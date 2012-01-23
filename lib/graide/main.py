@@ -1,0 +1,126 @@
+#!/usr/bin/python
+
+from graide.font import Font
+from graide.run import Run
+from graide.attribview import AttribView
+from graide.fontview import FontView
+from graide.runview import RunView, RunModel
+from graide.passes import PassesView
+from PySide import QtCore, QtGui
+import json
+
+class MainWindow(QtGui.QMainWindow) :
+
+    def __init__(self, fontfile, apfile, jsonfile, fontsize, gdxfile) :
+        super(MainWindow, self).__init__()
+        if fontfile :
+            self.font = Font()
+            self.font.loadFont(fontfile, apfile)
+            self.font.makebitmaps(fontsize)
+            if gdxfile :
+                self.font.loadGdx(gdxfile)
+        else :
+            self.font = None
+        if jsonfile :
+            f = file(jsonfile)
+            self.json = json.load(f)
+            f.close()
+        else :
+            self.json = None
+
+        self.setupUi()
+        self.createActions()
+        self.createToolBars()
+        self.createStatusBar()
+
+    def setupUi(self) :
+        self.resize(994, 696)
+        self.centralwidget = QtGui.QWidget(self)
+        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
+        self.vsplitter = QtGui.QSplitter(self.centralwidget)
+        self.vsplitter.setOrientation(QtCore.Qt.Vertical)
+        self.vsplitter.setHandleWidth(2)
+
+        self.widget = QtGui.QWidget(self.vsplitter)
+        self.setwidgetstretch(self.widget, 0, 3)
+        self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
+        self.horizontalLayout.setContentsMargins(2, 2, 2, 2)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.hsplitter = QtGui.QSplitter(self.widget)
+        self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
+        self.hsplitter.setHandleWidth(4)
+
+        self.tabInfo = QtGui.QTabWidget(self.hsplitter)
+        self.setwidgetstretch(self.tabInfo, 2, 0)
+        self.tab_glyph = AttribView()
+        self.tabInfo.addTab(self.tab_glyph, "Glyph")
+        self.tab_slot = AttribView()
+        self.tabInfo.addTab(self.tab_slot, "Slot")
+        self.tab_classes = QtGui.QWidget()
+        self.tabInfo.addTab(self.tab_classes, "Classes")
+
+        self.tabEdit = QtGui.QTabWidget(self.hsplitter)
+        self.setwidgetstretch(self.tabEdit, 4, 0)
+
+        self.tabTest = QtGui.QTabWidget(self.hsplitter)
+        self.setwidgetstretch(self.tabTest, 3, 0)
+
+        self.horizontalLayout.addWidget(self.hsplitter)
+
+        self.tabResults = QtGui.QTabWidget(self.vsplitter)
+        self.setwidgetstretch(self.tabResults, 0, 2)
+        self.tabResults.setTabPosition(QtGui.QTabWidget.South)
+
+        self.tab_font = FontView(self.font)
+        self.tabResults.addTab(self.tab_font, "Font")
+
+        self.tab_errors = QtGui.QWidget()
+        self.tabResults.addTab(self.tab_errors, "Errors")
+        if self.json :
+            self.run = Run()
+            self.run.addslots(self.json['output'])
+            self.tab_results = RunView(self.run, self.font)
+            self.tabResults.addTab(self.tab_results, "Results")
+            self.tab_results.model.slotSelected.connect(self.tab_slot.changeData)
+            self.tab_results.model.glyphSelected.connect(self.tab_glyph.changeData)
+            self.tab_passes = PassesView()
+            self.tab_passes.loadResults(self.font, self.json['passes'])
+            self.tabResults.addTab(self.tab_passes, "Passes")
+            self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
+            self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
+        self.verticalLayout.addWidget(self.vsplitter)
+        self.setCentralWidget(self.centralwidget)
+        
+        self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+
+    def setwidgetstretch(self, widget, hori, vert) :
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(hori)
+        sizePolicy.setVerticalStretch(vert)
+        sizePolicy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
+        widget.setSizePolicy(sizePolicy)
+
+    def createActions(self) :
+        pass
+
+    def createToolBars(self) :
+        pass
+
+    def createStatusBar(self) :
+        pass
+
+if __name__ == "__main__" :
+    from argparse import ArgumentParser
+    import sys
+
+    app = QtGui.QApplication(sys.argv)
+    p = ArgumentParser()
+    p.add_argument("font", help="Font .ttf file to process")
+    p.add_argument("-a","--ap",help="AP XML database file for font")
+    p.add_argument("-r","--results",help="graphite JSON debug output")
+    args = p.parse_args()
+
+    if args.font :
+        mainWindow = MainWindow(args.font, args.ap, args.results, 40)
+        mainWindow.show()
+        sys.exit(app.exec_())

@@ -1,0 +1,3 @@
+class ModelSuper(object) :
+    pass
+

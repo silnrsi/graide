@@ -1,0 +1,26 @@
+{"passes":
+  [{"slots":
+    [{"index":0, "position":[0.0, 0.0], "gid":188,
+      "breakweight": -15, "before": 0, "after": 0, "flags": 1 },
+     {"index":1, "position":[38.667, 0.0], "gid":103,
+      "breakweight": -50, "before": 4, "after": 4, "flags": 1,
+      "child": 2 },
+     {"index":2, "position":[61.333, 0.0], "gid":233,
+      "breakweight": -50, "before": 5, "after": 5, "flags": 0,
+      "parent": 1 },
+     {"index":3, "position":[68.667, 0.0], "gid":112,
+      "breakweight": -50, "before": 1, "after": 6, "flags": 1,
+      "parent": 4 },
+     {"index":4, "position":[67.333, 0.0], "gid":215,
+      "breakweight": -30, "before": 7, "after": 7, "flags": 0,
+      "child": 3 },
+     {"index":5, "position":[73.333, 0.0], "gid":109,
+      "breakweight": -30, "before": 8, "after": 8, "flags": 1,
+      "child": 6 },
+     {"index":6, "position":[93.667, 0.0], "gid":231,
+      "breakweight": -50, "before": 9, "after": 9, "flags": 0,
+      "parent": 5 },
+     {"index":7, "position":[95.667, 0.0], "gid":229,
+      "breakweight": -30, "before": 10, "after": 10, "flags": 1}]
+  }]
+}
