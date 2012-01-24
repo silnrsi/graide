@@ -1,1 +1,1 @@
-all = ['font', 'glyph']
+all = ['freetype']
