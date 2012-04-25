@@ -10,6 +10,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         super(GlyphPixmapItem, self).__init__(px, parent, scene)
         self.selected = False
         self.index = index
+        self.highlighted = False
 
     def mousePressEvent(self, mouseEvent) :
         self.scene().glyph_clicked(self, self.index)
@@ -18,10 +19,15 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         self.selected = state
         self.update()
 
+    def highlight(self) :
+        self.highlighted = True
+
     def paint(self, painter, option, widget) :
+        r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
         if self.selected :
-            r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
             painter.fillRect(r, option.palette.highlight())
+        elif self.highlighted :
+            painter.fillRect(r, QtGui.QColor(0, 0, 0, 32))
         super(GlyphPixmapItem, self).paint(painter, option, widget)
 
 
@@ -42,12 +48,13 @@ class RunModel(QtGui.QGraphicsScene, ModelSuper) :
             g = font[s.gid]
             if g and g.pixmap :
                 px = GlyphPixmapItem(i, g.pixmap, scene = self)
-                ppos = (s.origin[0] * factor + g.left, s.origin[1] * factor - g.top)
+                ppos = (s.origin[0] * factor + g.left, -s.origin[1] * factor - g.top)
                 # print s.gid, g.psname, ppos, g.pixmap.size()
                 px.setOffset(*ppos)
                 self.pixmaps.append(px)
-                s = g.pixmap.size()
-                r = QtCore.QRect(ppos[0], ppos[1], s.width(), s.height())
+                if s : s.pixmap(px)
+                sz = g.pixmap.size()
+                r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
                 res = res.united(r)
             else :
                 self.pixmaps.append(None)

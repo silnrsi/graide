@@ -6,6 +6,8 @@ from graide.attribview import AttribView
 from graide.fontview import FontView
 from graide.runview import RunView, RunModel
 from graide.passes import PassesView
+from graide.ruledialog import RuleDialog
+from graide.gdx import Gdx
 from PySide import QtCore, QtGui
 import json
 
@@ -13,14 +15,15 @@ class MainWindow(QtGui.QMainWindow) :
 
     def __init__(self, fontfile, apfile, jsonfile, fontsize, gdxfile) :
         super(MainWindow, self).__init__()
+        self.rules = None
+
         if fontfile :
             self.font = Font()
             self.font.loadFont(fontfile, apfile)
             self.font.makebitmaps(fontsize)
-            if gdxfile :
-                self.font.loadGdx(gdxfile)
         else :
             self.font = None
+
         if jsonfile :
             f = file(jsonfile)
             self.json = json.load(f)
@@ -28,10 +31,21 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.json = None
 
+        if gdxfile :
+            self.gdx = Gdx()
+            self.gdx.readfile(gdxfile)
+        else :
+            self.gdx = None
+
         self.setupUi()
         self.createActions()
         self.createToolBars()
         self.createStatusBar()
+
+    def closeEvent(self, event) :
+        if self.rules :
+            self.rules.close()
+        event.accept()
 
     def setupUi(self) :
         self.resize(994, 696)
@@ -84,10 +98,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_results.model.slotSelected.connect(self.tab_slot.changeData)
             self.tab_results.model.glyphSelected.connect(self.tab_glyph.changeData)
             self.tab_passes = PassesView()
-            self.tab_passes.loadResults(self.font, self.json['passes'])
+            self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
             self.tabResults.addTab(self.tab_passes, "Passes")
             self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
             self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
+            self.tab_passes.rowActivated.connect(self.ruledialog)
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
         
@@ -108,6 +123,30 @@ class MainWindow(QtGui.QMainWindow) :
 
     def createStatusBar(self) :
         pass
+
+    def ruledialog(self, row, model) :
+        if not self.rules :
+            self.rules = RuleDialog(self)
+        else :
+            self.rules.close()
+        self.ruleView = PassesView(parent = self.rules, index = row)
+        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run)
+        self.ruleView.slotSelected.connect(self.tab_slot.changeData)
+        self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
+        self.ruleView.rowActivated.connect(self.ruleSelected)
+        self.rules.setView(self.ruleView)
+        self.rules.show()
+
+    def rulesclosed(self, dialog) :
+        self.ruleView.slotSelected.disconnect()
+        self.ruleView.glyphSelected.disconnect()
+
+    def ruleSelected(self, row, model) :
+        run = model.run
+        print "pass: %d, run(%d): %s" % (run.passindex, run.ruleindex, run.label)
+        if self.gdx :
+            rule = self.gdx.passes[run.passindex][run.ruleindex]
+            print "File: %s, Line: %s %s" % (rule.srcfile, rule.srcline, rule.pretty)
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

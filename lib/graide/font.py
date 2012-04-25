@@ -8,7 +8,6 @@ class Font (object) :
     def __init__(self) :
         self.glyphs = []
         self.names = {}
-        self.passes = []
 
     def __len__(self) :
         return len(self.glyphs)
@@ -69,14 +68,3 @@ class Font (object) :
                     self.pixrect = self.pixrect | grect
                 if g.top > self.top : self.top = g.top
         # print self.pixrect
-
-    def loadGdx(self, gdxfile) :
-        etree = parse(gdxfile)
-        for e in etree.getroot().iterfind("pass") :
-            self.passes.append(e.get("table"))
-
-    def describePass(self, index) :
-        res = "Pass: %d" % index
-        if index < len(self.passes) :
-            res += " - %s" % (self.passes[index])
-        return res

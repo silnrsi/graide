@@ -1,16 +1,24 @@
 
 from graide.dataobj import DataObj
 from graide.attribview import Attribute, AttribModel
+from graide.utils import copyobj
 
 class Slot(DataObj) :
 
-    def __init__(self, info) :
+    def __init__(self, info = {}) :
+        self.highlighted = False
         for k, v in info.items() :
             setattr(self, k, v)
 
+    def copy(self) :
+        res = Slot()
+        copyobj(self, res)
+        self.px = None
+        return res
+
     def attribModel(self) :
         res = []
-        for k in ('index', 'gid', 'break', 'insert') :
+        for k in ('index', 'id', 'gid', 'break', 'insert') :
             res.append(Attribute(k, self.__getattribute__, None, False, k))
         for k in ('origin', 'advance') :
             res.append(Attribute(k, self.getpos, None, False, k))
@@ -34,3 +42,12 @@ class Slot(DataObj) :
     def getuser(self, index) :
         return self.user[index]
 
+    def highlight(self) :
+        self.highlighted = True
+        if (self.px) :
+            self.px.highlight()
+
+    def pixmap(self, px) :
+        self.px = px
+        if self.highlighted :
+            px.highlight()
