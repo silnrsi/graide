@@ -39,13 +39,14 @@ class PassesView(QtGui.QTableWidget) :
         self.currsel = None
         self.index = index
 
-    def addrun(self, font, run, label, num) :
+    def addrun(self, font, run, label, num, tooltip = "") :
         v = RunView(run, font, self)
         self.views.append(v)
         v.model.slotSelected.connect(self.changeSlot)
         v.model.glyphSelected.connect(self.changeGlyph)
         l = QtGui.QTableWidgetItem(label)
         l.setFlags(QtCore.Qt.ItemIsEnabled)
+        if tooltip : l.setToolTip(tooltip)
         self.setItem(num, 0, l)
         self.setCellWidget(num, 1, v)
         self.verticalHeader().setDefaultSectionSize(v.size().height())
@@ -68,10 +69,11 @@ class PassesView(QtGui.QTableWidget) :
         self.columnResized(1, 0, w)
         self.cellDoubleClicked.connect(self.doCellDoubleClicked)
 
-    def loadRules(self, font, json, inirun) :
+    def loadRules(self, font, json, inirun, gdx) :
         self.views = []
         self.runs = [inirun.copy()]
         self.runs[-1].label="Init"
+        self.runs[-1].ruleindex = -1
         for r in json :
             for c in r['considered'] :
                 run = self.runs[-1].copy()
@@ -93,7 +95,9 @@ class PassesView(QtGui.QTableWidget) :
         w = 0
         self.setRowCount(len(self.runs))
         for j in range(len(self.runs)) :
-            neww = self.addrun(font, self.runs[j], self.runs[j].label, j)
+            neww = self.addrun(font, self.runs[j], self.runs[j].label, j,
+                    tooltip = gdx.passes[self.index][self.runs[j].ruleindex].pretty
+                                    if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)
         w += 10
         self.setColumnWidth(1, w)

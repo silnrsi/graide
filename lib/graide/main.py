@@ -130,7 +130,7 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.rules.close()
         self.ruleView = PassesView(parent = self.rules, index = row)
-        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run)
+        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
         self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
         self.ruleView.rowActivated.connect(self.ruleSelected)
