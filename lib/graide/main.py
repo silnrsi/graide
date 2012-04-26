@@ -57,7 +57,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.vsplitter.setHandleWidth(2)
 
         self.widget = QtGui.QWidget(self.vsplitter)
-        self.setwidgetstretch(self.widget, 0, 3)
+        self.setwidgetstretch(self.widget, 100, 55)
         self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
         self.horizontalLayout.setContentsMargins(2, 2, 2, 2)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -66,7 +66,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.hsplitter.setHandleWidth(4)
 
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
-        self.setwidgetstretch(self.tabInfo, 2, 0)
+        self.setwidgetstretch(self.tabInfo, 30, 100)
         self.tab_glyph = AttribView()
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
         self.tab_slot = AttribView()
@@ -75,15 +75,15 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
         self.tabEdit = FileTabs(self.hsplitter)
-        self.setwidgetstretch(self.tabEdit, 4, 0)
+        self.setwidgetstretch(self.tabEdit, 40, 100)
 
         self.tabTest = QtGui.QTabWidget(self.hsplitter)
-        self.setwidgetstretch(self.tabTest, 3, 0)
+        self.setwidgetstretch(self.tabTest, 30, 100)
 
         self.horizontalLayout.addWidget(self.hsplitter)
 
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
-        self.setwidgetstretch(self.tabResults, 0, 2)
+        self.setwidgetstretch(self.tabResults, 100, 45)
         self.tabResults.setTabPosition(QtGui.QTabWidget.South)
 
         self.tab_font = FontView(self.font)
@@ -110,10 +110,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
 
     def setwidgetstretch(self, widget, hori, vert) :
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(hori)
-        sizePolicy.setVerticalStretch(vert)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        if hori != 100 : sizePolicy.setHorizontalStretch(hori)
+        if vert != 100 : sizePolicy.setVerticalStretch(vert)
         sizePolicy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
+        size = self.size()
+        widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
 
     def createActions(self) :
@@ -143,11 +145,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.rules = None
 
     def ruleSelected(self, row, model) :
-        run = model.run
-        print "pass: %d, run(%d): %s" % (run.passindex, run.ruleindex, run.label)
         if self.gdx :
-            rule = self.gdx.passes[run.passindex][run.ruleindex]
-            print "File: %s, Line: %s %s" % (rule.srcfile, rule.srcline, rule.pretty)
+            rule = self.gdx.passes[model.run.passindex][model.run.ruleindex]
             self.tabEdit.selectLine(rule.srcfile, rule.srcline)
 
 if __name__ == "__main__" :
