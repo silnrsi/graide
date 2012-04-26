@@ -8,6 +8,7 @@ from graide.runview import RunView, RunModel
 from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
+from graide.filetabs import FileTabs
 from PySide import QtCore, QtGui
 import json
 
@@ -73,7 +74,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_classes = QtGui.QWidget()
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
-        self.tabEdit = QtGui.QTabWidget(self.hsplitter)
+        self.tabEdit = FileTabs(self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 4, 0)
 
         self.tabTest = QtGui.QTabWidget(self.hsplitter)
@@ -125,10 +126,8 @@ class MainWindow(QtGui.QMainWindow) :
         pass
 
     def ruledialog(self, row, model) :
-        if not self.rules :
-            self.rules = RuleDialog(self)
-        else :
-            self.rules.close()
+        if self.rules : self.rules.close()
+        self.rules = RuleDialog(self)
         self.ruleView = PassesView(parent = self.rules, index = row)
         self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
@@ -140,6 +139,8 @@ class MainWindow(QtGui.QMainWindow) :
     def rulesclosed(self, dialog) :
         self.ruleView.slotSelected.disconnect()
         self.ruleView.glyphSelected.disconnect()
+        self.ruleView = None
+        self.rules = None
 
     def ruleSelected(self, row, model) :
         run = model.run
@@ -147,6 +148,7 @@ class MainWindow(QtGui.QMainWindow) :
         if self.gdx :
             rule = self.gdx.passes[run.passindex][run.ruleindex]
             print "File: %s, Line: %s %s" % (rule.srcfile, rule.srcline, rule.pretty)
+            self.tabEdit.selectLine(rule.srcfile, rule.srcline)
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

@@ -15,7 +15,7 @@ class RuleDialog(QtGui.QDialog) :
         if self.position :
             self.move(self.position)
         if self.currsize :
-            self.resize(self.size)
+            self.resize(self.currsize)
         else :
             self.resize(300, 300)
 

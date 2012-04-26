@@ -27,7 +27,7 @@ class Rule(object) :
 
     def __init__(self, e) :
         self.srcfile = e.get('inFile')
-        self.srcline = int(e.get('atLine'))
+        self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')
         slots = map(lambda x: int(x.get('slotIndex')), e.findall('rhsSlot'))
         if len(slots) :
