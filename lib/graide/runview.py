@@ -36,9 +36,10 @@ class RunModel(QtGui.QGraphicsScene, ModelSuper) :
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
 
-    def __init__(self, run, font, parent = None) :
+    def __init__(self, run = None, font = None, parent = None) :
         super(RunModel, self).__init__(parent)
-        self.loadrun(run, font)
+        if run and font :
+            self.loadrun(run, font)
 
     def loadrun(self, run, font) :
         self.run = run

@@ -20,6 +20,7 @@ class MainWindow(QtGui.QMainWindow) :
         super(MainWindow, self).__init__()
         self.rules = None
         self.runfile = None
+        self.runloaded = False
 
         if fontfile :
             self.font = Font()
@@ -95,39 +96,41 @@ class MainWindow(QtGui.QMainWindow) :
 
         self.tab_errors = QtGui.QWidget()
         self.tabResults.addTab(self.tab_errors, "Errors")
+        self.tab_results = QtGui.QWidget()
+        self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
+        self.tab_vbox.setSpacing(0)
+        self.tab_results_editor = QtGui.QWidget()
+        self.tab_hbox = QtGui.QHBoxLayout(self.tab_results_editor)
+        self.runEdit = QtGui.QLineEdit(self.tab_results_editor)
+        self.runEdit.returnPressed.connect(self.runClicked)
+        self.tab_hbox.addWidget(self.runEdit)
+        self.tab_hbox.setContentsMargins(0, 2, 0, 2)
+        self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
+        self.runGo.clicked.connect(self.runClicked)
+        self.tab_hbox.addWidget(self.runGo)
+        self.tab_vbox.addWidget(self.tab_results_editor)
+        self.run = Run()
+        self.runView = RunView()
+        self.tab_vbox.addWidget(self.runView)
+        self.tab_vbox.addStretch()
+        self.tabResults.addTab(self.tab_results, "Results")
+
+        self.tab_passes = PassesView()
+        self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
+        self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
+        self.tab_passes.rowActivated.connect(self.ruledialog)
+        self.tabResults.addTab(self.tab_passes, "Passes")
         if self.json :
-            self.tab_results = QtGui.QWidget()
-            self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
-            self.tab_vbox.setSpacing(0)
-            self.tab_results_editor = QtGui.QWidget()
-            self.tab_hbox = QtGui.QHBoxLayout(self.tab_results_editor)
-            self.runEdit = QtGui.QLineEdit(self.tab_results_editor)
-            self.runEdit.returnPressed.connect(self.runClicked)
-            self.tab_hbox.addWidget(self.runEdit)
-            self.tab_hbox.setContentsMargins(0, 2, 0, 2)
-            self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
-            self.runGo.clicked.connect(self.runClicked)
-            self.tab_hbox.addWidget(self.runGo)
-            self.tab_vbox.addWidget(self.tab_results_editor)
-            self.run = Run()
             self.run.addslots(self.json['output'])
-            self.runView = RunView(self.run, self.font)
+            self.runView.set_run(self.run, self.font)
             self.runView.model.slotSelected.connect(self.tab_slot.changeData)
             self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
-            self.tab_vbox.addWidget(self.runView)
-            self.tab_vbox.addStretch()
-            self.tabResults.addTab(self.tab_results, "Results")
-
-            self.tab_passes = PassesView()
             self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
-            self.tabResults.addTab(self.tab_passes, "Passes")
-            self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
-            self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
-            self.tab_passes.rowActivated.connect(self.ruledialog)
+            self.runloaded = True
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
-        
         self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+        self.tabResults.currentChanged.connect(self.setrunEditFocus)
 
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -178,9 +181,17 @@ class MainWindow(QtGui.QMainWindow) :
         self.run = Run()
         self.run.addslots(self.json['output'])
         self.runView.set_run(self.run, self.font)
+        if not self.runloaded :
+            self.runView.model.slotSelected.connect(self.tab_slot.changeData)
+            self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
+            self.runloaded = True
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
         print "\nDone"
-        
+
+    def setrunEditFocus(self, widget) :
+        if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \
+                or (not isinstance(widget, QtGui.QWidget) and widget == 2) :
+            self.runEdit.setFocus(QtCore.Qt.MouseFocusReason)
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
