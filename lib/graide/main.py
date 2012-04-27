@@ -186,7 +186,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
             self.runloaded = True
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
-        print "\nDone"
 
     def setrunEditFocus(self, widget) :
         if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \

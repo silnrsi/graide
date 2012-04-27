@@ -18,7 +18,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         f.close()
 
     def highlight(self, lineno) :
-        self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByLineNumber(lineno))
+        self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
         self.setExtraSelections([self.selection])
         self.setTextCursor(self.selection.cursor)
 
