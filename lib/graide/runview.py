@@ -38,10 +38,14 @@ class RunModel(QtGui.QGraphicsScene, ModelSuper) :
 
     def __init__(self, run, font, parent = None) :
         super(RunModel, self).__init__(parent)
-        self.pixmaps = []
-        self.currselection = None
+        self.loadrun(run, font)
+
+    def loadrun(self, run, font) :
         self.run = run
         self._font = font
+        self.currselection = None
+        self.clear()
+        self.pixmaps = []
         factor = font.size * 1. / font.upem
         res = QtCore.QRect()
         for i, s in enumerate(run) :
@@ -59,6 +63,7 @@ class RunModel(QtGui.QGraphicsScene, ModelSuper) :
             else :
                 self.pixmaps.append(None)
         self.boundingRect = res
+        self.setSceneRect(res)
 
     def glyph_clicked(self, gitem, index) :
         if self.currselection >= 0 and self.pixmaps[self.currselection] :
@@ -98,14 +103,20 @@ class RunView(QtGui.QGraphicsView) :
 
     def __init__(self, run = None, font = None, parent = None) :
         super(RunView, self).__init__(parent)
+        self.model = None
         if run :
             self.set_run(run, font)
 
     def set_run(self, run, font) :
-        self.model = RunModel(run, font)
-        self.setScene(self.model)
+        if not self.model :
+            self.model = RunModel(run, font)
+            self.setScene(self.model)
+        else:
+            self.model.loadrun(run, font)
+            self.updateScene([])
         b = self.model.boundingRect
         self.setFixedSize(b.left() + b.width() + 2, b.height() - b.top() + 2)
+        self.resize(b.left() + b.width() + 2, b.height() - b.top() + 2)
 
 
 if __name__ == "__main__" :

@@ -1,6 +1,6 @@
 from PySide import QtGui, QtCore
 
-class EditFile(QtGui.QTextEdit) :
+class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
@@ -11,8 +11,8 @@ class EditFile(QtGui.QTextEdit) :
         self.selection.format = QtGui.QTextCharFormat()
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
-        self.setFontFamily('Courier')
-        self.setFontPointSize(10)
+#        self.setFontFamily('Courier')
+#        self.setFontPointSize(10)
         f = file(fname)
         self.setPlainText("".join(f.readlines()))
         f.close()
@@ -21,7 +21,6 @@ class EditFile(QtGui.QTextEdit) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByLineNumber(lineno))
         self.setExtraSelections([self.selection])
         self.setTextCursor(self.selection.cursor)
-        print self.selection.cursor
 
     def unhighlight(self, lineno) :
         self.setExtraSelections([])

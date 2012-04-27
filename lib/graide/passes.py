@@ -17,6 +17,7 @@ class PassesView(QtGui.QTableWidget) :
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
     rowActivated = QtCore.Signal(int, RunModel)
 
+
     @QtCore.Slot(DataObj, ModelSuper)
     def changeSlot(self, data, model) :
         self.slotSelected.emit(data, model)
@@ -38,25 +39,33 @@ class PassesView(QtGui.QTableWidget) :
         self.horizontalHeader().hide()
         self.currsel = None
         self.index = index
+        self.connected = False
+        self.views = []
 
     def addrun(self, font, run, label, num, tooltip = "") :
-        v = RunView(run, font, self)
-        self.views.append(v)
-        v.model.slotSelected.connect(self.changeSlot)
-        v.model.glyphSelected.connect(self.changeGlyph)
-        l = QtGui.QTableWidgetItem(label)
-        l.setFlags(QtCore.Qt.ItemIsEnabled)
+        if num >= len(self.views) :
+            v = RunView(run, font, self)
+            self.views.append(v)
+            v.model.slotSelected.connect(self.changeSlot)
+            v.model.glyphSelected.connect(self.changeGlyph)
+            self.setCellWidget(num, 1, v)
+            l = QtGui.QTableWidgetItem(label)
+            l.setFlags(QtCore.Qt.ItemIsEnabled)
+            self.setItem(num, 0, l)
+        else :
+            v = self.views[num]
+            v.set_run(run, font)
+            l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
-        self.setItem(num, 0, l)
-        self.setCellWidget(num, 1, v)
         self.verticalHeader().setDefaultSectionSize(v.size().height())
         return v.width()
 
     def loadResults(self, font, json, gdx = None) :
-        self.setRowCount(len(json))
-        self.views = []
+        num = len(json)
+        if num != self.rowCount() :
+            self.setRowCount(len(json))
         w = 0
-        for j in range(len(json)) :
+        for j in range(num) :
             run = Run()
             run.addslots(json[j]['slots'])
             pname = "Pass: %d" % (j)
@@ -67,7 +76,9 @@ class PassesView(QtGui.QTableWidget) :
         w += 10
         self.setColumnWidth(1, w)
         self.columnResized(1, 0, w)
-        self.cellDoubleClicked.connect(self.doCellDoubleClicked)
+        if not self.connected :
+            self.cellDoubleClicked.connect(self.doCellDoubleClicked)
+            self.connected = True
 
     def loadRules(self, font, json, inirun, gdx) :
         self.views = []
@@ -102,7 +113,9 @@ class PassesView(QtGui.QTableWidget) :
         w += 10
         self.setColumnWidth(1, w)
         self.columnResized(1, 0, w)
-        self.cellDoubleClicked.connect(self.doCellDoubleClicked)
+        if not self.connected :
+            self.cellDoubleClicked.connect(self.doCellDoubleClicked)
+            self.connected = True
 
     def columnResized(self, col, old, new) :
         if col == 1 :

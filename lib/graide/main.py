@@ -9,19 +9,23 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
+from graide.utils import runGraphite
 from PySide import QtCore, QtGui
-import json
+from tempfile import NamedTemporaryFile
+import json, os
 
 class MainWindow(QtGui.QMainWindow) :
 
     def __init__(self, fontfile, apfile, jsonfile, fontsize, gdxfile) :
         super(MainWindow, self).__init__()
         self.rules = None
+        self.runfile = None
 
         if fontfile :
             self.font = Font()
             self.font.loadFont(fontfile, apfile)
             self.font.makebitmaps(fontsize)
+            self.fontfile = fontfile
         else :
             self.font = None
 
@@ -92,12 +96,28 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_errors = QtGui.QWidget()
         self.tabResults.addTab(self.tab_errors, "Errors")
         if self.json :
+            self.tab_results = QtGui.QWidget()
+            self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
+            self.tab_vbox.setSpacing(0)
+            self.tab_results_editor = QtGui.QWidget()
+            self.tab_hbox = QtGui.QHBoxLayout(self.tab_results_editor)
+            self.runEdit = QtGui.QLineEdit(self.tab_results_editor)
+            self.runEdit.returnPressed.connect(self.runClicked)
+            self.tab_hbox.addWidget(self.runEdit)
+            self.tab_hbox.setContentsMargins(0, 2, 0, 2)
+            self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
+            self.runGo.clicked.connect(self.runClicked)
+            self.tab_hbox.addWidget(self.runGo)
+            self.tab_vbox.addWidget(self.tab_results_editor)
             self.run = Run()
             self.run.addslots(self.json['output'])
-            self.tab_results = RunView(self.run, self.font)
+            self.runView = RunView(self.run, self.font)
+            self.runView.model.slotSelected.connect(self.tab_slot.changeData)
+            self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
+            self.tab_vbox.addWidget(self.runView)
+            self.tab_vbox.addStretch()
             self.tabResults.addTab(self.tab_results, "Results")
-            self.tab_results.model.slotSelected.connect(self.tab_slot.changeData)
-            self.tab_results.model.glyphSelected.connect(self.tab_glyph.changeData)
+
             self.tab_passes = PassesView()
             self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
             self.tabResults.addTab(self.tab_passes, "Passes")
@@ -129,7 +149,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ruledialog(self, row, model) :
         if self.rules : self.rules.close()
-        self.rules = RuleDialog(self)
+        else : self.rules = RuleDialog(self)
         self.ruleView = PassesView(parent = self.rules, index = row)
         self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
@@ -142,12 +162,25 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView.slotSelected.disconnect()
         self.ruleView.glyphSelected.disconnect()
         self.ruleView = None
-        self.rules = None
 
     def ruleSelected(self, row, model) :
         if self.gdx :
             rule = self.gdx.passes[model.run.passindex][model.run.ruleindex]
             self.tabEdit.selectLine(rule.srcfile, rule.srcline)
+
+    def runClicked(self) :
+        runfile = NamedTemporaryFile(mode="rw")
+        text = self.runEdit.text().decode('unicode_escape')
+        runGraphite(self.fontfile, text, runfile, size = self.font.size)
+        runfile.seek(0)
+        self.json = json.load(runfile)
+        runfile.close()
+        self.run = Run()
+        self.run.addslots(self.json['output'])
+        self.runView.set_run(self.run, self.font)
+        self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+        print "\nDone"
+        
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
