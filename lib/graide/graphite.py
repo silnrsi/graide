@@ -94,7 +94,8 @@ class Label(unicode) :
         self.ref = ref
 
     def __del__(self) :
-        gr2.gr_label_destroy(self.ref)
+#        import pdb; pdb.set_trace()
+        if self.ref : gr2.gr_label_destroy(self.ref)
 
 
 class FeatureVal(object) :
@@ -133,6 +134,9 @@ class FeatureRef(object) :
         length = c_uint32(0)
         res = gr2.gr_fref_value_label(self.fref, ind, byref(lngid), 1, byref(length))
         return Label(res, length.value)
+
+    def tag(self) :
+        return gr2.gr_fref_id(self.fref)
 
 
 class Face(object) :

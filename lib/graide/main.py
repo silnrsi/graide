@@ -10,6 +10,7 @@ from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
 from graide.utils import runGraphite
+from graide.featureselector import FeatureRefs, FeatureDialog
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 import json, os
@@ -21,12 +22,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.rules = None
         self.runfile = None
         self.runloaded = False
+        self.fDialog = None
 
         if fontfile :
+            self.fontfile = fontfile
             self.font = Font()
             self.font.loadFont(fontfile, apfile)
             self.font.makebitmaps(fontsize)
-            self.fontfile = fontfile
+            self.feats = FeatureRefs(fontfile)
         else :
             self.font = None
 
@@ -105,6 +108,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.runEdit.returnPressed.connect(self.runClicked)
         self.tab_hbox.addWidget(self.runEdit)
         self.tab_hbox.setContentsMargins(0, 2, 0, 2)
+        self.runRtl = QtGui.QCheckBox("RTL", self.tab_results_editor)
+        self.tab_hbox.addWidget(self.runRtl)
+        self.runFeats = QtGui.QPushButton("Features", self.tab_results_editor)
+        self.runFeats.clicked.connect(self.featuresClicked)
+        self.tab_hbox.addWidget(self.runFeats)
         self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
         self.runGo.clicked.connect(self.runClicked)
         self.tab_hbox.addWidget(self.runGo)
@@ -174,7 +182,7 @@ class MainWindow(QtGui.QMainWindow) :
     def runClicked(self) :
         runfile = NamedTemporaryFile(mode="rw")
         text = self.runEdit.text().decode('unicode_escape')
-        runGraphite(self.fontfile, text, runfile, size = self.font.size)
+        runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked())
         runfile.seek(0)
         self.json = json.load(runfile)
         runfile.close()
@@ -186,6 +194,13 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
             self.runloaded = True
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+
+    def featuresClicked(self) :
+        if self.font :
+            if self.fDialog : self.fDialog.close()
+            else : self.fDialog = FeatureDialog(self)
+            self.fDialog.set_feats(self.feats.feats)
+            self.fDialog.show()
 
     def setrunEditFocus(self, widget) :
         if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \
