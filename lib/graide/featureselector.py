@@ -7,9 +7,11 @@ class FeatureRefs(object) :
     def __init__(self, font) :
         self.feats = {}
         self.featids = {}
+        self.fval = {}
         langid = 0x0409
         length = 0
         grface = gr.Face(font)
+        grval = grface.get_featureval(0)
         for f in grface.featureRefs :
             name = f.name(langid)
             if not name : continue
@@ -22,6 +24,7 @@ class FeatureRefs(object) :
                 finfo[k] = v
             self.feats[name] = finfo
             self.featids[name] = f.tag()
+            self.fval[f.tag()] = grval.get(f)
 
 
 class FeatureDialog(QtGui.QDialog) :
@@ -38,21 +41,33 @@ class FeatureDialog(QtGui.QDialog) :
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
 
-    def set_feats(self, feats) :
+    def set_feats(self, feats, vals = None) :
+        if not vals : vals = feats.fval
         while self.table.rowCount() :
             self.table.removeRow(0)
-        num = len(feats.keys())
+        self.combos = []
+        num = len(feats.feats.keys())
         self.table.setRowCount(num)
         count = 0
-        for f in sorted(feats.keys()) :
+        for f in sorted(feats.feats.keys()) :
             c = QtGui.QComboBox()
-            for k in sorted(feats[f].keys()) :
-                c.addItem(k)
+            c.userTag = feats.featids[f]
+            for k in sorted(feats.feats[f].keys()) :
+                c.addItem(k, feats.feats[f][k])
+                if feats.feats[f][k] == vals[c.userTag] :
+                    c.setCurrentIndex(c.count() - 1)
+            self.combos.append(c)
             self.table.setCellWidget(count, 1, c)
             l = QtGui.QTableWidgetItem(f)
             self.table.setItem(count, 0, l)
             count += 1
         self.resize(600, 400)
+
+    def get_feats(self) :
+        res = {}
+        for c in self.combos :
+            res[c.userTag] = c.itemData(c.currentIndex())
+        return res
 
     def resizeEvent(self, event) :
         self.currsize = self.size()

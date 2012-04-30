@@ -182,7 +182,8 @@ class MainWindow(QtGui.QMainWindow) :
     def runClicked(self) :
         runfile = NamedTemporaryFile(mode="rw")
         text = self.runEdit.text().decode('unicode_escape')
-        runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked())
+        runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
+            feats = self.fDialog.get_feats() if self.fDialog else self.feats.fval)
         runfile.seek(0)
         self.json = json.load(runfile)
         runfile.close()
@@ -197,9 +198,9 @@ class MainWindow(QtGui.QMainWindow) :
 
     def featuresClicked(self) :
         if self.font :
-            if self.fDialog : self.fDialog.close()
-            else : self.fDialog = FeatureDialog(self)
-            self.fDialog.set_feats(self.feats.feats)
+            if not self.fDialog :
+                self.fDialog = FeatureDialog(self)
+                self.fDialog.set_feats(self.feats)
             self.fDialog.show()
 
     def setrunEditFocus(self, widget) :
