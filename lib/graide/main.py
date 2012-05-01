@@ -17,19 +17,23 @@ import json, os
 
 class MainWindow(QtGui.QMainWindow) :
 
-    def __init__(self, fontfile, apfile, jsonfile, fontsize, gdxfile) :
+    def __init__(self, config, jsonfile) :
         super(MainWindow, self).__init__()
         self.rules = None
         self.runfile = None
         self.runloaded = False
         self.fDialog = None
 
-        if fontfile :
-            self.fontfile = fontfile
+        if config.has_option('main', 'font') :
+            if config.has_option('main', 'size') :
+                fontsize = config.getint('main', 'size')
+            else :
+                fontsize = 40
+            self.fontfile = config.get('main', 'font')
             self.font = Font()
-            self.font.loadFont(fontfile, apfile)
+            self.font.loadFont(self.fontfile, config.get('main', 'ap') if config.has_option('main', 'ap') else None)
             self.font.makebitmaps(fontsize)
-            self.feats = FeatureRefs(fontfile)
+            self.feats = FeatureRefs(self.fontfile)
         else :
             self.font = None
 
@@ -40,9 +44,9 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.json = None
 
-        if gdxfile :
+        if config.has_option('main', 'gdx') :
             self.gdx = Gdx()
-            self.gdx.readfile(gdxfile)
+            self.gdx.readfile(config.get('main', 'gdx'))
         else :
             self.gdx = None
 
@@ -81,9 +85,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_slot, "Slot")
         self.tab_classes = QtGui.QWidget()
         self.tabInfo.addTab(self.tab_classes, "Classes")
+        self.buttonTool = QtGui.QToolButton()
+        self.buttonTool.setArrowType(QtCore.Qt.DownArrow)
+        self.tabInfo.setCornerWidget(self.buttonTool)
 
         self.tabEdit = FileTabs(self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 40, 100)
+        self.tabEdit.setTabsClosable(True)
+        self.buttonEdit = QtGui.QToolButton()
+        self.buttonEdit.setArrowType(QtCore.Qt.DownArrow)
+        self.tabEdit.setCornerWidget(self.buttonEdit)
 
         self.tabTest = QtGui.QTabWidget(self.hsplitter)
         self.setwidgetstretch(self.tabTest, 30, 100)
