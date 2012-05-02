@@ -1,1 +1,1 @@
-all = ['freetype']
+__all__ = ['freetype']

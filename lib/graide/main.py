@@ -127,6 +127,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
         self.runGo.clicked.connect(self.runClicked)
         self.tab_hbox.addWidget(self.runGo)
+        self.runSave = QtGui.QPushButton("Save", self.tab_results_editor)
+        self.runSave.clicked.connect(self.runSaveClicked)
+        self.tab_hbox.addWidget(self.runSave)
         self.tab_vbox.addWidget(self.tab_results_editor)
         self.run = Run()
         self.runView = RunView()
@@ -206,6 +209,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
             self.runloaded = True
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+
+    def runSaveClicked(self) :
+        f = file("graide.json", "w")
+        json.dump(self.json, f)
+        f.close()
 
     def featuresClicked(self) :
         if self.font :

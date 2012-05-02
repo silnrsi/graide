@@ -7,7 +7,7 @@ setup(  name = 'graide',
         description = 'Graphite Integrated Development Environment',
         author = 'M. Hosken',
         package_dir = {'' : 'lib'},
-        packages = ['graide', 'graide.freetype'],
+        packages = ['graide', 'graide/freetype'],
         scripts = ['graide']
 )
 
