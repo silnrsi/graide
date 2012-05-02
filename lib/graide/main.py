@@ -11,6 +11,7 @@ from graide.gdx import Gdx
 from graide.filetabs import FileTabs
 from graide.utils import runGraphite
 from graide.featureselector import FeatureRefs, FeatureDialog
+from graide.testlist import TestList
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 import json, os
@@ -49,6 +50,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.gdx.readfile(config.get('main', 'gdx'))
         else :
             self.gdx = None
+
+        if config.has_option('main', 'testsfile') :
+            self.testsfile = config.get('main', 'testsfile')
+        else :
+            self.testsfile = None
 
         self.setupUi()
         self.createActions()
@@ -96,7 +102,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.buttonEdit.setArrowType(QtCore.Qt.DownArrow)
         self.tabEdit.setCornerWidget(self.buttonEdit)
 
-        self.tabTest = QtGui.QTabWidget(self.hsplitter)
+        self.tabTest = TestList(self, self.testsfile, parent = self.hsplitter)
         self.setwidgetstretch(self.tabTest, 30, 100)
 
         self.horizontalLayout.addWidget(self.hsplitter)
@@ -172,6 +178,10 @@ class MainWindow(QtGui.QMainWindow) :
     def createStatusBar(self) :
         pass
 
+    def closeEvent(self, event) :
+        if self.testsfile :
+            self.tabTest.writeXML(self.testsfile)
+
     def ruledialog(self, row, model) :
         if self.rules : self.rules.close()
         else : self.rules = RuleDialog(self)
@@ -180,7 +190,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
         self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
         self.ruleView.rowActivated.connect(self.ruleSelected)
-        self.rules.setView(self.ruleView)
+        self.rules.setView(self.ruleView, "Pass %d" % (row + 1))
         self.rules.show()
 
     def rulesclosed(self, dialog) :
@@ -189,9 +199,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView = None
 
     def ruleSelected(self, row, model) :
-        if self.gdx :
+        if self.gdx and hasattr(model.run, 'passindex') :
             rule = self.gdx.passes[model.run.passindex][model.run.ruleindex]
             self.tabEdit.selectLine(rule.srcfile, rule.srcline)
+
+    def setRun(self, test) :
+        self.runRtl.setChecked(True if test.rtl else False)
+        self.runEdit.setText(test.text)
+        if not self.fDialog :
+            self.fDialog = FeatureDialog(self)
+        self.fDialog.set_feats(self.feats, test.feats)
 
     def runClicked(self) :
         runfile = NamedTemporaryFile(mode="rw")

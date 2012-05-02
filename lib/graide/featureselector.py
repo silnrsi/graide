@@ -4,27 +4,39 @@ import graide.graphite as gr
 
 class FeatureRefs(object) :
 
-    def __init__(self, font) :
+    def __init__(self, font = None) :
         self.feats = {}
         self.featids = {}
         self.fval = {}
-        langid = 0x0409
-        length = 0
-        grface = gr.Face(font)
-        grval = grface.get_featureval(0)
-        for f in grface.featureRefs :
-            name = f.name(langid)
-            if not name : continue
-            name = name[:]
-            n = f.num()
-            finfo = {}
-            for i in range(n) :
-                v = f.val(i)
-                k = f.label(i, langid)[:]
-                finfo[k] = v
-            self.feats[name] = finfo
-            self.featids[name] = f.tag()
-            self.fval[f.tag()] = grval.get(f)
+        if font :
+            langid = 0x0409
+            length = 0
+            grface = gr.Face(font)
+            grval = grface.get_featureval(0)
+            for f in grface.featureRefs :
+                name = f.name(langid)
+                if not name : continue
+                name = name[:]
+                n = f.num()
+                finfo = {}
+                for i in range(n) :
+                    v = f.val(i)
+                    k = f.label(i, langid)[:]
+                    finfo[k] = v
+                self.feats[name] = finfo
+                self.featids[name] = f.tag()
+                self.fval[f.tag()] = grval.get(f)
+
+    def copy(self) :
+        res = FeatureRefs()
+        res.feats = dict(self.feats)
+        res.featids = dict(self.featids)
+        res.fval = dict(self.fval)
+        return res
+
+    def apply(self, fvals) :
+        for (k, v) in fvals.items() :
+            self.fval[k] = v
 
 
 class FeatureDialog(QtGui.QDialog) :

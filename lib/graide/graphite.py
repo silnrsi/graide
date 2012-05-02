@@ -85,6 +85,10 @@ fn('gr_slot_can_insert_before', c_int, c_void_p)
 fn('gr_slot_original', c_int, c_void_p)
 fn('gr_slot_linebreak_before', None, c_void_p)
 
+def tag_to_str(num) :
+    s = create_string_buffer('\000' * 5)
+    gr2.gr_tag_to_str(num, s)
+    return str(s.value)
 
 class Label(unicode) :
     def __new__(typename, ref, size) :
@@ -136,7 +140,7 @@ class FeatureRef(object) :
         return Label(res, length.value)
 
     def tag(self) :
-        return gr2.gr_fref_id(self.fref)
+        return tag_to_str(gr2.gr_fref_id(self.fref))
 
 
 class Face(object) :

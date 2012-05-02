@@ -68,7 +68,7 @@ class PassesView(QtGui.QTableWidget) :
         for j in range(num) :
             run = Run()
             run.addslots(json[j]['slots'])
-            pname = "Pass: %d" % (j)
+            pname = "Pass: %d" % (j + 1)
             if gdx :
                 pname += " - " + gdx.passtypes[j]
             neww = self.addrun(font, run, pname, j)

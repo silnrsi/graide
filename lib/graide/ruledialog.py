@@ -10,7 +10,8 @@ class RuleDialog(QtGui.QDialog) :
         self.setSizeGripEnabled(True)
         self.setWindowFlags(QtCore.Qt.Tool)
 
-    def setView(self, runview) :
+    def setView(self, runview, title = None) :
+        if title : self.setWndowTitle(title)
         self.runview = runview
         runview.resize(self.size())
         #self.setLayout(runview)
