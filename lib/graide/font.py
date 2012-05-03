@@ -3,11 +3,12 @@ from graide import freetype
 import ctypes
 from graide.glyph import Glyph
 from PySide import QtCore
+import graide.makegdl.makegdl as gdl
 
-class Font (object) :
+class Font (gdl.Font) :
+
     def __init__(self) :
-        self.glyphs = []
-        self.names = {}
+        super(Font, self).__init__()
 
     def __len__(self) :
         return len(self.glyphs)
@@ -19,6 +20,7 @@ class Font (object) :
             return None
 
     def loadFont(self, fontfile, apfile = None) :
+        self.fname = fontfile
         self.face = freetype.Face(fontfile)
         self.glyphs = [None] * self.face.num_glyphs
         self.upem = self.face.units_per_EM
@@ -48,15 +50,11 @@ class Font (object) :
             freetype.FT_Get_Glyph_Name(self.face._FT_Face, index, n, ctypes.sizeof(n))
             name = n.value
         g = Glyph(self, name, index)
-        self.names[name] = g
+        super(Font, self).addGlyph(g, index)
         if elem is not None : g.readAP(elem)
-        self.glyphs[index] = g
         return index
 
     def makebitmaps(self, size) :
-#        self.face.set_char_size(height = size * 64)
-#        for a in ('xMin', 'xMax', 'yMin', 'yMax') :
-#            setattr(self, a, getattr(self.face.bbox, a) * self.face.size.y_scale / 65536 / 64)
         self.pixrect = QtCore.QRect()
         self.top = 0
         self.size = size
@@ -67,4 +65,5 @@ class Font (object) :
                     grect = g.pixmap.rect()
                     self.pixrect = self.pixrect | grect
                 if g.top > self.top : self.top = g.top
-        # print self.pixrect
+
+    def emunits(self) : return self.upem

@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <tests>
 <test feats="dotr=0 lldt=0 vtta=0 ulon=0 hsln=2 wtri=0 kdot=1 utal=0 dotc=1 fdot=0 nnya=0" name="test1">\u1000\u103e\u102f</test>
+<test feats="kdot=0 lldt=0 vtta=0 ulon=0 hsln=0 wtri=0 dotc=1 utal=0 fdot=0 nnya=0 dotr=0" name="test2">\u1000\u103c\u102d\u102f</test>
 </tests>

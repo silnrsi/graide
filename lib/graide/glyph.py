@@ -4,15 +4,14 @@ from graide import freetype
 import array, re
 from graide.attribview import Attribute, AttribModel
 from graide.dataobj import DataObj
+import graide.makegdl.makegdl as gdl
 
-class Glyph(DataObj) :
+class Glyph(gdl.Glyph, DataObj) :
 
-    def __init__(self, font, name = None, gid = 0) :
-        self.psname = name
+    def __init__(self, font, name, gid = 0) :
+        super(Glyph, self).__init__(name)
         self.gid = gid
         self.properties = {}
-        self.gdl_properties = {}
-        self.points = {}
 
     def __str__(self) :
         return self.psname
@@ -43,7 +42,9 @@ class Glyph(DataObj) :
                 self.properties[n] = p.get('value')
         for p in elem.iterfind('point') :
             l = p.find('location')
-            self.points[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
+            self.anchors[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
+        if 'classes' in self.properties :
+            self.classes.update(self.properties['classes'].split())
       
     def attribModel(self) :
         res = []
@@ -54,7 +55,7 @@ class Glyph(DataObj) :
         for a in sorted(self.gdl_properties.keys()) :
             res.append(Attribute(a, self.getgdlproperty, self.setgdlproperty, False, a))
         pres = []
-        for k in self.points.keys() :
+        for k in self.anchors.keys() :
             pres.append(Attribute(k, self.getpoint, self.setpoint, False, k))
         resAttrib = AttribModel(res)
         pAttrib = AttribModel(pres, resAttrib)
@@ -80,13 +81,13 @@ class Glyph(DataObj) :
             self.gdl_properties[key] = value
 
     def getpoint(self, key) :
-        return str(self.points[key])
+        return str(self.anchors[key])
 
     def setpoint(self, key, value) :
         if value == None :
-            del self.points[key]
+            del self.anchors[key]
         elif value == "" :
-            self.points[key] = (0, 0)
+            self.anchors[key] = (0, 0)
         else :
-            self.points[key] = map(int, re.split(r",\s*", value[1:-1]))
+            self.anchors[key] = map(int, re.split(r",\s*", value[1:-1]))
 

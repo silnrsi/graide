@@ -15,6 +15,7 @@
     </glyph>
     <glyph PSName='quotedbl' UID='0022'>
         <property name='mark' value='1'/>
+        <property name='GDL_order' value='0'/>
         <note/>
     </glyph>
     <glyph PSName='numbersign' UID='0023'>
@@ -23,6 +24,7 @@
         <note/>
     </glyph>
     <glyph PSName='dollar' UID='0024'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -32,10 +34,12 @@
         <note/>
     </glyph>
     <glyph PSName='ampersand' UID='0026'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='quotesingle' UID='0027'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -80,42 +84,52 @@
         <note/>
     </glyph>
     <glyph PSName='zero' UID='0030'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='one' UID='0031'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='two' UID='0032'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='three' UID='0033'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='four' UID='0034'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='five' UID='0035'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='six' UID='0036'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='seven' UID='0037'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='eight' UID='0038'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='nine' UID='0039'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -130,6 +144,7 @@
         <note/>
     </glyph>
     <glyph PSName='less' UID='003C'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -139,6 +154,7 @@
         <note/>
     </glyph>
     <glyph PSName='greater' UID='003E'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -148,114 +164,142 @@
         <note/>
     </glyph>
     <glyph PSName='at' UID='0040'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='A' UID='0041'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='B' UID='0042'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='C' UID='0043'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='D' UID='0044'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='E' UID='0045'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='F' UID='0046'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='G' UID='0047'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='H' UID='0048'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='I' UID='0049'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='J' UID='004A'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='K' UID='004B'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='L' UID='004C'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='M' UID='004D'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='N' UID='004E'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='O' UID='004F'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='P' UID='0050'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='Q' UID='0051'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='R' UID='0052'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='S' UID='0053'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='T' UID='0054'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='U' UID='0055'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='V' UID='0056'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='W' UID='0057'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='X' UID='0058'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='Y' UID='0059'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='Z' UID='005A'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='bracketleft' UID='005B'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -265,6 +309,7 @@
         <note/>
     </glyph>
     <glyph PSName='bracketright' UID='005D'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -282,110 +327,137 @@
         <note/>
     </glyph>
     <glyph PSName='grave' UID='0060'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='a' UID='0061'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='b' UID='0062'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='c' UID='0063'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='d' UID='0064'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='e' UID='0065'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='f' UID='0066'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='g' UID='0067'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='h' UID='0068'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='i' UID='0069'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='j' UID='006A'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='k' UID='006B'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='l' UID='006C'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='m' UID='006D'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='n' UID='006E'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='o' UID='006F'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='p' UID='0070'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='q' UID='0071'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='r' UID='0072'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='s' UID='0073'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='t' UID='0074'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='u' UID='0075'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='v' UID='0076'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='w' UID='0077'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='x' UID='0078'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='y' UID='0079'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
     <glyph PSName='z' UID='007A'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -395,6 +467,7 @@
         <note/>
     </glyph>
     <glyph PSName='bar' UID='007C'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='1'/>
         <note/>
     </glyph>
@@ -5381,6 +5454,7 @@
         <note/>
     </glyph>
     <glyph PSName='uA92E' UID='A92E'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='80'/>
         <note/>
     </glyph>
@@ -6347,10 +6421,12 @@
         <point type='U'>
             <location x='292' y='495'/>
         </point>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='183'/>
         <note/>
     </glyph>
     <glyph PSName='uAA78' UID='AA78'>
+        <property name='GDL_order' value='0'/>
         <property name='mark' value='183'/>
         <note/>
     </glyph>

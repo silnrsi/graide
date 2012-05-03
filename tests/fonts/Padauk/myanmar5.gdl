@@ -167,7 +167,7 @@ a default line-breaking behaviour of not wanting a break before the glyph. Our l
 model is based on what happens before a glyph rather than after it.
 @enddoc */
 
-ANY = (glyphid(0 .. MAXGLYPH)){breakweight = -BW_CHAR};         // what about pseudo glyphs?
+ANY = (glyphid(3 .. MAXGLYPH)){breakweight = -BW_CHAR};         // what about pseudo glyphs?
 
 /* @doc
 Set various default line-breaking weights for particular glyphs. We like breaking after whitespace
@@ -522,7 +522,7 @@ ANY g200C > ANY:(1 2){sOrder=order} _;
 ANY g200d > ANY:(1 2){sOrder=order} _;
 ANY wj > ANY:(1 2){sOrder=order} _;
 ANY > @1{sOrder=order};
-
+ 
 endpass;
 
 /* @doc

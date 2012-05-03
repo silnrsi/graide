@@ -147,7 +147,7 @@ if __name__ == '__main__' :
     font = Font()
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests/fonts/Padauk')
     font.loadFont(os.path.join(tpath, 'Padauk.ttf'), os.path.join(tpath, 'padauk.xml'))
-    glyph = font.names['u1000']
+    glyph = font.psnames['u1000']
     model = glyph.attribModel()
     view = AttribView(model)
     view.show()

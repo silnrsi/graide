@@ -9,7 +9,7 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite
+from graide.utils import runGraphite, buildGraphite
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from PySide import QtCore, QtGui
@@ -24,6 +24,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runfile = None
         self.runloaded = False
         self.fDialog = None
+        self.config = config
 
         if config.has_option('main', 'font') :
             if config.has_option('main', 'size') :
@@ -95,7 +96,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.buttonTool.setArrowType(QtCore.Qt.DownArrow)
         self.tabInfo.setCornerWidget(self.buttonTool)
 
-        self.tabEdit = FileTabs(self.hsplitter)
+        self.tabEdit = FileTabs(self.config, self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 40, 100)
         self.tabEdit.setTabsClosable(True)
         self.buttonEdit = QtGui.QToolButton()
@@ -114,7 +115,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_font = FontView(self.font)
         self.tabResults.addTab(self.tab_font, "Font")
 
-        self.tab_errors = QtGui.QWidget()
+        self.tab_errors = QtGui.QPlainTextEdit()
+        self.tab_errors.setReadOnly(True)
         self.tabResults.addTab(self.tab_errors, "Errors")
         self.tab_results = QtGui.QWidget()
         self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
@@ -210,7 +212,24 @@ class MainWindow(QtGui.QMainWindow) :
             self.fDialog = FeatureDialog(self)
         self.fDialog.set_feats(self.feats, test.feats)
 
+    def buildClicked(self) :
+        self.tabEdit.writeIfModified()
+        if buildGraphite(self.config, self.font, self.fontfile) :
+            f = file('gdlerr.txt')
+            self.tab_errors.setPlainText("".join(f.readlines()))
+            f.close()
+            return False
+        else :
+            self.tab_errors.setPlainText("")
+        if self.config.has_option('main', 'gdx') :
+            self.gdx = Gdx()
+            self.gdx.readfile(self.config.get('main', 'gdx'))
+        self.feats = FeatureRefs(self.fontfile)
+        return True
+
     def runClicked(self) :
+#        import pdb; pdb.set_trace()
+        if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = NamedTemporaryFile(mode="rw")
         text = self.runEdit.text().decode('unicode_escape')
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
