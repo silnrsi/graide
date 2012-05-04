@@ -30,12 +30,15 @@ class TestList(QtGui.QWidget) :
         self.app = app
         self.tests = []
         self.vbox = QtGui.QVBoxLayout()
+        self.vbox.setContentsMargins(0, 0, 0, 0)
         self.list = QtGui.QListWidget(self)
         self.list.itemDoubleClicked.connect(self.loadTest)
         self.vbox.addWidget(self.list)
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbbox)
+        self.hbbox.setContentsMargins(0, 0, 0, 0)
+        self.hbbox.insertStretch(0)
         self.vbox.addWidget(self.bbox)
         self.bEdit = QtGui.QToolButton(self.bbox)
         self.bEdit.setIcon(QtGui.QIcon.fromTheme('document-properties'))

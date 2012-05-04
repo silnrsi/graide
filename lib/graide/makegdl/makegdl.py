@@ -105,7 +105,7 @@ class Font(object) :
             for a in g.anchors.keys() :
                 b = a
                 if a.startswith("_") : b = a[1:]
-                if a not in self.points :
+                if b not in self.points :
                     self.points[b] = PointClass(b)
                 if a == b :
                     self.points[b].addBaseGlyph(g)

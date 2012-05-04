@@ -50,48 +50,88 @@ class EditFile(QtGui.QPlainTextEdit) :
             f = file(self.fname, "w")
             f.write(self.document().toPlainText())
             f.close()
+            self.document().setModified(False)
             return True
         else :
             return False
+
+    def reload(self) :
+        f = file(self.fname)
+        self.setPlainText("".join(f.readlines()))
+        f.close()
 
     def closeEvent(self, event) :
         self.writeIfModified()
 
 
-class FileTabs(QtGui.QTabWidget) :
+class FileTabs(QtGui.QWidget) :
 
-    def __init__(self, config, parent = None) :
+    def __init__(self, config, app, parent = None) :
         super(FileTabs, self).__init__(parent)
+        self.vbox = QtGui.QVBoxLayout()
+        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.tabs = QtGui.QTabWidget(self)
+        self.tabs.tabCloseRequested.connect(self.closeRequest)
+        self.tabs.setContentsMargins(0, 0, 0, 0)
+        self.vbox.addWidget(self.tabs)
+        self.bbox = QtGui.QWidget(self)
+        self.vbox.addWidget(self.bbox)
+        self.hbox = QtGui.QHBoxLayout()
+        self.bbox.setLayout(self.hbox)
+        self.hbox.setContentsMargins(0, 0, 0, 0)
+        self.hbox.insertStretch(0)
+        self.bBuild = QtGui.QPushButton('Build', self.bbox)
+        self.bBuild.clicked.connect(app.buildClicked)
+        self.hbox.addWidget(self.bBuild)
+        self.bAdd = QtGui.QToolButton(self.bbox)
+        self.bAdd.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.bAdd.setToolTip('add new test')
+        self.bAdd.clicked.connect(self.addClicked)
+        self.hbox.addWidget(self.bAdd)
+        self.setLayout(self.vbox)
         self.currselIndex = None
         self.currselline = 0
         self.config = config
-        self.tabCloseRequested.connect(self.closeRequest)
 
     def selectLine(self, fname, lineno) :
-        for i in range(self.count()) :
-            f = self.widget(i)
+        for i in range(self.tabs.count()) :
+            f = self.tabs.widget(i)
             if f.fname == fname :
                 self.highlightLine(i, lineno)
                 return
         newFile = EditFile(fname)
-        self.addTab(newFile, fname)
-        self.highlightLine(self.count() - 1, lineno)
+        self.tabs.addTab(newFile, fname)
+        self.highlightLine(self.tabs.count() - 1, lineno)
         if self.config.has_option('build', 'gdlfile') and os.path.abspath(self.config.get('build', 'gdlfile')) == os.path.abspath(fname) :
             newFile.setReadOnly(True)
 
     def highlightLine(self, tabindex, lineno) :
-        if self.currselIndex != None and (self.currselIndex != tabindex or self.currselline != lineno) :
-            self.widget(self.currselIndex).unhighlight(self.currselline)
-        self.widget(tabindex).highlight(lineno)
-        self.currselIndex = tabindex
-        self.currselline = lineno
+        if lineno >= 0 :
+            if self.currselIndex != None and (self.currselIndex != tabindex or self.currselline != lineno) :
+                self.tabs.widget(self.currselIndex).unhighlight(self.currselline)
+            self.tabs.widget(tabindex).highlight(lineno)
+            self.currselIndex = tabindex
+            self.currselline = lineno
+        self.tabs.setCurrentIndex(tabindex)
 
     def writeIfModified(self) :
         res = False
-        for i in range(self.count()) :
-            res = res | self.widget(i).writeIfModified()
+        for i in range(self.tabs.count()) :
+            res = res | self.tabs.widget(i).writeIfModified()
         return res
 
     def closeRequest(self, index) :
-        self.widget(index).close()
-        self.removeTab(index)
+        self.tabs.widget(index).close()
+        self.tabs.removeTab(index)
+
+    def addClicked(self) :
+        fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
+        self.selectLine(fname, -1)
+
+    def updateFileEdit(self, fname) :
+        for i in range(self.tabs.count()) :
+            f = self.tabs.widget(i)
+            if f.name == fname :
+                f.reload()
+                break
+

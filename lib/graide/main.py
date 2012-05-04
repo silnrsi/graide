@@ -111,16 +111,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_slot, "Slot")
         self.tab_classes = QtGui.QWidget()
         self.tabInfo.addTab(self.tab_classes, "Classes")
-        self.buttonTool = QtGui.QToolButton()
-        self.buttonTool.setArrowType(QtCore.Qt.DownArrow)
-        self.tabInfo.setCornerWidget(self.buttonTool)
 
-        self.tabEdit = FileTabs(self.config, self.hsplitter)
+        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 40, 100)
-        self.tabEdit.setTabsClosable(True)
-        self.buttonEdit = QtGui.QToolButton()
-        self.buttonEdit.setArrowType(QtCore.Qt.DownArrow)
-        self.tabEdit.setCornerWidget(self.buttonEdit)
+        self.tabEdit.tabs.setTabsClosable(True)
 
         self.tabTest = TestList(self, self.testsfile, parent = self.hsplitter)
         self.setwidgetstretch(self.tabTest, 30, 100)
@@ -233,7 +227,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
-        if buildGraphite(self.config, self.font, self.fontfile) :
+        if buildGraphite(self.config, self, self.font, self.fontfile) :
             f = file('gdlerr.txt')
             self.tab_errors.setPlainText("".join(f.readlines()))
             f.close()
@@ -281,6 +275,9 @@ class MainWindow(QtGui.QMainWindow) :
         if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \
                 or (not isinstance(widget, QtGui.QWidget) and widget == 2) :
             self.runEdit.setFocus(QtCore.Qt.MouseFocusReason)
+
+    def updateFileEdit(self, fname) :
+        self.tabEdit.updateFileEdit(fname)
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
