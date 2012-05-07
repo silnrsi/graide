@@ -26,6 +26,11 @@ from shutil import copyfile
 
 libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
 
+class DataObj(object) :
+    
+    def attribModel(self) :
+        return None
+
 class ModelSuper(object) :
     pass
 

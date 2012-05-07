@@ -22,7 +22,7 @@ from PySide import QtGui
 from graide import freetype
 import array, re
 from graide.attribview import Attribute, AttribModel
-from graide.dataobj import DataObj
+from graide.utils import DataObj
 import graide.makegdl.makegdl as gdl
 
 class Glyph(gdl.Glyph, DataObj) :

@@ -18,9 +18,8 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from graide.dataobj import DataObj
 from graide.attribview import Attribute, AttribModel
-from graide.utils import copyobj
+from graide.utils import copyobj, DataObj
 
 class Slot(DataObj) :
 

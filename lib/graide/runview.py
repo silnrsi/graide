@@ -20,8 +20,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtCore, QtGui
-from graide.dataobj import DataObj
-from graide.utils import ModelSuper
+from graide.utils import ModelSuper, DataObj
 
 class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
