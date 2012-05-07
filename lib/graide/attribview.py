@@ -155,6 +155,7 @@ class AttribView(QtGui.QTreeView) :
     def changeData(self, data, model) :
         self.model = data.attribModel() if data else None
         self.setModel(self.model)
+        self.expandAll()
 
 if __name__ == '__main__' :
 
