@@ -23,7 +23,7 @@ from graide.font import Font
 from graide.run import Run
 from graide.attribview import AttribView
 from graide.fontview import FontView
-from graide.runview import RunView, RunModel
+from graide.runview import RunView
 from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
@@ -154,7 +154,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_vbox.addWidget(self.tab_results_editor)
         self.run = Run()
         self.runView = RunView()
-        self.tab_vbox.addWidget(self.runView)
+        self.tab_vbox.addWidget(self.runView.gview)
         self.tab_vbox.addStretch()
         self.tabResults.addTab(self.tab_results, "Results")
 
@@ -165,9 +165,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json['output'])
-            self.runView.set_run(self.run, self.font)
-            self.runView.model.slotSelected.connect(self.tab_slot.changeData)
-            self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
+            self.runView.loadrun(self.run, self.font)
+            self.runView.slotSelected.connect(self.tab_slot.changeData)
+            self.runView.glyphSelected.connect(self.tab_glyph.changeData)
             self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
             self.runloaded = True
         self.verticalLayout.addWidget(self.vsplitter)
@@ -197,11 +197,11 @@ class MainWindow(QtGui.QMainWindow) :
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
 
-    def ruledialog(self, row, model) :
+    def ruledialog(self, row, view) :
         if self.rules : self.rules.close()
         else : self.rules = RuleDialog(self)
         self.ruleView = PassesView(parent = self.rules, index = row)
-        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], model.run, self.gdx)
+        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], view.run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
         self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
         self.ruleView.rowActivated.connect(self.ruleSelected)
@@ -213,9 +213,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView.glyphSelected.disconnect()
         self.ruleView = None
 
-    def ruleSelected(self, row, model) :
-        if self.gdx and hasattr(model.run, 'passindex') :
-            rule = self.gdx.passes[model.run.passindex][model.run.ruleindex]
+    def ruleSelected(self, row, view) :
+        if self.gdx and hasattr(view.run, 'passindex') :
+            rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
             self.tabEdit.selectLine(rule.srcfile, rule.srcline)
 
     def setRun(self, test) :
@@ -241,7 +241,6 @@ class MainWindow(QtGui.QMainWindow) :
         return True
 
     def runClicked(self) :
-#        import pdb; pdb.set_trace()
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = NamedTemporaryFile(mode="rw")
         text = self.runEdit.text().decode('unicode_escape')
@@ -252,11 +251,14 @@ class MainWindow(QtGui.QMainWindow) :
         runfile.close()
         self.run = Run()
         self.run.addslots(self.json['output'])
-        self.runView.set_run(self.run, self.font)
+        self.runView.loadrun(self.run, self.font)
         if not self.runloaded :
-            self.runView.model.slotSelected.connect(self.tab_slot.changeData)
-            self.runView.model.glyphSelected.connect(self.tab_glyph.changeData)
-            self.runloaded = True
+            try :
+                self.runView.slotSelected.connect(self.tab_slot.changeData)
+                self.runView.glyphSelected.connect(self.tab_glyph.changeData)
+                self.runloaded = True
+            except :
+                print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
 
     def runSaveClicked(self) :

@@ -20,7 +20,7 @@
 
 from PySide import QtGui, QtCore
 from graide.run import Run
-from graide.runview import RunView, RunModel
+from graide.runview import RunView
 from graide.utils import ModelSuper
 from graide.dataobj import DataObj
 
@@ -34,7 +34,7 @@ class PassesView(QtGui.QTableWidget) :
 
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
-    rowActivated = QtCore.Signal(int, RunModel)
+    rowActivated = QtCore.Signal(int, RunView)
 
 
     @QtCore.Slot(DataObj, ModelSuper)
@@ -50,11 +50,11 @@ class PassesView(QtGui.QTableWidget) :
 
     @QtCore.Slot(int)
     def activateRow(self, row) :
-        self.rowActivated(row, self.views[row].model)
+        self.rowActivated(row, self.views[row])
 
     def __init__(self, parent = None, index = 0) :
         super(PassesView, self).__init__(parent)
-        self.setColumnCount(2)
+        self.setColumnCount(3)
         self.horizontalHeader().hide()
         self.currsel = None
         self.index = index
@@ -65,39 +65,51 @@ class PassesView(QtGui.QTableWidget) :
         if num >= len(self.views) :
             v = RunView(run, font, self)
             self.views.append(v)
-            v.model.slotSelected.connect(self.changeSlot)
-            v.model.glyphSelected.connect(self.changeGlyph)
-            self.setCellWidget(num, 1, v)
+            self.setCellWidget(num, 1, v.gview)
+            self.setCellWidget(num, 2, v.tview)
             l = QtGui.QTableWidgetItem(label)
             l.setFlags(QtCore.Qt.ItemIsEnabled)
             self.setItem(num, 0, l)
+            try :
+                v.slotSelected.connect(self.changeSlot)
+                v.glyphSelected.connect(self.changeGlyph)
+            except :
+                print "Passes connection failed"
         else :
             v = self.views[num]
-            v.set_run(run, font)
+            v.loadrun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
-        self.verticalHeader().setDefaultSectionSize(v.size().height())
-        return v.width()
+        self.verticalHeader().setDefaultSectionSize(v.gview.size().height())
+        return (v.gview.width(), v.tview.width())
+
+    def finishLoad(self, w, wt) :
+        w += 10
+        wt += 10
+        self.setColumnWidth(1, w)
+        self.columnResized(1, 0, w)
+        self.setColumnWidth(2, wt)
+        self.columnResized(2, 0, wt)
+        if not self.connected :
+            self.cellDoubleClicked.connect(self.doCellDoubleClicked)
+            self.connected = True
 
     def loadResults(self, font, json, gdx = None) :
         num = len(json)
         if num != self.rowCount() :
             self.setRowCount(len(json))
         w = 0
+        wt = 0
         for j in range(num) :
             run = Run()
             run.addslots(json[j]['slots'])
             pname = "Pass: %d" % (j + 1)
             if gdx :
                 pname += " - " + gdx.passtypes[j]
-            neww = self.addrun(font, run, pname, j)
+            (neww, newt) = self.addrun(font, run, pname, j)
             w = max(w, neww)
-        w += 10
-        self.setColumnWidth(1, w)
-        self.columnResized(1, 0, w)
-        if not self.connected :
-            self.cellDoubleClicked.connect(self.doCellDoubleClicked)
-            self.connected = True
+            wt = max(wt, newt)
+        self.finishLoad(w, wt)
 
     def loadRules(self, font, json, inirun, gdx) :
         self.views = []
@@ -123,29 +135,25 @@ class PassesView(QtGui.QTableWidget) :
                 run.ruleindex = int(c['id'])
 
         w = 0
+        wt = 0
         self.setRowCount(len(self.runs))
         for j in range(len(self.runs)) :
-            neww = self.addrun(font, self.runs[j], self.runs[j].label, j,
+            (neww, newt) = self.addrun(font, self.runs[j], self.runs[j].label, j,
                     tooltip = gdx.passes[self.index][self.runs[j].ruleindex].pretty
                                     if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)
-        w += 10
-        self.setColumnWidth(1, w)
-        self.columnResized(1, 0, w)
-        if not self.connected :
-            self.cellDoubleClicked.connect(self.doCellDoubleClicked)
-            self.connected = True
+            wt = max(wt, newt)
+        self.finishLoad(w, wt)
 
     def columnResized(self, col, old, new) :
-        if col == 1 :
+        if col >= 1 :
             for j in range(self.rowCount()) :
-                w = self.cellWidget(j, 1)
+                w = self.cellWidget(j, col)
                 w.setFixedWidth(new)
                 w.update()
 
     def doCellDoubleClicked(self, row, col) :
         if col == 0 :
-            model = self.views[row].model
-            self.rowActivated.emit(row, model)
+            self.rowActivated.emit(row, self.views[row])
  
 
