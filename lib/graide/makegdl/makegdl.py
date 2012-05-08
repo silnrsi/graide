@@ -77,12 +77,17 @@ class Font(object) :
                 n = n[0:index] + "_" + str(count)
                 if count == 10 : index = -3
                 if count == 100 : index = -4
-            g.setGDL(n)
-        self.gdls[n] = g
+        self.setGDL(g, n)
         for n in g.parseNames() :
             self.psnames[n.psname] = g
             self.canons[n.canonical()] = (n, g)
         return g
+
+    def setGDL(self, glyph, name) :
+        n = glyph.GDLName()
+        if n != name and n in self.gdls : del self.gdls[n]
+        self.gdls[name] = glyph
+        glyph.setGDL(name)
 
     def createClasses(self) :
         for k, v in self.canons.items() :
@@ -158,7 +163,8 @@ class Font(object) :
             self.outclass(fh, 'cnTakes' + n, filter(lambda x : p.isNotInClass(x, False), self.glyphs))
         fh.write("\n/* Classes */\n")
         for (c, l) in self.classes.items() :
-            self.outclass(fh, c, l)
+            if c not in self.subclasses and not isMakeGDLSpecialClass(c) :
+                self.outclass(fh, c, l)
         for p in self.subclasses.keys() :
             ins = []
             outs = []
@@ -218,3 +224,10 @@ class Glyph(object) :
     def setGDL(self, name) :
         self.name.GDLName = name
 
+def isMakeGDLSpecialClass(name) :
+    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
+    if name.startswith('clig') : return True
+    if name.startswith('cno_') : return True
+    if re.match(r'^\*GC\d+\*$', name) : return True
+    return False
+    

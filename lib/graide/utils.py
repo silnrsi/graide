@@ -83,4 +83,3 @@ def buildGraphite(config, app, font, fontfile) :
         copyfile(tempname, fontfile)
     os.remove(tempname)
     return res
-

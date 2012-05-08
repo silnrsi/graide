@@ -28,6 +28,7 @@ class Font (gdl.Font) :
 
     def __init__(self) :
         super(Font, self).__init__()
+        self.classes = {}
 
     def __len__(self) :
         return len(self.glyphs)
@@ -70,9 +71,34 @@ class Font (gdl.Font) :
             name = n.value
         g = Glyph(self, name, index)
         super(Font, self).addGlyph(g, index)
-        if elem is not None : g.readAP(elem)
+        if elem is not None : g.readAP(elem, self)
         return index
 
+    def addClass(self, name, elements) :
+        self.classes[name] = elements
+        for e in elements :
+            g = self.glyphs[e]
+            if g : g.addClass(name)
+
+    def addGlyphClass(self, name, gid) :
+        if name not in self.classes :
+            self.classes[name] = []
+        if gid not in self.classes[name] :
+            self.classes[name].append(gid)
+
+    def classUpdated(self, name, value) :
+        c = []
+        if name in self.classes :
+            for gid in self.classes[name] :
+                g = self.glyphs[gid]
+                if g : g.removeClass(name)
+        for n in value.split() :
+            g = self.gdls.get(n, None)
+            if g :
+                c.append(g.gid)
+                g.addClass(name)
+        self.classes[name] = c
+        
     def makebitmaps(self, size) :
         self.pixrect = QtCore.QRect()
         self.top = 0

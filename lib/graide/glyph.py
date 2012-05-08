@@ -51,7 +51,7 @@ class Glyph(gdl.Glyph, DataObj) :
         else :
             self.pixmap = None
 
-    def readAP(self, elem) :
+    def readAP(self, elem, font) :
         self.uid = int(elem.get('UID', '0'), 16)
         for p in elem.iterfind('property') :
             n = p.get('name')
@@ -63,7 +63,10 @@ class Glyph(gdl.Glyph, DataObj) :
             l = p.find('location')
             self.anchors[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
         if 'classes' in self.properties :
-            self.classes.update(self.properties['classes'].split())
+            for c in self.properties['classes'].split() :
+                if c not in self.classes :
+                    self.classes.add(c)
+                    font.addGlyphClass(c, self.gid)
       
     def attribModel(self) :
         res = []
@@ -110,3 +113,18 @@ class Glyph(gdl.Glyph, DataObj) :
         else :
             self.anchors[key] = map(int, re.split(r",\s*", value[1:-1]))
 
+    def setpointint(self, key, x, y) :
+        if key in self.anchors :
+            if x is None : x = self.anchors[key][0]
+            if y is None : y = self.anchors[key][1]
+        self.anchors[key] = (x, y)
+
+    def addClass(self, name) :
+        if name not in self.classes :
+            self.classes.add(name)
+            self.properties['classes'] = " ".join(sorted(self.classes))
+
+    def removeClass(self, name) :
+        if name in self.classes :
+            self.classes.discard(name)
+            self.properties['classes'] = " ".join(sorted(self.classes))

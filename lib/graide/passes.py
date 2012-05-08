@@ -144,6 +144,9 @@ class PassesView(QtGui.QTableWidget) :
             wt = max(wt, newt)
         self.finishLoad(w, wt)
 
+    def setTopToolTip(self, txt) :
+        self.item(0, 0).setToolTip(txt)
+
     def columnResized(self, col, old, new) :
         if col >= 1 :
             for j in range(self.rowCount()) :

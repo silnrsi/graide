@@ -84,7 +84,7 @@ class AttribModel(QtCore.QAbstractItemModel) :
         return 2
 
     def data(self, index, role) :
-        if not index.isValid() or role != QtCore.Qt.DisplayRole:
+        if not index.isValid() or (role != QtCore.Qt.DisplayRole and role != QtCore.Qt.EditRole) :
             return None
 
         item = self.getItem(index)

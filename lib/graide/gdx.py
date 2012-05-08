@@ -18,6 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from xml.etree.ElementTree import iterparse
+from makegdl.makegdl import isMakeGDLSpecialClass
 
 class Gdx(object) :
 
@@ -26,19 +27,54 @@ class Gdx(object) :
         self.passtypes = []
         self.keepelements = False
 
-    def readfile(self, fname) :
+    def readfile(self, fname, font = None) :
         self.file = file(fname)
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
                 if e.tag == 'pass' :
                     self.passes.append([])
                     self.passtypes.append(e.get('table'))
-                elif e.tag == 'rule' :
+                elif e.tag in ('rule', 'glyph', 'class') :
                     self.keepelements = True
             else :
                 if e.tag == "rule" :
                     self.keepelements = False
                     self.passes[-1].append(Rule(e))
+                if font :
+                    if e.tag == 'glyph' :
+                        self.keepelements = False
+                        gid = int(e.get('glyphid'))
+                        g = font[gid]
+                        if g :
+                            cname = e.get('className')
+                            if cname : font.setGDL(g, cname)
+                            storemirror = False
+                            for a in e.iterfind('glyphAttrValue') :
+                                n = a.get('name')
+                                if n == 'mirror.isEncoded' :
+                                    storemirror = True
+                                elif n == 'mirror.glyph' :
+                                    mirrorglyph = a.get('value')
+                                elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
+                                    pass
+                                elif n.find('.') != -1 :
+                                    if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
+                                    elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
+                                else :
+                                    g.setgdlproperty(n, a.get('value'))
+                            if storemirror and mirrorglyph :
+                                g.setgdlproperty('mirror.glyph', mirrorglyph)
+                                g.setgdlproperty('mirror.isEncoded', '1')
+                    elif e.tag == 'class' :
+                        self.keepelements = False
+                        n = e.get('name')
+                        c = e.findall('member')
+                        if len(c) :
+                            g = font[int(c[0].get('glyphid'))]
+                            if len(c) == 1 and g and g.GDLName() == n :
+                                pass
+                            elif not isMakeGDLSpecialClass(n) :
+                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c))
                 if not self.keepelements :
                     e.clear()
 

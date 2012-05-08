@@ -28,9 +28,10 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite
+from graide.utils import runGraphite, buildGraphite, configval
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
+from graide.classes import Classes
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 import json, os
@@ -67,7 +68,7 @@ class MainWindow(QtGui.QMainWindow) :
 
         if config.has_option('main', 'gdx') :
             self.gdx = Gdx()
-            self.gdx.readfile(config.get('main', 'gdx'))
+            self.gdx.readfile(config.get('main', 'gdx'), self.font if not configval(config, 'build', 'usemakegdl') else None)
         else :
             self.gdx = None
 
@@ -109,7 +110,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
-        self.tab_classes = QtGui.QWidget()
+        self.tab_classes = Classes(self.font)
+        if self.font :
+            self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
         self.tabEdit = FileTabs(self.config, self, self.hsplitter)
@@ -169,6 +172,9 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.slotSelected.connect(self.tab_slot.changeData)
             self.runView.glyphSelected.connect(self.tab_glyph.changeData)
             self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+            istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
+            self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
+            self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runloaded = True
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
@@ -236,7 +242,8 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_errors.setPlainText("")
         if self.config.has_option('main', 'gdx') :
             self.gdx = Gdx()
-            self.gdx.readfile(self.config.get('main', 'gdx'))
+            self.gdx.readfile(self.config.get('main', 'gdx'),
+                    None if configval(self.config, 'build', 'usemakegdl') else self.font)
         self.feats = FeatureRefs(self.fontfile)
         return True
 
@@ -260,6 +267,7 @@ class MainWindow(QtGui.QMainWindow) :
             except :
                 print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+        self.tab_passes.setTopToolTip(self.runEdit.text())
 
     def runSaveClicked(self) :
         f = file("graide.json", "w")

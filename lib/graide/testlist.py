@@ -96,6 +96,9 @@ class TestList(QtGui.QWidget) :
         t = Test('', {})
         self.appendTest(t)
         self.editTest(len(self.tests) - 1)
+        if not t.name :
+            self.tests.pop()
+            self.list.takeItem(len(self.tests) - 1)
 
     def delClicked(self) :
         i = self.list.currentRow()
