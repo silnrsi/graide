@@ -31,6 +31,7 @@ from graide.filetabs import FileTabs
 from graide.utils import runGraphite, buildGraphite, configval
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
+from graide.test import Test
 from graide.classes import Classes
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
@@ -104,6 +105,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
 
+        # glyph, slot, classes, tabview
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
         self.setwidgetstretch(self.tabInfo, 30, 100)
         self.tab_glyph = AttribView()
@@ -115,25 +117,32 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
+        # file edit view
         self.tabEdit = FileTabs(self.config, self, self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 40, 100)
         self.tabEdit.tabs.setTabsClosable(True)
 
+        # tests list
         self.tabTest = TestList(self, self.testsfile, parent = self.hsplitter)
         self.setwidgetstretch(self.tabTest, 30, 100)
 
         self.horizontalLayout.addWidget(self.hsplitter)
 
+        # bottom pain
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
         self.setwidgetstretch(self.tabResults, 100, 45)
         self.tabResults.setTabPosition(QtGui.QTabWidget.South)
 
+        # font tab
         self.tab_font = FontView(self.font)
         self.tabResults.addTab(self.tab_font, "Font")
 
+        # errors tab
         self.tab_errors = QtGui.QPlainTextEdit()
         self.tab_errors.setReadOnly(True)
         self.tabResults.addTab(self.tab_errors, "Errors")
+
+        # results tab
         self.tab_results = QtGui.QWidget()
         self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
         self.tab_vbox.setSpacing(0)
@@ -151,9 +160,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
         self.runGo.clicked.connect(self.runClicked)
         self.tab_hbox.addWidget(self.runGo)
-        self.runSave = QtGui.QPushButton("Save", self.tab_results_editor)
-        self.runSave.clicked.connect(self.runSaveClicked)
-        self.tab_hbox.addWidget(self.runSave)
+        self.runAdd = QtGui.QToolButton(self.tab_results_editor)
+        self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.runAdd.clicked.connect(self.runAddClicked)
+        self.tab_hbox.addWidget(self.runAdd)
         self.tab_vbox.addWidget(self.tab_results_editor)
         self.run = Run()
         self.runView = RunView()
@@ -161,6 +171,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_vbox.addStretch()
         self.tabResults.addTab(self.tab_results, "Results")
 
+        # passes tab
         self.tab_passes = PassesView()
         self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
         self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
@@ -270,10 +281,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.text())
 
-    def runSaveClicked(self) :
-        f = file("graide.json", "w")
-        json.dump(self.json, f)
-        f.close()
+    def runAddClicked(self) :
+        text = self.runEdit.text()
+        if not text : return
+        (name, ok) = QtGui.QInputDialog.getText(self, "Test Name", "Test Name")
+        if not name or not ok : return
+        test = Test(text, self.fDialog.get_feats() if self.fDialog else self.feats.fval, self.runRtl.isChecked(), name)
+        self.tabTest.appendTest(test)
 
     def featuresClicked(self) :
         if self.font :

@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui
+from PySide import QtCore, QtGui
 from xml.etree import ElementTree as et
 from graide.test import Test
 import os
@@ -38,6 +38,7 @@ class TestList(QtGui.QWidget) :
         self.hbbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbbox)
         self.hbbox.setContentsMargins(0, 0, 0, 0)
+        self.hbbox.setSpacing(0)
         self.hbbox.insertStretch(0)
         self.vbox.addWidget(self.bbox)
         self.bEdit = QtGui.QToolButton(self.bbox)
@@ -45,6 +46,14 @@ class TestList(QtGui.QWidget) :
         self.bEdit.setToolTip('edit test')
         self.bEdit.clicked.connect(self.editClicked)
         self.hbbox.addWidget(self.bEdit)
+        self.bUpp = QtGui.QToolButton(self.bbox)
+        self.bUpp.setArrowType(QtCore.Qt.UpArrow)
+        self.bUpp.clicked.connect(self.upClicked)
+        self.hbbox.addWidget(self.bUpp)
+        self.bDown = QtGui.QToolButton(self.bbox)
+        self.bDown.setArrowType(QtCore.Qt.DownArrow)
+        self.bDown.clicked.connect(self.downClicked)
+        self.hbbox.addWidget(self.bDown)
         self.bAdd = QtGui.QToolButton(self.bbox)
         self.bAdd.setIcon(QtGui.QIcon.fromTheme('add'))
         self.bAdd.setToolTip('add new test')
@@ -104,6 +113,20 @@ class TestList(QtGui.QWidget) :
         i = self.list.currentRow()
         self.tests.pop(i)
         self.list.takeItem(i)
+
+    def upClicked(self) :
+        i = self.list.currentRow()
+        if i > 0 :
+            self.tests.insert(i - 1, self.tests.pop(i))
+            self.list.insertItem(i - 1, self.list.takeItem(i))
+            self.list.setCurrentRow(i - 1)
+
+    def downClicked(self) :
+        i = self.list.currentRow()
+        if i < self.list.count() - 1 :
+            self.tests.insert(i + 1, self.tests.pop(i))
+            self.list.insertItem(i + 1, self.list.takeItem(i))
+            self.list.setCurrentRow(i + 1)
 
     def loadTest(self, item) :
         i = self.list.currentRow()
