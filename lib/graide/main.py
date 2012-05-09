@@ -171,7 +171,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.loadrun(self.run, self.font)
             self.runView.slotSelected.connect(self.tab_slot.changeData)
             self.runView.glyphSelected.connect(self.tab_glyph.changeData)
-            self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+            self.tab_passes.loadResults(self.font, self.json, self.gdx)
             istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
@@ -203,15 +203,16 @@ class MainWindow(QtGui.QMainWindow) :
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
 
-    def ruledialog(self, row, view) :
+    def ruledialog(self, row, view, passview) :
         if self.rules : self.rules.close()
         else : self.rules = RuleDialog(self)
-        self.ruleView = PassesView(parent = self.rules, index = row)
-        self.ruleView.loadRules(self.font, self.json['passes'][row]['rules'], view.run, self.gdx)
+        if row == 0 : return
+        self.ruleView = PassesView(parent = self.rules, index = row - 1)
+        self.ruleView.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
         self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
         self.ruleView.rowActivated.connect(self.ruleSelected)
-        self.rules.setView(self.ruleView, "Pass %d" % (row + 1))
+        self.rules.setView(self.ruleView, "Pass %d" % (row))
         self.rules.show()
 
     def rulesclosed(self, dialog) :
@@ -219,7 +220,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView.glyphSelected.disconnect()
         self.ruleView = None
 
-    def ruleSelected(self, row, view) :
+    def ruleSelected(self, row, view, passview) :
         if self.gdx and hasattr(view.run, 'passindex') :
             rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
             self.tabEdit.selectLine(rule.srcfile, rule.srcline)
@@ -266,7 +267,7 @@ class MainWindow(QtGui.QMainWindow) :
                 self.runloaded = True
             except :
                 print "Selection connection failed"
-        self.tab_passes.loadResults(self.font, self.json['passes'], self.gdx)
+        self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.text())
 
     def runSaveClicked(self) :

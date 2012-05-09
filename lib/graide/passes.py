@@ -29,11 +29,13 @@ class PassesItem(QtGui.QTableWidgetItem) :
         super(PassesItem, self).__init__()
         self.data = data
 
+class PassesView(QtGui.QTableWidget) : pass
+
 class PassesView(QtGui.QTableWidget) :
 
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
-    rowActivated = QtCore.Signal(int, RunView)
+    rowActivated = QtCore.Signal(int, RunView, PassesView)
 
 
     @QtCore.Slot(DataObj, ModelSuper)
@@ -94,17 +96,23 @@ class PassesView(QtGui.QTableWidget) :
             self.connected = True
 
     def loadResults(self, font, json, gdx = None) :
-        num = len(json)
+        num = len(json['passes']) + 1
         if num != self.rowCount() :
-            self.setRowCount(len(json))
+            self.setRowCount(num)
         w = 0
         wt = 0
         for j in range(num) :
             run = Run()
-            run.addslots(json[j]['slots'])
-            pname = "Pass: %d" % (j + 1)
-            if gdx :
-                pname += " - " + gdx.passtypes[j]
+            if j < num - 1 :
+                run.addslots(json['passes'][j]['slots'])
+            else :
+                run.addslots(json['output'])
+            if j > 0 :
+                pname = "Pass: %d" % j
+                if gdx :
+                    pname += " - " + gdx.passtypes[j - 1]
+            else :
+                pname = "Init"
             (neww, newt) = self.addrun(font, run, pname, j)
             w = max(w, neww)
             wt = max(wt, newt)
@@ -113,8 +121,8 @@ class PassesView(QtGui.QTableWidget) :
     def loadRules(self, font, json, inirun, gdx) :
         self.views = []
         self.runs = [inirun.copy()]
-        self.runs[-1].label="Init"
-        self.runs[-1].ruleindex = -1
+        self.runs[0].label="Init"
+        self.runs[0].ruleindex = -1
         for r in json :
             for c in r['considered'] :
                 run = self.runs[-1].copy()
@@ -156,6 +164,6 @@ class PassesView(QtGui.QTableWidget) :
 
     def doCellDoubleClicked(self, row, col) :
         if col == 0 :
-            self.rowActivated.emit(row, self.views[row])
+            self.rowActivated.emit(row, self.views[row], self)
  
 
