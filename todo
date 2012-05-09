@@ -1,8 +1,6 @@
 Pre-Beta
     * configuration dialog
-    * classes tab and editor
-    * glyph ids with runviews
-    * read glyph properties from .gdx if not using makegdl
+    * Add glyph property editing
 
 Pre-Release
     * Remove ttftable call

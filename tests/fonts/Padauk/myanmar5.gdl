@@ -521,7 +521,7 @@ gKill g101c g103d > g101c_med_103d:(1 2 3){sOrder = order} _ _;
 ANY g200C > ANY:(1 2){sOrder=order} _;
 ANY g200d > ANY:(1 2){sOrder=order} _;
 ANY wj > ANY:(1 2){sOrder=order} _;
-ANY > @1{sOrder=order}; 
+ANY > @1{sOrder=order};
  
 endpass;
 

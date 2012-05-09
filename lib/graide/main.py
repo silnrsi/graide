@@ -33,6 +33,7 @@ from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
+from graide.config import ConfigDialog
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 import json, os
@@ -156,6 +157,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox.setSpacing(0)
         self.cfg_button = QtGui.QToolButton(self.cfg_widget)
         self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
+        self.cfg_button.clicked.connect(self.configClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
         self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
@@ -308,6 +310,10 @@ class MainWindow(QtGui.QMainWindow) :
 
     def updateFileEdit(self, fname) :
         self.tabEdit.updateFileEdit(fname)
+
+    def configClicked(self) :
+        d = ConfigDialog(self.config)
+        d.exec_()
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
