@@ -62,6 +62,7 @@ class FeatureDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) :
         super(FeatureDialog, self).__init__(parent)
+        self.vbox = QtGui.QVBoxLayout(self)
         self.currsize = None
         self.position = None
         self.isHidden = False
@@ -71,6 +72,11 @@ class FeatureDialog(QtGui.QDialog) :
         self.table.setColumnCount(2)
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
+        self.vbox.addWidget(self.table)
+        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o.accepted.connect(self.accept)
+        o.rejected.connect(self.reject)
+        self.vbox.addWidget(o)
 
     def set_feats(self, feats, vals = None) :
         if not vals : vals = feats.fval

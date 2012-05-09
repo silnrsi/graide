@@ -32,7 +32,8 @@ class TestList(QtGui.QWidget) :
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.list = QtGui.QListWidget(self)
-        self.list.itemDoubleClicked.connect(self.loadTest)
+        self.list.itemDoubleClicked.connect(self.runTest)
+        self.list.itemClicked.connect(self.loadTest)
         self.vbox.addWidget(self.list)
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
@@ -131,3 +132,7 @@ class TestList(QtGui.QWidget) :
     def loadTest(self, item) :
         i = self.list.currentRow()
         self.app.setRun(self.tests[i])
+
+    def runTest(self, item) :
+        self.loadTest(item)
+        self.app.runClicked()

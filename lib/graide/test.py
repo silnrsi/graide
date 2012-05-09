@@ -73,7 +73,8 @@ class Test(object) :
         f.apply(self.feats)
         d.set_feats(f)
         self.featdialog = d
-        d.exec_()
+        if not d.exec_() :
+            self.featdialog = None
 
     def addTree(self, parent) :
         e = et.SubElement(parent, 'test')

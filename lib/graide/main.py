@@ -46,6 +46,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runloaded = False
         self.fDialog = None
         self.config = config
+        self.currFeats = None
 
         if config.has_option('main', 'font') :
             if config.has_option('main', 'size') :
@@ -79,9 +80,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.testsfile = None
 
         self.setupUi()
-        self.createActions()
-        self.createToolBars()
-        self.createStatusBar()
 
     def closeEvent(self, event) :
         if self.rules :
@@ -99,11 +97,40 @@ class MainWindow(QtGui.QMainWindow) :
         self.widget = QtGui.QWidget(self.vsplitter)
         self.setwidgetstretch(self.widget, 100, 55)
         self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
-        self.horizontalLayout.setContentsMargins(2, 2, 2, 2)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.hsplitter = QtGui.QSplitter(self.widget)
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
+
+        # tests list
+        self.test_widget = QtGui.QWidget(self.hsplitter)
+        self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
+        self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
+        self.test_vbox.addWidget(self.tabTest)
+        self.setwidgetstretch(self.test_widget, 30, 100)
+        self.runEdit = QtGui.QPlainTextEdit(self.test_widget)
+        self.runEdit.setMaximumHeight(60)
+        self.test_vbox.addWidget(self.runEdit)
+        self.test_hbox = QtGui.QHBoxLayout()
+        self.test_vbox.addLayout(self.test_hbox)
+        self.test_hbox.setContentsMargins(0, 2, 0, 2)
+        self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
+        self.test_hbox.addWidget(self.runRtl)
+        self.runFeats = QtGui.QPushButton("Features", self.test_widget)
+        self.runFeats.clicked.connect(self.featuresClicked)
+        self.test_hbox.addWidget(self.runFeats)
+        self.runGo = QtGui.QPushButton("Run", self.test_widget)
+        self.runGo.clicked.connect(self.runClicked)
+        self.test_hbox.addWidget(self.runGo)
+        self.runAdd = QtGui.QToolButton(self.test_widget)
+        self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.runAdd.clicked.connect(self.runAddClicked)
+        self.test_hbox.addWidget(self.runAdd)
+
+        # file edit view
+        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
+        self.setwidgetstretch(self.tabEdit, 40, 100)
+        self.tabEdit.tabs.setTabsClosable(True)
 
         # glyph, slot, classes, tabview
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
@@ -117,21 +144,26 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
-        # file edit view
-        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
-        self.setwidgetstretch(self.tabEdit, 40, 100)
-        self.tabEdit.tabs.setTabsClosable(True)
-
-        # tests list
-        self.tabTest = TestList(self, self.testsfile, parent = self.hsplitter)
-        self.setwidgetstretch(self.tabTest, 30, 100)
-
         self.horizontalLayout.addWidget(self.hsplitter)
 
         # bottom pain
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
         self.setwidgetstretch(self.tabResults, 100, 45)
         self.tabResults.setTabPosition(QtGui.QTabWidget.South)
+        self.cfg_widget = QtGui.QWidget()
+        self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
+        self.cfg_hbox.setContentsMargins(0, 0, 0, 0)
+        self.cfg_hbox.setSpacing(0)
+        self.cfg_button = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
+        self.cfg_hbox.addWidget(self.cfg_button)
+        self.cfg_open = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
+        self.cfg_hbox.addWidget(self.cfg_open)
+        self.cfg_new = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new"))
+        self.cfg_hbox.addWidget(self.cfg_new)
+        self.tabResults.setCornerWidget(self.cfg_widget)
 
         # font tab
         self.tab_font = FontView(self.font)
@@ -146,25 +178,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_results = QtGui.QWidget()
         self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
         self.tab_vbox.setSpacing(0)
-        self.tab_results_editor = QtGui.QWidget()
-        self.tab_hbox = QtGui.QHBoxLayout(self.tab_results_editor)
-        self.runEdit = QtGui.QLineEdit(self.tab_results_editor)
-        self.runEdit.returnPressed.connect(self.runClicked)
-        self.tab_hbox.addWidget(self.runEdit)
-        self.tab_hbox.setContentsMargins(0, 2, 0, 2)
-        self.runRtl = QtGui.QCheckBox("RTL", self.tab_results_editor)
-        self.tab_hbox.addWidget(self.runRtl)
-        self.runFeats = QtGui.QPushButton("Features", self.tab_results_editor)
-        self.runFeats.clicked.connect(self.featuresClicked)
-        self.tab_hbox.addWidget(self.runFeats)
-        self.runGo = QtGui.QPushButton("Run", self.tab_results_editor)
-        self.runGo.clicked.connect(self.runClicked)
-        self.tab_hbox.addWidget(self.runGo)
-        self.runAdd = QtGui.QToolButton(self.tab_results_editor)
-        self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
-        self.runAdd.clicked.connect(self.runAddClicked)
-        self.tab_hbox.addWidget(self.runAdd)
-        self.tab_vbox.addWidget(self.tab_results_editor)
         self.run = Run()
         self.runView = RunView()
         self.tab_vbox.addWidget(self.runView.gview)
@@ -201,15 +214,6 @@ class MainWindow(QtGui.QMainWindow) :
         widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
 
-    def createActions(self) :
-        pass
-
-    def createToolBars(self) :
-        pass
-
-    def createStatusBar(self) :
-        pass
-
     def closeEvent(self, event) :
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
@@ -238,10 +242,8 @@ class MainWindow(QtGui.QMainWindow) :
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
-        self.runEdit.setText(test.text)
-        if not self.fDialog :
-            self.fDialog = FeatureDialog(self)
-        self.fDialog.set_feats(self.feats, test.feats)
+        self.runEdit.setPlainText(test.text)
+        self.currFeats = dict(test.feats)
 
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
@@ -249,6 +251,7 @@ class MainWindow(QtGui.QMainWindow) :
             f = file('gdlerr.txt')
             self.tab_errors.setPlainText("".join(f.readlines()))
             f.close()
+            self.tabResults.setCurrentWidget(self.tab_errors)
             return False
         else :
             self.tab_errors.setPlainText("")
@@ -262,9 +265,9 @@ class MainWindow(QtGui.QMainWindow) :
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = NamedTemporaryFile(mode="rw")
-        text = self.runEdit.text().decode('unicode_escape')
+        text = self.runEdit.toPlainText().decode('unicode_escape')
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.fDialog.get_feats() if self.fDialog else self.feats.fval)
+            feats = self.currFeats or self.feats.fval)
         runfile.seek(0)
         self.json = json.load(runfile)
         runfile.close()
@@ -279,22 +282,24 @@ class MainWindow(QtGui.QMainWindow) :
             except :
                 print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
-        self.tab_passes.setTopToolTip(self.runEdit.text())
+        self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
+        if self.tabResults.currentWidget() is not self.tab_passes :
+            self.tabResults.setCurrentWidget(self.tab_results)
 
     def runAddClicked(self) :
-        text = self.runEdit.text()
+        text = self.runEdit.toPlainText()
         if not text : return
         (name, ok) = QtGui.QInputDialog.getText(self, "Test Name", "Test Name")
         if not name or not ok : return
-        test = Test(text, self.fDialog.get_feats() if self.fDialog else self.feats.fval, self.runRtl.isChecked(), name)
+        test = Test(text, self.fDialog.currFeats or self.feats.fval, self.runRtl.isChecked(), name)
         self.tabTest.appendTest(test)
 
     def featuresClicked(self) :
         if self.font :
-            if not self.fDialog :
-                self.fDialog = FeatureDialog(self)
-                self.fDialog.set_feats(self.feats)
-            self.fDialog.show()
+            fDialog = FeatureDialog(self)
+            fDialog.set_feats(self.feats, self.currFeats)
+            if fDialog.exec_() :
+                self.currFeats = fDialog.get_feats()
 
     def setrunEditFocus(self, widget) :
         if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \
