@@ -77,6 +77,7 @@ class Font (gdl.Font) :
     def addClass(self, name, elements) :
         self.classes[name] = elements
         for e in elements :
+            if e > len(self.glyphs) : continue
             g = self.glyphs[e]
             if g : g.addClass(name)
 
@@ -90,6 +91,7 @@ class Font (gdl.Font) :
         c = []
         if name in self.classes :
             for gid in self.classes[name] :
+                if gid > len(self.glyphs) : continue
                 g = self.glyphs[gid]
                 if g : g.removeClass(name)
         for n in value.split() :
