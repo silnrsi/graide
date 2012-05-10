@@ -110,6 +110,8 @@ class Font (gdl.Font) :
                 g.setpixmap(self.face, i, size)
                 if g.pixmap :
                     grect = g.pixmap.rect()
+#                    grect.moveLeft(g.left)
+                    grect.moveBottom(grect.height() - g.top)
                     self.pixrect = self.pixrect | grect
                 if g.top > self.top : self.top = g.top
 

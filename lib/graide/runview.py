@@ -111,15 +111,15 @@ class RunView(QtCore.QObject, ModelSuper) :
             if g :
                 t = g.GDLName() or g.psname
                 self.tview.moveCursor(QtGui.QTextCursor.End)
-                self.tview.insertPlainText(t + " ")
-                self._gindices.append(self._gindices[-1] + len(t) + 1)
+                self.tview.insertPlainText(t + "  ")
+                self._gindices.append(self._gindices[-1] + len(t) + 2)
                 if s.highlighted :
                     hselect = QtGui.QTextEdit.ExtraSelection()
                     hselect.format = self._fHighlight
                     hselect.cursor = QtGui.QTextCursor(self.tview.document())
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[-2])
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
-                            QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 1 - self._gindices[-2])
+                            QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 2 - self._gindices[-2])
                     sels.append(hselect)
         if len(sels) :
             self.tview.setExtraSelections(sels)

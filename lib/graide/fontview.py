@@ -47,14 +47,16 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
             painter.setFont(myfont)
             namerect = QtCore.QRect(option.rect.left(), option.rect.bottom()-self.textheight, option.rect.width(), self.textheight)
             painter.drawText(namerect, QtCore.Qt.AlignLeft | QtCore.Qt.TextSingleLine, str(g))
-            painter.setPen(QtCore.Qt.red)
             namerect.translate(QtCore.QPoint(0, -option.rect.height() + self.textheight))
+            if getattr(g, 'uid', None) :
+                painter.drawText(namerect, QtCore.Qt.AlignLeft | QtCore.Qt.TextSingleLine, g.uid)
+            painter.setPen(QtCore.Qt.red)
             painter.drawText(namerect, QtCore.Qt.AlignRight | QtCore.Qt.TextSingleLine, str(g.gid))
             painter.setPen(QtCore.Qt.black)
             painter.setFont(font)
 
     def sizeHint(self, option, index) :
-        return self.brect.size() + QtCore.QSize(0, self.textheight)
+        return self.brect.size() + QtCore.QSize(0, 2 * self.textheight)
 
 class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
 

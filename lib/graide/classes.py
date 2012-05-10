@@ -41,16 +41,15 @@ class Classes(QtGui.QTableWidget) :
             l = QtGui.QTableWidgetItem(keys[i])
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             v = map(lambda x: font[x].GDLName() if font[x] else "", font.classes[keys[i]])
-            m = QtGui.QTableWidgetItem(" ".join(v))
+            m = QtGui.QTableWidgetItem("  ".join(v))
             m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
             self.setItem(i, 0, l)
             self.setItem(i, 1, m)
 
     def doubleClicked(self, row, col) :
         d = QtGui.QDialog(self)
+        d.setWindowTitle(self.item(row, 0).text())
         l = QtGui.QVBoxLayout(d)
-        label = QtGui.QLabel(self.item(row, 0).text(), d)
-        l.addWidget(label)
         edit = QtGui.QPlainTextEdit(self.item(row, 1).text(), d)
         l.addWidget(edit)
         o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)

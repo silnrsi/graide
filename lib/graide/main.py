@@ -59,6 +59,12 @@ class MainWindow(QtGui.QMainWindow) :
             self.font.loadFont(self.fontfile, config.get('main', 'ap') if config.has_option('main', 'ap') else None)
             self.font.makebitmaps(fontsize)
             self.feats = FeatureRefs(self.fontfile)
+            self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
+            if os.path.exists(self.gdxfile) :
+                self.gdx = Gdx()
+                self.gdx.readfile(self.gdxfile, self.font if not configval(config, 'build', 'usemakegdl') else None)
+            else :
+                self.gdx = None
         else :
             self.font = None
 
@@ -68,12 +74,6 @@ class MainWindow(QtGui.QMainWindow) :
             f.close()
         else :
             self.json = None
-
-        if config.has_option('main', 'gdx') :
-            self.gdx = Gdx()
-            self.gdx.readfile(config.get('main', 'gdx'), self.font if not configval(config, 'build', 'usemakegdl') else None)
-        else :
-            self.gdx = None
 
         if config.has_option('main', 'testsfile') :
             self.testsfile = config.get('main', 'testsfile')
@@ -106,25 +106,35 @@ class MainWindow(QtGui.QMainWindow) :
         # tests list
         self.test_widget = QtGui.QWidget(self.hsplitter)
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
+        self.test_vbox.setContentsMargins(0, 0, 0, 0)
         self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
         self.test_vbox.addWidget(self.tabTest)
         self.setwidgetstretch(self.test_widget, 30, 100)
+        self.test_line = QtGui.QFrame(self.test_widget)
+        self.test_line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
+        self.test_line.setLineWidth(2)
+        self.test_vbox.addWidget(self.test_line)
         self.runEdit = QtGui.QPlainTextEdit(self.test_widget)
         self.runEdit.setMaximumHeight(60)
         self.test_vbox.addWidget(self.runEdit)
         self.test_hbox = QtGui.QHBoxLayout()
         self.test_vbox.addLayout(self.test_hbox)
-        self.test_hbox.setContentsMargins(0, 2, 0, 2)
+        self.test_hbox.setContentsMargins(0, 0, 0, 0)
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
+        self.runRtl.setChecked(True if configval(self.config, 'main', 'defaultrtl') else False)
+        self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
         self.runFeats = QtGui.QPushButton("Features", self.test_widget)
         self.runFeats.clicked.connect(self.featuresClicked)
+        self.runFeats.setToolTip("Edit run features")
         self.test_hbox.addWidget(self.runFeats)
         self.runGo = QtGui.QPushButton("Run", self.test_widget)
+        self.runGo.setToolTip("Rebuild and process run")
         self.runGo.clicked.connect(self.runClicked)
         self.test_hbox.addWidget(self.runGo)
         self.runAdd = QtGui.QToolButton(self.test_widget)
         self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.runAdd.setToolTip("Add run to tests list under a new name")
         self.runAdd.clicked.connect(self.runAddClicked)
         self.test_hbox.addWidget(self.runAdd)
 
@@ -157,13 +167,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox.setSpacing(0)
         self.cfg_button = QtGui.QToolButton(self.cfg_widget)
         self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
+        self.cfg_button.setToolTip("Configure project")
         self.cfg_button.clicked.connect(self.configClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
         self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
+        self.cfg_open.setToolTip("Open existing project")
         self.cfg_hbox.addWidget(self.cfg_open)
         self.cfg_new = QtGui.QToolButton(self.cfg_widget)
         self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new"))
+        self.cfg_new.setToolTip("Create new project")
         self.cfg_hbox.addWidget(self.cfg_new)
         self.tabResults.setCornerWidget(self.cfg_widget)
 
@@ -257,9 +270,9 @@ class MainWindow(QtGui.QMainWindow) :
             return False
         else :
             self.tab_errors.setPlainText("")
-        if self.config.has_option('main', 'gdx') :
+        if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
-            self.gdx.readfile(self.config.get('main', 'gdx'),
+            self.gdx.readfile(self.gdxfile,
                     None if configval(self.config, 'build', 'usemakegdl') else self.font)
         self.feats = FeatureRefs(self.fontfile)
         return True

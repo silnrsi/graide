@@ -31,6 +31,7 @@ class Glyph(gdl.Glyph, DataObj) :
         super(Glyph, self).__init__(name)
         self.gid = gid
         self.properties = {}
+        self.uid = None
 
     def __str__(self) :
         return self.psname
@@ -52,7 +53,7 @@ class Glyph(gdl.Glyph, DataObj) :
             self.pixmap = None
 
     def readAP(self, elem, font) :
-        self.uid = int(elem.get('UID', '0'), 16)
+        self.uid = elem.get('UID', None)
         for p in elem.iterfind('property') :
             n = p.get('name')
             if n.startswith('GDL_') :
@@ -70,7 +71,7 @@ class Glyph(gdl.Glyph, DataObj) :
       
     def attribModel(self) :
         res = []
-        for a in ['psname', 'gid'] :
+        for a in ['psname', 'gid', 'uid'] :
             res.append(Attribute(a, self.__getattribute__, None, False, a)) # read-only
         for a in sorted(self.properties.keys()) :
             res.append(Attribute(a, self.getproperty, self.setproperty, False, a))
@@ -122,9 +123,9 @@ class Glyph(gdl.Glyph, DataObj) :
     def addClass(self, name) :
         if name not in self.classes :
             self.classes.add(name)
-            self.properties['classes'] = " ".join(sorted(self.classes))
+            self.properties['classes'] = "  ".join(sorted(self.classes))
 
     def removeClass(self, name) :
         if name in self.classes :
             self.classes.discard(name)
-            self.properties['classes'] = " ".join(sorted(self.classes))
+            self.properties['classes'] = "  ".join(sorted(self.classes))

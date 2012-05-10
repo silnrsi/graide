@@ -57,6 +57,7 @@ class PassesView(QtGui.QTableWidget) :
         super(PassesView, self).__init__(parent)
         self.setColumnCount(3)
         self.horizontalHeader().hide()
+        self.verticalHeader().hide()
         self.currsel = None
         self.index = index
         self.connected = False

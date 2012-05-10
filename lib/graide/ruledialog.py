@@ -39,7 +39,7 @@ class RuleDialog(QtGui.QDialog) :
         if self.currsize :
             self.resize(self.currsize)
         else :
-            self.resize(300, 300)
+            self.resize(550, 300)
         self.isHidden = False
 
     def closeEvent(self, event) :
