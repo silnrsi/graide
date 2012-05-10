@@ -22,6 +22,30 @@ from PySide import QtCore, QtGui
 from graide.utils import configval
 import os
 
+class FileEntry(QtGui.QWidget) :
+
+    def __init__(self, parent, val, pattern) :
+        super(FileEntry, self).__init__(parent)
+        self.pattern = pattern
+        self.hb = QtGui.QHBoxLayout(self)
+        self.hb.setContentsMargins(0, 0, 0, 0)
+        self.hb.setSpacing(0)
+        self.le = QtGui.QLineEdit(self)
+        if val :
+            self.le.setText(val)
+        self.hb.addWidget(self.le)
+        self.b = QtGui.QToolButton(self)
+        self.b.setIcon(QtGui.QIcon.fromTheme("document-open"))
+        self.hb.addWidget(self.b)
+        self.b.clicked.connect(self.bClicked)
+
+    def bClicked(self) :
+        (fname, filt) = QtGui.QFileDialog.getSaveFileName(self,
+                dir=os.path.dirname(self.le.text()), filter=self.pattern,
+                options=QtGui.QFileDialog.DontConfirmOverwrite)
+        self.le.setText(os.path.relpath(fname))
+
+
 class ConfigDialog(QtGui.QDialog) :
 
     def __init__(self, config, parent = None) :
@@ -36,37 +60,37 @@ class ConfigDialog(QtGui.QDialog) :
 
         self.main = QtGui.QWidget(self.tb)
         self.main_vb = QtGui.QGridLayout(self.main)
-        (self.main_fontw, self.main_font) = self.fileEntry(self.main, configval(config, 'main', 'font'), 'Font Files (*.ttf)')
+#        self.main_vb.setVerticalSpacing(0)
+        self.main_font = FileEntry(self.main, configval(config, 'main', 'font'), 'Font Files (*.ttf)')
         self.main_vb.addWidget(QtGui.QLabel('Font File:'), 0, 0)
-        self.main_vb.addWidget(self.main_fontw, 0, 1)
-        (self.main_gdxw, self.main_gdx) = self.fileEntry(self.main, configval(config, 'main', 'gdx'), 'Debug Files (*.gdx)')
-        self.main_vb.addWidget(QtGui.QLabel('Graphite Debug File:'), 1, 0)
-        self.main_vb.addWidget(self.main_gdxw, 1, 1)
-        (self.main_apw, self.main_ap) = self.fileEntry(self.main, configval(config, 'main', 'ap'), 'AP Files (*.xml)')
-        self.main_vb.addWidget(QtGui.QLabel('Attachment Point Database:'), 2, 0)
-        self.main_vb.addWidget(self.main_apw, 2, 1)
-        (self.main_testsw, self.main_tests) = self.fileEntry(self.main, configval(config, 'main', 'testsfile'), 'Tests Lists (*.xml)')
+        self.main_vb.addWidget(self.main_font, 0, 1, 1, 2)
+        self.main_gdl = FileEntry(self.main, configval(config, 'build', 'gdlfile'), 'GDL Files (*.gdl)')
+        self.main_vb.addWidget(QtGui.QLabel('GDL File:'), 1, 0)
+        self.main_vb.addWidget(self.main_gdl, 1, 1, 1, 2)
+        self.main_ap = FileEntry(self.main, configval(config, 'main', 'ap'), 'AP Files (*.xml)')
+        self.main_vb.addWidget(QtGui.QLabel('Attachment Point Database:'), 2, 0, 1, 2)
+        self.main_vb.addWidget(self.main_ap, 2, 2)
+        self.main_tests = FileEntry(self.main, configval(config, 'main', 'testsfile'), 'Tests Lists (*.xml)')
         self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 3, 0)
-        self.main_vb.addWidget(self.main_testsw, 3, 1)
+        self.main_vb.addWidget(self.main_tests, 3, 1, 1, 2)
+        self.main_vb.setRowStretch(4, 1)
         self.tb.addItem(self.main, "General")
 
-    def fileEntry(self, parent, val, pattern) :
-        res = QtGui.QWidget(parent)
-        hb = QtGui.QHBoxLayout(res)
-        le = QtGui.QLineEdit(res)
-        if val :
-            le.setText(val)
-        hb.addWidget(le)
-        b = QtGui.QToolButton(res)
-        b.setIcon(QtGui.QIcon.fromTheme("document-open"))
-        hb.addWidget(b)
+        self.build = QtGui.QWidget(self.tb)
+        self.build_vb = QtGui.QGridLayout(self.build)
+        self.build_make = QtGui.QCheckBox()
+        self.build_make.stateChanged.connect(self.makegdlClicked)
+        self.build_vb.addWidget(QtGui.QLabel('Autogenerate font level GDL'), 0, 1, 1, 2)
+        self.build_vb.addWidget(self.build_make, 0, 0)
+        self.build_inc = FileEntry(self.build, configval(config, 'build', 'includefile'), 'GDL Files (*.gdl)')
+        self.build_vb.addWidget(QtGui.QLabel('Included GDL file:'), 1, 1)
+        self.build_vb.addWidget(self.build_inc, 1, 2)
+        self.build_vb.setRowStretch(2, 1)
+        if configval(config, 'build', 'usemakegdl') :
+            self.build_make.setChecked(True)
+        else :
+            self.build_inc.setEnabled(False)
+        self.tb.addItem(self.build, 'Build')
 
-        def bClicked() :
-            (fname, filt) = QtGui.QFileDialog.getSaveFileName(res, dir = os.path.dirname(le.text()), filter = pattern)
-            le.setText(fname)
-
-        b.clicked.connect(bClicked)
-        return (res, le)
-
-
-            
+    def makegdlClicked(self) :
+        self.build_inc.setEnabled(self.build_make.isChecked())

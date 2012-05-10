@@ -18,6 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 import re, psnames
+from graide.makegdl.psnames import Name
 
 class PointClass(object) :
 
@@ -65,10 +66,12 @@ class Font(object) :
     def addGlyph(self, g, index = None) :
         if index is None :
             self.glyphs.append(g)
+        elif index >= len(self.glyphs) :
+            self.glyphs.extend([None] * (len(self.glyphs) - index + 1))
         else :
             self.glyphs[index] = g
         n = g.GDLName()
-        if n in self.gdls :
+        if n and n in self.gdls :
             count = 1
             index = -2
             n = n + "_1"
@@ -84,6 +87,7 @@ class Font(object) :
         return g
 
     def setGDL(self, glyph, name) :
+        if not glyph : return
         n = glyph.GDLName()
         if n != name and n in self.gdls : del self.gdls[n]
         self.gdls[name] = glyph
@@ -135,7 +139,7 @@ class Font(object) :
         munits = self.emunits()
         fh.write('table(glyph) {MUnits = ' + str(munits) + '};\n')
         for g in self.glyphs :
-            if not g : continue
+            if not g or not g.psname : continue
             if g.psname == '.notdef' :
                 fh.write(g.GDLName() + ' = glyphid(0)')
             else :
@@ -219,9 +223,14 @@ class Glyph(object) :
             yield res
 
     def GDLName(self) :
-        return self.name.GDL()
+        if self.name :
+            return self.name.GDL()
+        else :
+            return None
 
     def setGDL(self, name) :
+        if not self.name :
+            self.name = Name()
         self.name.GDLName = name
 
 def isMakeGDLSpecialClass(name) :

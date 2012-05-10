@@ -19,6 +19,7 @@
 
 from xml.etree.ElementTree import iterparse
 from makegdl.makegdl import isMakeGDLSpecialClass
+import re
 
 class Gdx(object) :
 
@@ -65,6 +66,14 @@ class Gdx(object) :
                             if storemirror and mirrorglyph :
                                 g.setgdlproperty('mirror.glyph', mirrorglyph)
                                 g.setgdlproperty('mirror.isEncoded', '1')
+                        else :
+                            n = e.get('className')
+                            if not n or re.match('^\*GC\d+\*$', n) :
+                                cname = None
+                            else :
+                                cname = Name.createFromGDL(e.get('className')).canonical()
+                            g = font[font.addglyph(gid, name = cname)]
+                            font.setGDL(g, n)
                     elif e.tag == 'class' :
                         self.keepelements = False
                         n = e.get('name')

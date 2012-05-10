@@ -4348,6 +4348,11 @@ def parse(name) :
     res = []
     return res
 
+        
+        
+        
+        
+
 
 class Name(object) :
     def __init__(self, name = None, finalcomp = False) :
@@ -4389,6 +4394,28 @@ class Name(object) :
         self.canonical()
         return
 
+    def createFromGDL(name) :
+        """Convert from GDLName back to cannonical name. An inexact science"""
+        self = Name()
+        if name.startswith("g_") :
+            name = name[2:]
+            # assume only first letter can be capitalised, everything else is components
+            if name.startswith("_") :
+                c = name[1].upper()
+                name = name[2:]
+            else :
+                c = name[0]
+                name = name[1:]
+            cs = name.split("_")
+            cs[0] = c + cs[0]
+            for i in range(len(cs)) :
+                if cs[i] in agl :
+                    self.components.append(c)
+                else :
+                    self.ext = ".".join(cs[i:])
+                    break
+            self.psname = self.canonical()
+
     def canonical(self) :
         if self.cname : return self.cname
         res = ""
@@ -4421,6 +4448,7 @@ class Name(object) :
         if self.GDLName : return self.GDLName
         res = ""
         if not len(self.components) :
+            if not self.psname : return None
             res = "g_" + self.psname.replace('.', '_')
             self.GDLName = re.sub(r"([A-Z])", lambda x : "_" + x.group(1).lower(), res)
             return self.GDLName

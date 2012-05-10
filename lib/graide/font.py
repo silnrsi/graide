@@ -54,8 +54,8 @@ class Font (gdl.Font) :
             for i in range(self.face.num_glyphs) :
                 self.addglyph(i)
 
-    def addglyph(self, index, elem = None) :
-        if elem is not None :
+    def addglyph(self, index, elem = None, name = None) :
+        if elem is not None and name is None :
             name = elem.get('PSName')
             if name :
                 i = freetype.FT_Get_Name_Index(self.face._FT_Face, name)
@@ -63,8 +63,6 @@ class Font (gdl.Font) :
                     name = None
                 else :
                     index = i
-        else :
-            name = None
         if not name :
             n = ctypes.create_string_buffer(64)
             freetype.FT_Get_Glyph_Name(self.face._FT_Face, index, n, ctypes.sizeof(n))
@@ -77,8 +75,7 @@ class Font (gdl.Font) :
     def addClass(self, name, elements) :
         self.classes[name] = elements
         for e in elements :
-            if e > len(self.glyphs) : continue
-            g = self.glyphs[e]
+            g = self[e]
             if g : g.addClass(name)
 
     def addGlyphClass(self, name, gid) :
@@ -91,8 +88,7 @@ class Font (gdl.Font) :
         c = []
         if name in self.classes :
             for gid in self.classes[name] :
-                if gid > len(self.glyphs) : continue
-                g = self.glyphs[gid]
+                g = self[gid]
                 if g : g.removeClass(name)
         for n in value.split() :
             g = self.gdls.get(n, None)
