@@ -37,6 +37,7 @@ from graide.config import ConfigDialog
 from graide.debug import ContextToolButton, DebugMenu
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
+from ConfigParser import SafeConfigParser
 import json, os
 
 class MainWindow(QtGui.QMainWindow) :
@@ -89,10 +90,12 @@ class MainWindow(QtGui.QMainWindow) :
             if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
                 self.font.loadEmptyGlyphs()
         if hasattr(self, 'tab_font') :
+            i = self.tabResults.currentIndex()
             self.tabResults.removeTab(0)
             self.tab_font = FontView(self.font)
             self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
             self.tabResults.insertTab(0, self.tab_font, "Font")
+            self.tabResults.setCurrentIndex(i)
 
     def loadAP(self, apname) :
         if self.apname != apname :
@@ -200,10 +203,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
         self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
         self.cfg_open.setToolTip("Open existing project")
+        self.cfg_open.clicked.connect(self.configOpenClicked)
         self.cfg_hbox.addWidget(self.cfg_open)
         self.cfg_new = QtGui.QToolButton(self.cfg_widget)
         self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new"))
         self.cfg_new.setToolTip("Create new project")
+        self.cfg_new.clicked.connect(self.configNewClicked)
         self.cfg_hbox.addWidget(self.cfg_new)
         self.tabResults.setCornerWidget(self.cfg_widget)
 
@@ -363,6 +368,27 @@ class MainWindow(QtGui.QMainWindow) :
                 f = file(self.configfile, "w")
                 self.config.write(f)
                 f.close()
+
+    def configOpenClicked(self) :
+        (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
+        if not os.path.exists(fname) : return
+        self.configfile = fname
+        self.config = SafeConfigParser()
+        self.config.read(fname)
+        if self.config.has_option('main', 'font') :
+            self.loadFont(self.config.get('main', 'font'))
+            if self.config.has_option('main', 'ap') :
+                self.loadAP(self.config.get('main', 'ap'))
+        if self.config.has_option('main', 'testsfile') :
+            self.loadTests(self.config.get('main', 'testsfile'))
+
+    def configNewClicked(self) :
+        (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
+        if not fname : return
+        self.configfile = fname
+        self.config = SafeConfigParser()
+        for s in ('main', 'build') : self.config.add_section(s)
+        self.configClicked()
 
     def debugClicked(self, event) :
         m = DebugMenu(self)
