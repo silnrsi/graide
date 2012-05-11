@@ -28,6 +28,8 @@ class Classes(QtGui.QTableWidget) :
         super(Classes, self).__init__(parent)
         self.setColumnCount(2)
         self.cellDoubleClicked.connect(self.doubleClicked)
+        self.horizontalHeader().hide()
+        self.verticalHeader().hide()
         if font :
             self.loadFont(font)
 

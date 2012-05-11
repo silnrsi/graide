@@ -63,33 +63,43 @@ class Font(object) :
     def emunits(self) :
         return 0
 
-    def addGlyph(self, g, index = None) :
+    def addGlyph(self, g, index = None, gdlname = None) :
         if index is None :
             self.glyphs.append(g)
         elif index >= len(self.glyphs) :
             self.glyphs.extend([None] * (len(self.glyphs) - index + 1))
+        self.glyphs[index] = g
+        self.renameGlyph(g, g.psname, gdlname)
+        return g
+
+    def renameGlyph(self, g, name, gdlname = None) :
+        if g.psname != name :
+            for n in g.parseNames() :
+                del self.psnames[n.psname]
+                del self.canons[n.canonical()]
+        if gdlname :
+            self.setGDL(gdlname)
         else :
-            self.glyphs[index] = g
-        n = g.GDLName()
-        if n and n in self.gdls :
-            count = 1
-            index = -2
-            n = n + "_1"
-            while n in self.gdls :
-                count = count + 1
-                n = n[0:index] + "_" + str(count)
-                if count == 10 : index = -3
-                if count == 100 : index = -4
-        self.setGDL(g, n)
+            self.setGDL(g, g.GDLName())
         for n in g.parseNames() :
+            if n is None : break
             self.psnames[n.psname] = g
             self.canons[n.canonical()] = (n, g)
-        return g
 
     def setGDL(self, glyph, name) :
         if not glyph : return
         n = glyph.GDLName()
         if n != name and n in self.gdls : del self.gdls[n]
+        if name and name in self.gdls and self.gdls[name] is not glyph :
+            count = 1
+            index = -2
+            name = name + "_1"
+            while name in self.gdls :
+                if self.gdls[name] is glyph : break
+                count = count + 1
+                name = name[0:index] + "_" + str(count)
+                if count == 10 : index = -3
+                if count == 100 : index = -4
         self.gdls[name] = glyph
         glyph.setGDL(name)
 
@@ -205,12 +215,18 @@ class Font(object) :
 class Glyph(object) :
 
     def __init__(self, name) :
-        self.psname = name
-        # self.isBase = False
-        self.name = next(self.parseNames())
+        self.clear()
+        self.setName(name)
+        self.gdl = None
+
+    def clear(self) :
         self.anchors = {}
         self.classes = set()
         self.gdl_properties = {}
+
+    def setName(self, name) :
+        self.psname = name
+        self.name = next(self.parseNames())
 
     def addAnchor(self, name, x, y, t = None) :
         self.anchors[name] = (x, y)
@@ -218,20 +234,23 @@ class Glyph(object) :
         #     self.isBase = True
 
     def parseNames(self) :
-        for name in self.psname.split("/") :
-            res = psnames.Name(name)
-            yield res
+        if self.psname :
+            for name in self.psname.split("/") :
+                res = psnames.Name(name)
+                yield res
+        else :
+            yield None
 
     def GDLName(self) :
-        if self.name :
+        if self.gdl :
+            return self.gdl
+        elif self.name :
             return self.name.GDL()
         else :
             return None
 
     def setGDL(self, name) :
-        if not self.name :
-            self.name = Name()
-        self.name.GDLName = name
+        self.gdl = name
 
 def isMakeGDLSpecialClass(name) :
     if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True

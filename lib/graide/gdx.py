@@ -19,7 +19,6 @@
 
 from xml.etree.ElementTree import iterparse
 from makegdl.makegdl import isMakeGDLSpecialClass
-import re
 
 class Gdx(object) :
 
@@ -30,6 +29,7 @@ class Gdx(object) :
 
     def readfile(self, fname, font = None) :
         self.file = file(fname)
+        if font : font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
                 if e.tag == 'pass' :
@@ -41,39 +41,10 @@ class Gdx(object) :
                 if e.tag == "rule" :
                     self.keepelements = False
                     self.passes[-1].append(Rule(e))
-                if font :
+                if font is not None :
                     if e.tag == 'glyph' :
                         self.keepelements = False
-                        gid = int(e.get('glyphid'))
-                        g = font[gid]
-                        if g :
-                            cname = e.get('className')
-                            if cname : font.setGDL(g, cname)
-                            storemirror = False
-                            for a in e.iterfind('glyphAttrValue') :
-                                n = a.get('name')
-                                if n == 'mirror.isEncoded' :
-                                    storemirror = True
-                                elif n == 'mirror.glyph' :
-                                    mirrorglyph = a.get('value')
-                                elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
-                                    pass
-                                elif n.find('.') != -1 :
-                                    if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
-                                    elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
-                                else :
-                                    g.setgdlproperty(n, a.get('value'))
-                            if storemirror and mirrorglyph :
-                                g.setgdlproperty('mirror.glyph', mirrorglyph)
-                                g.setgdlproperty('mirror.isEncoded', '1')
-                        else :
-                            n = e.get('className')
-                            if not n or re.match('^\*GC\d+\*$', n) :
-                                cname = None
-                            else :
-                                cname = Name.createFromGDL(e.get('className')).canonical()
-                            g = font[font.addglyph(gid, name = cname)]
-                            font.setGDL(g, n)
+                        font.addGDXGlyph(e)
                     elif e.tag == 'class' :
                         self.keepelements = False
                         n = e.get('name')

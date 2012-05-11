@@ -19,15 +19,18 @@
 
 from xml.etree.ElementTree import parse
 from graide import freetype
-import ctypes
-from graide.glyph import Glyph
+from graide.glyph import Glyph, GlyphItem
 from PySide import QtCore
 import graide.makegdl.makegdl as gdl
+from graide.makegdl.psnames import Name
+import re
 
-class Font (gdl.Font) :
+class Font(gdl.Font) :
 
     def __init__(self) :
         super(Font, self).__init__()
+        self.glyphItems = []
+        self.gnames = {}
         self.classes = {}
 
     def __len__(self) :
@@ -39,37 +42,83 @@ class Font (gdl.Font) :
         except IndexError :
             return None
 
-    def loadFont(self, fontfile, apfile = None) :
+    def loadFont(self, fontfile, size = 40) :
+        self.glyphItems = []
+        self.gnames = {}
+        self.pixrect = QtCore.QRect()
+        self.top = 0
+        self.size = size
         self.fname = fontfile
-        self.face = freetype.Face(fontfile)
-        self.glyphs = [None] * self.face.num_glyphs
-        self.upem = self.face.units_per_EM
-        if apfile :
-            etree = parse(apfile)
-            i = 0
-            for e in etree.getroot().iterfind("glyph") :
-                i = self.addglyph(i, e)
-                i += 1
-        else :
-            for i in range(self.face.num_glyphs) :
-                self.addglyph(i)
+        face = freetype.Face(fontfile)
+        self.upem = face.units_per_EM
+        self.numGlyphs = face.num_glyphs
+        for i in range(self.numGlyphs) :
+            g = GlyphItem(face, i, size)
+            self.gnames[g.name] = i
+            self.glyphItems.append(g)
+            if g.pixmap :
+                grect = g.pixmap.rect()
+                grect.moveBottom(grect.height() - g.top)
+                self.pixrect = self.pixrect | grect
+            if g.top > self.top : self.top = g.top
+        for (i, g) in enumerate(self.glyphs) :
+            if i < len(self.glyphItems) :
+                g.item = self.glyphItems[i]
 
-    def addglyph(self, index, elem = None, name = None) :
-        if elem is not None and name is None :
-            name = elem.get('PSName')
-            if name :
-                i = freetype.FT_Get_Name_Index(self.face._FT_Face, name)
-                if i == None :
-                    name = None
-                else :
-                    index = i
-        if not name :
-            n = ctypes.create_string_buffer(64)
-            freetype.FT_Get_Glyph_Name(self.face._FT_Face, index, n, ctypes.sizeof(n))
-            name = n.value
-        g = Glyph(self, name, index)
-        super(Font, self).addGlyph(g, index)
-        if elem is not None : g.readAP(elem, self)
+    def initGlyphs(self) :
+        self.glyphs = [None] * self.face.num_glyphs
+
+    def loadAP(self, apfile) :
+        self.initGlyphs()
+        etree = parse(apfile)
+        i = 0
+        for e in etree.getroot().iterfind("glyph") :
+            i = self.addglyph(i, e.get('PSName'))
+            g = self.glyphs[i]
+            g.readAP(e)
+            i += 1
+
+    def addGDXGlyph(self, e) :
+        gid = int(e.get('glyphid'))
+        g = self[gid]
+        cname = e.get('className')
+        if cname and re.match('^\*GC\d+\*$', cname) :
+            cname = None
+        if not g :
+            if gid > len(self.glyphItems) :
+                g = self[self.addglyph(gid, name = Name.createFromGDL(cname).canonical() if cname else None)]
+            else :
+                g = self[self.addglyph(gid)]
+        else :
+            g.clear()
+        if cname : self.setGDL(g, cname)
+        storemirror = False
+        for a in e.iterfind('glyphAttrValue') :
+            n = a.get('name')
+            if n == 'mirror.isEncoded' :
+                storemirror = True
+            elif n == 'mirror.glyph' :
+                mirrorglyph = a.get('value')
+            elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
+                pass
+            elif n.find('.') != -1 :
+                if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
+                elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
+            else :
+                g.setgdlproperty(n, a.get('value'))
+        if storemirror and mirrorglyph :
+            g.setgdlproperty('mirror.glyph', mirrorglyph)
+            g.setgdlproperty('mirror.isEncoded', '1')
+
+    def addglyph(self, index, name = None, gdlname = None) :
+        if name and name in self.gnames :
+            index = self.gnames[name]
+        else :
+            name = None
+        if not name and index < len(self.glyphItems) :
+            name = self.glyphItems[index].name
+        g = Glyph(self, name, index, item = self.glyphItems[index] if index < len(self.glyphItems) else None)
+        super(Font, self).addGlyph(g, index, gdlname)
         return index
 
     def addClass(self, name, elements) :
@@ -97,18 +146,4 @@ class Font (gdl.Font) :
                 g.addClass(name)
         self.classes[name] = c
         
-    def makebitmaps(self, size) :
-        self.pixrect = QtCore.QRect()
-        self.top = 0
-        self.size = size
-        for i, g in enumerate(self.glyphs) :
-            if g :
-                g.setpixmap(self.face, i, size)
-                if g.pixmap :
-                    grect = g.pixmap.rect()
-#                    grect.moveLeft(g.left)
-                    grect.moveBottom(grect.height() - g.top)
-                    self.pixrect = self.pixrect | grect
-                if g.top > self.top : self.top = g.top
-
     def emunits(self) : return self.upem

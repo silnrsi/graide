@@ -34,6 +34,7 @@ from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
 from graide.config import ConfigDialog
+from graide.debug import ContextToolButton, DebugMenu
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 import json, os
@@ -48,17 +49,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.fDialog = None
         self.config = config
         self.currFeats = None
+        self.font = Font()
 
         if config.has_option('main', 'font') :
-            if config.has_option('main', 'size') :
-                fontsize = config.getint('main', 'size')
-            else :
-                fontsize = 40
-            self.fontfile = config.get('main', 'font')
-            self.font = Font()
-            self.font.loadFont(self.fontfile, config.get('main', 'ap') if config.has_option('main', 'ap') else None)
-            self.font.makebitmaps(fontsize)
-            self.feats = FeatureRefs(self.fontfile)
+            self.loadFont(config.get('main', 'font'))
+            if config.has_option('main', 'ap') :
+                self.font.loadAP(config.get('main', 'ap'))
             self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
             if os.path.exists(self.gdxfile) :
                 self.gdx = Gdx()
@@ -81,6 +77,17 @@ class MainWindow(QtGui.QMainWindow) :
             self.testsfile = None
 
         self.setupUi()
+
+    def loadFont(self, fontname) :
+        if self.config.has_option('main', 'size') :
+            fontsize = self.config.getint('main', 'size')
+        else :
+            fontsize = 40
+        self.fontfile = fontname
+        self.font.loadFont(self.fontfile, fontsize)
+        self.feats = FeatureRefs(self.fontfile)
+        if hasattr(self, 'tab_font') :
+            self.tab_font = FontView(self.font)
 
     def closeEvent(self, event) :
         if self.rules :
@@ -165,10 +172,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
         self.cfg_hbox.setContentsMargins(0, 0, 0, 0)
         self.cfg_hbox.setSpacing(0)
-        self.cfg_button = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_button = ContextToolButton(self.cfg_widget)
         self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
         self.cfg_button.setToolTip("Configure project")
         self.cfg_button.clicked.connect(self.configClicked)
+        self.cfg_button.rightClick.connect(self.debugClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
         self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
@@ -281,6 +289,7 @@ class MainWindow(QtGui.QMainWindow) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = NamedTemporaryFile(mode="rw")
         text = self.runEdit.toPlainText().decode('unicode_escape')
+        if not text : return
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
             feats = self.currFeats or self.feats.fval)
         runfile.seek(0)
@@ -327,6 +336,10 @@ class MainWindow(QtGui.QMainWindow) :
     def configClicked(self) :
         d = ConfigDialog(self.config)
         d.exec_()
+
+    def debugClicked(self, event) :
+        m = DebugMenu(self)
+        m.exec_(event.globalPos())
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

@@ -82,12 +82,23 @@ class TestList(QtGui.QWidget) :
                         for ft in f.split(" ") :
                             (k, v) = ft.split('=')
                             feats[k] = int(v)
-                    te = Test(t.text, feats, t.get('rtl'), t.get('name'))
+                    txt = t.text
+                    if not txt :
+                        y = t.find('text')
+                        txt = y.text
+                    y = t.find('comment')
+                    if y :
+                        c = y.text
+                    else :
+                        c = ""
+                    te = Test(txt, feats, t.get('rtl'), t.get('name'), comment = c)
                     self.appendTest(te)
 
     def appendTest(self, t) :
         self.tests.append(t)
-        QtGui.QListWidgetItem(t.name, self.list)
+        w = QtGui.QListWidgetItem(t.name, self.list)
+        if t.comment :
+            w.setToolTip(t.comment)
 
     def editTest(self, index) :
         t = self.tests[index]

@@ -35,11 +35,11 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
         if option.state & QtGui.QStyle.State_Selected:
             painter.fillRect(option.rect, option.palette.highlight())
         g = index.data()
-        if g :
-            if g.pixmap :
-                x = option.rect.left() + (option.rect.width() - g.pixmap.width()) / 2
-                y = option.rect.bottom() - self.textheight - self.desc - g.top
-                painter.drawPixmap(x, y, g.pixmap)
+        if g and g.item :
+            if g.item.pixmap :
+                x = option.rect.left() + (option.rect.width() - g.item.pixmap.width()) / 2
+                y = option.rect.bottom() - self.textheight - self.desc - g.item.top
+                painter.drawPixmap(x, y, g.item.pixmap)
             font = painter.font()
             myfont = QtGui.QFont(font)
             myfont.setPointSize(myfont.pointSize() * 0.8)
@@ -71,7 +71,7 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
         oldcolumns = self.columns
         self.beginResetModel()
         self.columns = width / (self.delegate.sizeHint(None, None).width() + 1)
-        self.rows = (len(self.font) + self.columns - 1) / self.columns
+        self.rows = (self.font.numGlyphs + self.columns - 1) / self.columns
         if oldcolumns and oldcolumns > self.columns :
             self.columnsRemoved.emit(self.createIndex(0, 0), oldcolumns, self.columns)
         elif oldcolumns and oldcolumns < self.columns :

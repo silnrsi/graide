@@ -20,23 +20,14 @@
 
 from PySide import QtGui
 from graide import freetype
-import array, re
+import array, re, ctypes
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 import graide.makegdl.makegdl as gdl
 
-class Glyph(gdl.Glyph, DataObj) :
+class GlyphItem(object) :
 
-    def __init__(self, font, name, gid = 0) :
-        super(Glyph, self).__init__(name)
-        self.gid = gid
-        self.properties = {}
-        self.uid = None
-
-    def __str__(self) :
-        return self.psname
-
-    def setpixmap(self, face, gid, height = 40) :
+    def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
         b = face.glyph.bitmap
@@ -51,6 +42,24 @@ class Glyph(gdl.Glyph, DataObj) :
             self.pixmap = QtGui.QPixmap(image)
         else :
             self.pixmap = None
+        n = ctypes.create_string_buffer(64)
+        freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
+        self.name = n.value
+
+class Glyph(gdl.Glyph, DataObj) :
+
+    def __init__(self, font, name, gid = 0, item = None) :
+        super(Glyph, self).__init__(name)
+        self.gid = gid
+        self.uid = None     # this is a string!
+        self.item = item
+
+    def clear(self) :
+        super(Glyph, self).clear()
+        self.properties = {}
+
+    def __str__(self) :
+        return self.psname
 
     def readAP(self, elem, font) :
         self.uid = elem.get('UID', None)

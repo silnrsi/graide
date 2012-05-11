@@ -23,11 +23,12 @@ from graide.featureselector import FeatureDialog
 from xml.etree import ElementTree as et
 
 class Test(object) :
-    def __init__(self, text, feats, rtl = False, name = None) :
+    def __init__(self, text, feats, rtl = False, name = None, comment = "") :
         self.text = text
         self.feats = dict(feats)
         self.name = name or text
         self.rtl = rtl
+        self.comment = comment
 
     def editDialog(self, parent) :
         self.parent = parent
@@ -40,10 +41,14 @@ class Test(object) :
         v.addWidget(QtGui.QLabel('Text:', d), 1, 0)
         eText = QtGui.QLineEdit(self.text, d)
         v.addWidget(eText, 1, 1)
+        v.addWidget(QtGui.QLabel('Comment:', d), 2, 0)
+        eComment = QtGui.QPlainTextEdit()
+        eComment.setPlainText(self.comment)
+        v.addWidget(eComment, 2, 1)
         eRTL = QtGui.QCheckBox('RTL', d)
-        v.addWidget(eRTL, 2, 1)
+        v.addWidget(eRTL, 3, 1)
         b = QtGui.QPushButton('Features', d)
-        v.addWidget(b, 3, 1)
+        v.addWidget(b, 4, 1)
         hw = QtGui.QWidget(d)
         h = QtGui.QHBoxLayout()
         hw.setLayout(h)
@@ -60,6 +65,7 @@ class Test(object) :
             self.name = eName.text()
             self.text = eText.text()
             self.rtl = eRTL.isChecked()
+            self.comment = eComment.toPlainText()
             if self.featdialog : 
                 self.feats = self.featdialog.get_feats()
             else :
@@ -78,7 +84,13 @@ class Test(object) :
 
     def addTree(self, parent) :
         e = et.SubElement(parent, 'test')
-        e.text = self.text
+        t = et.SubElement(e, 'text')
+        t.text = self.text
+        t.tail = "\n"
+        if self.comment :
+            c = et.SubElement(e, 'comment')
+            c.text = self.comment
+            c.tail = "\n"
         e.tail = "\n"
         e.set('name', self.name)
         if self.rtl : e.set('rtl', 'True')

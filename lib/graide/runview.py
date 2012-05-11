@@ -97,13 +97,13 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.tview.setPlainText("")
         for i, s in enumerate(run) :
             g = font[s.gid]
-            if g and g.pixmap :
-                px = GlyphPixmapItem(i, g.pixmap, model = self, scene = self._scene)
-                ppos = (s.origin[0] * factor + g.left, -s.origin[1] * factor - g.top)
+            if g and g.item.pixmap :
+                px = GlyphPixmapItem(i, g.item.pixmap, model = self, scene = self._scene)
+                ppos = (s.origin[0] * factor + g.item.left, -s.origin[1] * factor - g.item.top)
                 px.setOffset(*ppos)
                 self._pixmaps.append(px)
                 if s : s.pixmap(px)
-                sz = g.pixmap.size()
+                sz = g.item.pixmap.size()
                 r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
                 res = res.united(r)
             else :
