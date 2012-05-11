@@ -21,6 +21,7 @@
 from PySide import QtCore, QtGui
 from xml.etree import ElementTree as et
 from graide.test import Test
+from graide.utils import configval
 import os
 
 class TestList(QtGui.QWidget) :
@@ -57,6 +58,11 @@ class TestList(QtGui.QWidget) :
         self.bDown.setToolTip("Move test down")
         self.bDown.clicked.connect(self.downClicked)
         self.hbbox.addWidget(self.bDown)
+        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave.setIcon(QtGui.QIcon.fromTheme('document-save'))
+        self.bSave.setToolTip('save test list')
+        self.bSave.clicked.connect(self.saveClicked)
+        self.hbbox.addWidget(self.bSave)
         self.bAdd = QtGui.QToolButton(self.bbox)
         self.bAdd.setIcon(QtGui.QIcon.fromTheme('add'))
         self.bAdd.setToolTip('add new test')
@@ -127,6 +133,10 @@ class TestList(QtGui.QWidget) :
         if not t.name :
             self.tests.pop()
             self.list.takeItem(len(self.tests) - 1)
+
+    def saveClicked(self) :
+        tname = configval(self.app.config, 'main', 'testsfile')
+        if tname : self.writeXML(tname)
 
     def delClicked(self) :
         i = self.list.currentRow()

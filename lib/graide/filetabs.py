@@ -36,6 +36,10 @@ class EditFile(QtGui.QPlainTextEdit) :
         f = file(fname)
         self.setPlainText("".join(f.readlines()))
         f.close()
+        a = QtGui.QAction(self)
+        a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
+        a.triggered.connect(self.search)
+        self.addAction(a)
 
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
@@ -63,6 +67,8 @@ class EditFile(QtGui.QPlainTextEdit) :
     def closeEvent(self, event) :
         self.writeIfModified()
 
+    def search(self) :
+        print "Searching"
 
 class FileTabs(QtGui.QWidget) :
 
@@ -84,6 +90,11 @@ class FileTabs(QtGui.QWidget) :
         self.bBuild.setToolTip("Save files and force rebuild")
         self.bBuild.clicked.connect(app.buildClicked)
         self.hbox.addWidget(self.bBuild)
+        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave.setIcon(QtGui.QIcon.fromTheme('document-save'))
+        self.bSave.setToolTip('Save all files')
+        self.bSave.clicked.connect(self.writeIfModified)
+        self.hbox.addWidget(self.bSave)
         self.bAdd = QtGui.QToolButton(self.bbox)
         self.bAdd.setIcon(QtGui.QIcon.fromTheme('document-open'))
         self.bAdd.setToolTip('open file in editor')
