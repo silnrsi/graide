@@ -46,6 +46,6 @@ if args.ap : config.set('main', 'ap', args.ap)
 if args.size > 0 : config.set('main', 'size', str(args.size))
 if args.gdx : config.set('main', 'gdx', args.gdx)
 
-mainWindow = main.MainWindow(config, args.results)
+mainWindow = main.MainWindow(config, args.project, args.results)
 mainWindow.show()
 sys.exit(app.exec_())

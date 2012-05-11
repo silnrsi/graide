@@ -69,6 +69,11 @@ class TestList(QtGui.QWidget) :
         self.hbbox.addWidget(self.bDel)
         self.setLayout(self.vbox)
 
+        self.loadTests(fname)
+
+    def loadTests(self, fname):
+        self.list.clear()
+        self.tests = []
         if fname and os.path.exists(fname) :
             try :
                 e = et.parse(fname)

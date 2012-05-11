@@ -32,6 +32,8 @@ class Font(gdl.Font) :
         self.glyphItems = []
         self.gnames = {}
         self.classes = {}
+        self.pixrect = QtCore.QRect()
+        self.isread = False
 
     def __len__(self) :
         return len(self.glyphs)
@@ -41,6 +43,8 @@ class Font(gdl.Font) :
             return self.glyphs[y]
         except IndexError :
             return None
+
+    def isRead(self) : return self.isread
 
     def loadFont(self, fontfile, size = 40) :
         self.glyphItems = []
@@ -64,9 +68,10 @@ class Font(gdl.Font) :
         for (i, g) in enumerate(self.glyphs) :
             if i < len(self.glyphItems) :
                 g.item = self.glyphItems[i]
+        self.isread = True
 
     def initGlyphs(self) :
-        self.glyphs = [None] * self.face.num_glyphs
+        self.glyphs = [None] * self.numGlyphs
 
     def loadAP(self, apfile) :
         self.initGlyphs()
@@ -75,8 +80,13 @@ class Font(gdl.Font) :
         for e in etree.getroot().iterfind("glyph") :
             i = self.addglyph(i, e.get('PSName'))
             g = self.glyphs[i]
-            g.readAP(e)
+            g.readAP(e, self)
             i += 1
+
+    def loadEmptyGlyphs(self) :
+        self.initGlyphs()
+        for i in range(self.numGlyphs) :
+            self.addglyph(i)
 
     def addGDXGlyph(self, e) :
         gid = int(e.get('glyphid'))
@@ -93,6 +103,9 @@ class Font(gdl.Font) :
             g.clear()
         if cname : self.setGDL(g, cname)
         storemirror = False
+        u = e.get('usv')
+        if u and u.startswith('U+') : u = u[2:]
+        if u : g.uid = u
         for a in e.iterfind('glyphAttrValue') :
             n = a.get('name')
             if n == 'mirror.isEncoded' :

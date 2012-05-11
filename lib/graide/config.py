@@ -43,8 +43,10 @@ class FileEntry(QtGui.QWidget) :
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self,
                 dir=os.path.dirname(self.le.text()), filter=self.pattern,
                 options=QtGui.QFileDialog.DontConfirmOverwrite)
-        self.le.setText(os.path.relpath(fname))
+        self.le.setText(os.path.relpath(fname) if fname else "")
 
+    def text(self) :
+        return self.le.text()
 
 class ConfigDialog(QtGui.QDialog) :
 
@@ -94,3 +96,23 @@ class ConfigDialog(QtGui.QDialog) :
 
     def makegdlClicked(self) :
         self.build_inc.setEnabled(self.build_make.isChecked())
+
+    def updateConfig(self, app, config) :
+        self.updateChanged(self.main_font, config, 'main', 'font', app.loadFont)
+        self.updateChanged(self.main_gdl, config, 'build', 'gdlfile')
+        self.updateChanged(self.main_ap, config, 'main', 'ap', app.loadAP)
+        self.updateChanged(self.main_tests, config, 'main', 'testsfile', app.loadTests)
+        self.updateChanged(self.build_inc, config, 'build', 'includefile')
+        if self.build_make.isChecked() != configval(config, 'build', 'usemakegdl') :
+            config.set('build', 'usemakegdl', "1" if self.build_make.isChecked() else "0")
+
+    def updateChanged(self, widget, config, section, option, fn = None) :
+        t = widget.text()
+        if t != configval(config, section, option) and (t or configval(config, section, option)) :
+            if not t :
+                config.remove_option(section, option)
+            else :
+                config.set(section, option, t)
+            if fn :
+                fn(t)
+

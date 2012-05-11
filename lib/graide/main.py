@@ -41,28 +41,22 @@ import json, os
 
 class MainWindow(QtGui.QMainWindow) :
 
-    def __init__(self, config, jsonfile) :
+    def __init__(self, config, configfile, jsonfile) :
         super(MainWindow, self).__init__()
         self.rules = None
         self.runfile = None
         self.runloaded = False
         self.fDialog = None
         self.config = config
+        self.configfile = configfile
         self.currFeats = None
         self.font = Font()
+        self.apname = None
 
         if config.has_option('main', 'font') :
             self.loadFont(config.get('main', 'font'))
             if config.has_option('main', 'ap') :
-                self.font.loadAP(config.get('main', 'ap'))
-            self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
-            if os.path.exists(self.gdxfile) :
-                self.gdx = Gdx()
-                self.gdx.readfile(self.gdxfile, self.font if not configval(config, 'build', 'usemakegdl') else None)
-            else :
-                self.gdx = None
-        else :
-            self.font = None
+                self.loadAP(config.get('main', 'ap'))
 
         if jsonfile :
             f = file(jsonfile)
@@ -83,11 +77,36 @@ class MainWindow(QtGui.QMainWindow) :
             fontsize = self.config.getint('main', 'size')
         else :
             fontsize = 40
-        self.fontfile = fontname
+        self.fontfile = str(fontname)
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = FeatureRefs(self.fontfile)
+        self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
+        if os.path.exists(self.gdxfile) :
+            self.gdx = Gdx()
+            self.gdx.readfile(self.gdxfile, self.font if not self.config.has_option('main', 'ap') else None)
+        else :
+            self.gdx = None
+            if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
+                self.font.loadEmptyGlyphs()
         if hasattr(self, 'tab_font') :
+            self.tabResults.removeTab(0)
             self.tab_font = FontView(self.font)
+            self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+            self.tabResults.insertTab(0, self.tab_font, "Font")
+
+    def loadAP(self, apname) :
+        if self.apname != apname :
+            self.apname = apname
+            if apname :
+                self.font.loadAP(apname)
+            elif os.path.exists(self.gdxfile) :
+                self.gdx = Gdx()
+                self.gdx.readfile(self.gdxfile, self.font)
+
+    def loadTests(self, testsname) :
+        self.testsfile = testsname
+        if self.tabTest :
+            self.tabTest.loadTests(testsname)
 
     def closeEvent(self, event) :
         if self.rules :
@@ -189,7 +208,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.setCornerWidget(self.cfg_widget)
 
         # font tab
-        self.tab_font = FontView(self.font)
+        if self.font.isRead() :
+            self.tab_font = FontView(self.font)
+            self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+        else :
+            self.tab_font = QtGui.QWidget()
         self.tabResults.addTab(self.tab_font, "Font")
 
         # errors tab
@@ -225,7 +248,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.runloaded = True
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
-        self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
         self.tabResults.currentChanged.connect(self.setrunEditFocus)
 
     def setwidgetstretch(self, widget, hori, vert) :
@@ -335,7 +357,12 @@ class MainWindow(QtGui.QMainWindow) :
 
     def configClicked(self) :
         d = ConfigDialog(self.config)
-        d.exec_()
+        if d.exec_() :
+            d.updateConfig(self, self.config)
+            if self.configfile :
+                f = file(self.configfile, "w")
+                self.config.write(f)
+                f.close()
 
     def debugClicked(self, event) :
         m = DebugMenu(self)
