@@ -26,6 +26,10 @@ from shutil import copyfile
 
 libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
 
+class Layout(object) :
+    buttonSpacing = 1
+    buttonMargins = (0, 0, 0, 0)
+
 class DataObj(object) :
     
     def attribModel(self) :

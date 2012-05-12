@@ -75,7 +75,10 @@ class ConfigDialog(QtGui.QDialog) :
         self.main_tests = FileEntry(self.main, configval(config, 'main', 'testsfile'), 'Tests Lists (*.xml)')
         self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 3, 0)
         self.main_vb.addWidget(self.main_tests, 3, 1, 1, 2)
-        self.main_vb.setRowStretch(4, 1)
+        self.main_rtl = QCheckBox()
+        self.main_vb.addWidget(QtGui.QLabel('Default RTL'), 4, 0)
+        self.main_vb.addWidget(self.main_rtl, 4, 1)
+        self.main_vb.setRowStretch(5, 1)
         self.tb.addItem(self.main, "General")
 
         self.build = QtGui.QWidget(self.tb)
@@ -102,6 +105,8 @@ class ConfigDialog(QtGui.QDialog) :
         self.updateChanged(self.main_gdl, config, 'build', 'gdlfile')
         self.updateChanged(self.main_ap, config, 'main', 'ap', app.loadAP)
         self.updateChanged(self.main_tests, config, 'main', 'testsfile', app.loadTests)
+        if self.main_rtl.isChecked != configval(config, 'main', 'defaultrtl') :
+            config.set('main', 'defaultrtl', "1" if self.main_rtl.isChecked() else "0")
         self.updateChanged(self.build_inc, config, 'build', 'includefile')
         if self.build_make.isChecked() != configval(config, 'build', 'usemakegdl') :
             config.set('build', 'usemakegdl', "1" if self.build_make.isChecked() else "0")

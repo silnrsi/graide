@@ -21,7 +21,7 @@
 from PySide import QtCore, QtGui
 from xml.etree import ElementTree as et
 from graide.test import Test
-from graide.utils import configval
+from graide.utils import configval, Layout
 import os
 
 class TestList(QtGui.QWidget) :
@@ -31,7 +31,7 @@ class TestList(QtGui.QWidget) :
         self.app = app
         self.tests = []
         self.vbox = QtGui.QVBoxLayout()
-        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.vbox.setContentsMargins(*Layout.buttonMargins)
         self.list = QtGui.QListWidget(self)
         self.list.itemDoubleClicked.connect(self.runTest)
         self.list.itemClicked.connect(self.loadTest)
@@ -39,8 +39,8 @@ class TestList(QtGui.QWidget) :
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbbox)
-        self.hbbox.setContentsMargins(0, 0, 0, 0)
-        self.hbbox.setSpacing(0)
+        self.hbbox.setContentsMargins(*Layout.buttonMargins)
+        self.hbbox.setSpacing(Layout.buttonSpacing)
         self.hbbox.insertStretch(0)
         self.vbox.addWidget(self.bbox)
         self.bEdit = QtGui.QToolButton(self.bbox)

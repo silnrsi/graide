@@ -1,6 +1,6 @@
 Pre-Beta
-    * configuration dialog
     * Add glyph property editing
+    * add ctrl-f search within a file
 
 Pre-Release
     * Remove ttftable call

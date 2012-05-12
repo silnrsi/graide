@@ -106,263 +106,263 @@
 
   <glyphs>
     <glyph glyphid="0" className="g_notdef">
-      <glyphAttrValue name="breakweight" value="30" />
+      <glyphAttrValue name="breakweight" value="3" />
     </glyph>
     <glyph glyphid="1">
-      <glyphAttrValue name="breakweight" value="30" />
+      <glyphAttrValue name="breakweight" value="3" />
     </glyph>
     <glyph glyphid="2">
-      <glyphAttrValue name="breakweight" value="30" />
+      <glyphAttrValue name="breakweight" value="3" />
     </glyph>
-    <glyph glyphid="3" className="g_space">
+    <glyph glyphid="3" className="g_space" usv="U+0020">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="178" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="3" />
     </glyph>
-    <glyph glyphid="4" className="g_exclam">
+    <glyph glyphid="4" className="g_exclam" usv="U+0021">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="4" />
     </glyph>
-    <glyph glyphid="5" className="g_quotedbl">
+    <glyph glyphid="5" className="g_quotedbl" usv="U+0022">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="5" />
     </glyph>
-    <glyph glyphid="6" className="g_numbersign">
+    <glyph glyphid="6" className="g_numbersign" usv="U+0023">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="6" />
     </glyph>
-    <glyph glyphid="7" className="g_dollar">
+    <glyph glyphid="7" className="g_dollar" usv="U+0024">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="7" />
     </glyph>
-    <glyph glyphid="8" className="g_percent">
+    <glyph glyphid="8" className="g_percent" usv="U+0025">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="8" />
     </glyph>
-    <glyph glyphid="9" className="g_ampersand">
+    <glyph glyphid="9" className="g_ampersand" usv="U+0026">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="9" />
     </glyph>
-    <glyph glyphid="10" className="g_quotesingle">
+    <glyph glyphid="10" className="g_quotesingle" usv="U+0027">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="10" />
     </glyph>
-    <glyph glyphid="11" className="g_parenleft">
+    <glyph glyphid="11" className="g_parenleft" usv="U+0028">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="189" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="11" />
     </glyph>
-    <glyph glyphid="12" className="g_parenright">
+    <glyph glyphid="12" className="g_parenright" usv="U+0029">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="190" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="12" />
     </glyph>
-    <glyph glyphid="13" className="g_asterisk">
+    <glyph glyphid="13" className="g_asterisk" usv="U+002A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="13" />
     </glyph>
-    <glyph glyphid="14" className="g_plus">
+    <glyph glyphid="14" className="g_plus" usv="U+002B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="14" />
     </glyph>
-    <glyph glyphid="15" className="g_comma">
+    <glyph glyphid="15" className="g_comma" usv="U+002C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="15" />
     </glyph>
-    <glyph glyphid="16" className="g_hyphen">
+    <glyph glyphid="16" className="g_hyphen" usv="U+002D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="16" />
     </glyph>
-    <glyph glyphid="17" className="g_period">
+    <glyph glyphid="17" className="g_period" usv="U+002E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="17" />
     </glyph>
-    <glyph glyphid="18" className="g_slash">
+    <glyph glyphid="18" className="g_slash" usv="U+002F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="18" />
     </glyph>
-    <glyph glyphid="19" className="g_zero">
+    <glyph glyphid="19" className="g_zero" usv="U+0030">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="19" />
     </glyph>
-    <glyph glyphid="20" className="g_one">
+    <glyph glyphid="20" className="g_one" usv="U+0031">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="20" />
     </glyph>
-    <glyph glyphid="21" className="g_two">
+    <glyph glyphid="21" className="g_two" usv="U+0032">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="21" />
     </glyph>
-    <glyph glyphid="22" className="g_three">
+    <glyph glyphid="22" className="g_three" usv="U+0033">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="22" />
     </glyph>
-    <glyph glyphid="23" className="g_four">
+    <glyph glyphid="23" className="g_four" usv="U+0034">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="23" />
     </glyph>
-    <glyph glyphid="24" className="g_five">
+    <glyph glyphid="24" className="g_five" usv="U+0035">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="24" />
     </glyph>
-    <glyph glyphid="25" className="g_six">
+    <glyph glyphid="25" className="g_six" usv="U+0036">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="25" />
     </glyph>
-    <glyph glyphid="26" className="g_seven">
+    <glyph glyphid="26" className="g_seven" usv="U+0037">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="26" />
     </glyph>
-    <glyph glyphid="27" className="g_eight">
+    <glyph glyphid="27" className="g_eight" usv="U+0038">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="27" />
     </glyph>
-    <glyph glyphid="28" className="g_nine">
+    <glyph glyphid="28" className="g_nine" usv="U+0039">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="28" />
     </glyph>
-    <glyph glyphid="29" className="g_colon">
+    <glyph glyphid="29" className="g_colon" usv="U+003A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="29" />
     </glyph>
-    <glyph glyphid="30" className="g_semicolon">
+    <glyph glyphid="30" className="g_semicolon" usv="U+003B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="30" />
     </glyph>
-    <glyph glyphid="31" className="g_less">
+    <glyph glyphid="31" className="g_less" usv="U+003C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="31" />
     </glyph>
-    <glyph glyphid="32" className="g_equal">
+    <glyph glyphid="32" className="g_equal" usv="U+003D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="32" />
     </glyph>
-    <glyph glyphid="33" className="g_greater">
+    <glyph glyphid="33" className="g_greater" usv="U+003E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="33" />
     </glyph>
-    <glyph glyphid="34" className="g_question">
+    <glyph glyphid="34" className="g_question" usv="U+003F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="34" />
     </glyph>
-    <glyph glyphid="35" className="g_at">
+    <glyph glyphid="35" className="g_at" usv="U+0040">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="35" />
     </glyph>
-    <glyph glyphid="36" className="g__a">
+    <glyph glyphid="36" className="g__a" usv="U+0041">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="36" />
     </glyph>
-    <glyph glyphid="37" className="g__b">
+    <glyph glyphid="37" className="g__b" usv="U+0042">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="37" />
     </glyph>
-    <glyph glyphid="38" className="g__c">
+    <glyph glyphid="38" className="g__c" usv="U+0043">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="38" />
     </glyph>
-    <glyph glyphid="39" className="g__d">
+    <glyph glyphid="39" className="g__d" usv="U+0044">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="39" />
     </glyph>
-    <glyph glyphid="40" className="g__e">
+    <glyph glyphid="40" className="g__e" usv="U+0045">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="40" />
     </glyph>
-    <glyph glyphid="41" className="g__f">
+    <glyph glyphid="41" className="g__f" usv="U+0046">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="41" />
     </glyph>
-    <glyph glyphid="42" className="g__g">
+    <glyph glyphid="42" className="g__g" usv="U+0047">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="42" />
     </glyph>
-    <glyph glyphid="43" className="g__h">
+    <glyph glyphid="43" className="g__h" usv="U+0048">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="43" />
     </glyph>
-    <glyph glyphid="44" className="g__i">
+    <glyph glyphid="44" className="g__i" usv="U+0049">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="44" />
     </glyph>
-    <glyph glyphid="45" className="g__j">
+    <glyph glyphid="45" className="g__j" usv="U+004A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="45" />
     </glyph>
-    <glyph glyphid="46" className="g__k">
+    <glyph glyphid="46" className="g__k" usv="U+004B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="46" />
     </glyph>
-    <glyph glyphid="47" className="g__l">
+    <glyph glyphid="47" className="g__l" usv="U+004C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="47" />
     </glyph>
-    <glyph glyphid="48" className="g__m">
+    <glyph glyphid="48" className="g__m" usv="U+004D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="48" />
     </glyph>
-    <glyph glyphid="49" className="g__n">
+    <glyph glyphid="49" className="g__n" usv="U+004E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="49" />
     </glyph>
-    <glyph glyphid="50" className="g__o">
+    <glyph glyphid="50" className="g__o" usv="U+004F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="50" />
     </glyph>
-    <glyph glyphid="51" className="g__p">
+    <glyph glyphid="51" className="g__p" usv="U+0050">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="51" />
     </glyph>
-    <glyph glyphid="52" className="g__q">
+    <glyph glyphid="52" className="g__q" usv="U+0051">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="52" />
     </glyph>
-    <glyph glyphid="53" className="g__r">
+    <glyph glyphid="53" className="g__r" usv="U+0052">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="53" />
     </glyph>
-    <glyph glyphid="54" className="g__s">
+    <glyph glyphid="54" className="g__s" usv="U+0053">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="54" />
     </glyph>
-    <glyph glyphid="55" className="g__t">
+    <glyph glyphid="55" className="g__t" usv="U+0054">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="55" />
     </glyph>
-    <glyph glyphid="56" className="g__u">
+    <glyph glyphid="56" className="g__u" usv="U+0055">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="56" />
     </glyph>
-    <glyph glyphid="57" className="g__v">
+    <glyph glyphid="57" className="g__v" usv="U+0056">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="57" />
     </glyph>
-    <glyph glyphid="58" className="g__w">
+    <glyph glyphid="58" className="g__w" usv="U+0057">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="58" />
     </glyph>
-    <glyph glyphid="59" className="g__x">
+    <glyph glyphid="59" className="g__x" usv="U+0058">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="59" />
     </glyph>
-    <glyph glyphid="60" className="g__y">
+    <glyph glyphid="60" className="g__y" usv="U+0059">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="60" />
     </glyph>
-    <glyph glyphid="61" className="g__z">
+    <glyph glyphid="61" className="g__z" usv="U+005A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="61" />
     </glyph>
-    <glyph glyphid="62" className="g_bracketleft">
+    <glyph glyphid="62" className="g_bracketleft" usv="U+005B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="62" />
     </glyph>
-    <glyph glyphid="63" className="g_backslash">
+    <glyph glyphid="63" className="g_backslash" usv="U+005C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="63" />
     </glyph>
-    <glyph glyphid="64" className="g_bracketright">
+    <glyph glyphid="64" className="g_bracketright" usv="U+005D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="64" />
     </glyph>
-    <glyph glyphid="65" className="g_asciicircum">
+    <glyph glyphid="65" className="g_asciicircum" usv="U+005E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="65" />
       <glyphAttrValue name="UM.x" value="226" inFile="padauk.gdl" atLine="65" />
@@ -370,139 +370,139 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="65" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="65" />
     </glyph>
-    <glyph glyphid="66" className="g_underscore">
+    <glyph glyphid="66" className="g_underscore" usv="U+005F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="66" />
     </glyph>
-    <glyph glyphid="67" className="g_grave">
+    <glyph glyphid="67" className="g_grave" usv="U+0060">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="67" />
     </glyph>
-    <glyph glyphid="68" className="g_a">
+    <glyph glyphid="68" className="g_a" usv="U+0061">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="68" />
     </glyph>
-    <glyph glyphid="69" className="g_b">
+    <glyph glyphid="69" className="g_b" usv="U+0062">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="69" />
     </glyph>
-    <glyph glyphid="70" className="g_c">
+    <glyph glyphid="70" className="g_c" usv="U+0063">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="70" />
     </glyph>
-    <glyph glyphid="71" className="g_d">
+    <glyph glyphid="71" className="g_d" usv="U+0064">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="71" />
     </glyph>
-    <glyph glyphid="72" className="g_e">
+    <glyph glyphid="72" className="g_e" usv="U+0065">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="72" />
     </glyph>
-    <glyph glyphid="73" className="g_f">
+    <glyph glyphid="73" className="g_f" usv="U+0066">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="73" />
     </glyph>
-    <glyph glyphid="74" className="g_g">
+    <glyph glyphid="74" className="g_g" usv="U+0067">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="74" />
     </glyph>
-    <glyph glyphid="75" className="g_h">
+    <glyph glyphid="75" className="g_h" usv="U+0068">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="75" />
     </glyph>
-    <glyph glyphid="76" className="g_i">
+    <glyph glyphid="76" className="g_i" usv="U+0069">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="76" />
     </glyph>
-    <glyph glyphid="77" className="g_j">
+    <glyph glyphid="77" className="g_j" usv="U+006A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="77" />
     </glyph>
-    <glyph glyphid="78" className="g_k">
+    <glyph glyphid="78" className="g_k" usv="U+006B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="78" />
     </glyph>
-    <glyph glyphid="79" className="g_l">
+    <glyph glyphid="79" className="g_l" usv="U+006C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="79" />
     </glyph>
-    <glyph glyphid="80" className="g_m">
+    <glyph glyphid="80" className="g_m" usv="U+006D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="80" />
     </glyph>
-    <glyph glyphid="81" className="g_n">
+    <glyph glyphid="81" className="g_n" usv="U+006E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="81" />
     </glyph>
-    <glyph glyphid="82" className="g_o">
+    <glyph glyphid="82" className="g_o" usv="U+006F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="82" />
     </glyph>
-    <glyph glyphid="83" className="g_p">
+    <glyph glyphid="83" className="g_p" usv="U+0070">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="83" />
     </glyph>
-    <glyph glyphid="84" className="g_q">
+    <glyph glyphid="84" className="g_q" usv="U+0071">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="84" />
     </glyph>
-    <glyph glyphid="85" className="g_r">
+    <glyph glyphid="85" className="g_r" usv="U+0072">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="85" />
     </glyph>
-    <glyph glyphid="86" className="g_s">
+    <glyph glyphid="86" className="g_s" usv="U+0073">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="86" />
     </glyph>
-    <glyph glyphid="87" className="g_t">
+    <glyph glyphid="87" className="g_t" usv="U+0074">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="87" />
     </glyph>
-    <glyph glyphid="88" className="g_u">
+    <glyph glyphid="88" className="g_u" usv="U+0075">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="88" />
     </glyph>
-    <glyph glyphid="89" className="g_v">
+    <glyph glyphid="89" className="g_v" usv="U+0076">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="89" />
     </glyph>
-    <glyph glyphid="90" className="g_w">
+    <glyph glyphid="90" className="g_w" usv="U+0077">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="90" />
     </glyph>
-    <glyph glyphid="91" className="g_x">
+    <glyph glyphid="91" className="g_x" usv="U+0078">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="91" />
     </glyph>
-    <glyph glyphid="92" className="g_y">
+    <glyph glyphid="92" className="g_y" usv="U+0079">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="92" />
     </glyph>
-    <glyph glyphid="93" className="g_z">
+    <glyph glyphid="93" className="g_z" usv="U+007A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="93" />
     </glyph>
-    <glyph glyphid="94" className="g_braceleft">
+    <glyph glyphid="94" className="g_braceleft" usv="U+007B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="94" />
     </glyph>
-    <glyph glyphid="95" className="g_bar">
+    <glyph glyphid="95" className="g_bar" usv="U+007C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="95" />
     </glyph>
-    <glyph glyphid="96" className="g_braceright">
+    <glyph glyphid="96" className="g_braceright" usv="U+007D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="96" />
     </glyph>
-    <glyph glyphid="97" className="g_asciitilde">
+    <glyph glyphid="97" className="g_asciitilde" usv="U+007E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="97" />
     </glyph>
-    <glyph glyphid="98" className="g_multiply">
+    <glyph glyphid="98" className="g_multiply" usv="U+00D7">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="98" />
     </glyph>
-    <glyph glyphid="99" className="g1000">
+    <glyph glyphid="99" className="g1000" usv="U+1000">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="508" inFile="padauk.gdl" atLine="99" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="99" />
@@ -595,7 +595,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="102" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="102" />
     </glyph>
-    <glyph glyphid="103" className="g1001">
+    <glyph glyphid="103" className="g1001" usv="U+1001">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="103" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="103" />
@@ -648,7 +648,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="104" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="104" />
     </glyph>
-    <glyph glyphid="105" className="g1002">
+    <glyph glyphid="105" className="g1002" usv="U+1002">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="105" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="105" />
@@ -701,7 +701,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="106" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="106" />
     </glyph>
-    <glyph glyphid="107" className="g1003">
+    <glyph glyphid="107" className="g1003" usv="U+1003">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="107" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="107" />
@@ -758,7 +758,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="108" />
       <glyphAttrValue name="origWidth" value="795" inFile="padauk.gdl" atLine="108" />
     </glyph>
-    <glyph glyphid="109" className="g1004">
+    <glyph glyphid="109" className="g1004" usv="U+1004">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="109" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="109" />
@@ -899,7 +899,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="118" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="118" />
     </glyph>
-    <glyph glyphid="119" className="g1005">
+    <glyph glyphid="119" className="g1005" usv="U+1005">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="288" inFile="padauk.gdl" atLine="119" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="119" />
@@ -952,7 +952,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="120" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="120" />
     </glyph>
-    <glyph glyphid="121" className="g1006">
+    <glyph glyphid="121" className="g1006" usv="U+1006">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="121" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="121" />
@@ -1009,7 +1009,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="122" />
       <glyphAttrValue name="origWidth" value="789" inFile="padauk.gdl" atLine="122" />
     </glyph>
-    <glyph glyphid="123" className="g1007">
+    <glyph glyphid="123" className="g1007" usv="U+1007">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="286" inFile="padauk.gdl" atLine="123" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="123" />
@@ -1062,7 +1062,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="124" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="124" />
     </glyph>
-    <glyph glyphid="125" className="g1008">
+    <glyph glyphid="125" className="g1008" usv="U+1008">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="810" inFile="padauk.gdl" atLine="125" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="125" />
@@ -1111,7 +1111,7 @@
       <glyphAttrValue name="dotS.y" value="-53" inFile="padauk.gdl" atLine="126" />
       <glyphAttrValue name="dotS.yoffset" value="0" inFile="padauk.gdl" atLine="126" />
     </glyph>
-    <glyph glyphid="127" className="g1009">
+    <glyph glyphid="127" className="g1009" usv="U+1009">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="450" inFile="padauk.gdl" atLine="127" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="127" />
@@ -1163,7 +1163,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="128" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="128" />
     </glyph>
-    <glyph glyphid="129" className="g100a">
+    <glyph glyphid="129" className="g100a" usv="U+100A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="1063" inFile="padauk.gdl" atLine="129" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="129" />
@@ -1268,7 +1268,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="132" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="132" />
     </glyph>
-    <glyph glyphid="133" className="g100b">
+    <glyph glyphid="133" className="g100b" usv="U+100B">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="657" inFile="padauk.gdl" atLine="133" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="133" />
@@ -1397,7 +1397,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="137" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="137" />
     </glyph>
-    <glyph glyphid="138" className="g100c">
+    <glyph glyphid="138" className="g100c" usv="U+100C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="657" inFile="padauk.gdl" atLine="138" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="138" />
@@ -1454,7 +1454,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="139" />
       <glyphAttrValue name="origWidth" value="811" inFile="padauk.gdl" atLine="139" />
     </glyph>
-    <glyph glyphid="140" className="g100d">
+    <glyph glyphid="140" className="g100d" usv="U+100D">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="30" inFile="padauk.gdl" atLine="140" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="140" />
@@ -1563,7 +1563,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="143" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="143" />
     </glyph>
-    <glyph glyphid="144" className="g100e">
+    <glyph glyphid="144" className="g100e" usv="U+100E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="285" inFile="padauk.gdl" atLine="144" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="144" />
@@ -1616,7 +1616,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="145" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="145" />
     </glyph>
-    <glyph glyphid="146" className="g100f">
+    <glyph glyphid="146" className="g100f" usv="U+100F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="516" inFile="padauk.gdl" atLine="146" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="146" />
@@ -1729,7 +1729,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="149" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="149" />
     </glyph>
-    <glyph glyphid="150" className="g1010">
+    <glyph glyphid="150" className="g1010" usv="U+1010">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="150" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="150" />
@@ -1815,7 +1815,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="152" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="152" />
     </glyph>
-    <glyph glyphid="153" className="g1011">
+    <glyph glyphid="153" className="g1011" usv="U+1011">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="153" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="153" />
@@ -1872,7 +1872,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="154" />
       <glyphAttrValue name="origWidth" value="789" inFile="padauk.gdl" atLine="154" />
     </glyph>
-    <glyph glyphid="155" className="g1012">
+    <glyph glyphid="155" className="g1012" usv="U+1012">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="267" inFile="padauk.gdl" atLine="155" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="155" />
@@ -1925,7 +1925,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="156" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="156" />
     </glyph>
-    <glyph glyphid="157" className="g1013">
+    <glyph glyphid="157" className="g1013" usv="U+1013">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="288" inFile="padauk.gdl" atLine="157" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="157" />
@@ -1978,7 +1978,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="158" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="158" />
     </glyph>
-    <glyph glyphid="159" className="g1014">
+    <glyph glyphid="159" className="g1014" usv="U+1014">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="531" inFile="padauk.gdl" atLine="159" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="159" />
@@ -2099,7 +2099,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="163" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="163" />
     </glyph>
-    <glyph glyphid="164" className="g1015">
+    <glyph glyphid="164" className="g1015" usv="U+1015">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="164" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="164" />
@@ -2152,7 +2152,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="165" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="165" />
     </glyph>
-    <glyph glyphid="166" className="g1016">
+    <glyph glyphid="166" className="g1016" usv="U+1016">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="166" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="166" />
@@ -2197,7 +2197,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="167" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="167" />
     </glyph>
-    <glyph glyphid="168" className="g1017">
+    <glyph glyphid="168" className="g1017" usv="U+1017">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="168" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="168" />
@@ -2250,7 +2250,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="169" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="169" />
     </glyph>
-    <glyph glyphid="170" className="g1018">
+    <glyph glyphid="170" className="g1018" usv="U+1018">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="492" inFile="padauk.gdl" atLine="170" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="170" />
@@ -2307,7 +2307,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="171" />
       <glyphAttrValue name="origWidth" value="786" inFile="padauk.gdl" atLine="171" />
     </glyph>
-    <glyph glyphid="172" className="g1019">
+    <glyph glyphid="172" className="g1019" usv="U+1019">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="294" inFile="padauk.gdl" atLine="172" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="172" />
@@ -2360,7 +2360,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="173" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="173" />
     </glyph>
-    <glyph glyphid="174" className="g101a">
+    <glyph glyphid="174" className="g101a" usv="U+101A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="504" inFile="padauk.gdl" atLine="174" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="174" />
@@ -2417,7 +2417,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="175" />
       <glyphAttrValue name="origWidth" value="797" inFile="padauk.gdl" atLine="175" />
     </glyph>
-    <glyph glyphid="176" className="g101b">
+    <glyph glyphid="176" className="g101b" usv="U+101B">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="87" inFile="padauk.gdl" atLine="176" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="176" />
@@ -2574,7 +2574,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="183" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="183" />
     </glyph>
-    <glyph glyphid="184" className="g101c">
+    <glyph glyphid="184" className="g101c" usv="U+101C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="480" inFile="padauk.gdl" atLine="184" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="184" />
@@ -2664,7 +2664,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="186" />
       <glyphAttrValue name="origWidth" value="1168" inFile="padauk.gdl" atLine="186" />
     </glyph>
-    <glyph glyphid="187" className="g101d">
+    <glyph glyphid="187" className="g101d" usv="U+101D">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="286" inFile="padauk.gdl" atLine="187" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="187" />
@@ -2688,7 +2688,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="187" />
     </glyph>
-    <glyph glyphid="188" className="g101e">
+    <glyph glyphid="188" className="g101e" usv="U+101E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="492" inFile="padauk.gdl" atLine="188" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="188" />
@@ -2765,7 +2765,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="190" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="190" />
     </glyph>
-    <glyph glyphid="191" className="g101f">
+    <glyph glyphid="191" className="g101f" usv="U+101F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="504" inFile="padauk.gdl" atLine="191" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="191" />
@@ -2789,7 +2789,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="191" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="191" />
     </glyph>
-    <glyph glyphid="192" className="g1020">
+    <glyph glyphid="192" className="g1020" usv="U+1020">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="654" inFile="padauk.gdl" atLine="192" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="192" />
@@ -2886,7 +2886,7 @@
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="195" />
       <glyphAttrValue name="origWidth" value="583" inFile="padauk.gdl" atLine="195" />
     </glyph>
-    <glyph glyphid="196" className="g1021">
+    <glyph glyphid="196" className="g1021" usv="U+1021">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="465" inFile="padauk.gdl" atLine="196" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="196" />
@@ -2943,7 +2943,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="197" />
       <glyphAttrValue name="origWidth" value="724" inFile="padauk.gdl" atLine="197" />
     </glyph>
-    <glyph glyphid="198" className="g1022">
+    <glyph glyphid="198" className="g1022" usv="U+1022">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="198" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="198" />
@@ -2967,7 +2967,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="198" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="198" />
     </glyph>
-    <glyph glyphid="199" className="g1023">
+    <glyph glyphid="199" className="g1023" usv="U+1023">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="993" inFile="padauk.gdl" atLine="199" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="199" />
@@ -2991,11 +2991,11 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="199" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="199" />
     </glyph>
-    <glyph glyphid="200" className="g1024">
+    <glyph glyphid="200" className="g1024" usv="U+1024">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="200" />
     </glyph>
-    <glyph glyphid="201" className="g1025">
+    <glyph glyphid="201" className="g1025" usv="U+1025">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="276" inFile="padauk.gdl" atLine="201" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="201" />
@@ -3015,7 +3015,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="201" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="201" />
     </glyph>
-    <glyph glyphid="202" className="g1026">
+    <glyph glyphid="202" className="g1026" usv="U+1026">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="276" inFile="padauk.gdl" atLine="202" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="202" />
@@ -3035,7 +3035,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="202" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="202" />
     </glyph>
-    <glyph glyphid="203" className="g1027">
+    <glyph glyphid="203" className="g1027" usv="U+1027">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="203" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="203" />
@@ -3055,7 +3055,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="203" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="203" />
     </glyph>
-    <glyph glyphid="204" className="g1028">
+    <glyph glyphid="204" className="g1028" usv="U+1028">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="204" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="204" />
@@ -3075,7 +3075,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="204" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="204" />
     </glyph>
-    <glyph glyphid="205" className="g1029">
+    <glyph glyphid="205" className="g1029" usv="U+1029">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="1263" inFile="padauk.gdl" atLine="205" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="205" />
@@ -3095,11 +3095,11 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="205" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="205" />
     </glyph>
-    <glyph glyphid="206" className="g102a">
+    <glyph glyphid="206" className="g102a" usv="U+102A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="206" />
     </glyph>
-    <glyph glyphid="207" className="g102b">
+    <glyph glyphid="207" className="g102b" usv="U+102B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="96" inFile="padauk.gdl" atLine="207" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="207" />
@@ -3133,7 +3133,7 @@
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="208" />
       <glyphAttrValue name="xkern" value="270" inFile="padauk.gdl" atLine="208" />
     </glyph>
-    <glyph glyphid="209" className="g102c">
+    <glyph glyphid="209" className="g102c" usv="U+102C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="133" inFile="padauk.gdl" atLine="209" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="209" />
@@ -3157,7 +3157,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="209" />
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="209" />
     </glyph>
-    <glyph glyphid="210" className="g102d">
+    <glyph glyphid="210" className="g102d" usv="U+102D">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="210" />
       <glyphAttrValue name="UM.x" value="-234" inFile="padauk.gdl" atLine="210" />
@@ -3193,7 +3193,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="212" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="212" />
     </glyph>
-    <glyph glyphid="213" className="g102e">
+    <glyph glyphid="213" className="g102e" usv="U+102E">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="213" />
       <glyphAttrValue name="UM.x" value="-237" inFile="padauk.gdl" atLine="213" />
@@ -3217,7 +3217,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="214" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="214" />
     </glyph>
-    <glyph glyphid="215" className="g102f">
+    <glyph glyphid="215" className="g102f" usv="U+102F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="290" inFile="padauk.gdl" atLine="215" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="215" />
@@ -3299,7 +3299,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="217" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="217" />
     </glyph>
-    <glyph glyphid="218" className="g1030">
+    <glyph glyphid="218" className="g1030" usv="U+1030">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="384" inFile="padauk.gdl" atLine="218" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="218" />
@@ -3381,7 +3381,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="220" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="220" />
     </glyph>
-    <glyph glyphid="221" className="g1031">
+    <glyph glyphid="221" className="g1031" usv="U+1031">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="221" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="221" />
@@ -3405,7 +3405,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="221" />
       <glyphAttrValue name="order" value="9" inFile="padauk.gdl" atLine="221" />
     </glyph>
-    <glyph glyphid="222" className="g1032">
+    <glyph glyphid="222" className="g1032" usv="U+1032">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="222" />
       <glyphAttrValue name="UM.x" value="-247" inFile="padauk.gdl" atLine="222" />
@@ -3429,7 +3429,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="223" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="223" />
     </glyph>
-    <glyph glyphid="224" className="g1033">
+    <glyph glyphid="224" className="g1033" usv="U+1033">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="224" />
       <glyphAttrValue name="UM.x" value="-234" inFile="padauk.gdl" atLine="224" />
@@ -3441,7 +3441,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="224" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="224" />
     </glyph>
-    <glyph glyphid="225" className="g1034">
+    <glyph glyphid="225" className="g1034" usv="U+1034">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="225" />
       <glyphAttrValue name="UM.x" value="-193" inFile="padauk.gdl" atLine="225" />
@@ -3453,7 +3453,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="225" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="225" />
     </glyph>
-    <glyph glyphid="226" className="g1035">
+    <glyph glyphid="226" className="g1035" usv="U+1035">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="226" />
       <glyphAttrValue name="UM.x" value="-231" inFile="padauk.gdl" atLine="226" />
@@ -3465,7 +3465,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="226" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="226" />
     </glyph>
-    <glyph glyphid="227" className="g1036">
+    <glyph glyphid="227" className="g1036" usv="U+1036">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="227" />
       <glyphAttrValue name="UM.x" value="-129" inFile="padauk.gdl" atLine="227" />
@@ -3477,7 +3477,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="227" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="227" />
     </glyph>
-    <glyph glyphid="228" className="g1037">
+    <glyph glyphid="228" className="g1037" usv="U+1037">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="13" inFile="padauk.gdl" atLine="228" />
       <glyphAttrValue name="LMM.x" value="-74" inFile="padauk.gdl" atLine="228" />
@@ -3493,7 +3493,7 @@
       <glyphAttrValue name="LM.y" value="-53" inFile="padauk.gdl" atLine="228" />
       <glyphAttrValue name="LM.yoffset" value="0" inFile="padauk.gdl" atLine="228" />
     </glyph>
-    <glyph glyphid="229" className="g1038">
+    <glyph glyphid="229" className="g1038" usv="U+1038">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="229" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="229" />
@@ -3501,7 +3501,7 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="229" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="229" />
     </glyph>
-    <glyph glyphid="230" className="g1039">
+    <glyph glyphid="230" className="g1039" usv="U+1039">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="180" />
       <glyphAttrValue name="LS.x" value="144" inFile="padauk.gdl" atLine="230" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="230" />
@@ -3529,7 +3529,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="230" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="230" />
     </glyph>
-    <glyph glyphid="231" className="g103a">
+    <glyph glyphid="231" className="g103a" usv="U+103A">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="3" inFile="padauk.gdl" atLine="231" />
       <glyphAttrValue name="UM.x" value="-231" inFile="padauk.gdl" atLine="231" />
@@ -3545,7 +3545,7 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="232" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="232" />
     </glyph>
-    <glyph glyphid="233" className="g103b">
+    <glyph glyphid="233" className="g103b" usv="U+103B">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="224" />
       <glyphAttrValue name="BDS.x" value="250" inFile="padauk.gdl" atLine="233" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="233" />
@@ -3652,7 +3652,7 @@
       <glyphAttrValue name="dotS.y" value="-53" inFile="padauk.gdl" atLine="236" />
       <glyphAttrValue name="dotS.yoffset" value="0" inFile="padauk.gdl" atLine="236" />
     </glyph>
-    <glyph glyphid="237" className="g103c">
+    <glyph glyphid="237" className="g103c" usv="U+103C">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="BDS.x" value="841" inFile="padauk.gdl" atLine="237" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="237" />
@@ -3932,7 +3932,7 @@
       <glyphAttrValue name="RS.yoffset" value="0" inFile="padauk.gdl" atLine="248" />
       <glyphAttrValue name="advx" value="1174" inFile="padauk.gdl" atLine="248" />
     </glyph>
-    <glyph glyphid="249" className="g103d">
+    <glyph glyphid="249" className="g103d" usv="U+103D">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="LS.x" value="89" inFile="padauk.gdl" atLine="249" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="249" />
@@ -4032,7 +4032,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="252" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="252" />
     </glyph>
-    <glyph glyphid="253" className="g103e">
+    <glyph glyphid="253" className="g103e" usv="U+103E">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="LS.x" value="89" inFile="padauk.gdl" atLine="253" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="253" />
@@ -4150,7 +4150,7 @@
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="256" />
       <glyphAttrValue name="rkern" value="90" inFile="padauk.gdl" atLine="256" />
     </glyph>
-    <glyph glyphid="257" className="g103f">
+    <glyph glyphid="257" className="g103f" usv="U+103F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="702" inFile="padauk.gdl" atLine="257" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="257" />
@@ -4174,7 +4174,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="257" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="257" />
     </glyph>
-    <glyph glyphid="258" className="g1040">
+    <glyph glyphid="258" className="g1040" usv="U+1040">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="258" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="258" />
@@ -4194,7 +4194,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="258" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="258" />
     </glyph>
-    <glyph glyphid="259" className="g1041">
+    <glyph glyphid="259" className="g1041" usv="U+1041">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="272" inFile="padauk.gdl" atLine="259" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="259" />
@@ -4218,7 +4218,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="259" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="259" />
     </glyph>
-    <glyph glyphid="260" className="g1042">
+    <glyph glyphid="260" className="g1042" usv="U+1042">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="252" inFile="padauk.gdl" atLine="260" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="260" />
@@ -4238,7 +4238,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="260" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="260" />
     </glyph>
-    <glyph glyphid="261" className="g1043">
+    <glyph glyphid="261" className="g1043" usv="U+1043">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="279" inFile="padauk.gdl" atLine="261" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="261" />
@@ -4258,7 +4258,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="261" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="261" />
     </glyph>
-    <glyph glyphid="262" className="g1044">
+    <glyph glyphid="262" className="g1044" usv="U+1044">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="297" inFile="padauk.gdl" atLine="262" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="262" />
@@ -4278,7 +4278,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="262" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="262" />
     </glyph>
-    <glyph glyphid="263" className="g1045">
+    <glyph glyphid="263" className="g1045" usv="U+1045">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="263" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="263" />
@@ -4298,7 +4298,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="263" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="263" />
     </glyph>
-    <glyph glyphid="264" className="g1046">
+    <glyph glyphid="264" className="g1046" usv="U+1046">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="264" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="264" />
@@ -4318,7 +4318,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="264" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="264" />
     </glyph>
-    <glyph glyphid="265" className="g1047">
+    <glyph glyphid="265" className="g1047" usv="U+1047">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="286" inFile="padauk.gdl" atLine="265" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="265" />
@@ -4338,7 +4338,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="265" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="265" />
     </glyph>
-    <glyph glyphid="266" className="g1048">
+    <glyph glyphid="266" className="g1048" usv="U+1048">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="266" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="266" />
@@ -4358,7 +4358,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="266" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="266" />
     </glyph>
-    <glyph glyphid="267" className="g1049">
+    <glyph glyphid="267" className="g1049" usv="U+1049">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="267" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="267" />
@@ -4378,15 +4378,15 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="267" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="267" />
     </glyph>
-    <glyph glyphid="268" className="g104a">
+    <glyph glyphid="268" className="g104a" usv="U+104A">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="179" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="268" />
     </glyph>
-    <glyph glyphid="269" className="g104b">
+    <glyph glyphid="269" className="g104b" usv="U+104B">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="179" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="269" />
     </glyph>
-    <glyph glyphid="270" className="g104c">
+    <glyph glyphid="270" className="g104c" usv="U+104C">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="184" />
       <glyphAttrValue name="BDS.x" value="624" inFile="padauk.gdl" atLine="270" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="270" />
@@ -4402,11 +4402,11 @@
       <glyphAttrValue name="LS.yoffset" value="0" inFile="padauk.gdl" atLine="270" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="270" />
     </glyph>
-    <glyph glyphid="271" className="g104d">
+    <glyph glyphid="271" className="g104d" usv="U+104D">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="184" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="271" />
     </glyph>
-    <glyph glyphid="272" className="g104e">
+    <glyph glyphid="272" className="g104e" usv="U+104E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="US.x" value="292" inFile="padauk.gdl" atLine="272" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="272" />
@@ -4414,11 +4414,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="272" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="272" />
     </glyph>
-    <glyph glyphid="273" className="g104f">
+    <glyph glyphid="273" className="g104f" usv="U+104F">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="184" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="273" />
     </glyph>
-    <glyph glyphid="274" className="g1050">
+    <glyph glyphid="274" className="g1050" usv="U+1050">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="274" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="274" />
@@ -4471,7 +4471,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="275" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="275" />
     </glyph>
-    <glyph glyphid="276" className="g1051">
+    <glyph glyphid="276" className="g1051" usv="U+1051">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="276" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="276" />
@@ -4580,7 +4580,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="279" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="279" />
     </glyph>
-    <glyph glyphid="280" className="g1052">
+    <glyph glyphid="280" className="g1052" usv="U+1052">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="285" inFile="padauk.gdl" atLine="280" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="280" />
@@ -4604,7 +4604,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="280" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="280" />
     </glyph>
-    <glyph glyphid="281" className="g1053">
+    <glyph glyphid="281" className="g1053" usv="U+1053">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="315" inFile="padauk.gdl" atLine="281" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="281" />
@@ -4628,7 +4628,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="281" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="281" />
     </glyph>
-    <glyph glyphid="282" className="g1054">
+    <glyph glyphid="282" className="g1054" usv="U+1054">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="282" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="282" />
@@ -4652,7 +4652,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="282" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="282" />
     </glyph>
-    <glyph glyphid="283" className="g1055">
+    <glyph glyphid="283" className="g1055" usv="U+1055">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="283" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="283" />
@@ -4676,7 +4676,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="283" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="283" />
     </glyph>
-    <glyph glyphid="284" className="g1056">
+    <glyph glyphid="284" className="g1056" usv="U+1056">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="238" inFile="padauk.gdl" atLine="284" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="284" />
@@ -4700,7 +4700,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="284" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="284" />
     </glyph>
-    <glyph glyphid="285" className="g1057">
+    <glyph glyphid="285" className="g1057" usv="U+1057">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="238" inFile="padauk.gdl" atLine="285" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="285" />
@@ -4724,7 +4724,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="285" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="285" />
     </glyph>
-    <glyph glyphid="286" className="g1058">
+    <glyph glyphid="286" className="g1058" usv="U+1058">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="LS.x" value="556" inFile="padauk.gdl" atLine="286" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="286" />
@@ -4752,7 +4752,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="286" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="286" />
     </glyph>
-    <glyph glyphid="287" className="g1059">
+    <glyph glyphid="287" className="g1059" usv="U+1059">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="LS.x" value="556" inFile="padauk.gdl" atLine="287" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="287" />
@@ -4780,7 +4780,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="287" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="287" />
     </glyph>
-    <glyph glyphid="288" className="g105a">
+    <glyph glyphid="288" className="g105a" usv="U+105A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="288" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="288" />
@@ -4833,7 +4833,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="289" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="289" />
     </glyph>
-    <glyph glyphid="290" className="g105b">
+    <glyph glyphid="290" className="g105b" usv="U+105B">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="148" inFile="padauk.gdl" atLine="290" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="290" />
@@ -4882,7 +4882,7 @@
       <glyphAttrValue name="dotS.y" value="-53" inFile="padauk.gdl" atLine="291" />
       <glyphAttrValue name="dotS.yoffset" value="0" inFile="padauk.gdl" atLine="291" />
     </glyph>
-    <glyph glyphid="292" className="g105c">
+    <glyph glyphid="292" className="g105c" usv="U+105C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="290" inFile="padauk.gdl" atLine="292" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="292" />
@@ -4935,7 +4935,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="293" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="293" />
     </glyph>
-    <glyph glyphid="294" className="g105d">
+    <glyph glyphid="294" className="g105d" usv="U+105D">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="294" inFile="padauk.gdl" atLine="294" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="294" />
@@ -4959,7 +4959,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="294" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="294" />
     </glyph>
-    <glyph glyphid="295" className="g105e">
+    <glyph glyphid="295" className="g105e" usv="U+105E">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="LS.x" value="89" inFile="padauk.gdl" atLine="295" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="295" />
@@ -4987,7 +4987,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="295" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="295" />
     </glyph>
-    <glyph glyphid="296" className="g105f">
+    <glyph glyphid="296" className="g105f" usv="U+105F">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="LS.x" value="89" inFile="padauk.gdl" atLine="296" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="296" />
@@ -5015,7 +5015,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="296" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="296" />
     </glyph>
-    <glyph glyphid="297" className="g1060">
+    <glyph glyphid="297" className="g1060" usv="U+1060">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="225" />
       <glyphAttrValue name="order" value="7" inFile="padauk.gdl" atLine="297" />
       <glyphAttrValue name="LLS.x" value="-556" inFile="padauk.gdl" atLine="297" />
@@ -5035,7 +5035,7 @@
       <glyphAttrValue name="LM.y" value="-53" inFile="padauk.gdl" atLine="297" />
       <glyphAttrValue name="LM.yoffset" value="0" inFile="padauk.gdl" atLine="297" />
     </glyph>
-    <glyph glyphid="298" className="g1061">
+    <glyph glyphid="298" className="g1061" usv="U+1061">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="87" inFile="padauk.gdl" atLine="298" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="298" />
@@ -5063,7 +5063,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="298" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="298" />
     </glyph>
-    <glyph glyphid="299" className="g1062">
+    <glyph glyphid="299" className="g1062" usv="U+1062">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="192" inFile="padauk.gdl" atLine="299" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="299" />
@@ -5099,7 +5099,7 @@
       <glyphAttrValue name="LS.yoffset" value="0" inFile="padauk.gdl" atLine="300" />
       <glyphAttrValue name="order" value="13" inFile="padauk.gdl" atLine="300" />
     </glyph>
-    <glyph glyphid="301" className="g1063">
+    <glyph glyphid="301" className="g1063" usv="U+1063">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="276" inFile="padauk.gdl" atLine="301" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="301" />
@@ -5139,7 +5139,7 @@
       <glyphAttrValue name="LS.yoffset" value="0" inFile="padauk.gdl" atLine="302" />
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="302" />
     </glyph>
-    <glyph glyphid="303" className="g1064">
+    <glyph glyphid="303" className="g1064" usv="U+1064">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="192" inFile="padauk.gdl" atLine="303" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="303" />
@@ -5159,7 +5159,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="303" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="303" />
     </glyph>
-    <glyph glyphid="304" className="g1065">
+    <glyph glyphid="304" className="g1065" usv="U+1065">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="279" inFile="padauk.gdl" atLine="304" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="304" />
@@ -5183,7 +5183,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="304" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="304" />
     </glyph>
-    <glyph glyphid="305" className="g1066">
+    <glyph glyphid="305" className="g1066" usv="U+1066">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="305" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="305" />
@@ -5207,7 +5207,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="305" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="305" />
     </glyph>
-    <glyph glyphid="306" className="g1067">
+    <glyph glyphid="306" className="g1067" usv="U+1067">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="138" inFile="padauk.gdl" atLine="306" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="306" />
@@ -5227,7 +5227,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="306" />
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="306" />
     </glyph>
-    <glyph glyphid="307" className="g1068">
+    <glyph glyphid="307" className="g1068" usv="U+1068">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="134" inFile="padauk.gdl" atLine="307" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="307" />
@@ -5243,7 +5243,7 @@
       <glyphAttrValue name="LS.yoffset" value="0" inFile="padauk.gdl" atLine="307" />
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="307" />
     </glyph>
-    <glyph glyphid="308" className="g1069">
+    <glyph glyphid="308" className="g1069" usv="U+1069">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="180" inFile="padauk.gdl" atLine="308" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="308" />
@@ -5267,7 +5267,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="308" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="308" />
     </glyph>
-    <glyph glyphid="309" className="g106a">
+    <glyph glyphid="309" className="g106a" usv="U+106A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="154" inFile="padauk.gdl" atLine="309" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="309" />
@@ -5287,7 +5287,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="309" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="309" />
     </glyph>
-    <glyph glyphid="310" className="g106b">
+    <glyph glyphid="310" className="g106b" usv="U+106B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="210" inFile="padauk.gdl" atLine="310" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="310" />
@@ -5307,7 +5307,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="310" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="310" />
     </glyph>
-    <glyph glyphid="311" className="g106c">
+    <glyph glyphid="311" className="g106c" usv="U+106C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="138" inFile="padauk.gdl" atLine="311" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="311" />
@@ -5327,7 +5327,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="311" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="311" />
     </glyph>
-    <glyph glyphid="312" className="g106d">
+    <glyph glyphid="312" className="g106d" usv="U+106D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="174" inFile="padauk.gdl" atLine="312" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="312" />
@@ -5351,7 +5351,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="312" />
       <glyphAttrValue name="order" value="17" inFile="padauk.gdl" atLine="312" />
     </glyph>
-    <glyph glyphid="313" className="g106e">
+    <glyph glyphid="313" className="g106e" usv="U+106E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="592" inFile="padauk.gdl" atLine="313" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="313" />
@@ -5375,7 +5375,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="313" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="313" />
     </glyph>
-    <glyph glyphid="314" className="g106f">
+    <glyph glyphid="314" className="g106f" usv="U+106F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="293" inFile="padauk.gdl" atLine="314" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="314" />
@@ -5399,7 +5399,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="314" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="314" />
     </glyph>
-    <glyph glyphid="315" className="g1070">
+    <glyph glyphid="315" className="g1070" usv="U+1070">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="293" inFile="padauk.gdl" atLine="315" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="315" />
@@ -5423,7 +5423,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="315" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="315" />
     </glyph>
-    <glyph glyphid="316" className="g1071">
+    <glyph glyphid="316" className="g1071" usv="U+1071">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="316" />
       <glyphAttrValue name="UM.x" value="231" inFile="padauk.gdl" atLine="316" />
@@ -5431,7 +5431,7 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="316" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="316" />
     </glyph>
-    <glyph glyphid="317" className="g1072">
+    <glyph glyphid="317" className="g1072" usv="U+1072">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="317" />
       <glyphAttrValue name="UM.x" value="-286" inFile="padauk.gdl" atLine="317" />
@@ -5439,7 +5439,7 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="317" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="317" />
     </glyph>
-    <glyph glyphid="318" className="g1073">
+    <glyph glyphid="318" className="g1073" usv="U+1073">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="318" />
       <glyphAttrValue name="UM.x" value="226" inFile="padauk.gdl" atLine="318" />
@@ -5451,7 +5451,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="318" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="318" />
     </glyph>
-    <glyph glyphid="319" className="g1074">
+    <glyph glyphid="319" className="g1074" usv="U+1074">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="319" />
       <glyphAttrValue name="UM.x" value="-282" inFile="padauk.gdl" atLine="319" />
@@ -5463,7 +5463,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="319" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="319" />
     </glyph>
-    <glyph glyphid="320" className="g1075">
+    <glyph glyphid="320" className="g1075" usv="U+1075">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="285" inFile="padauk.gdl" atLine="320" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="320" />
@@ -5487,7 +5487,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="320" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="320" />
     </glyph>
-    <glyph glyphid="321" className="g1076">
+    <glyph glyphid="321" className="g1076" usv="U+1076">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="289" inFile="padauk.gdl" atLine="321" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="321" />
@@ -5511,7 +5511,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="321" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="321" />
     </glyph>
-    <glyph glyphid="322" className="g1077">
+    <glyph glyphid="322" className="g1077" usv="U+1077">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="285" inFile="padauk.gdl" atLine="322" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="322" />
@@ -5535,7 +5535,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="322" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="322" />
     </glyph>
-    <glyph glyphid="323" className="g1078">
+    <glyph glyphid="323" className="g1078" usv="U+1078">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="323" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="323" />
@@ -5559,7 +5559,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="323" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="323" />
     </glyph>
-    <glyph glyphid="324" className="g1079">
+    <glyph glyphid="324" className="g1079" usv="U+1079">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="468" inFile="padauk.gdl" atLine="324" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="324" />
@@ -5583,7 +5583,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="324" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="324" />
     </glyph>
-    <glyph glyphid="325" className="g107a">
+    <glyph glyphid="325" className="g107a" usv="U+107A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="750" inFile="padauk.gdl" atLine="325" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="325" />
@@ -5611,7 +5611,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="325" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="325" />
     </glyph>
-    <glyph glyphid="326" className="g107b">
+    <glyph glyphid="326" className="g107b" usv="U+107B">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="462" inFile="padauk.gdl" atLine="326" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="326" />
@@ -5635,7 +5635,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="326" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="326" />
     </glyph>
-    <glyph glyphid="327" className="g107c">
+    <glyph glyphid="327" className="g107c" usv="U+107C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="474" inFile="padauk.gdl" atLine="327" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="327" />
@@ -5659,7 +5659,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="327" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="327" />
     </glyph>
-    <glyph glyphid="328" className="g107d">
+    <glyph glyphid="328" className="g107d" usv="U+107D">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="504" inFile="padauk.gdl" atLine="328" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="328" />
@@ -5683,7 +5683,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="328" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="328" />
     </glyph>
-    <glyph glyphid="329" className="g107e">
+    <glyph glyphid="329" className="g107e" usv="U+107E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="276" inFile="padauk.gdl" atLine="329" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="329" />
@@ -5707,7 +5707,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="329" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="329" />
     </glyph>
-    <glyph glyphid="330" className="g107f">
+    <glyph glyphid="330" className="g107f" usv="U+107F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="330" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="330" />
@@ -5731,7 +5731,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="330" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="330" />
     </glyph>
-    <glyph glyphid="331" className="g1080">
+    <glyph glyphid="331" className="g1080" usv="U+1080">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="331" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="331" />
@@ -5755,7 +5755,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="331" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="331" />
     </glyph>
-    <glyph glyphid="332" className="g1081">
+    <glyph glyphid="332" className="g1081" usv="U+1081">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="332" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="332" />
@@ -5779,7 +5779,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="332" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="332" />
     </glyph>
-    <glyph glyphid="333" className="g1082">
+    <glyph glyphid="333" className="g1082" usv="U+1082">
       <glyphAttrValue name="breakweight" value="-50" inFile="myanmar5.gdl" atLine="265" />
       <glyphAttrValue name="LS.x" value="556" inFile="padauk.gdl" atLine="333" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="333" />
@@ -5835,7 +5835,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="334" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="334" />
     </glyph>
-    <glyph glyphid="335" className="g1083">
+    <glyph glyphid="335" className="g1083" usv="U+1083">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="US.x" value="173" inFile="padauk.gdl" atLine="335" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="335" />
@@ -5843,11 +5843,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="335" />
       <glyphAttrValue name="order" value="15" inFile="padauk.gdl" atLine="335" />
     </glyph>
-    <glyph glyphid="336" className="g1084">
+    <glyph glyphid="336" className="g1084" usv="U+1084">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="9" inFile="padauk.gdl" atLine="336" />
     </glyph>
-    <glyph glyphid="337" className="g1085">
+    <glyph glyphid="337" className="g1085" usv="U+1085">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="337" />
       <glyphAttrValue name="UM.x" value="-219" inFile="padauk.gdl" atLine="337" />
@@ -5859,7 +5859,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="337" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="337" />
     </glyph>
-    <glyph glyphid="338" className="g1086">
+    <glyph glyphid="338" className="g1086" usv="U+1086">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="14" inFile="padauk.gdl" atLine="338" />
       <glyphAttrValue name="UM.x" value="-169" inFile="padauk.gdl" atLine="338" />
@@ -5883,7 +5883,7 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="339" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="339" />
     </glyph>
-    <glyph glyphid="340" className="g1087">
+    <glyph glyphid="340" className="g1087" usv="U+1087">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="340" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="340" />
@@ -5891,11 +5891,11 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="340" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="340" />
     </glyph>
-    <glyph glyphid="341" className="g1088">
+    <glyph glyphid="341" className="g1088" usv="U+1088">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="341" />
     </glyph>
-    <glyph glyphid="342" className="g1089">
+    <glyph glyphid="342" className="g1089" usv="U+1089">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="342" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="342" />
@@ -5903,7 +5903,7 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="342" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="342" />
     </glyph>
-    <glyph glyphid="343" className="g108a">
+    <glyph glyphid="343" className="g108a" usv="U+108A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="343" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="343" />
@@ -5911,7 +5911,7 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="343" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="343" />
     </glyph>
-    <glyph glyphid="344" className="g108b">
+    <glyph glyphid="344" className="g108b" usv="U+108B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="344" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="344" />
@@ -5919,7 +5919,7 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="344" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="344" />
     </glyph>
-    <glyph glyphid="345" className="g108c">
+    <glyph glyphid="345" className="g108c" usv="U+108C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="345" />
       <glyphAttrValue name="FAKES.x" value="0" inFile="padauk.gdl" atLine="345" />
@@ -5927,7 +5927,7 @@
       <glyphAttrValue name="FAKES.y" value="0" inFile="padauk.gdl" atLine="345" />
       <glyphAttrValue name="FAKES.yoffset" value="0" inFile="padauk.gdl" atLine="345" />
     </glyph>
-    <glyph glyphid="346" className="g108d">
+    <glyph glyphid="346" className="g108d" usv="U+108D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="LS.x" value="585" inFile="padauk.gdl" atLine="346" />
       <glyphAttrValue name="LS.xoffset" value="0" inFile="padauk.gdl" atLine="346" />
@@ -5955,7 +5955,7 @@
       <glyphAttrValue name="BSM.y" value="-53" inFile="padauk.gdl" atLine="346" />
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="346" />
     </glyph>
-    <glyph glyphid="347" className="g108e">
+    <glyph glyphid="347" className="g108e" usv="U+108E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="288" inFile="padauk.gdl" atLine="347" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="347" />
@@ -5979,11 +5979,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="347" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="347" />
     </glyph>
-    <glyph glyphid="348" className="g108f">
+    <glyph glyphid="348" className="g108f" usv="U+108F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="348" />
     </glyph>
-    <glyph glyphid="349" className="g1090">
+    <glyph glyphid="349" className="g1090" usv="U+1090">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="349" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="349" />
@@ -6003,7 +6003,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="349" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="349" />
     </glyph>
-    <glyph glyphid="350" className="g1091">
+    <glyph glyphid="350" className="g1091" usv="U+1091">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="US.x" value="154" inFile="padauk.gdl" atLine="350" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="350" />
@@ -6011,7 +6011,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="350" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="350" />
     </glyph>
-    <glyph glyphid="351" className="g1092">
+    <glyph glyphid="351" className="g1092" usv="U+1092">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="RM.x" value="0" inFile="padauk.gdl" atLine="351" />
       <glyphAttrValue name="RM.xoffset" value="0" inFile="padauk.gdl" atLine="351" />
@@ -6019,7 +6019,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="351" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="351" />
     </glyph>
-    <glyph glyphid="352" className="g1093">
+    <glyph glyphid="352" className="g1093" usv="U+1093">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="US.x" value="182" inFile="padauk.gdl" atLine="352" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="352" />
@@ -6027,7 +6027,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="352" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="352" />
     </glyph>
-    <glyph glyphid="353" className="g1094">
+    <glyph glyphid="353" className="g1094" usv="U+1094">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="US.x" value="200" inFile="padauk.gdl" atLine="353" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="353" />
@@ -6035,7 +6035,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="353" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="353" />
     </glyph>
-    <glyph glyphid="354" className="g1095">
+    <glyph glyphid="354" className="g1095" usv="U+1095">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="RM.x" value="2" inFile="padauk.gdl" atLine="354" />
       <glyphAttrValue name="RM.xoffset" value="0" inFile="padauk.gdl" atLine="354" />
@@ -6043,7 +6043,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="354" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="354" />
     </glyph>
-    <glyph glyphid="355" className="g1096">
+    <glyph glyphid="355" className="g1096" usv="U+1096">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="RM.x" value="2" inFile="padauk.gdl" atLine="355" />
       <glyphAttrValue name="RM.xoffset" value="0" inFile="padauk.gdl" atLine="355" />
@@ -6051,7 +6051,7 @@
       <glyphAttrValue name="RM.yoffset" value="0" inFile="padauk.gdl" atLine="355" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="355" />
     </glyph>
-    <glyph glyphid="356" className="g1097">
+    <glyph glyphid="356" className="g1097" usv="U+1097">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="US.x" value="218" inFile="padauk.gdl" atLine="356" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="356" />
@@ -6059,7 +6059,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="356" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="356" />
     </glyph>
-    <glyph glyphid="357" className="g1098">
+    <glyph glyphid="357" className="g1098" usv="U+1098">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="290" inFile="padauk.gdl" atLine="357" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="357" />
@@ -6079,7 +6079,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="357" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="357" />
     </glyph>
-    <glyph glyphid="358" className="g1099">
+    <glyph glyphid="358" className="g1099" usv="U+1099">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="BDS.x" value="290" inFile="padauk.gdl" atLine="358" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="358" />
@@ -6099,19 +6099,19 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="358" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="358" />
     </glyph>
-    <glyph glyphid="359" className="g109a">
+    <glyph glyphid="359" className="g109a" usv="U+109A">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="359" />
     </glyph>
-    <glyph glyphid="360" className="g109b">
+    <glyph glyphid="360" className="g109b" usv="U+109B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="360" />
     </glyph>
-    <glyph glyphid="361" className="g109c">
+    <glyph glyphid="361" className="g109c" usv="U+109C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="361" />
     </glyph>
-    <glyph glyphid="362" className="g109d">
+    <glyph glyphid="362" className="g109d" usv="U+109D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="362" />
       <glyphAttrValue name="UM.x" value="-114" inFile="padauk.gdl" atLine="362" />
@@ -6119,7 +6119,7 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="362" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="362" />
     </glyph>
-    <glyph glyphid="363" className="g109e">
+    <glyph glyphid="363" className="g109e" usv="U+109E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="US.x" value="173" inFile="padauk.gdl" atLine="363" />
       <glyphAttrValue name="US.xoffset" value="0" inFile="padauk.gdl" atLine="363" />
@@ -6127,55 +6127,55 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="363" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="363" />
     </glyph>
-    <glyph glyphid="364" className="g109f">
+    <glyph glyphid="364" className="g109f" usv="U+109F">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="364" />
     </glyph>
-    <glyph glyphid="365" className="g200b">
+    <glyph glyphid="365" className="g200b" usv="U+200B">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="177" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="365" />
     </glyph>
-    <glyph glyphid="366" className="g200c">
+    <glyph glyphid="366" className="g200c" usv="U+200C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="366" />
     </glyph>
-    <glyph glyphid="367" className="g200d">
+    <glyph glyphid="367" className="g200d" usv="U+200D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="367" />
     </glyph>
-    <glyph glyphid="368" className="g_quotedblleft">
+    <glyph glyphid="368" className="g_quotedblleft" usv="U+201C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="189" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="368" />
     </glyph>
-    <glyph glyphid="369" className="g_quotedblright">
+    <glyph glyphid="369" className="g_quotedblright" usv="U+201D">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="190" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="369" />
     </glyph>
-    <glyph glyphid="370" className="g_quoteleft">
+    <glyph glyphid="370" className="g_quoteleft" usv="U+2018">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="189" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="370" />
     </glyph>
-    <glyph glyphid="371" className="g_quoteright">
+    <glyph glyphid="371" className="g_quoteright" usv="U+2019">
       <glyphAttrValue name="breakweight" value="10" inFile="myanmar5.gdl" atLine="190" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="371" />
     </glyph>
-    <glyph glyphid="372" className="g_endash">
+    <glyph glyphid="372" className="g_endash" usv="U+2013">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="372" />
     </glyph>
-    <glyph glyphid="373" className="g_emdash">
+    <glyph glyphid="373" className="g_emdash" usv="U+2014">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="373" />
     </glyph>
-    <glyph glyphid="374" className="g2060">
+    <glyph glyphid="374" className="g2060" usv="U+2060">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="182" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="374" />
     </glyph>
-    <glyph glyphid="375" className="g_notequal">
+    <glyph glyphid="375" className="g_notequal" usv="U+2260">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="375" />
     </glyph>
-    <glyph glyphid="376" className="g_circledash">
+    <glyph glyphid="376" className="g_circledash" usv="U+25CC">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="318" inFile="padauk.gdl" atLine="376" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="376" />
@@ -6200,7 +6200,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="376" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="376" />
     </glyph>
-    <glyph glyphid="377" className="g1700">
+    <glyph glyphid="377" className="g1700" usv="U+1700">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="318" inFile="padauk.gdl" atLine="377" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="377" />
@@ -6225,11 +6225,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="377" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="377" />
     </glyph>
-    <glyph glyphid="378" className="ga92e">
+    <glyph glyphid="378" className="ga92e" usv="U+A92E">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="378" />
     </glyph>
-    <glyph glyphid="379" className="ga9e0">
+    <glyph glyphid="379" className="ga9e0" usv="U+A9E0">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="283" inFile="padauk.gdl" atLine="379" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="379" />
@@ -6253,7 +6253,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="379" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="379" />
     </glyph>
-    <glyph glyphid="380" className="ga9e1">
+    <glyph glyphid="380" className="ga9e1" usv="U+A9E1">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="479" inFile="padauk.gdl" atLine="380" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="380" />
@@ -6277,7 +6277,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="380" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="380" />
     </glyph>
-    <glyph glyphid="381" className="ga9e2">
+    <glyph glyphid="381" className="ga9e2" usv="U+A9E2">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="465" inFile="padauk.gdl" atLine="381" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="381" />
@@ -6301,7 +6301,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="381" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="381" />
     </glyph>
-    <glyph glyphid="382" className="ga9e3">
+    <glyph glyphid="382" className="ga9e3" usv="U+A9E3">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="382" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="382" />
@@ -6325,7 +6325,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="382" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="382" />
     </glyph>
-    <glyph glyphid="383" className="ga9e4">
+    <glyph glyphid="383" className="ga9e4" usv="U+A9E4">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="502" inFile="padauk.gdl" atLine="383" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="383" />
@@ -6349,7 +6349,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="383" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="383" />
     </glyph>
-    <glyph glyphid="384" className="ga9e5">
+    <glyph glyphid="384" className="ga9e5" usv="U+A9E5">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="11" inFile="padauk.gdl" atLine="384" />
       <glyphAttrValue name="UM.x" value="-111" inFile="padauk.gdl" atLine="384" />
@@ -6373,11 +6373,11 @@
       <glyphAttrValue name="YM.y" value="495" inFile="padauk.gdl" atLine="385" />
       <glyphAttrValue name="YM.yoffset" value="0" inFile="padauk.gdl" atLine="385" />
     </glyph>
-    <glyph glyphid="386" className="ga9e6">
+    <glyph glyphid="386" className="ga9e6" usv="U+A9E6">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="8" inFile="padauk.gdl" atLine="386" />
     </glyph>
-    <glyph glyphid="387" className="ga9e7">
+    <glyph glyphid="387" className="ga9e7" usv="U+A9E7">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="481" inFile="padauk.gdl" atLine="387" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="387" />
@@ -6401,7 +6401,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="387" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="387" />
     </glyph>
-    <glyph glyphid="388" className="ga9e8">
+    <glyph glyphid="388" className="ga9e8" usv="U+A9E8">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="502" inFile="padauk.gdl" atLine="388" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="388" />
@@ -6425,7 +6425,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="388" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="388" />
     </glyph>
-    <glyph glyphid="389" className="ga9e9">
+    <glyph glyphid="389" className="ga9e9" usv="U+A9E9">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="508" inFile="padauk.gdl" atLine="389" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="389" />
@@ -6449,7 +6449,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="389" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="389" />
     </glyph>
-    <glyph glyphid="390" className="ga9ea">
+    <glyph glyphid="390" className="ga9ea" usv="U+A9EA">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="480" inFile="padauk.gdl" atLine="390" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="390" />
@@ -6473,7 +6473,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="390" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="390" />
     </glyph>
-    <glyph glyphid="391" className="ga9eb">
+    <glyph glyphid="391" className="ga9eb" usv="U+A9EB">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="391" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="391" />
@@ -6497,7 +6497,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="391" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="391" />
     </glyph>
-    <glyph glyphid="392" className="ga9ec">
+    <glyph glyphid="392" className="ga9ec" usv="U+A9EC">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="392" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="392" />
@@ -6521,7 +6521,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="392" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="392" />
     </glyph>
-    <glyph glyphid="393" className="ga9ed">
+    <glyph glyphid="393" className="ga9ed" usv="U+A9ED">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="393" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="393" />
@@ -6545,7 +6545,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="393" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="393" />
     </glyph>
-    <glyph glyphid="394" className="ga9ee">
+    <glyph glyphid="394" className="ga9ee" usv="U+A9EE">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="394" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="394" />
@@ -6569,7 +6569,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="394" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="394" />
     </glyph>
-    <glyph glyphid="395" className="ga9ef">
+    <glyph glyphid="395" className="ga9ef" usv="U+A9EF">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="411" inFile="padauk.gdl" atLine="395" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="395" />
@@ -6593,7 +6593,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="395" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="395" />
     </glyph>
-    <glyph glyphid="396" className="ga9fa">
+    <glyph glyphid="396" className="ga9fa" usv="U+A9FA">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="480" inFile="padauk.gdl" atLine="396" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="396" />
@@ -6617,7 +6617,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="396" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="396" />
     </glyph>
-    <glyph glyphid="397" className="ga9fb">
+    <glyph glyphid="397" className="ga9fb" usv="U+A9FB">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="397" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="397" />
@@ -6641,7 +6641,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="397" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="397" />
     </glyph>
-    <glyph glyphid="398" className="ga9fc">
+    <glyph glyphid="398" className="ga9fc" usv="U+A9FC">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="398" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="398" />
@@ -6665,7 +6665,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="398" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="398" />
     </glyph>
-    <glyph glyphid="399" className="ga9fd">
+    <glyph glyphid="399" className="ga9fd" usv="U+A9FD">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="292" inFile="padauk.gdl" atLine="399" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="399" />
@@ -6689,7 +6689,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="399" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="399" />
     </glyph>
-    <glyph glyphid="400" className="ga9fe">
+    <glyph glyphid="400" className="ga9fe" usv="U+A9FE">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="400" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="400" />
@@ -6713,47 +6713,47 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="400" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="400" />
     </glyph>
-    <glyph glyphid="401" className="ga9f0">
+    <glyph glyphid="401" className="ga9f0" usv="U+A9F0">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="401" />
     </glyph>
-    <glyph glyphid="402" className="ga9f1">
+    <glyph glyphid="402" className="ga9f1" usv="U+A9F1">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="402" />
     </glyph>
-    <glyph glyphid="403" className="ga9f2">
+    <glyph glyphid="403" className="ga9f2" usv="U+A9F2">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="403" />
     </glyph>
-    <glyph glyphid="404" className="ga9f3">
+    <glyph glyphid="404" className="ga9f3" usv="U+A9F3">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="404" />
     </glyph>
-    <glyph glyphid="405" className="ga9f4">
+    <glyph glyphid="405" className="ga9f4" usv="U+A9F4">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="405" />
     </glyph>
-    <glyph glyphid="406" className="ga9f5">
+    <glyph glyphid="406" className="ga9f5" usv="U+A9F5">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="406" />
     </glyph>
-    <glyph glyphid="407" className="ga9f6">
+    <glyph glyphid="407" className="ga9f6" usv="U+A9F6">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="407" />
     </glyph>
-    <glyph glyphid="408" className="ga9f7">
+    <glyph glyphid="408" className="ga9f7" usv="U+A9F7">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="408" />
     </glyph>
-    <glyph glyphid="409" className="ga9f8">
+    <glyph glyphid="409" className="ga9f8" usv="U+A9F8">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="187" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="409" />
     </glyph>
-    <glyph glyphid="410" className="ga9f9">
+    <glyph glyphid="410" className="ga9f9" usv="U+A9F9">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="410" />
     </glyph>
-    <glyph glyphid="411" className="gaa60">
+    <glyph glyphid="411" className="gaa60" usv="U+AA60">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="465" inFile="padauk.gdl" atLine="411" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="411" />
@@ -6843,7 +6843,7 @@
       <glyphAttrValue name="LMM.yoffset" value="0" inFile="padauk.gdl" atLine="413" />
       <glyphAttrValue name="origWidth" value="757" inFile="padauk.gdl" atLine="413" />
     </glyph>
-    <glyph glyphid="414" className="gaa61">
+    <glyph glyphid="414" className="gaa61" usv="U+AA61">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="505" inFile="padauk.gdl" atLine="414" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="414" />
@@ -6867,7 +6867,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="414" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="414" />
     </glyph>
-    <glyph glyphid="415" className="gaa62">
+    <glyph glyphid="415" className="gaa62" usv="U+AA62">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="303" inFile="padauk.gdl" atLine="415" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="415" />
@@ -6891,7 +6891,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="415" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="415" />
     </glyph>
-    <glyph glyphid="416" className="gaa63">
+    <glyph glyphid="416" className="gaa63" usv="U+AA63">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="500" inFile="padauk.gdl" atLine="416" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="416" />
@@ -6915,7 +6915,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="416" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="416" />
     </glyph>
-    <glyph glyphid="417" className="gaa64">
+    <glyph glyphid="417" className="gaa64" usv="U+AA64">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="508" inFile="padauk.gdl" atLine="417" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="417" />
@@ -6939,7 +6939,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="417" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="417" />
     </glyph>
-    <glyph glyphid="418" className="gaa65">
+    <glyph glyphid="418" className="gaa65" usv="U+AA65">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="744" inFile="padauk.gdl" atLine="418" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="418" />
@@ -6967,7 +6967,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="418" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="418" />
     </glyph>
-    <glyph glyphid="419" className="gaa66">
+    <glyph glyphid="419" className="gaa66" usv="U+AA66">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="501" inFile="padauk.gdl" atLine="419" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="419" />
@@ -6991,7 +6991,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="419" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="419" />
     </glyph>
-    <glyph glyphid="420" className="gaa67">
+    <glyph glyphid="420" className="gaa67" usv="U+AA67">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="420" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="420" />
@@ -7015,7 +7015,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="420" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="420" />
     </glyph>
-    <glyph glyphid="421" className="gaa68">
+    <glyph glyphid="421" className="gaa68" usv="U+AA68">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="645" inFile="padauk.gdl" atLine="421" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="421" />
@@ -7039,7 +7039,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="421" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="421" />
     </glyph>
-    <glyph glyphid="422" className="gaa69">
+    <glyph glyphid="422" className="gaa69" usv="U+AA69">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="422" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="422" />
@@ -7063,7 +7063,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="422" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="422" />
     </glyph>
-    <glyph glyphid="423" className="gaa6a">
+    <glyph glyphid="423" className="gaa6a" usv="U+AA6A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="423" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="423" />
@@ -7087,7 +7087,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="423" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="423" />
     </glyph>
-    <glyph glyphid="424" className="gaa6b">
+    <glyph glyphid="424" className="gaa6b" usv="U+AA6B">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="421" inFile="padauk.gdl" atLine="424" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="424" />
@@ -7111,7 +7111,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="424" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="424" />
     </glyph>
-    <glyph glyphid="425" className="gaa6c">
+    <glyph glyphid="425" className="gaa6c" usv="U+AA6C">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="495" inFile="padauk.gdl" atLine="425" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="425" />
@@ -7135,7 +7135,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="425" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="425" />
     </glyph>
-    <glyph glyphid="426" className="gaa6d">
+    <glyph glyphid="426" className="gaa6d" usv="U+AA6D">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="555" inFile="padauk.gdl" atLine="426" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="426" />
@@ -7159,7 +7159,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="426" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="426" />
     </glyph>
-    <glyph glyphid="427" className="gaa6e">
+    <glyph glyphid="427" className="gaa6e" usv="U+AA6E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="480" inFile="padauk.gdl" atLine="427" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="427" />
@@ -7183,7 +7183,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="427" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="427" />
     </glyph>
-    <glyph glyphid="428" className="gaa6f">
+    <glyph glyphid="428" className="gaa6f" usv="U+AA6F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="436" inFile="padauk.gdl" atLine="428" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="428" />
@@ -7207,11 +7207,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="428" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="428" />
     </glyph>
-    <glyph glyphid="429" className="gaa70">
+    <glyph glyphid="429" className="gaa70" usv="U+AA70">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="22" inFile="padauk.gdl" atLine="429" />
     </glyph>
-    <glyph glyphid="430" className="gaa71">
+    <glyph glyphid="430" className="gaa71" usv="U+AA71">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="508" inFile="padauk.gdl" atLine="430" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="430" />
@@ -7235,7 +7235,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="430" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="430" />
     </glyph>
-    <glyph glyphid="431" className="gaa72">
+    <glyph glyphid="431" className="gaa72" usv="U+AA72">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="721" inFile="padauk.gdl" atLine="431" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="431" />
@@ -7259,7 +7259,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="431" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="431" />
     </glyph>
-    <glyph glyphid="432" className="gaa73">
+    <glyph glyphid="432" className="gaa73" usv="U+AA73">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="303" inFile="padauk.gdl" atLine="432" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="432" />
@@ -7283,19 +7283,19 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="432" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="432" />
     </glyph>
-    <glyph glyphid="433" className="gaa74">
+    <glyph glyphid="433" className="gaa74" usv="U+AA74">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="433" />
     </glyph>
-    <glyph glyphid="434" className="gaa75">
+    <glyph glyphid="434" className="gaa75" usv="U+AA75">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="434" />
     </glyph>
-    <glyph glyphid="435" className="gaa76">
+    <glyph glyphid="435" className="gaa76" usv="U+AA76">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="435" />
     </glyph>
-    <glyph glyphid="436" className="gaa77">
+    <glyph glyphid="436" className="gaa77" usv="U+AA77">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="155" inFile="padauk.gdl" atLine="436" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="436" />
@@ -7323,11 +7323,11 @@
       <glyphAttrValue name="RS.y" value="0" inFile="padauk.gdl" atLine="436" />
       <glyphAttrValue name="RS.yoffset" value="0" inFile="padauk.gdl" atLine="436" />
     </glyph>
-    <glyph glyphid="437" className="gaa78">
+    <glyph glyphid="437" className="gaa78" usv="U+AA78">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="0" inFile="padauk.gdl" atLine="437" />
     </glyph>
-    <glyph glyphid="438" className="gaa79">
+    <glyph glyphid="438" className="gaa79" usv="U+AA79">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="BDS.x" value="133" inFile="padauk.gdl" atLine="438" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="438" />
@@ -7355,7 +7355,7 @@
       <glyphAttrValue name="LLS.y" value="-53" inFile="padauk.gdl" atLine="438" />
       <glyphAttrValue name="LLS.yoffset" value="0" inFile="padauk.gdl" atLine="438" />
     </glyph>
-    <glyph glyphid="439" className="gaa7a">
+    <glyph glyphid="439" className="gaa7a" usv="U+AA7A">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="596" inFile="padauk.gdl" atLine="439" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="439" />
@@ -7379,11 +7379,11 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="439" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="439" />
     </glyph>
-    <glyph glyphid="440" className="gaa7b">
+    <glyph glyphid="440" className="gaa7b" usv="U+AA7B">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="440" />
     </glyph>
-    <glyph glyphid="441" className="gaa7c">
+    <glyph glyphid="441" className="gaa7c" usv="U+AA7C">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="441" />
       <glyphAttrValue name="UM.x" value="-234" inFile="padauk.gdl" atLine="441" />
@@ -7391,11 +7391,11 @@
       <glyphAttrValue name="UM.y" value="495" inFile="padauk.gdl" atLine="441" />
       <glyphAttrValue name="UM.yoffset" value="0" inFile="padauk.gdl" atLine="441" />
     </glyph>
-    <glyph glyphid="442" className="gaa7d">
+    <glyph glyphid="442" className="gaa7d" usv="U+AA7D">
       <glyphAttrValue name="breakweight" value="-30" inFile="myanmar5.gdl" atLine="170" />
       <glyphAttrValue name="order" value="21" inFile="padauk.gdl" atLine="442" />
     </glyph>
-    <glyph glyphid="443" className="gaa7e">
+    <glyph glyphid="443" className="gaa7e" usv="U+AA7E">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="84" inFile="padauk.gdl" atLine="443" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="443" />
@@ -7419,7 +7419,7 @@
       <glyphAttrValue name="US.yoffset" value="0" inFile="padauk.gdl" atLine="443" />
       <glyphAttrValue name="order" value="1" inFile="padauk.gdl" atLine="443" />
     </glyph>
-    <glyph glyphid="444" className="gaa7f">
+    <glyph glyphid="444" className="gaa7f" usv="U+AA7F">
       <glyphAttrValue name="breakweight" value="-15" inFile="myanmar5.gdl" atLine="192" />
       <glyphAttrValue name="BDS.x" value="366" inFile="padauk.gdl" atLine="444" />
       <glyphAttrValue name="BDS.xoffset" value="0" inFile="padauk.gdl" atLine="444" />
@@ -8476,10 +8476,10 @@
       <glyphAttrValue name="BSM.yoffset" value="0" inFile="padauk.gdl" atLine="497" />
     </glyph>
     <glyph glyphid="498" className="*GC29*">
-      <glyphAttrValue name="breakweight" value="30" />
+      <glyphAttrValue name="breakweight" value="3" />
     </glyph>
     <glyph glyphid="499">
-      <glyphAttrValue name="breakweight" value="30" />
+      <glyphAttrValue name="breakweight" value="3" />
     </glyph>
   </glyphs>
 

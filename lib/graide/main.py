@@ -28,7 +28,7 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite, configval
+from graide.utils import runGraphite, buildGraphite, configval, Layout
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
@@ -127,7 +127,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.widget = QtGui.QWidget(self.vsplitter)
         self.setwidgetstretch(self.widget, 100, 55)
         self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setContentsMargins(*Layout.buttonMargins)
         self.hsplitter = QtGui.QSplitter(self.widget)
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
@@ -135,7 +135,7 @@ class MainWindow(QtGui.QMainWindow) :
         # tests list
         self.test_widget = QtGui.QWidget(self.hsplitter)
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
-        self.test_vbox.setContentsMargins(0, 0, 0, 0)
+        self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
         self.test_vbox.addWidget(self.tabTest)
         self.setwidgetstretch(self.test_widget, 30, 100)
@@ -148,7 +148,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox.addWidget(self.runEdit)
         self.test_hbox = QtGui.QHBoxLayout()
         self.test_vbox.addLayout(self.test_hbox)
-        self.test_hbox.setContentsMargins(0, 0, 0, 0)
+        self.test_hbox.setContentsMargins(*Layout.buttonMargins)
+        self.test_hbox.setSpacing(Layout.buttonSpacing)
+        self.test_hbox.insertStretch(0)
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
         self.runRtl.setChecked(True if configval(self.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
@@ -192,8 +194,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.setTabPosition(QtGui.QTabWidget.South)
         self.cfg_widget = QtGui.QWidget()
         self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
-        self.cfg_hbox.setContentsMargins(0, 0, 0, 0)
-        self.cfg_hbox.setSpacing(0)
+        self.cfg_hbox.setContentsMargins(*Layout.buttonMargins)
+        self.cfg_hbox.setSpacing(Layout.buttonSpacing)
         self.cfg_button = ContextToolButton(self.cfg_widget)
         self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
         self.cfg_button.setToolTip("Configure project")

@@ -22,6 +22,49 @@
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
 
+class LinePlainTextEdit(QtGui.QPlainTextEdit) :
+
+    editFinished = QtCore.Signal()
+
+    def keyPressEvent(self, key) :
+        if key.matches(QtGui.QKeySequence.InsertParagraphSeparator) :
+                    # or key.matches(QtGui.QKeySequence.InsertLineSeparator) :
+           self.editFinished.emit()
+        else :
+            return super(LinePlainTextEdit, self).keyPressEvent(key)
+
+class AttributeDelegate(QtGui.QStyledItemDelegate) :
+
+    def __init__(self, parent) :
+        super(AttributeDelegate, self).__init__(parent)
+        self.parent = parent
+
+    def createEditor(self, parent, option, index) :
+        if index.column() == 1 and len(index.data()) > 20 :
+            editor = LinePlainTextEdit(parent)
+            editor.editFinished.connect(self.commitAndCloseEditor)
+            editor.setMinimumHeight(100)
+            return editor
+        else :
+            return super(AttributeDelegate, self).createEditor(parent, option, index)
+
+    def setEditorData(self, editor, index) :
+        if index.column() == 1 and len(index.data()) > 20 :
+            editor.setPlainText(index.data())
+        else :
+            super(AttributeDelegate, self).setEditorData(editor, index)
+
+    def setModelData(self, editor, model, index) :
+        if index.column() == 1 and len(index.data()) > 20 :
+            model.setData(index, editor.toPlainText(), QtCore.Qt.EditRole)
+        else :
+            super(AttributeDelegate, self).setModelData(editor, model, index)
+
+    def commitAndCloseEditor(self) :
+        editor = self.sender()
+        self.commitData.emit(editor)
+        self.closeEditor.emit(editor)
+
 class Attribute(object) :
 
     def __init__(self, name, getter, setter, istree = False, *parms) :
@@ -150,6 +193,8 @@ class AttribView(QtGui.QTreeView) :
     def __init__(self, parent = None) :
         super(AttribView, self).__init__(parent)
         self.header().hide()
+        self.attribDelegate = AttributeDelegate(self)
+        self.setItemDelegateForColumn(1, self.attribDelegate)
 
     @QtCore.Slot(DataObj, ModelSuper)
     def changeData(self, data, model) :

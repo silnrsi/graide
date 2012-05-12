@@ -18,6 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtGui, QtCore
+from graide.utils import Layout
 import os
 
 class EditFile(QtGui.QPlainTextEdit) :
@@ -76,16 +77,17 @@ class FileTabs(QtGui.QWidget) :
     def __init__(self, config, app, parent = None) :
         super(FileTabs, self).__init__(parent)
         self.vbox = QtGui.QVBoxLayout()
-        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.vbox.setContentsMargins(*Layout.buttonMargins)
         self.tabs = QtGui.QTabWidget(self)
         self.tabs.tabCloseRequested.connect(self.closeRequest)
-        self.tabs.setContentsMargins(0, 0, 0, 0)
+        self.tabs.setContentsMargins(*Layout.buttonMargins)
         self.vbox.addWidget(self.tabs)
         self.bbox = QtGui.QWidget(self)
         self.vbox.addWidget(self.bbox)
         self.hbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbox)
-        self.hbox.setContentsMargins(0, 0, 0, 0)
+        self.hbox.setContentsMargins(*Layout.buttonMargins)
+        self.hbox.setSpacing(Layout.buttonSpacing)
         self.hbox.insertStretch(0)
         self.bBuild = QtGui.QPushButton('Build', self.bbox)
         self.bBuild.setToolTip("Save files and force rebuild")
