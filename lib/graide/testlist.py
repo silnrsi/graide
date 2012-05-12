@@ -98,7 +98,7 @@ class TestList(QtGui.QWidget) :
                         y = t.find('text')
                         txt = y.text
                     y = t.find('comment')
-                    if y :
+                    if y is not None :
                         c = y.text
                     else :
                         c = ""

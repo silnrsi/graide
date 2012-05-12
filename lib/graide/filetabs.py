@@ -32,6 +32,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
         self.setFont(QtGui.QFont('mono'))
+        self.setTabStopWidth(40)
 #        self.setFontPointSize(10)
         f = file(fname)
         self.setPlainText("".join(f.readlines()))
