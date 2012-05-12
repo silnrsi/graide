@@ -342,7 +342,7 @@ class MainWindow(QtGui.QMainWindow) :
         if not text : return
         (name, ok) = QtGui.QInputDialog.getText(self, "Test Name", "Test Name")
         if not name or not ok : return
-        test = Test(text, self.fDialog.currFeats or self.feats.fval, self.runRtl.isChecked(), name)
+        test = Test(text, self.currFeats or self.feats.fval, self.runRtl.isChecked(), name)
         self.tabTest.appendTest(test)
 
     def featuresClicked(self) :

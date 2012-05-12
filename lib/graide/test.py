@@ -52,7 +52,7 @@ class Test(object) :
         hw = QtGui.QWidget(d)
         h = QtGui.QHBoxLayout()
         hw.setLayout(h)
-        v.addWidget(hw, 4, 1)
+        v.addWidget(hw, 5, 1)
         bok = QtGui.QPushButton('OK', hw)
         h.addWidget(bok)
         bcancel = QtGui.QPushButton('Cancel', hw)
@@ -97,5 +97,5 @@ class Test(object) :
         feats = []
         for (k, v) in self.feats.items() :
             feats.append("%s=%d" % (k, v))
-        e.set('feats', " ".join(feats))
+        if len(feats) : e.set('feats', " ".join(feats))
         return e
