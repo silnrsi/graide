@@ -67,7 +67,7 @@ class Test(object) :
         res = d.exec_()
         if res :
             self.name = eName.text()
-            self.text = eText.text()
+            self.text = eText.toPlainText()
             self.rtl = eRTL.isChecked()
             self.comment = eComment.toPlainText()
             if self.featdialog : 
