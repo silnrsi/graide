@@ -21,6 +21,49 @@ from PySide import QtGui, QtCore
 from graide.utils import Layout
 import os
 
+class FindDialog(QtGui.QDialog) :
+
+    def __init__(self, parent = None) :
+        super(FindDialog, self).__init__(parent)
+        self.hb = QtGui.QHBoxLayout(self)
+        self.text = QtGui.QLineEdit(self)
+        self.text.returnPressed.connect(self.searchFwd)
+        self.hb.addWidget(self.text)
+        self.bBack = QtGui.QToolButton(self)
+        self.bBack.setArrowType(QtCore.Qt.UpArrow)
+        self.bBack.clicked.connect(self.searchBkwd)
+        self.hb.addWidget(self.bBack)
+        self.bFwd = QtGui.QToolButton(self)
+        self.bFwd.setArrowType(QtCore.Qt.DownArrow)
+        self.bFwd.clicked.connect(self.searchFwd)
+        self.hb.addWidget(self.bFwd)
+        self.bClose = QtGui.QToolButton(self)
+        self.bClose.setIcon(QtGui.QIcon.fromTheme('window-close'))
+        self.bClose.clicked.connect(self.closeDialog)
+        self.hb.addWidget(self.bClose)
+
+    def searchFwd(self) :
+        t = self.text.text()
+        if not t : return
+        self.parent().find(t)
+
+    def searchBkwd(self) :
+        t = self.text.text()
+        if not t : return
+        self.parent().find(t, QtGui.QTextDocument.FindBackward)
+
+    def closeDialog(self) :
+        self.hide()
+        self.parent().closedSearch()
+
+    def openDialog(self) :
+        self.show()
+        #self.raise_()
+        #self.activateWindow()
+        self.text.setFocus(QtCore.Qt.MouseFocusReason)
+        return True
+
+
 class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
@@ -42,6 +85,8 @@ class EditFile(QtGui.QPlainTextEdit) :
         a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         a.triggered.connect(self.search)
         self.addAction(a)
+        self.fDialog = FindDialog(self)
+        self.fIsOpen = False
 
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
@@ -68,9 +113,21 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     def closeEvent(self, event) :
         self.writeIfModified()
+        self.fDialog.close()
 
     def search(self) :
-        print "Searching"
+        self.fDialog.openDialog()
+        self.fIsOpen = True
+
+    def closedSearch(self) :
+        self.fIsOpen = False
+
+    def lostFocus(self) :
+        self.fDialog.hide()
+
+    def gainedFocus(self) :
+        if self.fIsOpen :
+            self.fDialog.show()
 
 class FileTabs(QtGui.QWidget) :
 
@@ -82,6 +139,7 @@ class FileTabs(QtGui.QWidget) :
         self.tabs = QtGui.QTabWidget(self)
         self.tabs.tabCloseRequested.connect(self.closeRequest)
         self.tabs.setContentsMargins(*Layout.buttonMargins)
+        self.tabs.currentChanged.connect(self.switchFile)
         self.vbox.addWidget(self.tabs)
         self.bbox = QtGui.QWidget(self)
         self.vbox.addWidget(self.bbox)
@@ -109,6 +167,7 @@ class FileTabs(QtGui.QWidget) :
         self.currselIndex = None
         self.currselline = 0
         self.config = config
+        self.currIndex = -1
 
     def selectLine(self, fname, lineno) :
         for i in range(self.tabs.count()) :
@@ -152,3 +211,7 @@ class FileTabs(QtGui.QWidget) :
                 f.reload()
                 break
 
+    def switchFile(self, widget) :
+        if self.currIndex > -1 : self.tabs.widget(self.currIndex).lostFocus()
+        self.currIndex = self.tabs.currentIndex()
+        widget.gainedFocus()

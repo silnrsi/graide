@@ -75,7 +75,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.main_tests = FileEntry(self.main, configval(config, 'main', 'testsfile'), 'Tests Lists (*.xml)')
         self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 3, 0)
         self.main_vb.addWidget(self.main_tests, 3, 1, 1, 2)
-        self.main_rtl = QCheckBox()
+        self.main_rtl = QtGui.QCheckBox()
         self.main_vb.addWidget(QtGui.QLabel('Default RTL'), 4, 0)
         self.main_vb.addWidget(self.main_rtl, 4, 1)
         self.main_vb.setRowStretch(5, 1)
