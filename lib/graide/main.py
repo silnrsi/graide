@@ -96,6 +96,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
             self.tabResults.insertTab(0, self.tab_font, "Font")
             self.tabResults.setCurrentIndex(i)
+            self.tab_classes.loadFont(self.font)
 
     def loadAP(self, apname) :
         if self.apname != apname :
@@ -105,6 +106,7 @@ class MainWindow(QtGui.QMainWindow) :
             elif os.path.exists(self.gdxfile) :
                 self.gdx = Gdx()
                 self.gdx.readfile(self.gdxfile, self.font)
+            if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsname) :
         self.testsfile = testsname
