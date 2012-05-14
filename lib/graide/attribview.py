@@ -96,7 +96,7 @@ class Attribute(object) :
             self.name = value
             return True
         elif column == 1 and self.setter:
-            parms = [self.params[:]] + [value]
+            parms = list(self.params[:]) + [value]
             self.setter(*parms)
             return True
         return False
@@ -198,9 +198,14 @@ class AttribView(QtGui.QTreeView) :
 
     @QtCore.Slot(DataObj, ModelSuper)
     def changeData(self, data, model) :
+        self.data = data
         self.model = data.attribModel() if data else None
         self.setModel(self.model)
         self.expandAll()
+
+    def removeCurrent(self) :
+        index = self.currentIndex()
+        self.model.setData(index, None, QtCore.Qt.EditRole)
 
 if __name__ == '__main__' :
 

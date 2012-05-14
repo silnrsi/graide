@@ -19,7 +19,7 @@
 
 
 from PySide import QtCore, QtGui
-from xml.etree import ElementTree as et
+from xml.etree import cElementTree as et
 from graide.test import Test
 from graide.utils import configval, Layout
 import os
@@ -113,8 +113,12 @@ class TestList(QtGui.QWidget) :
 
     def editTest(self, index) :
         t = self.tests[index]
-        t.editDialog(self.app)
-        self.list.item(index).setText(t.name)
+        if t.editDialog(self.app) :
+            self.list.item(index).setText(t.name)
+            self.list.item(index).setToolTip(t.comment)
+            return True
+        else :
+            return False
 
     def writeXML(self, fname) :
         e = et.Element('tests')
@@ -126,13 +130,13 @@ class TestList(QtGui.QWidget) :
     def editClicked(self) :
         self.editTest(self.list.currentRow())
 
-    def addClicked(self) :
-        t = Test('', {})
+    def addClicked(self, t = None) :
+        if not t : t = Test('', {})
         self.appendTest(t)
-        self.editTest(len(self.tests) - 1)
-        if not t.name :
+        res = self.editTest(len(self.tests) - 1)
+        if not t.name or not res :
             self.tests.pop()
-            self.list.takeItem(len(self.tests) - 1)
+            self.list.takeItem(len(self.tests))
 
     def saveClicked(self) :
         tname = configval(self.app.config, 'main', 'testsfile')

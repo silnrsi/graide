@@ -93,7 +93,7 @@ class MainWindow(QtGui.QMainWindow) :
             i = self.tabResults.currentIndex()
             self.tabResults.removeTab(0)
             self.tab_font = FontView(self.font)
-            self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+            self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
             self.tabResults.insertTab(0, self.tab_font, "Font")
             self.tabResults.setCurrentIndex(i)
 
@@ -136,15 +136,18 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_widget = QtGui.QWidget(self.hsplitter)
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
+        self.test_vbox.setSpacing(Layout.buttonSpacing)
         self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
         self.test_vbox.addWidget(self.tabTest)
         self.setwidgetstretch(self.test_widget, 30, 100)
+        self.test_vbox.addSpacing(2)
         self.test_line = QtGui.QFrame(self.test_widget)
         self.test_line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
         self.test_line.setLineWidth(2)
         self.test_vbox.addWidget(self.test_line)
+        self.test_vbox.addSpacing(2)
         self.runEdit = QtGui.QPlainTextEdit(self.test_widget)
-        self.runEdit.setMaximumHeight(60)
+        self.runEdit.setMaximumHeight(Layout.runEditHeight)
         self.test_vbox.addWidget(self.runEdit)
         self.test_hbox = QtGui.QHBoxLayout()
         self.test_vbox.addLayout(self.test_hbox)
@@ -155,12 +158,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.runRtl.setChecked(True if configval(self.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
-        self.runFeats = QtGui.QPushButton("Features", self.test_widget)
+        self.runFeats = QtGui.QToolButton(self.test_widget)
+        self.runFeats.setText(u'\u26A1')
         self.runFeats.clicked.connect(self.featuresClicked)
         self.runFeats.setToolTip("Edit run features")
         self.test_hbox.addWidget(self.runFeats)
-        self.runGo = QtGui.QPushButton("Run", self.test_widget)
-        self.runGo.setToolTip("Rebuild and process run")
+        self.runGo = QtGui.QToolButton(self.test_widget)
+        self.runGo.setArrowType(QtCore.Qt.RightArrow)
+        self.runGo.setToolTip("run string after rebuild")
         self.runGo.clicked.connect(self.runClicked)
         self.test_hbox.addWidget(self.runGo)
         self.runAdd = QtGui.QToolButton(self.test_widget)
@@ -177,7 +182,35 @@ class MainWindow(QtGui.QMainWindow) :
         # glyph, slot, classes, tabview
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
         self.setwidgetstretch(self.tabInfo, 30, 100)
-        self.tab_glyph = AttribView()
+        self.tab_glyph = QtGui.QWidget()
+        self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
+        self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
+        self.glyph_vb.setSpacing(Layout.buttonSpacing)
+        self.glyphAttrib = AttribView()
+        self.glyph_vb.addWidget(self.glyphAttrib)
+        self.glyph_bbox = QtGui.QWidget(self.tab_glyph)
+        self.glyph_hb = QtGui.QHBoxLayout(self.glyph_bbox)
+        self.glyph_hb.setContentsMargins(*Layout.buttonMargins)
+        self.glyph_hb.setSpacing(Layout.buttonSpacing)
+        self.glyph_hb.insertStretch(0)
+        if self.apname :
+            self.glyph_saveAP = QtGui.QToolButton(self.glyph_bbox)
+            self.glyph_saveAP.setIcon(QtGui.QIcon.fromTheme('document-save'))
+            self.glyph_saveAP.clicked.connect(self.saveAP)
+            self.glyph_hb.addWidget(self.glyph_saveAP)
+        self.glyph_addPoint = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_addPoint.setText(u'\u2022')
+        self.glyph_addPoint.clicked.connect(self.glyphAddPoint)
+        self.glyph_hb.addWidget(self.glyph_addPoint)
+        self.glyph_addProperty = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.glyph_addProperty.clicked.connect(self.glyphAddProperty)
+        self.glyph_hb.addWidget(self.glyph_addProperty)
+        self.glyph_remove = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('remove'))
+        self.glyph_remove.clicked.connect(self.glyphRemoveProperty)
+        self.glyph_hb.addWidget(self.glyph_remove)
+        self.glyph_vb.addWidget(self.glyph_bbox)
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
@@ -217,7 +250,7 @@ class MainWindow(QtGui.QMainWindow) :
         # font tab
         if self.font.isRead() :
             self.tab_font = FontView(self.font)
-            self.tab_font.changeGlyph.connect(self.tab_glyph.changeData)
+            self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
         else :
             self.tab_font = QtGui.QWidget()
         self.tabResults.addTab(self.tab_font, "Font")
@@ -240,14 +273,14 @@ class MainWindow(QtGui.QMainWindow) :
         # passes tab
         self.tab_passes = PassesView()
         self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
-        self.tab_passes.glyphSelected.connect(self.tab_glyph.changeData)
+        self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_passes.rowActivated.connect(self.ruledialog)
         self.tabResults.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json['output'])
             self.runView.loadrun(self.run, self.font)
             self.runView.slotSelected.connect(self.tab_slot.changeData)
-            self.runView.glyphSelected.connect(self.tab_glyph.changeData)
+            self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
             istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
@@ -277,7 +310,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.ruleView = PassesView(parent = self.rules, index = row - 1)
         self.ruleView.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
         self.ruleView.slotSelected.connect(self.tab_slot.changeData)
-        self.ruleView.glyphSelected.connect(self.tab_glyph.changeData)
+        self.ruleView.glyphSelected.connect(self.glyphAttrib.changeData)
         self.ruleView.rowActivated.connect(self.ruleSelected)
         self.rules.setView(self.ruleView, "Pass %d" % (row))
         self.rules.show()
@@ -330,7 +363,7 @@ class MainWindow(QtGui.QMainWindow) :
         if not self.runloaded :
             try :
                 self.runView.slotSelected.connect(self.tab_slot.changeData)
-                self.runView.glyphSelected.connect(self.tab_glyph.changeData)
+                self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
                 self.runloaded = True
             except :
                 print "Selection connection failed"
@@ -342,10 +375,8 @@ class MainWindow(QtGui.QMainWindow) :
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()
         if not text : return
-        (name, ok) = QtGui.QInputDialog.getText(self, "Test Name", "Test Name")
-        if not name or not ok : return
-        test = Test(text, self.currFeats or self.feats.fval, self.runRtl.isChecked(), name)
-        self.tabTest.appendTest(test)
+        test = Test(text, self.currFeats or self.feats.fval, self.runRtl.isChecked())
+        self.tabTest.addClicked(test)
 
     def featuresClicked(self) :
         if self.font :
@@ -359,8 +390,49 @@ class MainWindow(QtGui.QMainWindow) :
                 or (not isinstance(widget, QtGui.QWidget) and widget == 2) :
             self.runEdit.setFocus(QtCore.Qt.MouseFocusReason)
 
+    # called from utils
     def updateFileEdit(self, fname) :
         self.tabEdit.updateFileEdit(fname)
+
+    def propDialog(self, name) :
+        d = QtGui.QDialog(self)
+        d.setWindowTitle(name)
+        g = QtGui.QGridLayout()
+        d.setLayout(g)
+        n = QtGui.QLineEdit()
+        g.addWidget(QtGui.QLabel(name + ' Name:'), 0, 0)
+        g.addWidget(n, 0, 1)
+        v = QtGui.QLineEdit()
+        g.addWidget(QtGui.QLabel('Value:'), 1, 0)
+        g.addWidget(v, 1, 1)
+        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o.accepted.connect(d.accept)
+        o.rejected.connect(d.reject)
+        g.addWidget(o, 2, 0, 1, 2)
+        if d.exec_() :
+            return (n.text(), v.text())
+        else :
+            return (None, None)
+
+    def glyphAddPoint(self) :
+        (n, v) = self.propDialog('Point')
+        if n :
+            glyph = self.glyphAttrib.data
+            glyph.setpoint(n, v)
+            self.glyphAttrib.changeData(glyph, None)
+
+    def glyphAddProperty(self) :
+        (n, v) = self.propDialog('Property')
+        if n :
+            glyph = self.glyphAttrib.data
+            glyph.setgdlproperty(n, v)
+            self.glyphAttrib.changeData(glyph, None)
+
+    def glyphRemoveProperty(self) :
+        self.glyphAttrib.removeCurrent()
+
+    def saveAP(self) :
+        self.font.saveAP(self.apname)
 
     def configClicked(self) :
         d = ConfigDialog(self.config)

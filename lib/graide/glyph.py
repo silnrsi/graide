@@ -21,6 +21,7 @@
 from PySide import QtGui
 from graide import freetype
 import array, re, ctypes
+from xml.etree.cElementTree import SubElement
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 import graide.makegdl.makegdl as gdl
@@ -51,8 +52,9 @@ class Glyph(gdl.Glyph, DataObj) :
     def __init__(self, font, name, gid = 0, item = None) :
         super(Glyph, self).__init__(name)
         self.gid = gid
-        self.uid = None     # this is a string!
+        self.uid = ""     # this is a string!
         self.item = item
+        self.comment = ""
 
     def clear(self) :
         super(Glyph, self).clear()
@@ -72,16 +74,60 @@ class Glyph(gdl.Glyph, DataObj) :
         for p in elem.iterfind('point') :
             l = p.find('location')
             self.anchors[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
+        p = elem.find('note')
+        if p is not None and p.text :
+            self.comment = p.text
         if 'classes' in self.properties :
             for c in self.properties['classes'].split() :
                 if c not in self.classes :
                     self.classes.add(c)
                     font.addGlyphClass(c, self.gid)
+
+    def createAP(self, elem) :
+        e = SubElement(elem, 'glyph')
+        e.set('PSName', self.psname)
+        if self.uid : e.set('UID', self.uid)
+        e.set('GID', str(self.gid))
+        ce = None
+        for (k, v) in self.anchors.items() :
+            p = SubElement(e, 'point')
+            p.set('type', k)
+            p.text = "\n        "
+            l = SubElement(p, 'location')
+            l.set('x', str(v[0]))
+            l.set('y', str(v[1]))
+            l.tail = "\n    "
+            if ce is not None : ce.tail = "\n    "
+            ce = p
+        for (k, v) in self.gdl_properties.items() :
+            p = SubElement(e, 'property')
+            p.set('name', 'GDL_' + k)
+            p.set('value', v)
+            if ce is not None : ce.tail = "\n    "
+            ce = p
+        for (k, v) in self.properties.items() :
+            p = SubElement(e, 'property')
+            p.set('name', k)
+            p.set('value', v)
+            if ce is not None : ce.tail = "\n    "
+            ce = p
+        if self.comment :
+            p = SubElement(e, 'note')
+            p.text = self.comment
+            if ce is not None : ce.tail = "\n    "
+            ce = p
+        if ce is not None :
+            ce.tail = "\n"
+            e.text = "\n    "
+        e.tail = "\n"
+        return e
       
     def attribModel(self) :
         res = []
-        for a in ['psname', 'gid', 'uid'] :
+        for a in ['psname', 'gid'] :
             res.append(Attribute(a, self.__getattribute__, None, False, a)) # read-only
+        for a in ['uid', 'comment'] :
+            res.append(Attribute(a, self.__getattribute__, self.__setattr__, False, a))
         for a in sorted(self.properties.keys()) :
             res.append(Attribute(a, self.getproperty, self.setproperty, False, a))
         for a in sorted(self.gdl_properties.keys()) :

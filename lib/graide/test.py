@@ -20,7 +20,8 @@
 
 from PySide import QtGui
 from graide.featureselector import FeatureDialog
-from xml.etree import ElementTree as et
+from xml.etree import cElementTree as et
+from graide.utils import Layout
 
 class Test(object) :
     def __init__(self, text, feats, rtl = False, name = None, comment = "") :
@@ -39,11 +40,13 @@ class Test(object) :
         eName = QtGui.QLineEdit(self.name, d)
         v.addWidget(eName, 0, 1)
         v.addWidget(QtGui.QLabel('Text:', d), 1, 0)
-        eText = QtGui.QLineEdit(self.text, d)
+        eText = QtGui.QPlainTextEdit(self.text, d)
+        eText.setMaximumHeight(Layout.runEditHeight)
         v.addWidget(eText, 1, 1)
         v.addWidget(QtGui.QLabel('Comment:', d), 2, 0)
         eComment = QtGui.QPlainTextEdit()
         eComment.setPlainText(self.comment)
+        eComment.setMaximumHeight(Layout.runEditHeight)
         v.addWidget(eComment, 2, 1)
         eRTL = QtGui.QCheckBox('RTL', d)
         v.addWidget(eRTL, 3, 1)
@@ -61,7 +64,8 @@ class Test(object) :
         b.clicked.connect(self.featClicked)
         bok.clicked.connect(d.accept)
         bcancel.clicked.connect(d.reject)
-        if d.exec_() :
+        res = d.exec_()
+        if res :
             self.name = eName.text()
             self.text = eText.text()
             self.rtl = eRTL.isChecked()
@@ -72,6 +76,7 @@ class Test(object) :
                 self.feats = dict(self.parent.feats.fval)
         del self.featdialog
         del self.parent
+        return res
 
     def featClicked(self) :
         d = FeatureDialog(self.parent)

@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from xml.etree.ElementTree import iterparse
+from xml.etree.cElementTree import iterparse
 from makegdl.makegdl import isMakeGDLSpecialClass
 
 class Gdx(object) :

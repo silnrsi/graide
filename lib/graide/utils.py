@@ -29,6 +29,7 @@ libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c
 class Layout(object) :
     buttonSpacing = 1
     buttonMargins = (0, 0, 0, 0)
+    runEditHeight = 60
 
 class DataObj(object) :
     

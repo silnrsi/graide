@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from xml.etree.ElementTree import parse
+from xml.etree.cElementTree import parse, ElementTree, Element
 from graide import freetype
 from graide.glyph import Glyph, GlyphItem
 from PySide import QtCore
@@ -82,6 +82,14 @@ class Font(gdl.Font) :
             g = self.glyphs[i]
             g.readAP(e, self)
             i += 1
+
+    def saveAP(self, fname) :
+        root = Element('font')
+        root.set('upem', str(self.upem))
+        root.text = "\n\n"
+        for g in self.glyphs :
+            if g : g.createAP(root)
+        ElementTree(root).write(fname, encoding="utf-8", xml_declaration=True)
 
     def loadEmptyGlyphs(self) :
         self.initGlyphs()
