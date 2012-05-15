@@ -90,6 +90,7 @@ class MainWindow(QtGui.QMainWindow) :
             if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
                 self.font.loadEmptyGlyphs()
         if hasattr(self, 'tab_font') :
+            self.tab_classes.classSelected.disconnect(self.tab_font.classSelected)
             i = self.tabResults.currentIndex()
             self.tabResults.removeTab(0)
             self.tab_font = FontView(self.font)
