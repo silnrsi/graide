@@ -161,6 +161,9 @@ class Font(gdl.Font) :
             for gid in self.classes[name] :
                 g = self[gid]
                 if g : g.removeClass(name)
+        if value is None and name in classes :
+            del self.classes[name]
+            return
         for n in value.split() :
             g = self.gdls.get(n, None)
             if g :

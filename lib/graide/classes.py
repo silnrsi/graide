@@ -45,9 +45,20 @@ class Classes(QtGui.QWidget) :
         self.hb.addStretch()
         self.vb.addWidget(self.bbox)
         self.cButton = QtGui.QToolButton()
-        self.cButton.setText(u'\u2690')
+        self.cButton.setText(u'\u2610')
         self.cButton.clicked.connect(self.clearHighlights)
+        self.cButton.setToolTip('Clear glyph highlights')
         self.hb.addWidget(self.cButton)
+        self.aButton = QtGui.QToolButton()
+        self.aButton.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.aButton.clicked.connect(self.addClass)
+        self.aButton.setToolTip('Add new class')
+        self.hb.addWidget(self.aButton)
+        self.rButton = QtGui.QToolButton()
+        self.rButton.setIcon(QtGui.QIcon.fromTheme('remove'))
+        self.rButton.clicked.connect(self.delCurrent)
+        self.rButton.setToolTip('Remove currently selected class')
+        self.hb.addWidget(self.rButton)
         self.font = font
         if font :
             self.loadFont(font)
@@ -73,7 +84,8 @@ class Classes(QtGui.QWidget) :
 
     def doubleClicked(self, row, col) :
         d = QtGui.QDialog(self)
-        d.setWindowTitle(self.tab.item(row, 0).text())
+        name = self.tab.item(row, 0).text()
+        d.setWindowTitle(name)
         l = QtGui.QVBoxLayout(d)
         edit = QtGui.QPlainTextEdit(self.tab.item(row, 1).text(), d)
         l.addWidget(edit)
@@ -84,7 +96,7 @@ class Classes(QtGui.QWidget) :
         if d.exec_() :
             t = edit.toPlainText()
             self.tab.item(row, 1).setText(t)
-            self.tab.classUpdated.emit(label.text(), t)
+            self.classUpdated.emit(name, t)
 
     def clicked(self, row, cell) :
         self.classSelected.emit(self.tab.item(row, 0).text())
@@ -92,3 +104,21 @@ class Classes(QtGui.QWidget) :
     def clearHighlights(self) :
         self.classSelected.emit(None)
 
+    def addClass(self) :
+        (name, ok) = QtGui.QInputDialog.getText(self, 'Add Class', 'Class Name:')
+        if name and ok :
+            self.classUpdated.emit(name, "")
+            l = QtGui.QTableWidgetItem(name)
+            l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+            v = QtGui.QTableWidgetItem("")
+            v.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+            r = self.tab.rowCount()
+            self.tab.setRowCount(r + 1)
+            self.tab.setItem(r, 0, l)
+            self.tab.setItem(r, 1, v)
+
+    def delCurrent(self) :
+        r = self.tab.currentRow()
+        name = self.tab.item(r, 0).text()
+        self.classUpdated.emit(name, None)
+        self.tab.removeRow(r)
