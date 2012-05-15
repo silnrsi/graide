@@ -34,6 +34,7 @@ class Font(gdl.Font) :
         self.classes = {}
         self.pixrect = QtCore.QRect()
         self.isread = False
+        self.highlighted = None
 
     def __len__(self) :
         return len(self.glyphs)
@@ -166,5 +167,23 @@ class Font(gdl.Font) :
                 c.append(g.gid)
                 g.addClass(name)
         self.classes[name] = c
+
+    def classSelected(self, name) :
+        if name :
+            try :
+                nClass = set(self.classes[name])
+            except :
+                nClass = None
+        else :
+            nClass = None
+        if self.highlighted :
+            dif = self.highlighted.difference(nClass) if nClass else self.highlighted
+            for i in dif :
+                if self.glyphs[i] : self.glyphs[i].highlight(False)
+        if nClass :
+            dif = nClass.difference(self.highlighted) if self.highlighted else nClass
+            for i in dif :
+                if self.glyphs[i] : self.glyphs[i].highlight(True)
+        self.highlighted = nClass
         
     def emunits(self) : return self.upem

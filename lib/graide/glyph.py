@@ -55,6 +55,7 @@ class Glyph(gdl.Glyph, DataObj) :
         self.uid = ""     # this is a string!
         self.item = item
         self.comment = ""
+        self.isHigh = False
 
     def clear(self) :
         super(Glyph, self).clear()
@@ -184,3 +185,9 @@ class Glyph(gdl.Glyph, DataObj) :
         if name in self.classes :
             self.classes.discard(name)
             self.properties['classes'] = "  ".join(sorted(self.classes))
+
+    def highlight(self, value) :
+        self.isHigh = value
+
+    def isHighlighted(self) :
+        return self.isHigh

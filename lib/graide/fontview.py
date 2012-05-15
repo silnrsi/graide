@@ -32,9 +32,12 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
         self.desc = font.pixrect.height() - font.top
 
     def paint(self, painter, option, index) :
+        g = index.data()
         if option.state & QtGui.QStyle.State_Selected:
             painter.fillRect(option.rect, option.palette.highlight())
-        g = index.data()
+        elif g and g.isHighlighted() :
+            painter.fillRect(option.rect, QtGui.QColor(0, 0, 0, 32))
+
         if g and g.item :
             if g.item.pixmap :
                 x = option.rect.left() + (option.rect.width() - g.item.pixmap.width()) / 2
@@ -87,7 +90,6 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
     def data(self, index, role) :
         if not index.isValid() or role != QtCore.Qt.DisplayRole:
             return None
-
         return self.font[index.row() * self.columns + index.column()]
 
 class FontView(QtGui.QTableView) :
@@ -116,6 +118,10 @@ class FontView(QtGui.QTableView) :
 
     def do_activate(self, index) :
         self.changeGlyph.emit(index.data(), self.model)
+
+    def classSelected(self, name) :
+        self.model.font.classSelected(name)
+        self.viewport().update()
 
 def clicked_glyph(index) :
     print str(index.data())
