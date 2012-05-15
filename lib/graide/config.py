@@ -48,6 +48,15 @@ class FileEntry(QtGui.QWidget) :
     def text(self) :
         return self.le.text()
 
+class PassSpin(QtGui.QSpinBox) :
+
+    def __init__(self, parent = None) :
+        super(PassSpin, self).__init__(parent)
+        self.setMinimum(-1)
+        self.setSpecialValueText('None')
+        self.setValue(-1)
+
+
 class ConfigDialog(QtGui.QDialog) :
 
     def __init__(self, config, parent = None) :
@@ -87,18 +96,24 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_make.stateChanged.connect(self.makegdlClicked)
         self.build_vb.addWidget(QtGui.QLabel('Autogenerate font level GDL'), 0, 1, 1, 2)
         self.build_vb.addWidget(self.build_make, 0, 0)
-        self.build_inc = FileEntry(self.build, configval(config, 'build', 'includefile'), 'GDL Files (*.gdl)')
-        self.build_vb.addWidget(QtGui.QLabel('Included GDL file:'), 1, 1)
-        self.build_vb.addWidget(self.build_inc, 1, 2)
+        self.build_inmake = QtGui.QWidget(self.build)
+        self.build_vb.addWidget(self.build_inmake, 1, 0, 1, 3)
+        self.build_invb = QtGui.QGridLayout(self.build_inmake)
+        self.build_inc = FileEntry(self.build_inmake, configval(config, 'build', 'includefile'), 'GDL Files (*.gdl)')
+        self.build_invb.addWidget(QtGui.QLabel('Included GDL file:'), 0, 0)
+        self.build_invb.addWidget(self.build_inc, 0, 1, 1, 2)
+        self.build_pos = PassSpin(self.build_inmake)
+        self.build_invb.addWidget(QtGui.QLabel('Automatic positioning pass:'), 1, 0, 1, 2)
+        self.build_invb.addWidget(self.build_pos, 1, 2)
         self.build_vb.setRowStretch(2, 1)
         if configval(config, 'build', 'usemakegdl') :
             self.build_make.setChecked(True)
         else :
-            self.build_inc.setEnabled(False)
+            self.build_inmake.setEnabled(False)
         self.tb.addItem(self.build, 'Build')
 
     def makegdlClicked(self) :
-        self.build_inc.setEnabled(self.build_make.isChecked())
+        self.build_inmake.setEnabled(self.build_make.isChecked())
 
     def updateConfig(self, app, config) :
         self.updateChanged(self.main_font, config, 'main', 'font', app.loadFont)
@@ -107,9 +122,12 @@ class ConfigDialog(QtGui.QDialog) :
         self.updateChanged(self.main_tests, config, 'main', 'testsfile', app.loadTests)
         if self.main_rtl.isChecked != configval(config, 'main', 'defaultrtl') :
             config.set('main', 'defaultrtl', "1" if self.main_rtl.isChecked() else "0")
-        self.updateChanged(self.build_inc, config, 'build', 'includefile')
-        if self.build_make.isChecked() != configval(config, 'build', 'usemakegdl') :
-            config.set('build', 'usemakegdl', "1" if self.build_make.isChecked() else "0")
+        if self.build_make.isChecked() :
+            config.set('build', 'usemakegdl', "1")
+            self.updateChanged(self.build_inc, config, 'build', 'includefile')
+            config.set('build', 'pospass', str(self.build_pos.value()))
+        else :
+            config.set('build', 'usemakegdl', '0')
 
     def updateChanged(self, widget, config, section, option, fn = None) :
         t = widget.text()

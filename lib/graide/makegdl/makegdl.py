@@ -193,7 +193,26 @@ class Font(object) :
             self.outclass(fh, "clig" + k, map(lambda x: x[0], self.ligs[k]))
             self.outclass(fh, "cligno_" + k, map(lambda x: x[1], self.ligs[k]))
         fh.write("\nendtable;\n")
-        fh.write("#define MAXGLYPH %d\n" % (len(self.glyphs) - 1))
+        fh.write("#define MAXGLYPH %d\n\n" % (len(self.glyphs) - 1))
+
+    def outPosRules(self, fh, num) :
+        fh.write("""
+#ifndef opt2
+#define opt(x) [x]?
+#define opt2(x) [opt(x) x]?
+#define opt3(x) [opt2(x) x]?
+#define opt4(x) [opt3(x) x]?
+#endif
+#define posrule(x) cTakes##x##Dia c##x##Dia {attach {to=@1; at=##x##S; with=##x##M}; user1=1} \
+                        / ^ _ opt4(cnTakes##x##Dia) _{user1==0}
+
+table(positioning);
+pass(%d);
+""" % num)
+        for p in self.points.values() :
+            fh.write("posrule(%s);\n" % p.name)
+        fh.write("endpass;\nendtable;\n")
+
 
     def outclass(self, fh, name, glyphs) :
         fh.write(name + " = (")

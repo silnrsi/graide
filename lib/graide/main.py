@@ -97,6 +97,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.tabResults.insertTab(0, self.tab_font, "Font")
             self.tabResults.setCurrentIndex(i)
             self.tab_classes.loadFont(self.font)
+            self.tab_classes.classSelected.connect(self.tab_font.classSelected)
 
     def loadAP(self, apname) :
         if self.apname != apname :
@@ -255,7 +256,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
         else :
             self.tab_font = QtGui.QWidget()
-        self.tab_classes.classSelected.connect(self.tab_font.classSelected)
         self.tabResults.addTab(self.tab_font, "Font")
 
         # errors tab
