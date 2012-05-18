@@ -21,7 +21,7 @@
 from PySide import QtCore, QtGui
 from xml.etree import cElementTree as et
 from graide.test import Test
-from graide.utils import configval, Layout
+from graide.utils import configval, Layout, reportError
 import os
 
 class TestList(QtGui.QWidget) :
@@ -84,7 +84,7 @@ class TestList(QtGui.QWidget) :
             try :
                 e = et.parse(fname)
             except Exception as err:
-                print err
+                reportError("TestsFile %s: %s" % (fname, str(err)))
             else :
                 for t in e.iterfind('test') :
                     feats = {}

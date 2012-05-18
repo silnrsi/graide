@@ -28,7 +28,7 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite, configval, Layout
+from graide.utils import runGraphite, buildGraphite, configval, Layout, registerErrorLog
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
@@ -72,6 +72,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.testsfile = None
 
         self.setupUi()
+        registerErrorLog(self)
 
     def loadFont(self, fontname) :
         if self.config.has_option('main', 'size') :

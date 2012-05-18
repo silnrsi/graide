@@ -25,6 +25,8 @@ from tempfile import mktemp
 from shutil import copyfile
 
 libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
+mainapp = None
+pendingErrors = ""
 
 class Layout(object) :
     buttonSpacing = 1
@@ -97,3 +99,16 @@ def buildGraphite(config, app, font, fontfile) :
         copyfile(tempname, fontfile)
     os.remove(tempname)
     return res
+
+def reportError(text) :
+    global mainapp, pendingErrors
+    if not mainapp :
+        pendingErrors += "\n" + text
+    else :
+        mainapp.tab_errors.setPlainText(mainapp.tab_errors.toPlainText() + "\n" + text)
+
+def registerErrorLog(app) :
+    global mainapp, pendingErrors
+    mainapp = app
+    mainapp.tab_errors.setPlainText(pendingErrors)
+
