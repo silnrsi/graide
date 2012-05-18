@@ -137,8 +137,9 @@ class FeatureVal(object) :
 
 
 class FeatureRef(object) :
-    def __init__(self, fref) :
+    def __init__(self, fref, index = 0) :
         self.fref = fref
+        self.index = index
 
     def num(self) :
         return gr2.gr_fref_n_values(self.fref)
@@ -194,7 +195,7 @@ class Face(object) :
     def featureRefs(self) :
         num = gr2.gr_face_n_fref(self.face)
         for i in range(num) :
-            yield FeatureRef(gr2.gr_face_fref(self.face, i))
+            yield FeatureRef(gr2.gr_face_fref(self.face, i), index = i)
 
     @property
     def featureLangs(self) :

@@ -337,9 +337,12 @@ class MainWindow(QtGui.QMainWindow) :
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
         if buildGraphite(self.config, self, self.font, self.fontfile) :
-            f = file('gdlerr.txt')
-            self.tab_errors.setPlainText("".join(f.readlines()))
-            f.close()
+            try :
+                f = file('gdlerr.txt')
+                self.tab_errors.setPlainText("".join(f.readlines()))
+                f.close()
+            except :
+                self.tab_errors.setPlainText("Build failed without gdlerr.txt being generated!")
             self.tabResults.setCurrentWidget(self.tab_errors)
             return False
         else :

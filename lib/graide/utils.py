@@ -65,9 +65,15 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = 0, size = 16)
     gr2.graphite_stop_logging()
 
 def buildGraphite(config, app, font, fontfile) :
-    if not config.has_option('build', 'gdlfile') :
-        return 1
-    gdlfile = config.get('build', 'gdlfile')
+    gdlfile = configval(config, 'build', 'gdlfile')
+    if not gdlfile or not os.path.exists(gdlfile) :
+        f = file('gdlerr.txt' ,'w')
+        if not gdlfile :
+            f.write("No GDL File specified. Build failed")
+        else :
+            f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
+        f.close()
+        return True
     if configval(config, 'build', 'usemakegdl') :
         font.createClasses()
         font.pointClasses()

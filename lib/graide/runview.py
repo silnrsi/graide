@@ -97,7 +97,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.tview.setPlainText("")
         for i, s in enumerate(run) :
             g = font[s.gid]
-            if g and g.item.pixmap :
+            if g and g.item and g.item.pixmap :
                 px = GlyphPixmapItem(i, g.item.pixmap, model = self, scene = self._scene)
                 ppos = (s.origin[0] * factor + g.item.left, -s.origin[1] * factor - g.item.top)
                 px.setOffset(*ppos)

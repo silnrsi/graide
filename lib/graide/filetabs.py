@@ -214,4 +214,4 @@ class FileTabs(QtGui.QWidget) :
     def switchFile(self, widget) :
         if self.currIndex > -1 : self.tabs.widget(self.currIndex).lostFocus()
         self.currIndex = self.tabs.currentIndex()
-        widget.gainedFocus()
+        self.tabs.widget(self.currIndex).gainedFocus()

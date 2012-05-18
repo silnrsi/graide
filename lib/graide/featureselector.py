@@ -57,7 +57,6 @@ class FeatureRefs(object) :
         for (k, v) in fvals.items() :
             self.fval[k] = v
 
-
 class FeatureDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) :
@@ -89,7 +88,7 @@ class FeatureDialog(QtGui.QDialog) :
         for f in sorted(feats.feats.keys()) :
             c = QtGui.QComboBox()
             c.userTag = feats.featids[f]
-            for k in sorted(feats.feats[f].keys()) :
+            for k in sorted(feats.feats[f].keys(), cmp = lambda a, b: cmp(a.index, b.index)) :
                 c.addItem(k, feats.feats[f][k])
                 if feats.feats[f][k] == vals[c.userTag] :
                     c.setCurrentIndex(c.count() - 1)

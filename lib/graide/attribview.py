@@ -40,7 +40,8 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
         self.parent = parent
 
     def createEditor(self, parent, option, index) :
-        if index.column() == 1 and len(index.data()) > 20 :
+        dat = index.data()
+        if index.column() == 1 and dat and len(dat) > 20 :
             editor = LinePlainTextEdit(parent)
             editor.editFinished.connect(self.commitAndCloseEditor)
             editor.setMinimumHeight(100)
