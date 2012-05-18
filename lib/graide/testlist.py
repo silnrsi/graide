@@ -83,8 +83,8 @@ class TestList(QtGui.QWidget) :
         if fname and os.path.exists(fname) :
             try :
                 e = et.parse(fname)
-            except :
-                pass
+            except Exception as err:
+                print err
             else :
                 for t in e.iterfind('test') :
                     feats = {}
