@@ -28,7 +28,7 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite, configval, Layout, registerErrorLog
+from graide.utils import runGraphite, buildGraphite, configintval, Layout, registerErrorLog
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
@@ -160,7 +160,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.setSpacing(Layout.buttonSpacing)
         self.test_hbox.insertStretch(0)
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
-        self.runRtl.setChecked(True if configval(self.config, 'main', 'defaultrtl') else False)
+        self.runRtl.setChecked(True if configintval(self.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
         self.runFeats = QtGui.QToolButton(self.test_widget)
@@ -351,7 +351,7 @@ class MainWindow(QtGui.QMainWindow) :
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile,
-                    None if configval(self.config, 'build', 'usemakegdl') else self.font)
+                    None if configintval(self.config, 'build', 'usemakegdl') else self.font)
         self.feats = FeatureRefs(self.fontfile)
         return True
 

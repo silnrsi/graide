@@ -19,7 +19,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtCore, QtGui
-from graide.utils import configval
+from graide.utils import configval, configintval
 import os
 
 class FileEntry(QtGui.QWidget) :
@@ -85,6 +85,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 3, 0)
         self.main_vb.addWidget(self.main_tests, 3, 1, 1, 2)
         self.main_rtl = QtGui.QCheckBox()
+        self.main_rtl.setChecked(configintval(config, 'main', 'defaultrtl'))
         self.main_vb.addWidget(QtGui.QLabel('Default RTL'), 4, 0)
         self.main_vb.addWidget(self.main_rtl, 4, 1)
         self.main_vb.setRowStretch(5, 1)
@@ -106,7 +107,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_invb.addWidget(QtGui.QLabel('Automatic positioning pass:'), 1, 0, 1, 2)
         self.build_invb.addWidget(self.build_pos, 1, 2)
         self.build_vb.setRowStretch(2, 1)
-        if configval(config, 'build', 'usemakegdl') :
+        if configintval(config, 'build', 'usemakegdl') :
             self.build_make.setChecked(True)
         else :
             self.build_inmake.setEnabled(False)

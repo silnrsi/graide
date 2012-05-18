@@ -47,6 +47,18 @@ def configval(config, section, option) :
     else :
         return None
 
+def configintval(config, section, option) :
+    if config.has_option(section, option) :
+        txt = config.get(section, option)
+        if txt.isdigit() :
+            return int(txt)
+        elif txt.lower() == 'true' :
+            return 1
+        else :
+            return 0
+    else :
+        return 0
+
 def copyobj(src, dest) :
     for x in dir(src) :
         y = getattr(src, x)
@@ -76,7 +88,7 @@ def buildGraphite(config, app, font, fontfile) :
             f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
         f.close()
         return True
-    if int(configval(config, 'build', 'usemakegdl')) :
+    if configintval(config, 'build', 'usemakegdl') :
         font.createClasses()
         font.pointClasses()
         font.ligClasses()
