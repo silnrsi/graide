@@ -23,6 +23,11 @@ from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
 from graide.utils import Layout
 
+def asBool(txt) :
+    if txt.lower() == 'true' : return True
+    if txt.isdigit() : return int(txt) != 0
+    return False
+
 class Test(object) :
     def __init__(self, text, feats, rtl = False, name = None, comment = "") :
         self.text = text
@@ -49,6 +54,7 @@ class Test(object) :
         eComment.setMaximumHeight(Layout.runEditHeight)
         v.addWidget(eComment, 2, 1)
         eRTL = QtGui.QCheckBox('RTL', d)
+        eRTL.setChecked(asBool(self.rtl))
         v.addWidget(eRTL, 3, 1)
         b = QtGui.QPushButton('Features', d)
         v.addWidget(b, 4, 1)

@@ -76,7 +76,7 @@ def buildGraphite(config, app, font, fontfile) :
             f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
         f.close()
         return True
-    if configval(config, 'build', 'usemakegdl') :
+    if int(configval(config, 'build', 'usemakegdl')) :
         font.createClasses()
         font.pointClasses()
         font.ligClasses()
