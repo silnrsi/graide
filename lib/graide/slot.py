@@ -42,6 +42,7 @@ class Slot(DataObj) :
             res.append(Attribute(k, self.getpos, None, False, k))
         for k in ('before', 'after') :
             res.append(Attribute(k, self.getcharinfo, None, False, k))
+        res.append(Attribute('parent', self.getparent, None, False, 'parent'))
         ures = []
         for i in range(len(self.user)) :
             ures.append(Attribute(str(i), self.getuser, None, False, i))
@@ -59,6 +60,12 @@ class Slot(DataObj) :
 
     def getuser(self, index) :
         return self.user[index]
+
+    def getparent(self, name) :
+        try :
+            return self.parent['id']
+        except :
+            return None
 
     def highlight(self) :
         self.highlighted = True

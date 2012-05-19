@@ -73,6 +73,9 @@ class Font(gdl.Font) :
 
     def initGlyphs(self) :
         self.glyphs = [None] * self.numGlyphs
+        self.psnames = {}
+        self.canonos = {}
+        self.gdls = {}
 
     def loadAP(self, apfile) :
         self.initGlyphs()

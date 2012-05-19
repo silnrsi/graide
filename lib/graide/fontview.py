@@ -45,11 +45,11 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
                 painter.drawPixmap(x, y, g.item.pixmap)
             font = painter.font()
             myfont = QtGui.QFont(font)
-            myfont.setPointSize(myfont.pointSize() * 0.8)
+            myfont.setPointSize(myfont.pointSize() * 0.75)
             theight = myfont.pixelSize()
             painter.setFont(myfont)
             namerect = QtCore.QRect(option.rect.left(), option.rect.bottom()-self.textheight, option.rect.width(), self.textheight)
-            painter.drawText(namerect, QtCore.Qt.AlignLeft | QtCore.Qt.TextSingleLine, str(g))
+            painter.drawText(namerect, QtCore.Qt.AlignLeft | QtCore.Qt.TextSingleLine, str(g.GDLName()))
             namerect.translate(QtCore.QPoint(0, -option.rect.height() + self.textheight))
             if getattr(g, 'uid', None) :
                 painter.drawText(namerect, QtCore.Qt.AlignLeft | QtCore.Qt.TextSingleLine, g.uid)

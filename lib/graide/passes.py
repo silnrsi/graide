@@ -63,7 +63,7 @@ class PassesView(QtGui.QTableWidget) :
         self.connected = False
         self.views = []
 
-    def addrun(self, font, run, label, num, tooltip = "") :
+    def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.views) :
             v = RunView(run, font, self)
             self.views.append(v)
@@ -82,6 +82,7 @@ class PassesView(QtGui.QTableWidget) :
             v.loadrun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
+        l.setBackground(QtGui.QColor(255, 255, 208) if highlight else QtGui.QColor(255, 255, 255))
         self.verticalHeader().setDefaultSectionSize(v.gview.size().height())
         return (v.gview.width(), v.tview.width())
 
@@ -104,6 +105,7 @@ class PassesView(QtGui.QTableWidget) :
         wt = 0
         for j in range(num) :
             run = Run()
+            highlight = False
             if j < num - 1 :
                 run.addslots(json['passes'][j]['slots'])
             else :
@@ -112,9 +114,10 @@ class PassesView(QtGui.QTableWidget) :
                 pname = "Pass: %d" % j
                 if gdx :
                     pname += " - " + gdx.passtypes[j - 1]
+                if len(json['passes'][j-1]['rules']) : highlight = True
             else :
                 pname = "Init"
-            (neww, newt) = self.addrun(font, run, pname, j)
+            (neww, newt) = self.addrun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
         self.finishLoad(w, wt)
