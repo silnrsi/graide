@@ -149,7 +149,7 @@ class AttribModel(QtCore.QAbstractItemModel) :
 
     def getChildRow(self, model) :
         for i, d in enumerate(self.__data) :
-            if d.params[0] == model :
+            if len(d.params) and d.params[0] == model :
                 return i
         return -1
         

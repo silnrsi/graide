@@ -127,6 +127,7 @@ class Glyph(gdl.Glyph, DataObj) :
         res = []
         for a in ['psname', 'gid'] :
             res.append(Attribute(a, self.__getattribute__, None, False, a)) # read-only
+        res.append(Attribute('GDLName', self.GDLName, None))
         for a in ['uid', 'comment'] :
             res.append(Attribute(a, self.__getattribute__, self.__setattr__, False, a))
         for a in sorted(self.properties.keys()) :

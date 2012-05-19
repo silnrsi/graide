@@ -256,6 +256,7 @@ class MainWindow(QtGui.QMainWindow) :
         if self.font.isRead() :
             self.tab_font = FontView(self.font)
             self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
+            self.tab_classes.classSelected.connect(self.tab_font.classSelected)
         else :
             self.tab_font = QtGui.QWidget()
         self.tabResults.addTab(self.tab_font, "Font")
