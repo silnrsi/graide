@@ -40,6 +40,7 @@ if args.project :
     config.read([args.project])
 else :
     config.add_section('main')
+    config.add_section('build')
 
 if args.font : config.set('main', 'font', args.font)
 if args.ap : config.set('main', 'ap', args.ap)
