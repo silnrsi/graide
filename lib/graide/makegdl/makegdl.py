@@ -116,7 +116,7 @@ class Font(object) :
             for c in g.classes :
                 if c not in self.classes :
                     self.classes[c] = []
-                self.classes[c].append(g.GDLName())
+                self.classes[c].append(g.gid)
 
     def pointClasses(self) :
         for g in self.glyphs :
@@ -178,7 +178,7 @@ class Font(object) :
         fh.write("\n/* Classes */\n")
         for (c, l) in self.classes.items() :
             if c not in self.subclasses and not isMakeGDLSpecialClass(c) :
-                self.outclass(fh, c, l)
+                self.outclass(fh, c, map(lambda x: self.glyphs[x], l))
         for p in self.subclasses.keys() :
             ins = []
             outs = []
@@ -190,8 +190,8 @@ class Font(object) :
             self.outclass(fh, 'c' + n, outs)
         fh.write("/* Ligature Classes */\n")
         for k in self.ligs.keys() :
-            self.outclass(fh, "clig" + k, map(lambda x: x[0], self.ligs[k]))
-            self.outclass(fh, "cligno_" + k, map(lambda x: x[1], self.ligs[k]))
+            self.outclass(fh, "clig" + k, map(lambda x: self.gdls[x[0]], self.ligs[k]))
+            self.outclass(fh, "cligno_" + k, map(lambda x: self.gdls[x[1]], self.ligs[k]))
         fh.write("\nendtable;\n")
         fh.write("#define MAXGLYPH %d\n\n" % (len(self.glyphs) - 1))
 

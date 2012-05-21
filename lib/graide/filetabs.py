@@ -207,7 +207,7 @@ class FileTabs(QtGui.QWidget) :
     def updateFileEdit(self, fname) :
         for i in range(self.tabs.count()) :
             f = self.tabs.widget(i)
-            if f.name == fname :
+            if f.fname == fname :
                 f.reload()
                 break
 

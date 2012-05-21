@@ -35,6 +35,7 @@ from graide.test import Test
 from graide.classes import Classes
 from graide.config import ConfigDialog
 from graide.debug import ContextToolButton, DebugMenu
+from graide.errors import Errors
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
 from ConfigParser import SafeConfigParser
@@ -262,9 +263,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.addTab(self.tab_font, "Font")
 
         # errors tab
-        self.tab_errors = QtGui.QPlainTextEdit()
-        self.tab_errors.setReadOnly(True)
+        self.tab_errors = Errors()
         self.tabResults.addTab(self.tab_errors, "Errors")
+        self.tab_errors.errorSelected.connect(self.tabEdit.selectLine)
 
         # results tab
         self.tab_results = QtGui.QWidget()
@@ -338,17 +339,11 @@ class MainWindow(QtGui.QMainWindow) :
 
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
-        if buildGraphite(self.config, self, self.font, self.fontfile) :
-            try :
-                f = file('gdlerr.txt')
-                self.tab_errors.setPlainText("".join(f.readlines()))
-                f.close()
-            except :
-                self.tab_errors.setPlainText("Build failed without gdlerr.txt being generated!")
+        self.tab_errors.clear()
+        res = buildGraphite(self.config, self, self.font, self.fontfile)
+        self.tab_errors.addGdlErrors('gdlerr.txt')
+        if res :
             self.tabResults.setCurrentWidget(self.tab_errors)
-            return False
-        else :
-            self.tab_errors.setPlainText("")
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile,

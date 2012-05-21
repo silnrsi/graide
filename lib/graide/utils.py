@@ -17,6 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+from PySide import QtGui
 from graide.graphite import gr2
 from ctypes import cdll
 from ctypes.util import find_library
@@ -26,12 +27,14 @@ from shutil import copyfile
 
 libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
 mainapp = None
-pendingErrors = ""
+pendingErrors = []
 
 class Layout(object) :
     buttonSpacing = 1
     buttonMargins = (0, 0, 0, 0)
     runEditHeight = 60
+    errorColour = QtGui.QColor(255, 160, 160)
+    warnColour = QtGui.QColor(255, 255, 160)
 
 class DataObj(object) :
     
@@ -115,12 +118,15 @@ def buildGraphite(config, app, font, fontfile) :
 def reportError(text) :
     global mainapp, pendingErrors
     if not mainapp :
-        pendingErrors += "\n" + text
+        pendingErrors += [text]
     else :
-        mainapp.tab_errors.setPlainText(mainapp.tab_errors.toPlainText() + "\n" + text)
+        mainapp.tab_errors.addItem(text)
 
 def registerErrorLog(app) :
     global mainapp, pendingErrors
     mainapp = app
-    mainapp.tab_errors.setPlainText(pendingErrors)
+    for e in pendingErrors :
+        mainapp.tab_errors.addItem(e)
+    pendingErrors = []
+
 
