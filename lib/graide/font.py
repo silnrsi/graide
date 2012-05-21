@@ -23,7 +23,7 @@ from graide.glyph import Glyph, GlyphItem
 from PySide import QtCore
 import graide.makegdl.makegdl as gdl
 from graide.makegdl.psnames import Name
-import re
+import re, os
 
 class Font(gdl.Font) :
 
@@ -78,6 +78,7 @@ class Font(gdl.Font) :
         self.gdls = {}
 
     def loadAP(self, apfile) :
+        if not os.path.exists(apfile) : return False
         self.initGlyphs()
         etree = parse(apfile)
         i = 0
@@ -86,6 +87,7 @@ class Font(gdl.Font) :
             g = self.glyphs[i]
             g.readAP(e, self)
             i += 1
+        return True
 
     def saveAP(self, fname) :
         root = Element('font')

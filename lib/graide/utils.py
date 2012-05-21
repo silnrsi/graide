@@ -103,9 +103,8 @@ def buildGraphite(config, app, font, fontfile) :
             font.createClasses()
             font.pointClasses()
             font.ligClasses()
-            if config.has_option('build', 'pospass') :
-                v = int(config.get('build', 'pospass'))
-                if v >= 0 : font.outPosRules(v)
+            v = int(config.get('build', 'pospass'))
+            if v > 0 : font.outPosRules(v)
             f = file(gdlfile, "w")
             font.outGDL(f)
             if config.has_option('build', 'includefile') :
