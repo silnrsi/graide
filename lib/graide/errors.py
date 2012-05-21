@@ -50,9 +50,9 @@ class Errors(QtGui.QListWidget) :
             m = re.match(r'^(.*?)\((\d+)\) : (error|warning)\((\d+)\): (.*)$', l)
             if m :
                 if m.group(3) == 'error' :
-                    self.addError("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)))
+                    self.addError("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)) - 1)
                 elif m.group(3) == 'warning' :
-                    self.addWarning("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)))
+                    self.addWarning("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)) - 1)
                 continue
             m = re.match(r'^Compilation', l)
             if m :

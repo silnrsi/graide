@@ -38,7 +38,7 @@ from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile
-from ConfigParser import SafeConfigParser
+from ConfigParser import RawConfigParser
 import json, os
 
 class MainWindow(QtGui.QMainWindow) :
@@ -451,7 +451,7 @@ class MainWindow(QtGui.QMainWindow) :
         (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(fname) : return
         self.configfile = fname
-        self.config = SafeConfigParser()
+        self.config = RawConfigParser()
         self.config.read(fname)
         if self.config.has_option('main', 'font') :
             self.loadFont(self.config.get('main', 'font'))
@@ -464,7 +464,7 @@ class MainWindow(QtGui.QMainWindow) :
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
         self.configfile = fname
-        self.config = SafeConfigParser()
+        self.config = RawConfigParser()
         for s in ('main', 'build') : self.config.add_section(s)
         self.configClicked()
 

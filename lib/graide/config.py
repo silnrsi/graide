@@ -100,13 +100,17 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_inmake = QtGui.QWidget(self.build)
         self.build_vb.addWidget(self.build_inmake, 1, 0, 1, 3)
         self.build_invb = QtGui.QGridLayout(self.build_inmake)
+        self.build_cmd = QtGui.QLineEdit(self.build_inmake)
+        self.build_cmd.setText(configval(config, 'build', 'makegdlcmd'))
+        self.build_invb.addWidget(QtGui.QLabel('Make GDL Command:'), 0, 0)
+        self.build_invb.addWidget(self.build_cmd, 0, 1, 1, 2)
         self.build_inc = FileEntry(self.build_inmake, configval(config, 'build', 'includefile'), 'GDL Files (*.gdl)')
-        self.build_invb.addWidget(QtGui.QLabel('Included GDL file:'), 0, 0)
-        self.build_invb.addWidget(self.build_inc, 0, 1, 1, 2)
+        self.build_invb.addWidget(QtGui.QLabel('Included GDL file:'), 1, 0)
+        self.build_invb.addWidget(self.build_inc, 1, 1, 1, 2)
         self.build_pos = PassSpin(self.build_inmake)
-        self.build_invb.addWidget(QtGui.QLabel('Automatic positioning pass:'), 1, 0, 1, 2)
-        self.build_invb.addWidget(self.build_pos, 1, 2)
-        self.build_vb.setRowStretch(2, 1)
+        self.build_invb.addWidget(QtGui.QLabel('Automatic positioning pass:'), 2, 0, 1, 2)
+        self.build_invb.addWidget(self.build_pos, 2, 2)
+        self.build_vb.setRowStretch(3, 1)
         if configintval(config, 'build', 'usemakegdl') :
             self.build_make.setChecked(True)
         else :
@@ -127,6 +131,11 @@ class ConfigDialog(QtGui.QDialog) :
             config.set('build', 'usemakegdl', "1")
             self.updateChanged(self.build_inc, config, 'build', 'includefile')
             config.set('build', 'pospass', str(self.build_pos.value()))
+            txt = self.build_cmd.text()
+            if txt :
+                config.set('build', 'makegdlcmd', txt)
+            elif config.has_option('build', 'makegdlcmd') :
+                config.remove_option('build', 'makegdlcmd')
         else :
             config.set('build', 'usemakegdl', '0')
 

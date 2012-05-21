@@ -21,7 +21,7 @@ from PySide import QtGui
 from graide.graphite import gr2
 from ctypes import cdll
 from ctypes.util import find_library
-import os, sys, subprocess
+import os, sys, subprocess, re
 from tempfile import mktemp
 from shutil import copyfile
 
@@ -92,18 +92,25 @@ def buildGraphite(config, app, font, fontfile) :
         f.close()
         return True
     if configintval(config, 'build', 'usemakegdl') :
-        font.createClasses()
-        font.pointClasses()
-        font.ligClasses()
-        if config.has_option('build', 'pospass') :
-            v = int(config.get('build', 'pospass'))
-            if v >= 0 : font.outPosRules(v)
-        f = file(gdlfile, "w")
-        font.outGDL(f)
-        if config.has_option('build', 'includefile') :
-            f.write('#include "%s"\n' % (config.get('build', 'includefile')))
-        f.close()
-        app.updateFileEdit(gdlfile)
+        cmd = configval(config, 'build', 'makegdlcmd')
+        if cmd.strip() :
+            if config.has_option('main', 'ap') :
+                font.saveAP(config.get('main', 'ap'))
+            makecmd = expandMakeCmd(config, cmd)
+            subprocess.call(makecmd, shell = True)
+        else :
+            font.createClasses()
+            font.pointClasses()
+            font.ligClasses()
+            if config.has_option('build', 'pospass') :
+                v = int(config.get('build', 'pospass'))
+                if v >= 0 : font.outPosRules(v)
+            f = file(gdlfile, "w")
+            font.outGDL(f)
+            if config.has_option('build', 'includefile') :
+                f.write('#include "%s"\n' % (config.get('build', 'includefile')))
+            f.close()
+            app.updateFileEdit(gdlfile)
     tempname = mktemp()
     if config.has_option('build', 'usettftable') :
         subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempname))
@@ -114,6 +121,16 @@ def buildGraphite(config, app, font, fontfile) :
         copyfile(tempname, fontfile)
     os.remove(tempname)
     return res
+
+replacements = {
+    'a' : ['main', 'ap'],
+    'g' : ['build', 'gdlfile'],
+    'i' : ['build', 'includefile'],
+    'p' : ['build', 'pospass']
+}
+
+def expandMakeCmd(config, txt) :
+    return re.sub(r'%([agip])', lambda m: configval(config, *replacements[m.group(1)]), txt)
 
 def reportError(text) :
     global mainapp, pendingErrors

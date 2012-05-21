@@ -22,7 +22,7 @@
 from PySide import QtGui
 from graide import main
 from argparse import ArgumentParser
-from ConfigParser import SafeConfigParser
+from ConfigParser import RawConfigParser
 import sys
 
 app = QtGui.QApplication(sys.argv)
@@ -35,7 +35,7 @@ p.add_argument("-r","--results",help="graphite JSON debug output")
 p.add_argument("-s","--size",default=40,type=int,help="Size of glyphs to render in pixels")
 args = p.parse_args()
 
-config = SafeConfigParser()
+config = RawConfigParser()
 if args.project :
     config.read([args.project])
 else :
