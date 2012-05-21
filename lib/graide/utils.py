@@ -53,6 +53,7 @@ def configval(config, section, option) :
 def configintval(config, section, option) :
     if config.has_option(section, option) :
         txt = config.get(section, option)
+        if not txt : return 0
         if txt.isdigit() :
             return int(txt)
         elif txt.lower() == 'true' :

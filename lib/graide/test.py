@@ -24,6 +24,7 @@ from xml.etree import cElementTree as et
 from graide.utils import Layout
 
 def asBool(txt) :
+    if not txt : return False
     if txt.lower() == 'true' : return True
     if txt.isdigit() : return int(txt) != 0
     return False
