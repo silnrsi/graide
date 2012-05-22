@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtGui, QtCore
-from graide.utils import Layout
+from graide.utils import Layout, configintval
 import os
 
 class FindDialog(QtGui.QDialog) :
@@ -68,14 +68,16 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
-    def __init__(self, fname) :
+    def __init__(self, fname, size = 10) :
         super(EditFile, self).__init__()
         self.fname = fname
         self.selection = QtGui.QTextEdit.ExtraSelection()
         self.selection.format = QtGui.QTextCharFormat()
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
-        self.setFont(QtGui.QFont('mono'))
+        font = QtGui.QFont('mono')
+        font.setPointSize(size)
+        self.setFont(font)
         self.setTabStopWidth(40)
 #        self.setFontPointSize(10)
         f = file(fname)
@@ -105,6 +107,11 @@ class EditFile(QtGui.QPlainTextEdit) :
             return True
         else :
             return False
+
+    def setSize(self, size) :
+        f = self.font()
+        f.setPointSize(size)
+        self.setFont(f)
 
     def reload(self) :
         f = file(self.fname)
@@ -168,6 +175,7 @@ class FileTabs(QtGui.QWidget) :
         self.currselline = 0
         self.config = config
         self.currIndex = -1
+        self.size = configintval(config, 'ui', 'size') or 10
 
     def selectLine(self, fname, lineno) :
         for i in range(self.tabs.count()) :
@@ -175,7 +183,7 @@ class FileTabs(QtGui.QWidget) :
             if f.fname == fname :
                 self.highlightLine(i, lineno)
                 return
-        newFile = EditFile(fname)
+        newFile = EditFile(fname, size = self.size)
         self.tabs.addTab(newFile, fname)
         self.highlightLine(self.tabs.count() - 1, lineno)
         if self.config.has_option('build', 'gdlfile') and os.path.abspath(self.config.get('build', 'gdlfile')) == os.path.abspath(fname) :
@@ -215,3 +223,7 @@ class FileTabs(QtGui.QWidget) :
         if self.currIndex > -1 : self.tabs.widget(self.currIndex).lostFocus()
         self.currIndex = self.tabs.currentIndex()
         self.tabs.widget(self.currIndex).gainedFocus()
+
+    def setSize(self, size) :
+        for i in range(self.tabs.count()) :
+            self.tabs.widget(i).setSize(size)

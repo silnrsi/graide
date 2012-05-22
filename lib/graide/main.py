@@ -55,6 +55,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.font = Font()
         self.apname = None
 
+        for s in ('main', 'build', 'ui') :
+            if not config.has_section(s) :
+                config.add_section(s)
+
         if config.has_option('main', 'font') :
             self.loadFont(config.get('main', 'font'))
             if config.has_option('main', 'ap') :

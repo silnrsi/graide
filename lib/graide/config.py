@@ -118,6 +118,18 @@ class ConfigDialog(QtGui.QDialog) :
             self.build_inmake.setEnabled(False)
         self.tb.addItem(self.build, 'Build')
 
+        self.ui = QtGui.QWidget(self.tb)
+        self.ui_vb = QtGui.QGridLayout(self.ui)
+        self.ui_size = QtGui.QSpinBox(self.ui)
+        self.ui_size.setRange(1, 36)
+        if config.has_option('ui', 'size') :
+            self.ui_size.setValue(configintval(config, 'ui', 'size'))
+        else :
+            self.ui_size.setValue(10)
+        self.ui_vb.addWidget(QtGui.QLabel('Editor text point size'), 0, 0)
+        self.ui_vb.addWidget(self.ui_size, 0, 1)
+        self.tb.addItem(self.ui, 'User Interface')
+
     def makegdlClicked(self) :
         self.build_inmake.setEnabled(self.build_make.isChecked())
 
@@ -139,6 +151,9 @@ class ConfigDialog(QtGui.QDialog) :
                 config.remove_option('build', 'makegdlcmd')
         else :
             config.set('build', 'usemakegdl', '0')
+        if self.ui_size.value() != configintval(config, 'ui', 'size') :
+            config.set('ui', 'size', str(self.ui_size.value()))
+            app.tabEdit.setSize(self.ui_size.value())
 
     def updateChanged(self, widget, config, section, option, fn = None) :
         t = widget.text()
