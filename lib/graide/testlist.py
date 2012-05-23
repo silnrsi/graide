@@ -28,8 +28,10 @@ class TestList(QtGui.QWidget) :
 
     def __init__(self, app, fname = None, parent = None) :
         super(TestList, self).__init__(parent)
+        self.noclick = False
         self.app = app
         self.tests = []
+
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setContentsMargins(*Layout.buttonMargins)
         self.list = QtGui.QListWidget(self)
@@ -162,9 +164,13 @@ class TestList(QtGui.QWidget) :
             self.list.setCurrentRow(i + 1)
 
     def loadTest(self, item) :
-        i = self.list.currentRow()
-        self.app.setRun(self.tests[i])
+        if not self.noclick :
+            i = self.list.currentRow()
+            self.app.setRun(self.tests[i])
+        else :
+            self.noclick = False
 
     def runTest(self, item) :
-        self.loadTest(item)
+        # event sends clicked first so no need to select
         self.app.runClicked()
+        self.noclick = True

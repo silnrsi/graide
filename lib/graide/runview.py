@@ -70,6 +70,8 @@ class RunView(QtCore.QObject, ModelSuper) :
     def __init__(self, run = None, font = None, parent = None) :
         super(RunView, self).__init__()
         self.gview = QtGui.QGraphicsView(parent)
+        self.gview.setAlignment(QtCore.Qt.AlignLeft)
+        if font : self.gview.resize(self.gview.size().width(), font.pixrect.height())
         self._scene = QtGui.QGraphicsScene(self.gview)
         self._scene.keyPressEvent = self.keyPressEvent
         self.tview = QtGui.QPlainTextEdit(parent)
@@ -83,7 +85,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.loadrun(run, font)
         self.gview.setScene(self._scene)
 
-    def loadrun(self, run, font) :
+    def loadrun(self, run, font, resize = True) :
         self.run = run
         self._font = font
         self.currselection = None
@@ -125,9 +127,10 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.tview.setExtraSelections(sels)
         self.boundingRect = res
         self._scene.setSceneRect(res)
-        self.gview.setFixedSize(res.left() + res.width() + 2, res.height() - res.top() + 2)
-        self.gview.resize(res.left() + res.width() + 2, res.height() - res.top() + 2)
-        self.gview.updateScene([])
+        if resize :
+            self.gview.setFixedSize(res.left() + res.width() + 2, res.height() - res.top() + 2)
+            self.gview.resize(res.left() + res.width() + 2, res.height() - res.top() + 2)
+            self.gview.updateScene([])
 
     def glyph_clicked(self, gitem, index) :
         s = self.tview.extraSelections()
@@ -191,7 +194,11 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self.glyph_clicked(None, i - 1)
                 return True
         return False
-            
+
+    def clear(self) :
+        self._scene.clear()
+        self.tview.setPlainText("")
+        self.gview.update()
 
 if __name__ == "__main__" :
     import json, sys, os

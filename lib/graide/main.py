@@ -143,13 +143,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.hsplitter.setHandleWidth(4)
 
         # tests list
-        self.test_widget = QtGui.QWidget(self.hsplitter)
+        self.tabInfo = QtGui.QTabWidget(self.hsplitter)
+        self.setwidgetstretch(self.tabInfo, 30, 100)
+        self.test_widget = QtGui.QWidget()
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
         self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
         self.test_vbox.addWidget(self.tabTest)
-        self.setwidgetstretch(self.test_widget, 30, 100)
         self.test_vbox.addSpacing(2)
         self.test_line = QtGui.QFrame(self.test_widget)
         self.test_line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
@@ -183,15 +184,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.runAdd.setToolTip("Add run to tests list under a new name")
         self.runAdd.clicked.connect(self.runAddClicked)
         self.test_hbox.addWidget(self.runAdd)
-
-        # file edit view
-        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
-        self.setwidgetstretch(self.tabEdit, 40, 100)
-        self.tabEdit.tabs.setTabsClosable(True)
+        self.run = Run()
+        self.runView = RunView(self.font)
+        self.test_vbox.addWidget(self.runView.gview)
+        self.tabInfo.addTab(self.test_widget, "Tests")
 
         # glyph, slot, classes, tabview
-        self.tabInfo = QtGui.QTabWidget(self.hsplitter)
-        self.setwidgetstretch(self.tabInfo, 30, 100)
         self.tab_glyph = QtGui.QWidget()
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
         self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
@@ -228,6 +226,11 @@ class MainWindow(QtGui.QMainWindow) :
         if self.font :
             self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
+
+        # file edit view
+        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
+        self.setwidgetstretch(self.tabEdit, 50, 100)
+        self.tabEdit.tabs.setTabsClosable(True)
 
         self.horizontalLayout.addWidget(self.hsplitter)
 
@@ -270,16 +273,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_errors = Errors()
         self.tabResults.addTab(self.tab_errors, "Errors")
         self.tab_errors.errorSelected.connect(self.tabEdit.selectLine)
-
-        # results tab
-        self.tab_results = QtGui.QWidget()
-        self.tab_vbox = QtGui.QVBoxLayout(self.tab_results)
-        self.tab_vbox.setSpacing(0)
-        self.run = Run()
-        self.runView = RunView()
-        self.tab_vbox.addWidget(self.runView.gview)
-        self.tab_vbox.addStretch()
-        self.tabResults.addTab(self.tab_results, "Results")
 
         # passes tab
         self.tab_passes = PassesView()
@@ -343,6 +336,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runRtl.setChecked(True if test.rtl else False)
         self.runEdit.setPlainText(test.text)
         self.currFeats = dict(test.feats)
+        self.runView.clear()
 
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
@@ -369,7 +363,7 @@ class MainWindow(QtGui.QMainWindow) :
         runfile.close()
         self.run = Run()
         self.run.addslots(self.json['output'])
-        self.runView.loadrun(self.run, self.font)
+        self.runView.loadrun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
                 self.runView.slotSelected.connect(self.tab_slot.changeData)
@@ -379,8 +373,8 @@ class MainWindow(QtGui.QMainWindow) :
                 print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
-        if self.tabResults.currentWidget() is not self.tab_passes :
-            self.tabResults.setCurrentWidget(self.tab_results)
+#        if self.tabResults.currentWidget() is not self.tab_passes :
+#            self.tabResults.setCurrentWidget(self.tab_passes)
 
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()
