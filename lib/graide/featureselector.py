@@ -85,7 +85,7 @@ class FeatureDialog(QtGui.QDialog) :
         num = len(feats.feats.keys())
         self.table.setRowCount(num)
         count = 0
-        for f in sorted(feats.feats.keys()) :
+        for f in sorted(feats.feats.keys(), cmp = lambda x,y: cmp(x.index, y.index)) :
             c = QtGui.QComboBox()
             c.userTag = feats.featids[f]
             for k in sorted(feats.feats[f].keys(), cmp = lambda a, b: cmp(a.index, b.index)) :
