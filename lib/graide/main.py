@@ -28,7 +28,7 @@ from graide.passes import PassesView
 from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite, configintval, Layout, registerErrorLog
+from graide.utils import runGraphite, buildGraphite, configval, configintval, Layout, registerErrorLog
 from graide.featureselector import FeatureRefs, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
@@ -90,7 +90,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile, self.font if not self.config.has_option('main', 'ap') else None)
+            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'gdlfile') if configval(self.config, 'main', 'ap') else None)
         else :
             self.gdx = None
             if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
@@ -113,7 +113,7 @@ class MainWindow(QtGui.QMainWindow) :
                 self.font.loadAP(apname)
             elif os.path.exists(self.gdxfile) :
                 self.gdx = Gdx()
-                self.gdx.readfile(self.gdxfile, self.font)
+                self.gdx.readfile(self.gdxfile, self.font, None)
             if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsname) :
@@ -224,7 +224,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
-        self.tab_classes = Classes(self.font)
+        self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'gdlfile') if configval(self.config, 'main', 'ap') else None)
         if self.font :
             self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
@@ -334,7 +334,10 @@ class MainWindow(QtGui.QMainWindow) :
     def ruleSelected(self, row, view, passview) :
         if self.gdx and hasattr(view.run, 'passindex') :
             rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
-            self.tabEdit.selectLine(rule.srcfile, rule.srcline)
+            self.selectLine(rule.srcfile, rule.srcline)
+
+    def selectLine(self, srcfile, srcline) :
+        self.tabEdit.selectLine(srcfile, srcline)
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
@@ -350,8 +353,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.tabResults.setCurrentWidget(self.tab_errors)
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile,
-                    None if configintval(self.config, 'build', 'usemakegdl') else self.font)
+            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'main', 'ap'))
         self.feats = FeatureRefs(self.fontfile)
         return True
 
@@ -440,7 +442,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyphAttrib.removeCurrent()
 
     def saveAP(self) :
-        self.font.saveAP(self.apname)
+        self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
 
     def configClicked(self) :
         d = ConfigDialog(self.config)

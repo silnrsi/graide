@@ -84,12 +84,15 @@ class Glyph(gdl.Glyph, DataObj) :
                     self.classes.add(c)
                     font.addGlyphClass(c, self.gid)
 
-    def createAP(self, elem) :
+    def createAP(self, elem, font, apgdlfile) :
         e = SubElement(elem, 'glyph')
         e.set('PSName', self.psname)
         if self.uid : e.set('UID', self.uid)
         e.set('GID', str(self.gid))
         ce = None
+        if 'classes' in self.properties :
+            tempClasses = self.properties['classes']
+            self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), apgdlfile))
         for (k, v) in self.anchors.items() :
             p = SubElement(e, 'point')
             p.set('type', k)
@@ -117,6 +120,8 @@ class Glyph(gdl.Glyph, DataObj) :
             p.text = self.comment
             if ce is not None : ce.tail = "\n    "
             ce = p
+        if 'classes' in self.properties :
+            self.properties['classes'] = tempClasses
         if ce is not None :
             ce.tail = "\n"
             e.text = "\n    "

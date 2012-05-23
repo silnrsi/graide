@@ -25,6 +25,16 @@ import graide.makegdl.makegdl as gdl
 from graide.makegdl.psnames import Name
 import re, os
 
+class FontClass(object) :
+
+    def __init__(self, elements = None, fname = None, lineno = None) :
+        self.elements = elements or []
+        self.fname = fname
+        self.lineno = lineno
+
+    def append(self, element) :
+        self.elements.append(element)
+
 class Font(gdl.Font) :
 
     def __init__(self) :
@@ -89,12 +99,12 @@ class Font(gdl.Font) :
             i += 1
         return True
 
-    def saveAP(self, fname) :
+    def saveAP(self, fname, apgdlfile) :
         root = Element('font')
         root.set('upem', str(self.upem))
         root.text = "\n\n"
         for g in self.glyphs :
-            if g : g.createAP(root)
+            if g : g.createAP(root, self, apgdlfile)
         ElementTree(root).write(fname, encoding="utf-8", xml_declaration=True)
 
     def loadEmptyGlyphs(self) :
@@ -148,22 +158,22 @@ class Font(gdl.Font) :
         super(Font, self).addGlyph(g, index, gdlname)
         return index
 
-    def addClass(self, name, elements) :
-        self.classes[name] = elements
+    def addClass(self, name, elements, fname = None, lineno = 0) :
+        self.classes[name] = FontClass(elements, fname, lineno)
         for e in elements :
             g = self[e]
             if g : g.addClass(name)
 
     def addGlyphClass(self, name, gid) :
         if name not in self.classes :
-            self.classes[name] = []
-        if gid not in self.classes[name] :
+            self.classes[name] = FontClass()
+        if gid not in self.classes[name].elements :
             self.classes[name].append(gid)
 
     def classUpdated(self, name, value) :
         c = []
         if name in self.classes :
-            for gid in self.classes[name] :
+            for gid in self.classes[name].elements :
                 g = self[gid]
                 if g : g.removeClass(name)
         if value is None and name in classes :
@@ -174,12 +184,15 @@ class Font(gdl.Font) :
             if g :
                 c.append(g.gid)
                 g.addClass(name)
-        self.classes[name] = c
+        if name in self.classes :
+            self.classes[name].elements = c
+        else :
+            self.classes[name] = FontClass(c)
 
     def classSelected(self, name) :
         if name :
             try :
-                nClass = set(self.classes[name])
+                nClass = set(self.classes[name].elements)
             except :
                 nClass = None
         else :
@@ -193,5 +206,12 @@ class Font(gdl.Font) :
             for i in dif :
                 if self.glyphs[i] : self.glyphs[i].highlight(True)
         self.highlighted = nClass
-        
+
+    def filterAutoClasses(self, names, apgdlfile) :
+        res = []
+        for n in names :
+            c = self.classes[n]
+            if not c.fname or c.fname == apgdlfile : res.append(n)
+        return res
+
     def emunits(self) : return self.upem

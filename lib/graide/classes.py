@@ -26,8 +26,10 @@ class Classes(QtGui.QWidget) :
     classUpdated = QtCore.Signal(str, str)
     classSelected = QtCore.Signal(str)
 
-    def __init__(self, font, parent = None) :
+    def __init__(self, font, app, apgdlfile, parent = None) :
         super(Classes, self).__init__(parent)
+        self.app = app
+        self.apgdlfile = apgdlfile
         self.vb = QtGui.QVBoxLayout(self)
         self.vb.setContentsMargins(*Layout.buttonMargins)
         self.vb.setSpacing(Layout.buttonSpacing)
@@ -76,27 +78,33 @@ class Classes(QtGui.QWidget) :
         for i in range(num) :
             l = QtGui.QTableWidgetItem(keys[i])
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            v = map(lambda x: font[x].GDLName() if font[x] else "", font.classes[keys[i]])
+            c = font.classes[keys[i]]
+            v = map(lambda x: font[x].GDLName() if font[x] else "", c.elements)
             m = QtGui.QTableWidgetItem("  ".join(v))
             m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+            m.loc = (c.fname, c.lineno) if c.fname else None
             self.tab.setItem(i, 0, l)
             self.tab.setItem(i, 1, m)
 
     def doubleClicked(self, row, col) :
-        d = QtGui.QDialog(self)
-        name = self.tab.item(row, 0).text()
-        d.setWindowTitle(name)
-        l = QtGui.QVBoxLayout(d)
-        edit = QtGui.QPlainTextEdit(self.tab.item(row, 1).text(), d)
-        l.addWidget(edit)
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
-        o.accepted.connect(d.accept)
-        o.rejected.connect(d.reject)
-        l.addWidget(o)
-        if d.exec_() :
-            t = edit.toPlainText()
-            self.tab.item(row, 1).setText(t)
-            self.classUpdated.emit(name, t)
+        c = self.tab.item(row, 1)
+        if c.loc and c.loc[0] != self.apgdlfile :
+            self.app.selectLine(*c.loc)
+        else :
+            d = QtGui.QDialog(self)
+            name = self.tab.item(row, 0).text()
+            d.setWindowTitle(name)
+            l = QtGui.QVBoxLayout(d)
+            edit = QtGui.QPlainTextEdit(self.tab.item(row, 1).text(), d)
+            l.addWidget(edit)
+            o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+            o.accepted.connect(d.accept)
+            o.rejected.connect(d.reject)
+            l.addWidget(o)
+            if d.exec_() :
+                t = edit.toPlainText()
+                self.tab.item(row, 1).setText(t)
+                self.classUpdated.emit(name, t)
 
     def clicked(self, row, cell) :
         self.classSelected.emit(self.tab.item(row, 0).text())

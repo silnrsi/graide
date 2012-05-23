@@ -27,9 +27,9 @@ class Gdx(object) :
         self.passtypes = []
         self.keepelements = False
 
-    def readfile(self, fname, font = None) :
+    def readfile(self, fname, font, apgdlfile = None) :
         self.file = file(fname)
-        if font : font.initGlyphs()
+        if not apgdlfile : font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
                 if e.tag == 'pass' :
@@ -41,20 +41,22 @@ class Gdx(object) :
                 if e.tag == "rule" :
                     self.keepelements = False
                     self.passes[-1].append(Rule(e))
-                if font is not None :
-                    if e.tag == 'glyph' :
-                        self.keepelements = False
-                        font.addGDXGlyph(e)
-                    elif e.tag == 'class' :
-                        self.keepelements = False
-                        n = e.get('name')
-                        c = e.findall('member')
-                        if len(c) :
-                            g = font[int(c[0].get('glyphid'))]
-                            if len(c) == 1 and g and g.GDLName() == n :
-                                pass
-                            elif not isMakeGDLSpecialClass(n) :
-                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c))
+                if e.tag == 'glyph' :
+                    self.keepelements = False
+                    if not apgdlfile : font.addGDXGlyph(e)
+                elif e.tag == 'class' :
+                    self.keepelements = False
+                    n = e.get('name')
+                    c = e.findall('member')
+                    if len(c) :
+                        g = font[int(c[0].get('glyphid'))]
+                        f = c[0].get('inFile')
+                        l = int(c[0].get('atLine')) if f else 0
+                        if len(c) == 1 and g and g.GDLName() == n :
+                            pass
+                        elif not isMakeGDLSpecialClass(n) :
+                            if not apgdlfile or (n not in font.classes and f != apgdlfile) :
+                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
                 if not self.keepelements :
                     e.clear()
 

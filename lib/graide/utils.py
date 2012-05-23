@@ -96,7 +96,7 @@ def buildGraphite(config, app, font, fontfile) :
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd.strip() :
             if config.has_option('main', 'ap') :
-                font.saveAP(config.get('main', 'ap'))
+                font.saveAP(config.get('main', 'ap'), configval(config, 'build', 'gdlfile'))
             makecmd = expandMakeCmd(config, cmd)
             subprocess.call(makecmd, shell = True)
         else :

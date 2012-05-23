@@ -24,6 +24,8 @@ import os
 
 class FileEntry(QtGui.QWidget) :
 
+    textChanged = QtCore.Signal(str)
+
     def __init__(self, parent, val, pattern) :
         super(FileEntry, self).__init__(parent)
         self.pattern = pattern
@@ -31,6 +33,7 @@ class FileEntry(QtGui.QWidget) :
         self.hb.setContentsMargins(0, 0, 0, 0)
         self.hb.setSpacing(0)
         self.le = QtGui.QLineEdit(self)
+        self.le.textChanged.connect(self.txtChanged)
         if val :
             self.le.setText(val)
         self.hb.addWidget(self.le)
@@ -47,6 +50,9 @@ class FileEntry(QtGui.QWidget) :
 
     def text(self) :
         return self.le.text()
+
+    def txtChanged(self, txt) :
+        self.textChanged.emit(txt)
 
 class PassSpin(QtGui.QSpinBox) :
 
@@ -78,25 +84,22 @@ class ConfigDialog(QtGui.QDialog) :
         self.main_gdl = FileEntry(self.main, configval(config, 'build', 'gdlfile'), 'GDL Files (*.gdl)')
         self.main_vb.addWidget(QtGui.QLabel('GDL File:'), 1, 0)
         self.main_vb.addWidget(self.main_gdl, 1, 1, 1, 2)
-        self.main_ap = FileEntry(self.main, configval(config, 'main', 'ap'), 'AP Files (*.xml)')
-        self.main_vb.addWidget(QtGui.QLabel('Attachment Point Database:'), 2, 0, 1, 2)
-        self.main_vb.addWidget(self.main_ap, 2, 2)
         self.main_tests = FileEntry(self.main, configval(config, 'main', 'testsfile'), 'Tests Lists (*.xml)')
-        self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 3, 0)
-        self.main_vb.addWidget(self.main_tests, 3, 1, 1, 2)
+        self.main_vb.addWidget(QtGui.QLabel('Tests File:'), 2, 0)
+        self.main_vb.addWidget(self.main_tests, 2, 1, 1, 2)
         self.main_rtl = QtGui.QCheckBox()
         self.main_rtl.setChecked(configintval(config, 'main', 'defaultrtl'))
-        self.main_vb.addWidget(QtGui.QLabel('Default RTL'), 4, 0)
-        self.main_vb.addWidget(self.main_rtl, 4, 1)
-        self.main_vb.setRowStretch(5, 1)
+        self.main_vb.addWidget(QtGui.QLabel('Default RTL'), 3, 0)
+        self.main_vb.addWidget(self.main_rtl, 3, 1)
+        self.main_vb.setRowStretch(4, 1)
         self.tb.addItem(self.main, "General")
 
         self.build = QtGui.QWidget(self.tb)
         self.build_vb = QtGui.QGridLayout(self.build)
-        self.build_make = QtGui.QCheckBox()
-        self.build_make.stateChanged.connect(self.makegdlClicked)
-        self.build_vb.addWidget(QtGui.QLabel('Autogenerate font level GDL'), 0, 1, 1, 2)
-        self.build_vb.addWidget(self.build_make, 0, 0)
+        self.build_ap = FileEntry(self.main, configval(config, 'main', 'ap'), 'AP Files (*.xml)')
+        self.build_ap.textChanged.connect(self.apChanged)
+        self.build_vb.addWidget(QtGui.QLabel('Attachment Point Database:'), 0, 0, 1, 2)
+        self.build_vb.addWidget(self.build_ap, 0, 2)
         self.build_inmake = QtGui.QWidget(self.build)
         self.build_vb.addWidget(self.build_inmake, 1, 0, 1, 3)
         self.build_invb = QtGui.QGridLayout(self.build_inmake)
@@ -112,9 +115,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_invb.addWidget(QtGui.QLabel('Automatic positioning pass:'), 2, 0, 1, 2)
         self.build_invb.addWidget(self.build_pos, 2, 2)
         self.build_vb.setRowStretch(3, 1)
-        if configintval(config, 'build', 'usemakegdl') :
-            self.build_make.setChecked(True)
-        else :
+        if not self.build_ap.text() :
             self.build_inmake.setEnabled(False)
         self.tb.addItem(self.build, 'Build')
 
@@ -128,19 +129,22 @@ class ConfigDialog(QtGui.QDialog) :
             self.ui_size.setValue(10)
         self.ui_vb.addWidget(QtGui.QLabel('Editor text point size'), 0, 0)
         self.ui_vb.addWidget(self.ui_size, 0, 1)
+        self.ui_vb.setRowStretch(1, 1)
         self.tb.addItem(self.ui, 'User Interface')
 
-    def makegdlClicked(self) :
-        self.build_inmake.setEnabled(self.build_make.isChecked())
+        self.resize(500, 500)
+
+    def apChanged(self, txt) :
+        self.build_inmake.setEnabled(True if txt else False)
 
     def updateConfig(self, app, config) :
         self.updateChanged(self.main_font, config, 'main', 'font', app.loadFont)
         self.updateChanged(self.main_gdl, config, 'build', 'gdlfile')
-        self.updateChanged(self.main_ap, config, 'main', 'ap', app.loadAP)
         self.updateChanged(self.main_tests, config, 'main', 'testsfile', app.loadTests)
         if self.main_rtl.isChecked != configval(config, 'main', 'defaultrtl') :
             config.set('main', 'defaultrtl', "1" if self.main_rtl.isChecked() else "0")
-        if self.build_make.isChecked() :
+        self.updateChanged(self.build_ap, config, 'main', 'ap', app.loadAP)
+        if self.build_ap.text() :
             config.set('build', 'usemakegdl', "1")
             self.updateChanged(self.build_inc, config, 'build', 'includefile')
             config.set('build', 'pospass', str(self.build_pos.value()))
