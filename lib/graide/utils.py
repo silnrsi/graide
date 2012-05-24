@@ -35,6 +35,7 @@ class Layout(object) :
     runEditHeight = 60
     errorColour = QtGui.QColor(255, 160, 160)
     warnColour = QtGui.QColor(255, 255, 160)
+    activePassColour = QtGui.QColor(255, 255, 208)
 
 class DataObj(object) :
     

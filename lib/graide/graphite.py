@@ -21,11 +21,16 @@
 from ctypes import *
 import ctypes.util
 
+grfiles = {
+    'darwin' : 'libgraphite2.dylib',
+    'linux2' : 'ligraphite2.so',
+    'win32' : 'graphite2.dll'
+}
 gr2 = None
 gr2lib = ctypes.util.find_library("graphite2")
 if not gr2lib :
     try :
-        gr2 = CDLL("libgraphite2.so")
+        gr2 = CDLL(grfiles[sys.platform])
     except OSError :
         gr2 = None
 

@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtGui, QtCore
-from graide.utils import Layout, configintval
+from graide.utils import Layout, configintval, configval
 import os
 
 class FindDialog(QtGui.QDialog) :
@@ -186,7 +186,7 @@ class FileTabs(QtGui.QWidget) :
         newFile = EditFile(fname, size = self.size)
         self.tabs.addTab(newFile, fname)
         self.highlightLine(self.tabs.count() - 1, lineno)
-        if self.config.has_option('build', 'gdlfile') and os.path.abspath(self.config.get('build', 'gdlfile')) == os.path.abspath(fname) :
+        if configval(self.config, 'main', 'ap') and os.path.abspath(configval(self.config, 'build', 'gdlfile')) == os.path.abspath(fname) :
             newFile.setReadOnly(True)
 
     def highlightLine(self, tabindex, lineno) :

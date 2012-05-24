@@ -79,6 +79,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.setupUi()
         registerErrorLog(self)
 
+        if configval(config, 'main', 'ap') :
+            mainfile = configval(config, 'build', 'includefile')
+        else :
+            mainfile = configval(config, 'build', 'gdlfile')
+        if mainfile :
+            self.tabEdit.selectLine(mainfile, -1)
+
     def loadFont(self, fontname) :
         if self.config.has_option('main', 'size') :
             fontsize = self.config.getint('main', 'size')
@@ -178,6 +185,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runGo.setArrowType(QtCore.Qt.RightArrow)
         self.runGo.setToolTip("run string after rebuild")
         self.runGo.clicked.connect(self.runClicked)
+
         self.test_hbox.addWidget(self.runGo)
         self.runAdd = QtGui.QToolButton(self.test_widget)
         self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
@@ -186,6 +194,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.addWidget(self.runAdd)
         self.run = Run()
         self.runView = RunView(self.font)
+        self.runView.gview.setFixedHeight(self.font.pixrect.height())
         self.test_vbox.addWidget(self.runView.gview)
         self.tabInfo.addTab(self.test_widget, "Tests")
 
@@ -278,7 +287,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes = PassesView()
         self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
-        self.tab_passes.rowActivated.connect(self.ruledialog)
+        self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tabResults.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json['output'])
@@ -294,6 +303,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.setCentralWidget(self.centralwidget)
         self.tabResults.currentChanged.connect(self.setrunEditFocus)
 
+        self.tab_rules = PassesView()
+        self.tab_rules.slotSelected.connect(self.tab_slot.changeData)
+        self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
+        self.tab_rules.rowActivated.connect(self.ruleSelected)
+        self.tabResults.addTab(self.tab_rules, "Rules")
+
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         if hori != 100 : sizePolicy.setHorizontalStretch(hori)
@@ -307,17 +322,11 @@ class MainWindow(QtGui.QMainWindow) :
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
 
-    def ruledialog(self, row, view, passview) :
-        if self.rules : self.rules.close()
-        else : self.rules = RuleDialog(self)
+    def rulesSelected(self, row, view, passview) :
         if row == 0 : return
-        self.ruleView = PassesView(parent = self.rules, index = row - 1)
-        self.ruleView.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
-        self.ruleView.slotSelected.connect(self.tab_slot.changeData)
-        self.ruleView.glyphSelected.connect(self.glyphAttrib.changeData)
-        self.ruleView.rowActivated.connect(self.ruleSelected)
-        self.rules.setView(self.ruleView, "Pass %d" % (row))
-        self.rules.show()
+        self.tab_rules.index = row - 1
+        self.tab_rules.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
+        passview.selectRow(row)
 
     def rulesclosed(self, dialog) :
         self.ruleView.slotSelected.disconnect()

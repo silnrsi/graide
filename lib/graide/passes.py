@@ -21,7 +21,7 @@
 from PySide import QtGui, QtCore
 from graide.run import Run
 from graide.runview import RunView
-from graide.utils import ModelSuper, DataObj
+from graide.utils import ModelSuper, DataObj, Layout
 
 class PassesItem(QtGui.QTableWidgetItem) :
 
@@ -62,6 +62,7 @@ class PassesView(QtGui.QTableWidget) :
         self.index = index
         self.connected = False
         self.views = []
+        self.selectedRow = -1
 
     def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.views) :
@@ -82,7 +83,8 @@ class PassesView(QtGui.QTableWidget) :
             v.loadrun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
-        l.setBackground(QtGui.QColor(255, 255, 208) if highlight else QtGui.QColor(255, 255, 255))
+        l.setBackground(Layout.activePassColour if highlight else QtGui.QColor(255, 255, 255))
+        l.highlight = highlight
         self.verticalHeader().setDefaultSectionSize(v.gview.size().height())
         return (v.gview.width(), v.tview.width())
 
@@ -98,6 +100,7 @@ class PassesView(QtGui.QTableWidget) :
             self.connected = True
 
     def loadResults(self, font, json, gdx = None) :
+        self.selectRow(-1)
         num = len(json['passes']) + 1
         if num != self.rowCount() :
             self.setRowCount(num)
@@ -123,6 +126,7 @@ class PassesView(QtGui.QTableWidget) :
         self.finishLoad(w, wt)
 
     def loadRules(self, font, json, inirun, gdx) :
+        self.selectRow(-1)
         self.views = []
         self.runs = [inirun.copy()]
         self.runs[0].label="Init"
@@ -170,4 +174,18 @@ class PassesView(QtGui.QTableWidget) :
         if col == 0 :
             self.rowActivated.emit(row, self.views[row], self)
  
-
+    def selectRow(self, row) :
+        if self.selectedRow >= 0 :
+            it = self.item(self.selectedRow, 0)
+            if it.highlight :
+                it.setBackground(Layout.activePassColour)
+            else : 
+                it.setBackground(QtGui.QColor(255, 255, 255))
+            w = self.cellWidget(self.selectedRow, 1)
+            w.setBackgroundBrush(QtGui.QColor(255, 255, 255))
+        self.selectedRow = row
+        if self.selectedRow >= 0 :
+            it = self.item(self.selectedRow, 0)
+            if it : it.setBackground(self.palette().highlight())
+            w = self.cellWidget(self.selectedRow, 1)
+            w.setBackgroundBrush(self.palette().highlight())
