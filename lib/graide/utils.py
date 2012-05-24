@@ -84,20 +84,12 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = 0, size = 16)
     gr2.graphite_stop_logging()
 
 def buildGraphite(config, app, font, fontfile) :
-    gdlfile = configval(config, 'build', 'gdlfile')
-    if not gdlfile or not os.path.exists(gdlfile) :
-        f = file('gdlerr.txt' ,'w')
-        if not gdlfile :
-            f.write("No GDL File specified. Build failed")
-        else :
-            f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
-        f.close()
-        return True
     if configintval(config, 'build', 'usemakegdl') :
+        gdlfile = configval(config, 'build', 'makegdlfile')
         cmd = configval(config, 'build', 'makegdlcmd')
-        if cmd.strip() :
+        if cmd and cmd.strip() :
             if config.has_option('main', 'ap') :
-                font.saveAP(config.get('main', 'ap'), configval(config, 'build', 'gdlfile'))
+                font.saveAP(config.get('main', 'ap'), gdlfile)
             makecmd = expandMakeCmd(config, cmd)
             subprocess.call(makecmd, shell = True)
         else :
@@ -108,10 +100,20 @@ def buildGraphite(config, app, font, fontfile) :
             if v > 0 : font.outPosRules(v)
             f = file(gdlfile, "w")
             font.outGDL(f)
-            if config.has_option('build', 'includefile') :
-                f.write('#include "%s"\n' % (config.get('build', 'includefile')))
+            if configval(config, 'build', 'gdlfile') :
+                f.write('#include "%s"\n' % (config.get('build', 'gdlfile')))
             f.close()
             app.updateFileEdit(gdlfile)
+    else :
+        gdlfile = configval(config, 'build', 'gdlfile')
+    if not gdlfile or not os.path.exists(gdlfile) :
+        f = file('gdlerr.txt' ,'w')
+        if not gdlfile :
+            f.write("No GDL File specified. Build failed")
+        else :
+            f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
+        f.close()
+        return True
     tempname = mktemp()
     if config.has_option('build', 'usettftable') :
         subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempname))
@@ -125,8 +127,8 @@ def buildGraphite(config, app, font, fontfile) :
 
 replacements = {
     'a' : ['main', 'ap'],
-    'g' : ['build', 'gdlfile'],
-    'i' : ['build', 'includefile'],
+    'g' : ['build', 'makegdlfile'],
+    'i' : ['build', 'gdlfile'],
     'p' : ['build', 'pospass']
 }
 

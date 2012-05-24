@@ -61,8 +61,7 @@ class MainWindow(QtGui.QMainWindow) :
 
         if config.has_option('main', 'font') :
             self.loadFont(config.get('main', 'font'))
-            if config.has_option('main', 'ap') :
-                self.loadAP(config.get('main', 'ap'))
+            self.loadAP(configval(config, 'main', 'ap'))
 
         if jsonfile :
             f = file(jsonfile)
@@ -79,10 +78,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.setupUi()
         registerErrorLog(self)
 
-        if configval(config, 'main', 'ap') :
-            mainfile = configval(config, 'build', 'includefile')
-        else :
-            mainfile = configval(config, 'build', 'gdlfile')
+        mainfile = configval(config, 'build', 'gdlfile')
         if mainfile :
             self.tabEdit.selectLine(mainfile, -1)
 
@@ -95,15 +91,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = FeatureRefs(self.fontfile)
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
-        if os.path.exists(self.gdxfile) :
-            self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'gdlfile') if configval(self.config, 'main', 'ap') else None)
-        else :
+        if not os.path.exists(self.gdxfile) :
             self.gdx = None
             if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
                 self.font.loadEmptyGlyphs()
         if hasattr(self, 'tab_font') :
-            self.tab_classes.classSelected.disconnect(self.tab_font.classSelected)
+            self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
             i = self.tabResults.currentIndex()
             self.tabResults.removeTab(0)
             self.tab_font = FontView(self.font)
@@ -111,17 +104,17 @@ class MainWindow(QtGui.QMainWindow) :
             self.tabResults.insertTab(0, self.tab_font, "Font")
             self.tabResults.setCurrentIndex(i)
             self.tab_classes.loadFont(self.font)
-            self.tab_classes.classSelected.connect(self.tab_font.classSelected)
+            self.tab_classes.classSelected.connect(self.font.classSelected)
 
     def loadAP(self, apname) :
         if self.apname != apname :
             self.apname = apname
-            if apname :
+            if apname and os.path.exists(apname) :
                 self.font.loadAP(apname)
-            elif os.path.exists(self.gdxfile) :
-                self.gdx = Gdx()
-                self.gdx.readfile(self.gdxfile, self.font, None)
-            if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
+        if os.path.exists(self.gdxfile) :
+            self.gdx = Gdx()
+            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
+        if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsname) :
         self.testsfile = testsname
@@ -232,8 +225,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
         self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'gdlfile') if configval(self.config, 'main', 'ap') else None)
-        if self.font :
-            self.tab_classes.classUpdated.connect(self.font.classUpdated)
+        self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
         # file edit view
@@ -321,6 +313,15 @@ class MainWindow(QtGui.QMainWindow) :
     def closeEvent(self, event) :
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
+        if self.configfile :
+            try :
+                f = file(self.configfile, "w")
+                self.config.write(f)
+                f.close()
+            except :
+                pass
+        self.tabEdit.writeIfModified()
+        self.saveAP()
 
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
@@ -338,8 +339,10 @@ class MainWindow(QtGui.QMainWindow) :
             rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
             self.selectLine(rule.srcfile, rule.srcline)
 
-    def selectLine(self, srcfile, srcline) :
-        self.tabEdit.selectLine(srcfile, srcline)
+    def selectLine(self, fname = None, srcline = -1) :
+        if not fname :
+            fname = configval(self.config, 'build', 'gdlfile')
+        self.tabEdit.selectLine(fname, srcline)
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
@@ -356,7 +359,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.tabResults.setCurrentWidget(self.tab_errors)
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'main', 'ap'))
+            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
         self.feats = FeatureRefs(self.fontfile)
         return True
 
@@ -445,9 +448,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyphAttrib.removeCurrent()
 
     def saveAP(self) :
-        self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
+        if self.apname :
+            self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
 
     def configClicked(self) :
+        if not self.configfile :
+            self.configNewClicked()
+            return
         d = ConfigDialog(self.config)
         if d.exec_() :
             d.updateConfig(self, self.config)
@@ -474,7 +481,7 @@ class MainWindow(QtGui.QMainWindow) :
         if not fname : return
         self.configfile = fname
         self.config = RawConfigParser()
-        for s in ('main', 'build') : self.config.add_section(s)
+        for s in ('main', 'build', 'ui') : self.config.add_section(s)
         self.configClicked()
 
     def debugClicked(self, event) :

@@ -31,6 +31,7 @@ class FeatureRefs(object) :
             langid = 0x0409
             length = 0
             grface = gr.Face(font)
+            if not grface.face : return
             grval = grface.get_featureval(0)
             for f in grface.featureRefs :
                 name = f.name(langid)

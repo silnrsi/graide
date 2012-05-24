@@ -27,10 +27,11 @@ import re, os
 
 class FontClass(object) :
 
-    def __init__(self, elements = None, fname = None, lineno = None) :
+    def __init__(self, elements = None, fname = None, lineno = None, readonly = False) :
         self.elements = elements or []
         self.fname = fname
         self.lineno = lineno
+        self.readonly  = readonly
 
     def append(self, element) :
         self.elements.append(element)
@@ -158,8 +159,8 @@ class Font(gdl.Font) :
         super(Font, self).addGlyph(g, index, gdlname)
         return index
 
-    def addClass(self, name, elements, fname = None, lineno = 0) :
-        self.classes[name] = FontClass(elements, fname, lineno)
+    def addClass(self, name, elements, fname = None, lineno = 0, readonly = False) :
+        self.classes[name] = FontClass(elements, fname, lineno, readonly)
         for e in elements :
             g = self[e]
             if g : g.addClass(name)

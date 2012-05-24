@@ -80,9 +80,12 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.setFont(font)
         self.setTabStopWidth(40)
 #        self.setFontPointSize(10)
-        f = file(fname)
-        self.setPlainText("".join(f.readlines()))
-        f.close()
+        try :
+            f = file(fname)
+            self.setPlainText("".join(f.readlines()))
+            f.close()
+        except :
+            self.setPlainText("")
         a = QtGui.QAction(self)
         a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         a.triggered.connect(self.search)
@@ -186,7 +189,7 @@ class FileTabs(QtGui.QWidget) :
         newFile = EditFile(fname, size = self.size)
         self.tabs.addTab(newFile, fname)
         self.highlightLine(self.tabs.count() - 1, lineno)
-        if configval(self.config, 'main', 'ap') and os.path.abspath(configval(self.config, 'build', 'gdlfile')) == os.path.abspath(fname) :
+        if self.config.has_option('build', 'makegdlfile') and os.path.abspath(configval(self.config, 'build', 'makegdlfile')) == os.path.abspath(fname) :
             newFile.setReadOnly(True)
 
     def highlightLine(self, tabindex, lineno) :

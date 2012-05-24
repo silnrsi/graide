@@ -55,8 +55,10 @@ class Gdx(object) :
                         if len(c) == 1 and g and g.GDLName() == n :
                             pass
                         elif not isMakeGDLSpecialClass(n) :
-                            if not apgdlfile or (n not in font.classes and f != apgdlfile) :
+                            if not apgdlfile :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
+                            elif n not in font.classes :
+                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1, readonly = True)
                 if not self.keepelements :
                     e.clear()
 

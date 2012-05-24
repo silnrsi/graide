@@ -47,13 +47,20 @@ class Errors(QtGui.QListWidget) :
         if not os.path.exists(fname) : return
         f = file(fname)
         for l in f.readlines() :
+            l = l.strip()
             m = re.match(r'^(.*?)\((\d+)\) : (error|warning)\((\d+)\): (.*)$', l)
             if m :
                 if m.group(3) == 'error' :
-                    self.addError("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)) - 1)
+                    self.addError(l, m.group(1), int(m.group(2)) - 1)
                 elif m.group(3) == 'warning' :
-                    self.addWarning("{0}({1}) : {2}({3}): {4}".format(*m.groups()), m.group(1), int(m.group(2)) - 1)
+                    self.addWarning(l, m.group(1), int(m.group(2)) - 1)
                 continue
+            m = re.match(r'(error|warning)\((\d+)\): (.*)$', l)
+            if m :
+                if m.group(1) == 'error' :
+                    self.addError(l)
+                else :
+                    self.addWarning(l)
             m = re.match(r'^Compilation', l)
             if m :
                 self.addItem(l.strip())

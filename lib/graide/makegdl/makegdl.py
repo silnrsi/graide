@@ -133,7 +133,7 @@ class Font(object) :
 
     def ligClasses(self) :
         for g in self.glyphs :
-            if not g : continue
+            if not g or not g.name : continue
             (h, t) = g.name.split_last()
             if t :
                 o = self.canons.get(h.canonical(), None)
@@ -178,7 +178,7 @@ class Font(object) :
         fh.write("\n/* Classes */\n")
         for (c, l) in self.classes.items() :
             if c not in self.subclasses and not isMakeGDLSpecialClass(c) :
-                self.outclass(fh, c, map(lambda x: self.glyphs[x], l))
+                self.outclass(fh, c, map(lambda x: self.glyphs[x], l.elements))
         for p in self.subclasses.keys() :
             ins = []
             outs = []
@@ -272,9 +272,9 @@ class Glyph(object) :
         self.gdl = name
 
 def isMakeGDLSpecialClass(name) :
-    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
-    if name.startswith('clig') : return True
-    if name.startswith('cno_') : return True
+#    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
+#    if name.startswith('clig') : return True
+#    if name.startswith('cno_') : return True
     if re.match(r'^\*GC\d+\*$', name) : return True
     return False
     

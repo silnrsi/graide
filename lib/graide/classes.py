@@ -80,8 +80,14 @@ class Classes(QtGui.QWidget) :
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             c = font.classes[keys[i]]
             v = map(lambda x: font[x].GDLName() if font[x] else "", c.elements)
-            m = QtGui.QTableWidgetItem("  ".join(v))
-            m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
+            if len(v) :
+                m = QtGui.QTableWidgetItem("  ".join(filter(None, v)))
+            else :
+                m = QtGui.QTableWidgetItem("")
+            if c.readonly or c.fname :
+                m.setFlags(QtCore.Qt.NoItemFlags)
+            else :
+                m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
             m.loc = (c.fname, c.lineno) if c.fname else None
             self.tab.setItem(i, 0, l)
             self.tab.setItem(i, 1, m)
