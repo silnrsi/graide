@@ -104,17 +104,19 @@ class Glyph(gdl.Glyph, DataObj) :
             if ce is not None : ce.tail = "\n    "
             ce = p
         for (k, v) in self.gdl_properties.items() :
-            p = SubElement(e, 'property')
-            p.set('name', 'GDL_' + k)
-            p.set('value', v)
-            if ce is not None : ce.tail = "\n    "
-            ce = p
+            if v :
+                p = SubElement(e, 'property')
+                p.set('name', 'GDL_' + k)
+                p.set('value', v)
+                if ce is not None : ce.tail = "\n    "
+                ce = p
         for (k, v) in self.properties.items() :
-            p = SubElement(e, 'property')
-            p.set('name', k)
-            p.set('value', v)
-            if ce is not None : ce.tail = "\n    "
-            ce = p
+            if v :
+                p = SubElement(e, 'property')
+                p.set('name', k)
+                p.set('value', v)
+                if ce is not None : ce.tail = "\n    "
+                ce = p
         if self.comment :
             p = SubElement(e, 'note')
             p.text = self.comment

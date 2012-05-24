@@ -58,7 +58,7 @@ class Gdx(object) :
                             if not apgdlfile :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
                             elif n not in font.classes :
-                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1, readonly = True)
+                                font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1, generated = True)
                 if not self.keepelements :
                     e.clear()
 

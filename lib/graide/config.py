@@ -145,7 +145,6 @@ class ConfigDialog(QtGui.QDialog) :
             fname = (self.main_font.text() or configval(self.config, 'main', 'font'))[0:-3] + "gdl"
             count = 0
             nname = fname
-            print nname
             while os.path.exists(nname) :
                 nname = fname[:-4] + "_makegdl"
                 if count : nname += "_" + str(count)

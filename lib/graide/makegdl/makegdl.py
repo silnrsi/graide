@@ -111,12 +111,12 @@ class Font(object) :
                 if o :
                     if v[0].ext not in self.subclasses : self.subclasses[v[0].ext] = {}
                     self.subclasses[v[0].ext][o[1].GDLName()] = v[1].GDLName()
-        for g in self.glyphs :
-            if not g : continue
-            for c in g.classes :
-                if c not in self.classes :
-                    self.classes[c] = []
-                self.classes[c].append(g.gid)
+#        for g in self.glyphs :
+#            if not g : continue
+#            for c in g.classes :
+#                if c not in self.classes :
+#                    self.classes[c] = []
+#                self.classes[c].append(g.gid)
 
     def pointClasses(self) :
         for g in self.glyphs :
@@ -177,7 +177,7 @@ class Font(object) :
             self.outclass(fh, 'cnTakes' + n, filter(lambda x : p.isNotInClass(x, False), self.glyphs))
         fh.write("\n/* Classes */\n")
         for (c, l) in self.classes.items() :
-            if c not in self.subclasses and not isMakeGDLSpecialClass(c) :
+            if c not in self.subclasses and not l.generated :
                 self.outclass(fh, c, map(lambda x: self.glyphs[x], l.elements))
         for p in self.subclasses.keys() :
             ins = []

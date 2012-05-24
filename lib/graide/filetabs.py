@@ -176,7 +176,7 @@ class FileTabs(QtGui.QWidget) :
         self.setLayout(self.vbox)
         self.currselIndex = None
         self.currselline = 0
-        self.config = config
+        self.app = app
         self.currIndex = -1
         self.size = configintval(config, 'ui', 'size') or 10
 
@@ -189,7 +189,8 @@ class FileTabs(QtGui.QWidget) :
         newFile = EditFile(fname, size = self.size)
         self.tabs.addTab(newFile, fname)
         self.highlightLine(self.tabs.count() - 1, lineno)
-        if self.config.has_option('build', 'makegdlfile') and os.path.abspath(configval(self.config, 'build', 'makegdlfile')) == os.path.abspath(fname) :
+        apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
+        if apgdlfile and os.path.abspath(apgdlfile) == os.path.abspath(fname) :
             newFile.setReadOnly(True)
 
     def highlightLine(self, tabindex, lineno) :

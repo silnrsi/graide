@@ -91,10 +91,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = FeatureRefs(self.fontfile)
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
-        if not os.path.exists(self.gdxfile) :
-            self.gdx = None
-            if not hasattr(self.font, 'glyph') and not self.config.has_option('main', 'ap') :
-                self.font.loadEmptyGlyphs()
         if hasattr(self, 'tab_font') :
             self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
             i = self.tabResults.currentIndex()
@@ -107,10 +103,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.classSelected.connect(self.font.classSelected)
 
     def loadAP(self, apname) :
-        if self.apname != apname :
-            self.apname = apname
-            if apname and os.path.exists(apname) :
-                self.font.loadAP(apname)
+        self.apname = apname
+        if apname and os.path.exists(apname) :
+            self.font.loadAP(apname)
+        else :
+            self.font.loadEmptyGlyphs()
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
@@ -357,9 +354,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_errors.addGdlErrors('gdlerr.txt')
         if res :
             self.tabResults.setCurrentWidget(self.tab_errors)
-        if os.path.exists(self.gdxfile) :
-            self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
+        self.loadAP(self.apname)
         self.feats = FeatureRefs(self.fontfile)
         return True
 

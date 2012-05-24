@@ -27,11 +27,11 @@ import re, os
 
 class FontClass(object) :
 
-    def __init__(self, elements = None, fname = None, lineno = None, readonly = False) :
+    def __init__(self, elements = None, fname = None, lineno = None, generated = False) :
         self.elements = elements or []
         self.fname = fname
         self.lineno = lineno
-        self.readonly  = readonly
+        self.generated = generated
 
     def append(self, element) :
         self.elements.append(element)
@@ -87,6 +87,7 @@ class Font(gdl.Font) :
         self.psnames = {}
         self.canonos = {}
         self.gdls = {}
+        self.classes = {}
 
     def loadAP(self, apfile) :
         if not os.path.exists(apfile) : return False
@@ -159,8 +160,8 @@ class Font(gdl.Font) :
         super(Font, self).addGlyph(g, index, gdlname)
         return index
 
-    def addClass(self, name, elements, fname = None, lineno = 0, readonly = False) :
-        self.classes[name] = FontClass(elements, fname, lineno, readonly)
+    def addClass(self, name, elements, fname = None, lineno = 0, generated = False) :
+        self.classes[name] = FontClass(elements, fname, lineno, generated)
         for e in elements :
             g = self[e]
             if g : g.addClass(name)

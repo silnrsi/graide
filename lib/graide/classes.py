@@ -84,7 +84,7 @@ class Classes(QtGui.QWidget) :
                 m = QtGui.QTableWidgetItem("  ".join(filter(None, v)))
             else :
                 m = QtGui.QTableWidgetItem("")
-            if c.readonly or c.fname :
+            if c.generated or c.fname :
                 m.setFlags(QtCore.Qt.NoItemFlags)
             else :
                 m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
