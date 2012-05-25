@@ -110,6 +110,9 @@ fn('gr_slot_can_insert_before', c_int, c_void_p)
 fn('gr_slot_original', c_int, c_void_p)
 fn('gr_slot_linebreak_before', None, c_void_p)
 
+fn('graphite_start_logging', c_int, c_void_p, c_int)
+fn('graphite_stop_logging', None)
+ 
 def tag_to_str(num) :
     s = create_string_buffer('\000' * 5)
     gr2.gr_tag_to_str(num, s)

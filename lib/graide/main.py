@@ -37,7 +37,7 @@ from graide.config import ConfigDialog
 from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
 from PySide import QtCore, QtGui
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os
 
@@ -54,6 +54,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.currFeats = None
         self.font = Font()
         self.apname = None
+
+        print QtGui.QIcon.themeSearchPaths()
+        print QtGui.QIcon.themeName()
 
         for s in ('main', 'build', 'ui') :
             if not config.has_section(s) :
@@ -360,7 +363,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
-        runfile = NamedTemporaryFile(mode="rw")
+        runfile = TemporaryFile(mode="rw")
         text = self.runEdit.toPlainText().decode('unicode_escape')
         if not text : return
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
