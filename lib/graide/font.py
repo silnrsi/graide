@@ -78,7 +78,7 @@ class Font(gdl.Font) :
                 self.pixrect = self.pixrect | grect
             if g.top > self.top : self.top = g.top
         for (i, g) in enumerate(self.glyphs) :
-            if i < len(self.glyphItems) :
+            if i < len(self.glyphItems) and g :
                 g.item = self.glyphItems[i]
         self.isread = True
 

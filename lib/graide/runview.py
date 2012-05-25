@@ -135,7 +135,7 @@ class RunView(QtCore.QObject, ModelSuper) :
     def glyph_clicked(self, gitem, index) :
         s = self.tview.extraSelections()
         if self.currselection >= 0 :
-            if self._pixmaps[self.succselection] : self._pixmaps[self.currselection].select(False)
+            if self._pixmaps[self.currselection] : self._pixmaps[self.currselection].select(False)
             s.pop()
         if self.currselection != index :
             self.currselection = index

@@ -96,15 +96,21 @@ class MainWindow(QtGui.QMainWindow) :
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
-            self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
-            i = self.tabResults.currentIndex()
-            self.tabResults.removeTab(0)
-            self.tab_font = FontView(self.font)
-            self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
-            self.tabResults.insertTab(0, self.tab_font, "Font")
-            self.tabResults.setCurrentIndex(i)
+            if self.tab_font :
+                self.tab_font.resizeRowsToContents()
+                self.tab_font.resizeColumnsToContents()
+            else :
+                self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
+                i = self.tabResults.currentIndex()
+                self.tabResults.removeTab(0)
+                self.tab_font = FontView(self.font)
+                self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
+                self.tabResults.insertTab(0, self.tab_font, "Font")
+                self.tabResults.setCurrentIndex(i)
+                self.tab_classes.classSelected.connect(self.font.classSelected)
             self.tab_classes.loadFont(self.font)
-            self.tab_classes.classSelected.connect(self.font.classSelected)
+        if hasattr(self, 'runView') :
+            self.runView.gview.setFixedHeight(self.font.pixrect.height())
 
     def loadAP(self, apname) :
         self.apname = apname
@@ -225,7 +231,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
-        self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'gdlfile') if configval(self.config, 'main', 'ap') else None)
+        self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'makegdlfile') if configval(self.config, 'main', 'ap') else None)
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
@@ -265,10 +271,10 @@ class MainWindow(QtGui.QMainWindow) :
         # font tab
         if self.font.isRead() :
             self.tab_font = FontView(self.font)
-            self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
+            self.tab_font.changeGlyph.connect(self.glyphSelected)
             self.tab_classes.classSelected.connect(self.tab_font.classSelected)
         else :
-            self.tab_font = QtGui.QWidget()
+            self.tab_font = None
         self.tabResults.addTab(self.tab_font, "Font")
 
         # errors tab
@@ -323,6 +329,10 @@ class MainWindow(QtGui.QMainWindow) :
                 pass
         self.tabEdit.writeIfModified()
         self.saveAP()
+
+    def glyphSelected(self, data, model) :
+        self.glyphAttrib.changeData(data, model)
+        self.tabInfo.setCurrentWidget(self.tab_glyph)
 
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return

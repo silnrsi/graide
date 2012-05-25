@@ -28,8 +28,7 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
     def __init__(self, font, parent=None) :
         super(GlyphDelegate, self).__init__(parent)
-        self.brect = font.pixrect
-        self.desc = font.pixrect.height() - font.top
+        self.font = font
 
     def paint(self, painter, option, index) :
         g = index.data()
@@ -41,7 +40,7 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
         if g and g.item :
             if g.item.pixmap :
                 x = option.rect.left() + (option.rect.width() - g.item.pixmap.width()) / 2
-                y = option.rect.bottom() - self.textheight - self.desc - g.item.top
+                y = option.rect.bottom() - self.textheight - self.font.pixrect.height() + self.font.top - g.item.top
                 painter.drawPixmap(x, y, g.item.pixmap)
             font = painter.font()
             myfont = QtGui.QFont(font)
@@ -59,7 +58,7 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
             painter.setFont(font)
 
     def sizeHint(self, option, index) :
-        return self.brect.size() + QtCore.QSize(0, 2 * self.textheight)
+        return self.font.pixrect.size() + QtCore.QSize(0, 2 * self.textheight)
 
 class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
 
@@ -115,6 +114,17 @@ class FontView(QtGui.QTableView) :
         self.model.set_width(self.viewport().size().width())
         self.resizeColumnsToContents()
         super(FontView, self).resizeEvent(event)
+
+    def keyPressEvent(self, event) :
+        if event.matches(QtGui.QKeySequence.Copy) :
+            res = []
+            for i in self.selectedIndexes() :
+                g = i.data()
+                res.append(g.GDLName())
+            clipboard = QtGui.QApplication.clipboard()
+            clipboard.setText("  ".join(res))
+        else :
+            super(FontView, self).keyPressEvent(event)
 
     def do_activate(self, index) :
         self.changeGlyph.emit(index.data(), self.model)

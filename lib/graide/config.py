@@ -128,13 +128,21 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb = QtGui.QGridLayout(self.ui)
         self.ui_size = QtGui.QSpinBox(self.ui)
         self.ui_size.setRange(1, 36)
-        if config.has_option('ui', 'size') :
-            self.ui_size.setValue(configintval(config, 'ui', 'size'))
+        if config.has_option('ui', 'textsize') :
+            self.ui_size.setValue(configintval(config, 'ui', 'textsize'))
         else :
             self.ui_size.setValue(10)
         self.ui_vb.addWidget(QtGui.QLabel('Editor text point size'), 0, 0)
         self.ui_vb.addWidget(self.ui_size, 0, 1)
-        self.ui_vb.setRowStretch(1, 1)
+        self.ui_gsize = QtGui.QSpinBox(self.ui)
+        self.ui_gsize.setRange(1, 288)
+        if config.has_option('main', 'size') :
+            self.ui_gsize.setValue(configintval(config, 'main', 'size'))
+        else :
+            self.ui_gsize.setValue(40)
+        self.ui_vb.addWidget(QtGui.QLabel('Font Glyph pixel size'), 1, 0)
+        self.ui_vb.addWidget(self.ui_gsize, 1, 1)
+        self.ui_vb.setRowStretch(2, 1)
         self.tb.addItem(self.ui, 'User Interface')
 
         self.resize(500, 500)
@@ -169,9 +177,12 @@ class ConfigDialog(QtGui.QDialog) :
                 config.remove_option('build', 'makegdlcmd')
         else :
             config.set('build', 'usemakegdl', '0')
-        if self.ui_size.value() != configintval(config, 'ui', 'size') :
-            config.set('ui', 'size', str(self.ui_size.value()))
+        if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
+            config.set('ui', 'textsize', str(self.ui_size.value()))
             app.tabEdit.setSize(self.ui_size.value())
+        if self.ui_gsize.value() != configintval(config, 'main', 'size') :
+            config.set('main', 'size', str(self.ui_gsize.value()))
+            app.loadFont(configval(config, 'main', 'font'))
 
     def updateChanged(self, widget, config, section, option, fn = None) :
         t = widget.text()

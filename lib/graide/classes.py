@@ -96,6 +96,7 @@ class Classes(QtGui.QWidget) :
         c = self.tab.item(row, 1)
         if c.loc and c.loc[0] != self.apgdlfile :
             self.app.selectLine(*c.loc)
+            return True
         else :
             d = QtGui.QDialog(self)
             name = self.tab.item(row, 0).text()
