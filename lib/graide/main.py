@@ -308,6 +308,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
 
+        if self.config.has_section('window') :
+            self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
+            self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
+            self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         if hori != 100 : sizePolicy.setHorizontalStretch(hori)
@@ -318,6 +323,13 @@ class MainWindow(QtGui.QMainWindow) :
         widget.setSizePolicy(sizePolicy)
 
     def closeEvent(self, event) :
+        if not self.config.has_section('window') :
+            self.config.add_section('window')
+        s = self.size()
+        self.config.set('window', 'mainwidth', str(s.width()))
+        self.config.set('window', 'mainheight', str(s.height()))
+        self.config.set('window', 'vsplitter', self.vsplitter.saveState().toBase64())
+        self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
         if self.configfile :
