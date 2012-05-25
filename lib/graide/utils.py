@@ -75,7 +75,6 @@ def copyobj(src, dest) :
             setattr(dest, x, y)
 
 def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = 0, size = 16) :
-    debugfile.truncate(0)
     grface = gr2.gr_make_file_face(font, 0)
     grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
     for f, v in feats.items() :
