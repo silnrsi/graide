@@ -85,7 +85,7 @@ class Font(gdl.Font) :
     def initGlyphs(self) :
         self.glyphs = [None] * self.numGlyphs
         self.psnames = {}
-        self.canonos = {}
+        self.canons = {}
         self.gdls = {}
         self.classes = {}
 
@@ -213,7 +213,7 @@ class Font(gdl.Font) :
         res = []
         for n in names :
             c = self.classes[n]
-            if not c.fname or c.fname == apgdlfile : res.append(n)
+            if not c.generated and (not c.fname or c.fname == apgdlfile) : res.append(n)
         return res
 
     def emunits(self) : return self.upem

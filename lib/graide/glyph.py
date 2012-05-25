@@ -68,7 +68,9 @@ class Glyph(gdl.Glyph, DataObj) :
         self.uid = elem.get('UID', None)
         for p in elem.iterfind('property') :
             n = p.get('name')
-            if n.startswith('GDL_') :
+            if n == 'GDLName' :
+                self.setGDL(p.get('value'))
+            elif n.startswith('GDL_') :
                 self.gdl_properties[n[4:]] = p.get('value')
             else :
                 self.properties[n] = p.get('value')
@@ -110,6 +112,12 @@ class Glyph(gdl.Glyph, DataObj) :
                 p.set('value', v)
                 if ce is not None : ce.tail = "\n    "
                 ce = p
+        if self.gdl and (not self.name or self.gdl != self.name.GDL()) :
+            p = SubElement(e, 'property')
+            p.set('name', 'GDLName')
+            p.set('value', self.GDLName())
+            if ce is not None : ce.tail = "\n    "
+            ce = p
         for (k, v) in self.properties.items() :
             if v :
                 p = SubElement(e, 'property')
@@ -134,7 +142,7 @@ class Glyph(gdl.Glyph, DataObj) :
         res = []
         for a in ['psname', 'gid'] :
             res.append(Attribute(a, self.__getattribute__, None, False, a)) # read-only
-        res.append(Attribute('GDLName', self.GDLName, None))
+        res.append(Attribute('GDLName', self.GDLName, self.setGDL))
         for a in ['uid', 'comment'] :
             res.append(Attribute(a, self.__getattribute__, self.__setattr__, False, a))
         for a in sorted(self.properties.keys()) :

@@ -86,6 +86,8 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = 0, size = 16)
 def buildGraphite(config, app, font, fontfile) :
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
+        if config.has_option('main', 'ap') :
+            font.saveAP(config.get('main', 'ap'), gdlfile)
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
             if config.has_option('main', 'ap') :

@@ -104,6 +104,7 @@ class Font(object) :
         glyph.setGDL(name)
 
     def createClasses(self) :
+        self.subclasses = {}
         for k, v in self.canons.items() :
             if v[0].ext :
                 h = v[0].head()
@@ -119,6 +120,7 @@ class Font(object) :
 #                self.classes[c].append(g.gid)
 
     def pointClasses(self) :
+        self.points = {}
         for g in self.glyphs :
             if not g : continue
             for a in g.anchors.keys() :
@@ -132,6 +134,7 @@ class Font(object) :
                     self.points[b].addDiaGlyph(g)
 
     def ligClasses(self) :
+        self.ligs = {}
         for g in self.glyphs :
             if not g or not g.name : continue
             (h, t) = g.name.split_last()

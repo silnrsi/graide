@@ -61,7 +61,6 @@ class MainWindow(QtGui.QMainWindow) :
 
         if config.has_option('main', 'font') :
             self.loadFont(config.get('main', 'font'))
-            self.loadAP(configval(config, 'main', 'ap'))
 
         if jsonfile :
             f = file(jsonfile)
@@ -91,6 +90,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = FeatureRefs(self.fontfile)
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
+        self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
             self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
             i = self.tabResults.currentIndex()
