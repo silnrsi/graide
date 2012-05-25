@@ -39,7 +39,7 @@ from graide.errors import Errors
 from PySide import QtCore, QtGui
 from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
-import json, os
+import json, os, sys
 
 class MainWindow(QtGui.QMainWindow) :
 
@@ -55,8 +55,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.font = Font()
         self.apname = None
 
-        print QtGui.QIcon.themeSearchPaths()
-        print QtGui.QIcon.themeName()
+        if sys.platform == 'darwin' :
+            QtGui.QIcon.setThemeSearchPaths(['/opt/local/share/icons', ':/icons'])
+            QtGui.QIcon.setThemeName('Tango')
 
         for s in ('main', 'build', 'ui') :
             if not config.has_section(s) :
