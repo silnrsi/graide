@@ -461,6 +461,9 @@ class MainWindow(QtGui.QMainWindow) :
     def configOpenClicked(self) :
         (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(fname) : return
+        (dname, fname) = os.path.split(fname)
+        if dname :
+            os.chdir(dname)
         self.configfile = fname
         self.config = RawConfigParser()
         self.config.read(fname)
@@ -474,6 +477,9 @@ class MainWindow(QtGui.QMainWindow) :
     def configNewClicked(self) :
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
+        (dname, fname) = os.path.split(fname)
+        if dname :
+            os.chdir(dname)
         self.configfile = fname
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)

@@ -20,6 +20,7 @@
 
 from ctypes import *
 import ctypes.util
+import sys
 
 grfiles = {
     'darwin' : 'libgraphite2.dylib',
