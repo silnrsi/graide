@@ -110,7 +110,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_invb = QtGui.QGridLayout(self.build_inmake)
         self.build_cmd = QtGui.QLineEdit(self.build_inmake)
         self.build_cmd.setText(configval(config, 'build', 'makegdlcmd'))
-        self.build_cmd.setToolTip('External make gdl command: %a=AP Database, %g=Generated GDL File, %i=included GDL file\n    %p=positioning pass number')
+        self.build_cmd.setToolTip('External make gdl command: %a=AP Database, %f=Font File, %g=Generated GDL File,\n    %i=included GDL file %p=positioning pass number')
         self.build_invb.addWidget(QtGui.QLabel('Make GDL Command:'), 0, 0)
         self.build_invb.addWidget(self.build_cmd, 0, 1, 1, 2)
         self.build_inc = FileEntry(self.build_inmake, configval(config, 'build', 'makegdlfile'), 'GDL Files (*.gdl)')

@@ -68,9 +68,10 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
-    def __init__(self, fname, size = 10) :
+    def __init__(self, fname, abspath, size = 10) :
         super(EditFile, self).__init__()
         self.fname = fname
+        self.abspath = abspath
         self.selection = QtGui.QTextEdit.ExtraSelection()
         self.selection.format = QtGui.QTextCharFormat()
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
@@ -183,10 +184,10 @@ class FileTabs(QtGui.QWidget) :
     def selectLine(self, fname, lineno) :
         for i in range(self.tabs.count()) :
             f = self.tabs.widget(i)
-            if f.fname == fname :
+            if f.abspath == os.path.abspath(fname) :
                 self.highlightLine(i, lineno)
                 return
-        newFile = EditFile(fname, size = self.size)
+        newFile = EditFile(fname, os.path.abspath(fname), size = self.size)
         self.tabs.addTab(newFile, fname)
         self.highlightLine(self.tabs.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
@@ -209,6 +210,8 @@ class FileTabs(QtGui.QWidget) :
         return res
 
     def closeRequest(self, index) :
+        if index == self.currselIndex :
+            self.currselIndex = -1
         self.tabs.widget(index).close()
         self.tabs.removeTab(index)
 

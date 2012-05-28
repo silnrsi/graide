@@ -84,20 +84,22 @@ class Classes(QtGui.QWidget) :
                 m = QtGui.QTableWidgetItem("  ".join(filter(None, v)))
             else :
                 m = QtGui.QTableWidgetItem("")
-            if c.generated or c.fname :
+            t = ""
+            if c.generated : t += "Generated "
+            if c.editable : t += "Editable "
+            if c.fname : t += c.fname
+            l.setToolTip(t)
+            if (c.generated or not c.editable) and c.fname :
                 m.setFlags(QtCore.Qt.NoItemFlags)
             else :
                 m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
-            m.loc = (c.fname, c.lineno) if c.fname else None
+            m.loc = (c.fname, c.lineno, c.editable)
             self.tab.setItem(i, 0, l)
             self.tab.setItem(i, 1, m)
 
     def doubleClicked(self, row, col) :
         c = self.tab.item(row, 1)
-        if c.loc and c.loc[0] != self.apgdlfile :
-            self.app.selectLine(*c.loc)
-            return True
-        else :
+        if not c.loc[0] or c.loc[2] :
             d = QtGui.QDialog(self)
             name = self.tab.item(row, 0).text()
             d.setWindowTitle(name)
@@ -112,6 +114,9 @@ class Classes(QtGui.QWidget) :
                 t = edit.toPlainText()
                 self.tab.item(row, 1).setText(t)
                 self.classUpdated.emit(name, t)
+        elif c.loc[0] :
+            self.app.selectLine(*c.loc[:2])
+            return True
 
     def clicked(self, row, cell) :
         self.classSelected.emit(self.tab.item(row, 0).text())

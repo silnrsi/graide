@@ -84,7 +84,7 @@ class Glyph(gdl.Glyph, DataObj) :
             for c in self.properties['classes'].split() :
                 if c not in self.classes :
                     self.classes.add(c)
-                    font.addGlyphClass(c, self.gid)
+                    font.addGlyphClass(c, self.gid, editable = True)
 
     def createAP(self, elem, font, apgdlfile) :
         e = SubElement(elem, 'glyph')

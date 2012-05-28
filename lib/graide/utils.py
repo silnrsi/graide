@@ -107,7 +107,7 @@ def buildGraphite(config, app, font, fontfile) :
             f = file(gdlfile, "w")
             font.outGDL(f)
             if configval(config, 'build', 'gdlfile') :
-                f.write('#include "%s"\n' % (config.get('build', 'gdlfile')))
+                f.write('#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
             f.close()
             app.updateFileEdit(gdlfile)
     else :
@@ -133,13 +133,14 @@ def buildGraphite(config, app, font, fontfile) :
 
 replacements = {
     'a' : ['main', 'ap'],
+    'f' : ['main', 'font'],
     'g' : ['build', 'makegdlfile'],
     'i' : ['build', 'gdlfile'],
     'p' : ['build', 'pospass']
 }
 
 def expandMakeCmd(config, txt) :
-    return re.sub(r'%([agip])', lambda m: configval(config, *replacements[m.group(1)]), txt)
+    return re.sub(r'%([afgip])', lambda m: os.path.abspath(configval(config, *replacements[m.group(1)])), txt)
 
 def reportError(text) :
     global mainapp, pendingErrors

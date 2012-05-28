@@ -25,7 +25,6 @@ from graide.attribview import AttribView
 from graide.fontview import FontView
 from graide.runview import RunView
 from graide.passes import PassesView
-from graide.ruledialog import RuleDialog
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
 from graide.utils import runGraphite, buildGraphite, configval, configintval, Layout, registerErrorLog
