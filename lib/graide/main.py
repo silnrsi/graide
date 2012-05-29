@@ -101,9 +101,8 @@ class MainWindow(QtGui.QMainWindow) :
             else :
                 self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
                 i = self.tabResults.currentIndex()
-                self.tabResults.removeTab(0)
                 self.tab_font = FontView(self.font)
-                self.tab_font.changeGlyph.connect(self.glyphAttrib.changeData)
+                self.tab_font.changeGlyph.connect(self.glyphSelected)
                 self.tabResults.insertTab(0, self.tab_font, "Font")
                 self.tabResults.setCurrentIndex(i)
                 self.tab_classes.classSelected.connect(self.font.classSelected)
@@ -120,6 +119,8 @@ class MainWindow(QtGui.QMainWindow) :
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
+        else :
+            self.gdx = None
         if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsname) :
@@ -283,14 +284,14 @@ class MainWindow(QtGui.QMainWindow) :
 
         # passes tab
         self.tab_passes = PassesView()
-        self.tab_passes.slotSelected.connect(self.tab_slot.changeData)
+        self.tab_passes.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tabResults.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json['output'])
             self.runView.loadrun(self.run, self.font)
-            self.runView.slotSelected.connect(self.tab_slot.changeData)
+            self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
             istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
@@ -302,7 +303,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.currentChanged.connect(self.setrunEditFocus)
 
         self.tab_rules = PassesView()
-        self.tab_rules.slotSelected.connect(self.tab_slot.changeData)
+        self.tab_rules.slotSelected.connect(self.slotSelected)
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
@@ -345,11 +346,17 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyphAttrib.changeData(data, model)
         self.tabInfo.setCurrentWidget(self.tab_glyph)
 
+    def slotSelected(self, data, model) :
+        self.tab_slot.changeData(data, model)
+        if self.tabInfo.currentWidget() is not self.tab_glyph :
+            self.tabInfo.setCurrentWidget(self.tab_slot)
+
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
         self.tab_rules.index = row - 1
         self.tab_rules.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
         passview.selectRow(row)
+        self.tabResults.setCurrentWidget(self.tab_rules)
 
     def rulesclosed(self, dialog) :
         self.ruleView.slotSelected.disconnect()
@@ -398,15 +405,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.runView.loadrun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
-                self.runView.slotSelected.connect(self.tab_slot.changeData)
+                self.runView.slotSelected.connect(self.slotSelected)
                 self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
                 self.runloaded = True
             except :
                 print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
-#        if self.tabResults.currentWidget() is not self.tab_passes :
-#            self.tabResults.setCurrentWidget(self.tab_passes)
+        self.tabResults.setCurrentWidget(self.tab_passes)
 
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()
