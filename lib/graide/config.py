@@ -140,7 +140,7 @@ class ConfigDialog(QtGui.QDialog) :
             self.ui_gsize.setValue(configintval(config, 'main', 'size'))
         else :
             self.ui_gsize.setValue(40)
-        self.ui_vb.addWidget(QtGui.QLabel('Font Glyph pixel size'), 1, 0)
+        self.ui_vb.addWidget(QtGui.QLabel('Font glyph pixel size'), 1, 0)
         self.ui_vb.addWidget(self.ui_gsize, 1, 1)
         self.ui_vb.setRowStretch(2, 1)
         self.tb.addItem(self.ui, 'User Interface')

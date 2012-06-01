@@ -32,7 +32,7 @@ p.add_argument("-f","--font",help="Font .ttf file to process")
 p.add_argument("-a","--ap",help="AP XML database file for font")
 p.add_argument("-g","--gdx",help="grcompiler debug output file")
 p.add_argument("-r","--results",help="graphite JSON debug output")
-p.add_argument("-s","--size",default=40,type=int,help="Size of glyphs to render in pixels")
+p.add_argument("-s","--size",type=int,help="Size of glyphs to render in pixels")
 args = p.parse_args()
 
 config = RawConfigParser()
