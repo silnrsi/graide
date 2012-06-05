@@ -79,8 +79,6 @@ class Test(object) :
             self.comment = eComment.toPlainText()
             if self.featdialog : 
                 self.feats = self.featdialog.get_feats()
-            else :
-                self.feats = dict(self.parent.feats.fval)
         del self.featdialog
         del self.parent
         return res

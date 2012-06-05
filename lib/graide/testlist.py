@@ -133,7 +133,7 @@ class TestList(QtGui.QWidget) :
         self.editTest(self.list.currentRow())
 
     def addClicked(self, t = None) :
-        if not t : t = Test('', {})
+        if not t : t = Test('', self.app.feats.fval)
         self.appendTest(t)
         res = self.editTest(len(self.tests) - 1)
         if not t.name or not res :
