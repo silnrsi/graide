@@ -38,7 +38,7 @@ from graide.errors import Errors
 from PySide import QtCore, QtGui
 from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
-import json, os, sys
+import json, os, sys, re
 
 class MainWindow(QtGui.QMainWindow) :
 
@@ -393,7 +393,8 @@ class MainWindow(QtGui.QMainWindow) :
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = TemporaryFile(mode="rw")
-        text = self.runEdit.toPlainText().decode('unicode_escape')
+        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{8})', \
+                lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
         if not text : return
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
             feats = self.currFeats or self.feats.fval)
