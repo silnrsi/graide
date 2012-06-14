@@ -19,6 +19,7 @@
 
 from xml.etree.cElementTree import iterparse
 from makegdl.makegdl import isMakeGDLSpecialClass
+import os
 
 class Gdx(object) :
 
@@ -28,6 +29,7 @@ class Gdx(object) :
         self.keepelements = False
 
     def readfile(self, fname, font, apgdlfile = None) :
+        relbase = os.path.relpath(os.path.dirname(fname))
         self.file = file(fname)
         if not apgdlfile : font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
@@ -40,7 +42,7 @@ class Gdx(object) :
             else :
                 if e.tag == "rule" :
                     self.keepelements = False
-                    self.passes[-1].append(Rule(e))
+                    self.passes[-1].append(Rule(e, relbase))
                 if e.tag == 'glyph' :
                     self.keepelements = False
                     if not apgdlfile : font.addGDXGlyph(e)
@@ -64,8 +66,8 @@ class Gdx(object) :
 
 class Rule(object) :
 
-    def __init__(self, e) :
-        self.srcfile = e.get('inFile')
+    def __init__(self, e, relbase) :
+        self.srcfile = os.path.join(relbase, e.get('inFile'))
         self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')
         slots = map(lambda x: int(x.get('slotIndex')), e.findall('rhsSlot'))
