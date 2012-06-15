@@ -196,7 +196,7 @@ class FileTabs(QtGui.QWidget) :
 
     def highlightLine(self, tabindex, lineno) :
         if lineno >= 0 :
-            if self.currselIndex != None and (self.currselIndex != tabindex or self.currselline != lineno) :
+            if self.currselIndex is not None and self.currselIndex > -1 and (self.currselIndex != tabindex or self.currselline != lineno) :
                 self.tabs.widget(self.currselIndex).unhighlight(self.currselline)
             self.tabs.widget(tabindex).highlight(lineno)
             self.currselIndex = tabindex

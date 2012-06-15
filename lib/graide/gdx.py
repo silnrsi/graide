@@ -29,7 +29,7 @@ class Gdx(object) :
         self.keepelements = False
 
     def readfile(self, fname, font, apgdlfile = None) :
-        relbase = os.path.relpath(os.path.dirname(fname))
+        relbase = os.path.relpath(os.path.dirname(fname)) or ""
         self.file = file(fname)
         if not apgdlfile : font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
@@ -52,7 +52,8 @@ class Gdx(object) :
                     c = e.findall('member')
                     if len(c) :
                         g = font[int(c[0].get('glyphid'))]
-                        f = c[0].get('inFile')
+                        fn = c[0].get('inFile')
+                        f = os.path.join(relbase, fn) if fn else None
                         l = int(c[0].get('atLine')) if f else 0
                         if len(c) == 1 and g and g.GDLName() == n :
                             pass
