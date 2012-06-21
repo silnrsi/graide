@@ -300,7 +300,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.runloaded = True
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
-        self.tabResults.currentChanged.connect(self.setrunEditFocus)
 
         self.tab_rules = PassesView()
         self.tab_rules.slotSelected.connect(self.slotSelected)
@@ -427,11 +426,6 @@ class MainWindow(QtGui.QMainWindow) :
             fDialog.set_feats(self.feats, self.currFeats)
             if fDialog.exec_() :
                 self.currFeats = fDialog.get_feats()
-
-    def setrunEditFocus(self, widget) :
-        if (isinstance(widget, QtGui.QWidget) and widget == self.tab_results) \
-                or (not isinstance(widget, QtGui.QWidget) and widget == 2) :
-            self.runEdit.setFocus(QtCore.Qt.MouseFocusReason)
 
     # called from utils
     def updateFileEdit(self, fname) :

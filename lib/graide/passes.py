@@ -144,11 +144,13 @@ class PassesView(QtGui.QTableWidget) :
                     lext = ""
                     for s in self.runs[-1][beg:end] :
                         s.highlight()
+                    if 'postshift' in r['output'] :
+                        for s in self.runs[-1][end:] :
+                            s.origin = (s.origin[0] + r['output']['postshift'][0], s.origin[1] + r['output']['postshift'][1])
                 self.runs.append(run)
                 run.label="Rule: %d%s" % (c['id'], lext)
                 run.passindex = self.index
                 run.ruleindex = int(c['id'])
-
         w = 0
         wt = 0
         self.setRowCount(len(self.runs))

@@ -36,6 +36,8 @@ class Test(object) :
         self.name = name or text
         self.rtl = rtl
         self.comment = comment
+        self.foreground = QtGui.QColor('black')
+        self.background = QtGui.QColor('white')
 
     def editDialog(self, parent) :
         self.parent = parent
@@ -57,12 +59,13 @@ class Test(object) :
         eRTL = QtGui.QCheckBox('RTL', d)
         eRTL.setChecked(asBool(self.rtl))
         v.addWidget(eRTL, 3, 1)
+        
         b = QtGui.QPushButton('Features', d)
-        v.addWidget(b, 4, 1)
+        v.addWidget(b, 5, 1)
         hw = QtGui.QWidget(d)
         h = QtGui.QHBoxLayout()
         hw.setLayout(h)
-        v.addWidget(hw, 5, 1)
+        v.addWidget(hw, 6, 1)
         bok = QtGui.QPushButton('OK', hw)
         h.addWidget(bok)
         bcancel = QtGui.QPushButton('Cancel', hw)
