@@ -59,13 +59,21 @@ class Test(object) :
         eRTL = QtGui.QCheckBox('RTL', d)
         eRTL.setChecked(asBool(self.rtl))
         v.addWidget(eRTL, 3, 1)
-        
-        b = QtGui.QPushButton('Features', d)
-        v.addWidget(b, 5, 1)
+        bw = QtGui.QWidget(d)
+        bl = QtGui.QHBoxLayout()
+        bw.setLayout(bl)
+        c = QtGui.QToolButton(bw)
+        c.setIcon(QtGui.QIcon.fromTheme('background'))
+        c.setToolTip('Set background colour')
+        c.clicked.connect(self.doColour)
+        bl.addWidget(c)
+        b = QtGui.QPushButton('Features', bw)
+        bl.addWidget(b)
+        v.addWidget(bw, 4, 1)
         hw = QtGui.QWidget(d)
         h = QtGui.QHBoxLayout()
         hw.setLayout(h)
-        v.addWidget(hw, 6, 1)
+        v.addWidget(hw, 5, 1)
         bok = QtGui.QPushButton('OK', hw)
         h.addWidget(bok)
         bcancel = QtGui.QPushButton('Cancel', hw)
@@ -95,6 +103,9 @@ class Test(object) :
         if not d.exec_() :
             self.featdialog = None
 
+    def doColour(self) :
+        self.background = QtGui.QColorDialog.getColor(self.background)
+
     def addTree(self, parent) :
         e = et.SubElement(parent, 'test')
         t = et.SubElement(e, 'text')
@@ -106,6 +117,7 @@ class Test(object) :
             c.tail = "\n"
         e.tail = "\n"
         e.set('name', self.name)
+        if self.background != QtGui.QColor('white') : e.set('background', self.background.name())
         if self.rtl : e.set('rtl', 'True')
         feats = []
         for (k, v) in self.feats.items() :

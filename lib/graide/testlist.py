@@ -105,6 +105,10 @@ class TestList(QtGui.QWidget) :
                     else :
                         c = ""
                     te = Test(txt, feats, t.get('rtl'), t.get('name'), comment = c)
+                    b = t.get('background')
+                    if b :
+                        res = QtGui.QColor(b)
+                        if res.isValid() : te.background = res
                     self.appendTest(te)
 
     def appendTest(self, t) :
@@ -112,12 +116,14 @@ class TestList(QtGui.QWidget) :
         w = QtGui.QListWidgetItem(t.name, self.list)
         if t.comment :
             w.setToolTip(t.comment)
+            w.setBackground(QtGui.QBrush(t.background))
 
     def editTest(self, index) :
         t = self.tests[index]
         if t.editDialog(self.app) :
             self.list.item(index).setText(t.name)
             self.list.item(index).setToolTip(t.comment)
+            self.list.item(index).setBackground(QtGui.QBrush(t.background))
             return True
         else :
             return False
