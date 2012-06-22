@@ -29,7 +29,7 @@ class Gdx(object) :
         self.keepelements = False
 
     def readfile(self, fname, font, apgdlfile = None) :
-        relbase = os.path.relpath(os.path.dirname(fname)) or ""
+        relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
         self.file = file(fname)
         if not apgdlfile : font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
