@@ -152,7 +152,11 @@ class MainWindow(QtGui.QMainWindow) :
         # tests list
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
         self.setwidgetstretch(self.tabInfo, 30, 100)
-        self.test_widget = QtGui.QWidget()
+        self.test_splitter = QtGui.QSplitter()
+        self.test_splitter.setOrientation(QtCore.Qt.Vertical)
+        self.test_splitter.setContentsMargins(0, 0, 0, 0)
+        self.test_splitter.setHandleWidth(4)
+        self.test_widget = QtGui.QWidget(self.test_splitter)
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
@@ -194,9 +198,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.addWidget(self.runAdd)
         self.run = Run()
         self.runView = RunView(self.font)
-        self.runView.gview.setFixedHeight(self.font.pixrect.height())
-        self.test_vbox.addWidget(self.runView.gview)
-        self.tabInfo.addTab(self.test_widget, "Tests")
+        self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
+        self.test_splitter.addWidget(self.runView.gview)
+        self.tabInfo.addTab(self.test_splitter, "Tests")
 
         # glyph, slot, classes, tabview
         self.tab_glyph = QtGui.QWidget()
