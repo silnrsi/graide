@@ -20,8 +20,9 @@
 
 from PySide import QtGui
 from graide.featureselector import FeatureDialog
-from xml.etree import cElementTree as et
+from xml.etree import ElementTree as et
 from graide.utils import Layout
+import re
 
 def asBool(txt) :
     if not txt : return False
@@ -89,7 +90,7 @@ class Test(object) :
             self.rtl = eRTL.isChecked()
             self.comment = eComment.toPlainText()
             if self.featdialog : 
-                self.feats = self.featdialog.get_feats()
+                self.feats = self.featdialog.get_feats(self.parent.feats)
         del self.featdialog
         del self.parent
         return res
@@ -108,19 +109,13 @@ class Test(object) :
 
     def addTree(self, parent) :
         e = et.SubElement(parent, 'test')
-        t = et.SubElement(e, 'text')
-        t.text = self.text
-        t.tail = "\n"
         if self.comment :
             c = et.SubElement(e, 'comment')
             c.text = self.comment
-            c.tail = "\n"
-        e.tail = "\n"
-        e.set('name', self.name)
+        t = et.SubElement(e, 'text')
+        t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{8})', \
+                lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
+        e.set('label', self.name)
         if self.background != QtGui.QColor('white') : e.set('background', self.background.name())
         if self.rtl : e.set('rtl', 'True')
-        feats = []
-        for (k, v) in self.feats.items() :
-            feats.append("%s=%d" % (k, v))
-        if len(feats) : e.set('feats', " ".join(feats))
         return e

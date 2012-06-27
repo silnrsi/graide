@@ -105,6 +105,7 @@ class Font(gdl.Font) :
     def saveAP(self, fname, apgdlfile) :
         root = Element('font')
         root.set('upem', str(self.upem))
+        root.set('producer', 'graide 1.0')
         root.text = "\n\n"
         for g in self.glyphs :
             if g : g.createAP(root, self, apgdlfile)
@@ -114,6 +115,12 @@ class Font(gdl.Font) :
         self.initGlyphs()
         for i in range(self.numGlyphs) :
             self.addglyph(i)
+        face = freetype.Face(self.fname)
+        (uni, gid) = face.get_first_char()
+        while gid :
+            self[gid].uid = "%04X" % uni
+            (uni, gid) = face.get_next_char(uni, gid)
+            
 
     def addGDXGlyph(self, e) :
         gid = int(e.get('glyphid'))

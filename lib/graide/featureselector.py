@@ -100,10 +100,12 @@ class FeatureDialog(QtGui.QDialog) :
             count += 1
         self.resize(600, 400)
 
-    def get_feats(self) :
+    def get_feats(self, base = None) :
         res = {}
         for c in self.combos :
-            res[c.userTag] = c.itemData(c.currentIndex())
+            v = c.itemData(c.currentIndex())
+            if base is None or base.fval[c.userTag] != v :
+                res[c.userTag] = v
         return res
 
     def resizeEvent(self, event) :

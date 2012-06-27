@@ -56,7 +56,7 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
             super(AttributeDelegate, self).setEditorData(editor, index)
 
     def setModelData(self, editor, model, index) :
-        if index.column() == 1 and len(index.data()) > 20 :
+        if index.column() == 1 and index.data and len(index.data()) > 20 :
             model.setData(index, editor.toPlainText(), QtCore.Qt.EditRole)
         else :
             super(AttributeDelegate, self).setModelData(editor, model, index)

@@ -19,10 +19,11 @@
 
 
 from PySide import QtCore, QtGui
-from xml.etree import cElementTree as et
+from xml.etree import ElementTree as et
 from graide.test import Test
-from graide.utils import configval, Layout, reportError
-import os
+from graide.utils import configval, Layout, reportError, relpath, canonET
+import os, re
+from cStringIO import StringIO
 
 class TestList(QtGui.QWidget) :
 
@@ -31,13 +32,34 @@ class TestList(QtGui.QWidget) :
         self.noclick = False
         self.app = app
         self.tests = []
+        self.fsets = {}
+        self.fcount = 0
 
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setContentsMargins(*Layout.buttonMargins)
-        self.list = QtGui.QListWidget(self)
-        self.list.itemDoubleClicked.connect(self.runTest)
-        self.list.itemClicked.connect(self.loadTest)
+        self.cbox = QtGui.QWidget(self)
+        self.chbox = QtGui.QHBoxLayout()
+        self.chbox.setContentsMargins(*Layout.buttonMargins)
+        self.chbox.setSpacing(Layout.buttonSpacing)
+        self.cbox.setLayout(self.chbox)
+        self.combo = QtGui.QComboBox(self.cbox)
+        self.chbox.addWidget(self.combo)
+        self.chbox.addSpacing(10)
+        self.cabutton = QtGui.QToolButton(self.cbox)
+        self.cabutton.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.cabutton.setToolTip('Add test group below this group')
+        self.cabutton.clicked.connect(self.addGroupClicked)
+        self.chbox.addWidget(self.cabutton)
+        self.crbutton = QtGui.QToolButton(self.cbox)
+        self.crbutton.setIcon(QtGui.QIcon.fromTheme('remove'))
+        self.crbutton.setToolTip('Remove test group')
+        self.crbutton.clicked.connect(self.delGroupClicked)
+        self.chbox.addWidget(self.crbutton)
+        self.vbox.addWidget(self.cbox)
+        self.list = QtGui.QStackedWidget(self)
         self.vbox.addWidget(self.list)
+        self.combo.currentIndexChanged.connect(self.list.setCurrentIndex)
+        self.addGroup('main')
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbbox)
@@ -80,99 +102,197 @@ class TestList(QtGui.QWidget) :
         self.loadTests(fname)
 
     def loadTests(self, fname):
-        self.list.clear()
         self.tests = []
-        if fname and os.path.exists(fname) :
-            try :
-                e = et.parse(fname)
-            except Exception as err:
-                reportError("TestsFile %s: %s" % (fname, str(err)))
-            else :
-                for t in e.iterfind('test') :
+        self.combo.clear()
+        for i in range(self.list.count() - 1, -1, -1) :
+            self.list.removeWidget(self.list.widget(i))
+        if not fname or not os.path.exists(fname) : return
+        try :
+            e = et.parse(fname)
+        except Exception as err:
+            reportError("TestsFile %s: %s" % (fname, str(err)))
+            return
+        if e.getroot().tag == 'tests' :
+            self.loadOldTests(e)
+            return
+        classes = {}
+        for s in e.iterfind('.//style') :
+            k = s.get('name')
+            v = s.get('feats')
+            self.fsets[v] = k
+            classes[k] = {}
+            for ft in v.split(" ") :
+                if '=' in ft :
+                    (k1, v1) = ft.split('=')
+                    classes[k][k1] = v1
+            m = re.match(r'fset([0-9]+)', k)
+            if m :
+                i = int(m.group(1))
+                if i > self.fcount : self.fcount = i
+        for g in e.iterfind('testgroup') :
+            l = self.addGroup(g.get('label'))
+            for t in g.iterfind('test') :
+                y = t.find('text')
+                txt = y.text if y is not None else ""
+                y = t.find('comment')
+                c = y.text if y is not None else ""
+                y = t.get('class')
+                if y and y in classes :
+                    feats = classes[y]
+                else :
                     feats = {}
-                    f = t.get('feats')
-                    if f :
-                        for ft in f.split(" ") :
-                            (k, v) = ft.split('=')
-                            feats[k] = int(v)
-                    txt = t.text
-                    if not txt :
-                        y = t.find('text')
-                        txt = y.text
-                    y = t.find('comment')
-                    if y is not None :
-                        c = y.text
-                    else :
-                        c = ""
-                    te = Test(txt, feats, t.get('rtl'), t.get('name'), comment = c)
-                    b = t.get('background')
-                    if b :
-                        res = QtGui.QColor(b)
-                        if res.isValid() : te.background = res
-                    self.appendTest(te)
+                te = Test(txt, feats, t.get('rtl'), t.get('label'), comment = c)
+                b = t.get('background')
+                if b :
+                    res = QtGui.QColor(b)
+                    if res.isValid() : te.background = res
+                self.appendTest(te, l)
 
-    def appendTest(self, t) :
-        self.tests.append(t)
-        w = QtGui.QListWidgetItem(t.name, self.list)
+    def loadOldTests(self, e) :
+        l = self.addGroup('main')
+        for t in e.iterfind('test') :
+            feats = {}
+            f = t.get('feats')
+            if f :
+                for ft in f.split(" ") :
+                    (k, v) = ft.split('=')
+                    feats[k] = int(v)
+            txt = t.text
+            if not txt :
+                y = t.find('text')
+                txt = y.text
+            y = t.find('comment')
+            if y is not None :
+                c = y.text
+            else :
+                c = ""
+            te = Test(txt, feats, t.get('rtl'), t.get('name'), comment = c)
+            b = t.get('background')
+            if b :
+                res = QtGui.QColor(b)
+                if res.isValid() : te.background = res
+            self.appendTest(te, l)
+
+    def addGroup(self, name, index = None) :
+        l = QtGui.QListWidget()
+        l.itemDoubleClicked.connect(self.runTest)
+        l.itemClicked.connect(self.loadTest)
+        res = []
+        if index is None :
+            self.list.addWidget(l)
+            self.combo.addItem(name)
+            self.tests.append(res)
+        else :
+            self.list.insertWidget(index, l)
+            self.combo.insertItem(index, name)
+            self.tests.insert(index, res)
+        return l
+
+    def appendTest(self, t, l = None) :
+        if not l : l = self.list.currentWidget()
+        self.tests[self.list.indexOf(l)].append(t)
+        w = QtGui.QListWidgetItem(t.name or "", l)
         if t.comment :
             w.setToolTip(t.comment)
             w.setBackground(QtGui.QBrush(t.background))
 
     def editTest(self, index) :
-        t = self.tests[index]
+        i = self.list.currentIndex()
+        t = self.tests[i][index]
         if t.editDialog(self.app) :
-            self.list.item(index).setText(t.name)
-            self.list.item(index).setToolTip(t.comment)
-            self.list.item(index).setBackground(QtGui.QBrush(t.background))
+            l = self.list.widget(i)
+            l.item(index).setText(t.name)
+            l.item(index).setToolTip(t.comment)
+            l.item(index).setBackground(QtGui.QBrush(t.background))
             return True
         else :
             return False
 
     def writeXML(self, fname) :
-        e = et.Element('tests')
-        e.text = "\n"
-        for t in self.tests :
-            t.addTree(e)
-        et.ElementTree(e).write(fname, encoding="utf-8", xml_declaration=True)
+        e = et.Element('testfile')
+        h = et.SubElement(e, 'header')
+        fs = et.SubElement(h, 'fontsrc')
+        fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
+        s = et.SubElement(h, 'styles')
+        for i in range(len(self.tests)) :
+            g = et.SubElement(e, 'testgroup')
+            g.set('label', self.combo.itemText(i))
+            for t in self.tests[i] :
+                te = t.addTree(g)
+                c = self.findClass(t)
+                if c :
+                    te.set('class', c)
+        for k, v in self.fsets.items() :
+            st = et.SubElement(s, 'style')
+            st.set('name', v)
+            st.set('feats', k)
+        f = open(fname, "wb")
+        sio = StringIO()
+        sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
+        sio.write('<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
+        et.ElementTree(canonET(e)).write(sio, encoding="utf-8")
+        f.write(sio.getvalue().replace(' />', '/>'))
+        sio.close()
+        f.close()
+
+    def addGroupClicked(self) :
+        (name, ok) = QtGui.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
+        if ok :
+            index = self.combo.currentIndex() + 1
+            self.addGroup(name, index)
+            self.combo.setCurrentIndex(self.combo.currentIndex() + 1)
+
+    def delGroupClicked(self) :
+        index = self.combo.currentIndex()
+        self.list.removeWidget(self.list.widget(index))
+        self.combo.removeItem(index)
+        self.tests.pop(index)
 
     def editClicked(self) :
-        self.editTest(self.list.currentRow())
+        self.editTest(self.list.currentWidget().currentRow())
 
     def addClicked(self, t = None) :
+        i = self.list.currentIndex()
         if not t : t = Test('', self.app.feats.fval)
         self.appendTest(t)
-        res = self.editTest(len(self.tests) - 1)
+        res = self.editTest(len(self.tests[i]) - 1)
         if not t.name or not res :
-            self.tests.pop()
-            self.list.takeItem(len(self.tests))
+            self.tests[i].pop()
+            self.list.widget(i).takeItem(len(self.tests))
 
     def saveClicked(self) :
         tname = configval(self.app.config, 'main', 'testsfile')
         if tname : self.writeXML(tname)
 
     def delClicked(self) :
-        i = self.list.currentRow()
-        self.tests.pop(i)
-        self.list.takeItem(i)
+        j = self.list.currentIndex()
+        i = self.list.widget(j).currentRow()
+        self.tests[j].pop(i)
+        self.list.widget(j).takeItem(i)
 
     def upClicked(self) :
-        i = self.list.currentRow()
+        l = self.list.currentWidget()
+        j = self.list.currentIndex()
+        i = l.currentRow()
         if i > 0 :
-            self.tests.insert(i - 1, self.tests.pop(i))
-            self.list.insertItem(i - 1, self.list.takeItem(i))
-            self.list.setCurrentRow(i - 1)
+            self.tests[j].insert(i - 1, self.tests[j].pop(i))
+            l.insertItem(i - 1, l.takeItem(i))
+            l.setCurrentRow(i - 1)
 
     def downClicked(self) :
-        i = self.list.currentRow()
-        if i < self.list.count() - 1 :
-            self.tests.insert(i + 1, self.tests.pop(i))
-            self.list.insertItem(i + 1, self.list.takeItem(i))
-            self.list.setCurrentRow(i + 1)
+        l = self.list.currentWidget()
+        j = self.list.currentIndex()
+        i = l.currentRow()
+        if i < l.count() - 1 :
+            self.tests[j].insert(i + 1, self.tests[j].pop(i))
+            l.insertItem(i + 1, l.takeItem(i))
+            l.setCurrentRow(i + 1)
 
     def loadTest(self, item) :
         if not self.noclick :
-            i = self.list.currentRow()
-            self.app.setRun(self.tests[i])
+            j = self.list.currentIndex()
+            i = self.list.currentWidget().currentRow()
+            self.app.setRun(self.tests[j][i])
         else :
             self.noclick = False
 
@@ -180,3 +300,11 @@ class TestList(QtGui.QWidget) :
         # event sends clicked first so no need to select
         self.app.runClicked()
         self.noclick = True
+
+    def findClass(self, t) :
+        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
+        if k not in self.fsets :
+            self.fcount += 1
+            self.fsets[k] = "fset%d" % self.fcount
+        return self.fsets[k]
+

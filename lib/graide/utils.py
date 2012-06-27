@@ -157,3 +157,15 @@ def registerErrorLog(app) :
     pendingErrors = []
 
 
+def canonET(et, curr = 0, indent = 2) :
+    n = len(et)
+    if n :
+        et.text = "\n" + (' ' * (curr + indent))
+        for i in range(n) :
+            canonET(et[i], curr + indent, indent)
+            et[i].tail = "\n" + (' ' * (curr + indent if i < n - 1 else curr))
+    return et
+
+def relpath(p, base) :
+    d = os.path.dirname(base) or '.'
+    return os.path.relpath(p, d)
