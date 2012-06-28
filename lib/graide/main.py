@@ -41,6 +41,9 @@ from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
 
+def as_entities(txt) :
+    return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), txt)
+
 class MainWindow(QtGui.QMainWindow) :
 
     def __init__(self, config, configfile, jsonfile) :
@@ -176,12 +179,17 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox.addLayout(self.test_hbox)
         self.test_hbox.setContentsMargins(*Layout.buttonMargins)
         self.test_hbox.setSpacing(Layout.buttonSpacing)
+        self.runGo = QtGui.QToolButton(self.test_widget)
+        self.runGo.setArrowType(QtCore.Qt.RightArrow)
+        self.runGo.setToolTip("run string after rebuild")
+        self.runGo.clicked.connect(self.runClicked)
+        self.test_hbox.addWidget(self.runGo)
         self.runWater = QtGui.QToolButton(self.test_widget)
         self.runWater.setText(u'\u2693')
         self.runWater.setToolTip('Display run as a waterfall')
         self.runWater.clicked.connect(self.doWaterfall)
         self.test_hbox.addWidget(self.runWater)
-        self.test_hbox.insertStretch(0)
+        self.test_hbox.addStretch()
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
         self.runRtl.setChecked(True if configintval(self.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
@@ -191,12 +199,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.runFeats.clicked.connect(self.featuresClicked)
         self.runFeats.setToolTip("Edit run features")
         self.test_hbox.addWidget(self.runFeats)
-        self.runGo = QtGui.QToolButton(self.test_widget)
-        self.runGo.setArrowType(QtCore.Qt.RightArrow)
-        self.runGo.setToolTip("run string after rebuild")
-        self.runGo.clicked.connect(self.runClicked)
-
-        self.test_hbox.addWidget(self.runGo)
         self.runAdd = QtGui.QToolButton(self.test_widget)
         self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
         self.runAdd.setToolTip("Add run to tests list under a new name")
@@ -388,7 +390,11 @@ class MainWindow(QtGui.QMainWindow) :
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
-        self.runEdit.setPlainText(test.text)
+        if configintval(self.config, 'ui', 'entities') :
+            t = as_entities(test.text)
+        else :
+            t = test.text
+        self.runEdit.setPlainText(t)
         self.currFeats = dict(test.feats)
         self.runView.clear()
 

@@ -132,6 +132,7 @@ class ConfigDialog(QtGui.QDialog) :
             self.ui_size.setValue(configintval(config, 'ui', 'textsize'))
         else :
             self.ui_size.setValue(10)
+        self.ui_size.setToolTip('Text size in editing windows')
         self.ui_vb.addWidget(QtGui.QLabel('Editor text point size'), 0, 0)
         self.ui_vb.addWidget(self.ui_size, 0, 1)
         self.ui_gsize = QtGui.QSpinBox(self.ui)
@@ -140,9 +141,21 @@ class ConfigDialog(QtGui.QDialog) :
             self.ui_gsize.setValue(configintval(config, 'main', 'size'))
         else :
             self.ui_gsize.setValue(40)
+        self.ui_gsize.setToolTip('Pixel size of glyphs in the font window and results, passes, rules, etc.')
         self.ui_vb.addWidget(QtGui.QLabel('Font glyph pixel size'), 1, 0)
         self.ui_vb.addWidget(self.ui_gsize, 1, 1)
-        self.ui_vb.setRowStretch(2, 1)
+        self.ui_sizes = QtGui.QLineEdit(self.ui)
+        self.ui_sizes.setText(configval(config, 'ui', 'waterfall'))
+        self.ui_sizes.setToolTip('Point sizes for waterfall display, space separated')
+        self.ui_vb.addWidget(QtGui.QLabel('Waterfall sizes'), 2, 0)
+        self.ui_vb.addWidget(self.ui_sizes, 2, 1)
+        self.ui_ent = QtGui.QCheckBox()
+        self.ui_ent.setChecked(configintval(config, 'ui', 'entities'))
+        self.ui_ent.setToolTip('Display entry strings using \\u type entities for non-ASCII chars')
+        self.ui_vb.addWidget(QtGui.QLabel('Display character entities'), 3, 0)
+        self.ui_vb.addWidget(self.ui_ent, 3, 1)
+        
+        self.ui_vb.setRowStretch(4, 1)
         self.tb.addItem(self.ui, 'User Interface')
 
         self.resize(500, 500)
@@ -183,6 +196,9 @@ class ConfigDialog(QtGui.QDialog) :
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
             app.loadFont(configval(config, 'main', 'font'))
+        self.updateChanged(self.ui_sizes, config, 'ui', 'waterfall')
+        if self.ui_ent.isChecked != configval(config, 'ui', 'entities') :
+            config.set('ui', 'entities', "1" if self.ui_ent.isChecked() else "0")
 
     def updateChanged(self, widget, config, section, option, fn = None) :
         t = widget.text()
