@@ -35,6 +35,7 @@ from graide.classes import Classes
 from graide.config import ConfigDialog
 from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
+from graide.waterfall import WaterfallDialog
 from PySide import QtCore, QtGui
 from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
@@ -175,6 +176,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox.addLayout(self.test_hbox)
         self.test_hbox.setContentsMargins(*Layout.buttonMargins)
         self.test_hbox.setSpacing(Layout.buttonSpacing)
+        self.runWater = QtGui.QToolButton(self.test_widget)
+        self.runWater.setText(u'\u2693')
+        self.runWater.setToolTip('Display run as a waterfall')
+        self.runWater.clicked.connect(self.doWaterfall)
+        self.test_hbox.addWidget(self.runWater)
         self.test_hbox.insertStretch(0)
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
         self.runRtl.setChecked(True if configintval(self.config, 'main', 'defaultrtl') else False)
@@ -421,6 +427,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tabResults.setCurrentWidget(self.tab_passes)
+
+    def doWaterfall(self) :
+        self.runClicked()
+        if self.config.has_option('ui', 'waterfall') :
+            sizes = map(int, config.get('ui', 'waterfall').split(' '))
+        else :
+            sizes = None
+        if self.run :
+            w = WaterfallDialog(self.font, self.run, sizes = sizes)
+            w.exec_()
 
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()

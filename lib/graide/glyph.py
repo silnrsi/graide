@@ -26,23 +26,27 @@ from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 import graide.makegdl.makegdl as gdl
 
+def ftGlyph(face, gid) :
+    res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
+    b = face.glyph.bitmap
+    top = face.glyph.bitmap_top
+    left = face.glyph.bitmap_left
+    if b.rows :
+        data = array.array('B', b.buffer)
+        mask = QtGui.QImage(data, b.width, b.rows, b.pitch, QtGui.QImage.Format_Indexed8)
+        image = QtGui.QImage(b.width, b.rows, QtGui.QImage.Format_Mono)
+        image.fill(0)
+        image.setAlphaChannel(mask)
+        pixmap = QtGui.QPixmap(image)
+    else :
+        pixmap = None
+    return (pixmap, left, top)
+
 class GlyphItem(object) :
 
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
-        res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
-        b = face.glyph.bitmap
-        self.top = face.glyph.bitmap_top
-        self.left = face.glyph.bitmap_left
-        if b.rows :
-            data = array.array('B', b.buffer)
-            mask = QtGui.QImage(data, b.width, b.rows, b.pitch, QtGui.QImage.Format_Indexed8)
-            image = QtGui.QImage(b.width, b.rows, QtGui.QImage.Format_Mono)
-            image.fill(0)
-            image.setAlphaChannel(mask)
-            self.pixmap = QtGui.QPixmap(image)
-        else :
-            self.pixmap = None
+        (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
         n = ctypes.create_string_buffer(64)
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
         self.name = n.value
