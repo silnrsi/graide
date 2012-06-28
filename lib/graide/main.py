@@ -28,7 +28,7 @@ from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
 from graide.utils import runGraphite, buildGraphite, configval, configintval, Layout, registerErrorLog
-from graide.featureselector import FeatureRefs, FeatureDialog
+from graide.featureselector import make_FeaturesMap, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
@@ -55,6 +55,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.config = config
         self.configfile = configfile
         self.currFeats = None
+        self.currLang = None
         self.font = Font()
         self.apname = None
 
@@ -95,7 +96,7 @@ class MainWindow(QtGui.QMainWindow) :
             fontsize = 40
         self.fontfile = str(fontname)
         self.font.loadFont(self.fontfile, fontsize)
-        self.feats = FeatureRefs(self.fontfile)
+        self.feats = make_FeaturesMap(self.fontfile)
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
@@ -396,6 +397,7 @@ class MainWindow(QtGui.QMainWindow) :
             t = test.text
         self.runEdit.setPlainText(t)
         self.currFeats = dict(test.feats)
+        self.currLang = test.lang
         self.runView.clear()
 
     def buildClicked(self) :
@@ -406,7 +408,7 @@ class MainWindow(QtGui.QMainWindow) :
         if res :
             self.tabResults.setCurrentWidget(self.tab_errors)
         self.loadAP(self.apname)
-        self.feats = FeatureRefs(self.fontfile)
+        self.feats = make_FeaturesMap(self.fontfile)
         return True
 
     def runClicked(self) :
@@ -416,7 +418,7 @@ class MainWindow(QtGui.QMainWindow) :
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
         if not text : return
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.currFeats or self.feats.fval)
+            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang)
         runfile.seek(0)
         self.json = json.load(runfile)
         runfile.close()
@@ -447,15 +449,16 @@ class MainWindow(QtGui.QMainWindow) :
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()
         if not text : return
-        test = Test(text, self.currFeats or self.feats.fval, self.runRtl.isChecked())
+        test = Test(text, self.currFeats or {}, self.currLang, self.runRtl.isChecked())
         self.tabTest.addClicked(test)
 
     def featuresClicked(self) :
         if self.font :
             fDialog = FeatureDialog(self)
-            fDialog.set_feats(self.feats, self.currFeats)
+            fDialog.set_feats(self.feats[self.currLang], self.currFeats, lang = self.currLang)
             if fDialog.exec_() :
                 self.currFeats = fDialog.get_feats()
+                self.currLang = fDialog.get_lang()
 
     # called from utils
     def updateFileEdit(self, fname) :

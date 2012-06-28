@@ -31,11 +31,12 @@ def asBool(txt) :
     return False
 
 class Test(object) :
-    def __init__(self, text, feats, rtl = False, name = None, comment = "") :
+    def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "") :
         self.text = text
         self.feats = dict(feats)
         self.name = name or text
         self.rtl = rtl
+        self.lang = lang
         self.comment = comment
         self.foreground = QtGui.QColor('black')
         self.background = QtGui.QColor('white')
@@ -90,16 +91,19 @@ class Test(object) :
             self.rtl = eRTL.isChecked()
             self.comment = eComment.toPlainText()
             if self.featdialog : 
-                self.feats = self.featdialog.get_feats(self.parent.feats)
+                self.lang = self.featdialog.get_lang()
+                if self.lang not in self.parent.feats :
+                    self.lang = None
+                self.feats = self.featdialog.get_feats(self.parent.feats[self.lang])
         del self.featdialog
         del self.parent
         return res
 
     def featClicked(self) :
         d = FeatureDialog(self.parent)
-        f = self.parent.feats.copy()
+        f = self.parent.feats[self.lang].copy()
         f.apply(self.feats)
-        d.set_feats(f)
+        d.set_feats(f, lang = self.lang)
         self.featdialog = d
         if not d.exec_() :
             self.featdialog = None

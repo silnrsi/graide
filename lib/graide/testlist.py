@@ -33,6 +33,7 @@ class TestList(QtGui.QWidget) :
         self.app = app
         self.tests = []
         self.fsets = {}
+        self.comments = []
         self.fcount = 0
 
         self.vbox = QtGui.QVBoxLayout()
@@ -58,7 +59,7 @@ class TestList(QtGui.QWidget) :
         self.vbox.addWidget(self.cbox)
         self.list = QtGui.QStackedWidget(self)
         self.vbox.addWidget(self.list)
-        self.combo.currentIndexChanged.connect(self.list.setCurrentIndex)
+        self.combo.currentIndexChanged.connect(self.changeGroup)
         self.addGroup('main')
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
@@ -116,11 +117,14 @@ class TestList(QtGui.QWidget) :
             self.loadOldTests(e)
             return
         classes = {}
+        langs = {}
         for s in e.iterfind('.//style') :
             k = s.get('name')
             v = s.get('feats')
-            self.fsets[v] = k
+            l = s.get('lang')
+            self.fsets[v+"\n"+str(l)] = k
             classes[k] = {}
+            langs[k] = l
             for ft in v.split(" ") :
                 if '=' in ft :
                     (k1, v1) = ft.split('=')
@@ -131,6 +135,8 @@ class TestList(QtGui.QWidget) :
                 if i > self.fcount : self.fcount = i
         for g in e.iterfind('testgroup') :
             l = self.addGroup(g.get('label'))
+            y = g.find('comment')
+            self.comments.append(y.text if y else '')
             for t in g.iterfind('test') :
                 y = t.find('text')
                 txt = y.text if y is not None else ""
@@ -139,9 +145,11 @@ class TestList(QtGui.QWidget) :
                 y = t.get('class')
                 if y and y in classes :
                     feats = classes[y]
+                    lng = langs.get(y)
                 else :
                     feats = {}
-                te = Test(txt, feats, t.get('rtl'), t.get('label'), comment = c)
+                    lng = None
+                te = Test(txt, feats, lng, t.get('rtl'), t.get('label'), comment = c)
                 b = t.get('background')
                 if b :
                     res = QtGui.QColor(b)
@@ -173,7 +181,7 @@ class TestList(QtGui.QWidget) :
                 if res.isValid() : te.background = res
             self.appendTest(te, l)
 
-    def addGroup(self, name, index = None) :
+    def addGroup(self, name, index = None, comment = "") :
         l = QtGui.QListWidget()
         l.itemDoubleClicked.connect(self.runTest)
         l.itemClicked.connect(self.loadTest)
@@ -182,10 +190,12 @@ class TestList(QtGui.QWidget) :
             self.list.addWidget(l)
             self.combo.addItem(name)
             self.tests.append(res)
+            self.comments.append(comment)
         else :
             self.list.insertWidget(index, l)
             self.combo.insertItem(index, name)
             self.tests.insert(index, res)
+            self.comments.insert(index, comment)
         return l
 
     def appendTest(self, t, l = None) :
@@ -225,7 +235,9 @@ class TestList(QtGui.QWidget) :
         for k, v in self.fsets.items() :
             st = et.SubElement(s, 'style')
             st.set('name', v)
+            (k, sep, l) = k.rpartition("\n")
             st.set('feats', k)
+            if l and l != 'None' : st.set('lang', l)
         f = open(fname, "wb")
         sio = StringIO()
         sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
@@ -234,6 +246,11 @@ class TestList(QtGui.QWidget) :
         f.write(sio.getvalue().replace(' />', '/>'))
         sio.close()
         f.close()
+
+    def changeGroup(self, index) :
+        self.list.setCurrentIndex(index)
+        if index < len(self.comments) :
+            self.combo.setToolTip(self.comments[index])
 
     def addGroupClicked(self) :
         (name, ok) = QtGui.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
@@ -253,7 +270,7 @@ class TestList(QtGui.QWidget) :
 
     def addClicked(self, t = None) :
         i = self.list.currentIndex()
-        if not t : t = Test('', self.app.feats.fval)
+        if not t : t = Test('', self.app.feats[None].fval)
         self.appendTest(t)
         res = self.editTest(len(self.tests[i]) - 1)
         if not t.name or not res :
@@ -303,6 +320,7 @@ class TestList(QtGui.QWidget) :
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
+        k += "\n" + str(t.lang)
         if k not in self.fsets :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount

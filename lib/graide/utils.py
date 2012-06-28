@@ -74,8 +74,19 @@ def copyobj(src, dest) :
         if not callable(y) and not x.startswith('__') :
             setattr(dest, x, y)
 
-def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = 0, size = 16) :
+def strtolong(txt) :
+    res = 0
+    if txt :
+        txt = (txt + "\000\000\000\000")[:4]
+    else :
+        return 0
+    for c in txt :
+        res = (res << 8) + ord(c)
+    return res
+
+def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 16) :
     grface = gr2.gr_make_file_face(font, 0)
+    lang = strtolong(lang)
     grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
     for f, v in feats.items() :
         id = gr2.gr_str_to_tag(f)

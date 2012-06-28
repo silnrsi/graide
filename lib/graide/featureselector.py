@@ -20,19 +20,18 @@
 
 from PySide import QtCore, QtGui
 import graide.graphite as gr
+from graide.utils import strtolong
 
 class FeatureRefs(object) :
 
-    def __init__(self, font = None) :
+    def __init__(self, grface = None, lang = None) :
         self.feats = {}
         self.featids = {}
         self.fval = {}
-        if font :
+        if grface :
             langid = 0x0409
             length = 0
-            grface = gr.Face(font)
-            if not grface.face : return
-            grval = grface.get_featureval(0)
+            grval = grface.get_featureval(strtolong(lang))
             for f in grface.featureRefs :
                 name = f.name(langid)
                 if not name : continue
@@ -58,6 +57,16 @@ class FeatureRefs(object) :
         for (k, v) in fvals.items() :
             self.fval[k] = v
 
+def make_FeaturesMap(font) :
+    grface = gr.Face(font)
+    if not grface.face : return
+    res = {}
+    res[None] = FeatureRefs(grface)
+    for l in grface.featureLangs :
+        lang = gr.tag_to_str(l)
+        res[lang] = FeatureRefs(grface, lang)
+    return res
+
 class FeatureDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) :
@@ -73,12 +82,19 @@ class FeatureDialog(QtGui.QDialog) :
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
         self.vbox.addWidget(self.table)
+        self.lbox = QtGui.QWidget(self)
+        self.lhbox = QtGui.QHBoxLayout(self.lbox)
+        self.lhbox.addWidget(QtGui.QLabel('Language', self.lbox))
+        self.lang = QtGui.QLineEdit(self.lbox)
+#        self.lang.setInputMask("<AAan")
+        self.lhbox.addWidget(self.lang)
+        self.vbox.addWidget(self.lbox)
         o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.vbox.addWidget(o)
 
-    def set_feats(self, feats, vals = None) :
+    def set_feats(self, feats, vals = None, lang = None) :
         if not vals : vals = feats.fval
         while self.table.rowCount() :
             self.table.removeRow(0)
@@ -91,13 +107,14 @@ class FeatureDialog(QtGui.QDialog) :
             c.userTag = feats.featids[f]
             for k in sorted(feats.feats[f].keys(), cmp = lambda a, b: cmp(a.index, b.index)) :
                 c.addItem(k, feats.feats[f][k])
-                if feats.feats[f][k] == vals[c.userTag] :
+                if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
                     c.setCurrentIndex(c.count() - 1)
             self.combos.append(c)
             self.table.setCellWidget(count, 1, c)
             l = QtGui.QTableWidgetItem(f)
             self.table.setItem(count, 0, l)
             count += 1
+        if lang : self.lang.setText(lang)
         self.resize(600, 400)
 
     def get_feats(self, base = None) :
@@ -107,6 +124,9 @@ class FeatureDialog(QtGui.QDialog) :
             if base is None or base.fval[c.userTag] != v :
                 res[c.userTag] = v
         return res
+
+    def get_lang(self) :
+        return self.lang.text()
 
     def resizeEvent(self, event) :
         self.currsize = self.size()
