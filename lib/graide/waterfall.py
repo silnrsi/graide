@@ -25,7 +25,7 @@ from graide import freetype
 
 class WaterfallDialog(QtGui.QDialog) :
 
-    def __init__(self, font, run, sizes = None, margin = 10, parent = None) :
+    def __init__(self, font, run, sizes = None, margin = 2, parent = None) :
         super(WaterfallDialog, self).__init__(parent)
         if sizes is None :
             sizes = [8, 9, 10, 11, 12, 13, 14, 16, 20, 28, 40]
@@ -41,13 +41,14 @@ class WaterfallDialog(QtGui.QDialog) :
         currtop = 0
         master = QtCore.QRect()
         for i in range(len(sizes)) :
+            size = sizes[i] * self.physicalDpiY() / 72.
             res = QtCore.QRect()
             pixmaps = []
             pixitems = []
             self.pixmaps.append(pixmaps)
             self.pixitems.append(pixitems)
-            factor = sizes[i] * 1. / font.upem
-            face.set_char_size(sizes[i] * 64)
+            factor = size / font.upem
+            face.set_char_size(int(size) * 64)
             for s in run :
                 (px, left, top) = ftGlyph(face, s.gid)
                 if px :
@@ -63,7 +64,7 @@ class WaterfallDialog(QtGui.QDialog) :
             for i in pixitems :
                 i.translate(0, currtop)
             master = master.united(res.translated(0, currtop))
-        print self.scene.itemsBoundingRect(), master
+        master.adjust(-margin, -margin, margin, margin)
         self.scene.setSceneRect(master)
         self.gview.setScene(self.scene)
         self.vbox.addWidget(self.gview)

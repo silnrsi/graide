@@ -124,7 +124,7 @@ class TestList(QtGui.QWidget) :
             for ft in v.split(" ") :
                 if '=' in ft :
                     (k1, v1) = ft.split('=')
-                    classes[k][k1] = v1
+                    classes[k][k1] = int(v1)
             m = re.match(r'fset([0-9]+)', k)
             if m :
                 i = int(m.group(1))
