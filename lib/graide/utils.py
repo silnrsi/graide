@@ -168,14 +168,21 @@ def registerErrorLog(app) :
     pendingErrors = []
 
 
-def canonET(et, curr = 0, indent = 2) :
+def ETcanon(et, curr = 0, indent = 2) :
     n = len(et)
     if n :
         et.text = "\n" + (' ' * (curr + indent))
         for i in range(n) :
-            canonET(et[i], curr + indent, indent)
+            ETcanon(et[i], curr + indent, indent)
             et[i].tail = "\n" + (' ' * (curr + indent if i < n - 1 else curr))
     return et
+
+def ETinsert(elem, child) :
+    for (i, e) in enumerate(elem) :
+        if e.tag > child.tag :
+            elem.insert(i, child)
+            return
+    elem.append(child)
 
 def relpath(p, base) :
     d = os.path.dirname(base) or '.'

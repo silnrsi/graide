@@ -19,9 +19,9 @@
 
 
 from PySide import QtCore, QtGui
-from xml.etree import ElementTree as et
+from xml.etree import cElementTree as et
 from graide.test import Test
-from graide.utils import configval, Layout, reportError, relpath, canonET
+from graide.utils import configval, Layout, reportError, relpath, ETcanon, ETinsert
 import os, re
 from cStringIO import StringIO
 
@@ -32,9 +32,10 @@ class TestList(QtGui.QWidget) :
         self.noclick = False
         self.app = app
         self.tests = []
-        self.fsets = {}
+        self.fsets = {"\n" : None}
         self.comments = []
         self.fcount = 0
+        self.header = None
 
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setContentsMargins(*Layout.buttonMargins)
@@ -118,13 +119,15 @@ class TestList(QtGui.QWidget) :
             return
         classes = {}
         langs = {}
+        self.header = e.find('.//header')
         for s in e.iterfind('.//style') :
             k = s.get('name')
-            v = s.get('feats')
-            l = s.get('lang')
-            self.fsets[v+"\n"+str(l)] = k
+            v = s.get('feats') or ""
+            l = s.get('lang') or ""
+            fset = v + "\n" + k
+            if fset not in self.fsets : self.fsets[fset] = k
             classes[k] = {}
-            langs[k] = l
+            if l : langs[k] = l
             for ft in v.split(" ") :
                 if '=' in ft :
                     (k1, v1) = ft.split('=')
@@ -219,11 +222,18 @@ class TestList(QtGui.QWidget) :
             return False
 
     def writeXML(self, fname) :
-        e = et.Element('testfile')
-        h = et.SubElement(e, 'header')
-        fs = et.SubElement(h, 'fontsrc')
+        e = et.Element('testfile', {'version' : '1.0'})
+        if self.header is not None :
+            h = self.header
+            e.append(h)
+        else :
+            h = et.SubElement(e, 'header')
+        fs = h.find('fontsrc')
+        if fs is None:
+            fs = h.makeelement('fontsrc', {})
+            ETinsert(h, fs)
         fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
-        s = et.SubElement(h, 'styles')
+        used = set()
         for i in range(len(self.tests)) :
             g = et.SubElement(e, 'testgroup')
             g.set('label', self.combo.itemText(i))
@@ -232,17 +242,36 @@ class TestList(QtGui.QWidget) :
                 c = self.findClass(t)
                 if c :
                     te.set('class', c)
+                    used.add(c)
+        s = h.find('styles')
+        invfsets = {}
         for k, v in self.fsets.items() :
-            st = et.SubElement(s, 'style')
-            st.set('name', v)
-            (k, sep, l) = k.rpartition("\n")
-            st.set('feats', k)
-            if l and l != 'None' : st.set('lang', l)
+            if v is not None and v not in used :
+                del self.fsets[k]
+            else :
+                invfsets[v] = k
+        if len(self.fsets) > 1 :
+            if s is not None :
+                for i in range(len(s) - 1, -1, -1) :
+                    s.remove(s[i])
+            else :
+                s = h.makeelement('styles', {})
+                ETinsert(h, s)
+            for v in sorted(invfsets.keys()) :
+                k = invfsets[v]
+                if not v : continue
+                st = et.SubElement(s, 'style')
+                st.set('name', v)
+                (k, sep, l) = k.rpartition("\n")
+                if k : st.set('feats', k)
+                if l and l != 'None' : st.set('lang', l)
+        elif s :
+            h.remove(s)
         f = open(fname, "wb")
         sio = StringIO()
         sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
         sio.write('<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
-        et.ElementTree(canonET(e)).write(sio, encoding="utf-8")
+        et.ElementTree(ETcanon(e)).write(sio, encoding="utf-8")
         f.write(sio.getvalue().replace(' />', '/>'))
         sio.close()
         f.close()
@@ -320,7 +349,7 @@ class TestList(QtGui.QWidget) :
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
-        k += "\n" + str(t.lang)
+        k += "\n" + (t.lang or "")
         if k not in self.fsets :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount

@@ -20,7 +20,7 @@
 
 from PySide import QtGui
 from graide.featureselector import FeatureDialog
-from xml.etree import ElementTree as et
+from xml.etree import cElementTree as et
 from graide.utils import Layout
 import re
 
