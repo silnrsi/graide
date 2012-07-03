@@ -119,7 +119,8 @@ class TestList(QtGui.QWidget) :
             return
         classes = {}
         langs = {}
-        self.header = e.find('.//header')
+        self.header = e.find('.//head') 
+        if self.header is None : self.header = e.find('.//header')
         for s in e.iterfind('.//style') :
             k = s.get('name')
             v = s.get('feats') or ""
@@ -141,7 +142,8 @@ class TestList(QtGui.QWidget) :
             y = g.find('comment')
             self.comments.append(y.text if y else '')
             for t in g.iterfind('test') :
-                y = t.find('text')
+                y = t.find('string')
+                if y is None : y = t.find('text')
                 txt = y.text if y is not None else ""
                 y = t.find('comment')
                 c = y.text if y is not None else ""
@@ -222,12 +224,13 @@ class TestList(QtGui.QWidget) :
             return False
 
     def writeXML(self, fname) :
-        e = et.Element('testfile', {'version' : '1.0'})
+        e = et.Element('ftml', {'version' : '1.0'})
         if self.header is not None :
             h = self.header
+            if h.tag == 'header' : h.tag = 'head'
             e.append(h)
         else :
-            h = et.SubElement(e, 'header')
+            h = et.SubElement(e, 'head')
         fs = h.find('fontsrc')
         if fs is None:
             fs = h.makeelement('fontsrc', {})

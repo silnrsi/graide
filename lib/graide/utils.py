@@ -98,7 +98,7 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
     gr2.graphite_stop_logging()
 
-def buildGraphite(config, app, font, fontfile) :
+def buildGraphite(config, app, font, fontfile, errfile = None) :
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
         if config.has_option('main', 'ap') :
@@ -136,7 +136,11 @@ def buildGraphite(config, app, font, fontfile) :
         subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempname))
     else :
         copyfile(fontfile, tempname)
-    res = subprocess.call(("grcompiler", "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile))
+    parms = {}
+    if errfile :
+        parms['stderr'] = subprocess.STDOUT
+        parms['stdout'] = errfile
+    res = subprocess.call(("grcompiler", "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)

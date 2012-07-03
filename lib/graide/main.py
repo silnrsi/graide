@@ -403,7 +403,11 @@ class MainWindow(QtGui.QMainWindow) :
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
         self.tab_errors.clear()
-        res = buildGraphite(self.config, self, self.font, self.fontfile)
+        errfile = TemporaryFile(mode="rw")
+        res = buildGraphite(self.config, self, self.font, self.fontfile, errfile)
+        if res :
+            errfile.seek(0)
+            for l in errfile.readlines() : self.tab_errors.addItem(l.strip())
         self.tab_errors.addGdlErrors('gdlerr.txt')
         if res :
             self.tabResults.setCurrentWidget(self.tab_errors)

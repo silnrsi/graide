@@ -116,7 +116,7 @@ class Test(object) :
         if self.comment :
             c = et.SubElement(e, 'comment')
             c.text = self.comment
-        t = et.SubElement(e, 'text')
+        t = et.SubElement(e, 'string')
         t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{8})', \
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
         e.set('label', self.name)
