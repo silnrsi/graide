@@ -28,7 +28,7 @@ class Gdx(object) :
         self.passtypes = []
         self.keepelements = False
 
-    def readfile(self, fname, font, apgdlfile = None) :
+    def readfile(self, fname, font, apgdlfile = None, ronly = False) :
         relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
         self.file = file(fname)
         if not apgdlfile : font.initGlyphs()
@@ -60,7 +60,7 @@ class Gdx(object) :
                         elif not isMakeGDLSpecialClass(n) :
                             if not apgdlfile :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
-                            elif n not in font.classes :
+                            elif n not in font.classes or ronly :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1, generated = True)
                 if not self.keepelements :
                     e.clear()

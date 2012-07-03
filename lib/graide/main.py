@@ -123,7 +123,8 @@ class MainWindow(QtGui.QMainWindow) :
             self.font.loadEmptyGlyphs()
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
-            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'))
+            self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'),
+                                ronly = configintval(self.config, 'build', 'apronly'))
         else :
             self.gdx = None
         if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
@@ -201,7 +202,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runFeats.setToolTip("Edit run features")
         self.test_hbox.addWidget(self.runFeats)
         self.runAdd = QtGui.QToolButton(self.test_widget)
-        self.runAdd.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.runAdd.setIcon(QtGui.QIcon.fromTheme('list-add'))
         self.runAdd.setToolTip("Add run to tests list under a new name")
         self.runAdd.clicked.connect(self.runAddClicked)
         self.test_hbox.addWidget(self.runAdd)
@@ -235,12 +236,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_addPoint.setToolTip('Add Attachment Point to Glyph')
         self.glyph_hb.addWidget(self.glyph_addPoint)
         self.glyph_addProperty = QtGui.QToolButton(self.glyph_bbox)
-        self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('add'))
+        self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('list-add'))
         self.glyph_addProperty.clicked.connect(self.glyphAddProperty)
         self.glyph_addProperty.setToolTip('Add Property to Glyph')
         self.glyph_hb.addWidget(self.glyph_addProperty)
         self.glyph_remove = QtGui.QToolButton(self.glyph_bbox)
-        self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('remove'))
+        self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('list-remove'))
         self.glyph_remove.clicked.connect(self.glyphRemoveProperty)
         self.glyph_remove.setToolTip('Remove Property from Glyph')
         self.glyph_hb.addWidget(self.glyph_remove)
@@ -418,9 +419,21 @@ class MainWindow(QtGui.QMainWindow) :
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         runfile = TemporaryFile(mode="rw")
-        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{8})', \
+        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
         if not text : return
+        if not self.currFeats and self.currLang not in self.feats :
+            if None not in self.feats :    # not a graphite font, try to build
+                self.buildClicked()
+                if self.currLang not in self.feats :
+                    if None not in self.feats :     # build failed do nothing.
+                        self.tab_errors.addError("Can't run test on a non-Graphite font")
+                        self.tabResults.setCurrentWidget(self.tab_errors)
+                        return
+                    else :
+                        self.currLang = None
+            else :
+                self.currLang = None
         runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
             feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang)
         runfile.seek(0)
@@ -506,7 +519,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyphAttrib.removeCurrent()
 
     def saveAP(self) :
-        if self.apname :
+        if self.apname and not configintval(self.config, 'build', 'apronly') :
             self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
 
     def configClicked(self) :

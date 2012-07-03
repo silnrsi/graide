@@ -59,8 +59,8 @@ class FeatureRefs(object) :
 
 def make_FeaturesMap(font) :
     grface = gr.Face(font)
-    if not grface.face : return
     res = {}
+    if not grface.face : return res
     res[None] = FeatureRefs(grface)
     for l in grface.featureLangs :
         lang = gr.tag_to_str(l)

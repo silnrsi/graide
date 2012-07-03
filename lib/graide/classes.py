@@ -19,7 +19,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtCore, QtGui
-from graide.utils import Layout
+from graide.utils import Layout, configintval
 
 class Classes(QtGui.QWidget) :
 
@@ -29,6 +29,7 @@ class Classes(QtGui.QWidget) :
     def __init__(self, font, app, apgdlfile, parent = None) :
         super(Classes, self).__init__(parent)
         self.app = app
+        self.ronly = configintval(app.config, 'build', 'apronly')
         self.apgdlfile = apgdlfile
         self.vb = QtGui.QVBoxLayout(self)
         self.vb.setContentsMargins(*Layout.buttonMargins)
@@ -51,16 +52,17 @@ class Classes(QtGui.QWidget) :
         self.cButton.clicked.connect(self.clearHighlights)
         self.cButton.setToolTip('Clear glyph highlights')
         self.hb.addWidget(self.cButton)
-        self.aButton = QtGui.QToolButton()
-        self.aButton.setIcon(QtGui.QIcon.fromTheme('add'))
-        self.aButton.clicked.connect(self.addClass)
-        self.aButton.setToolTip('Add new class')
-        self.hb.addWidget(self.aButton)
-        self.rButton = QtGui.QToolButton()
-        self.rButton.setIcon(QtGui.QIcon.fromTheme('remove'))
-        self.rButton.clicked.connect(self.delCurrent)
-        self.rButton.setToolTip('Remove currently selected class')
-        self.hb.addWidget(self.rButton)
+        if not self.ronly :
+            self.aButton = QtGui.QToolButton()
+            self.aButton.setIcon(QtGui.QIcon.fromTheme('list-add'))
+            self.aButton.clicked.connect(self.addClass)
+            self.aButton.setToolTip('Add new class')
+            self.hb.addWidget(self.aButton)
+            self.rButton = QtGui.QToolButton()
+            self.rButton.setIcon(QtGui.QIcon.fromTheme('list-remove'))
+            self.rButton.clicked.connect(self.delCurrent)
+            self.rButton.setToolTip('Remove currently selected class')
+            self.hb.addWidget(self.rButton)
         self.font = font
         if font :
             self.loadFont(font)
@@ -85,6 +87,7 @@ class Classes(QtGui.QWidget) :
             else :
                 m = QtGui.QTableWidgetItem("")
             t = ""
+            if self.ronly : c.editable = False
             if c.generated : t += "Generated "
             if c.editable : t += "Editable "
             if c.fname : t += c.fname
