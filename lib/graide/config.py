@@ -194,6 +194,9 @@ class ConfigDialog(QtGui.QDialog) :
                 config.remove_option('build', 'makegdlcmd')
         else :
             config.set('build', 'usemakegdl', '0')
+            if config.has_option('build', 'makegdlfile')
+                config.remove_option('build', 'makegdlfile')
+                self.build_inc.setText("")
         if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
             config.set('ui', 'textsize', str(self.ui_size.value()))
             app.tabEdit.setSize(self.ui_size.value())

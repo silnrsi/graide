@@ -31,7 +31,8 @@ class Gdx(object) :
     def readfile(self, fname, font, apgdlfile = None, ronly = False) :
         relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
         self.file = file(fname)
-        if not apgdlfile : font.initGlyphs()
+        if not apgdlfile :
+            font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
                 if e.tag == 'pass' :

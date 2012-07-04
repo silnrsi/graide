@@ -35,6 +35,12 @@ class PointClass(object) :
     def addDiaGlyph(self, g) :
         self.dias.append(g)
 
+    def hasDias(self) :
+        if len(self.dias) and len(self.glyphs) :
+            return True
+        else :
+            return False
+
     def classGlyphs(self, isDia = False) :
         if isDia :
             return self.dias
@@ -173,6 +179,7 @@ class Font(object) :
         fh.write("\n")
         fh.write("\n/* Point Classes */\n")
         for p in self.points.values() :
+            if not p.hasDias() : continue
             n = p.name + "Dia"
             self.outclass(fh, "c" + n, p.classGlyphs(True))
             self.outclass(fh, "cTakes" + n, p.classGlyphs(False))
@@ -206,14 +213,15 @@ class Font(object) :
 #define opt3(x) [opt2(x) x]?
 #define opt4(x) [opt3(x) x]?
 #endif
-#define posrule(x) cTakes##x##Dia c##x##Dia {attach {to=@1; at=##x##S; with=##x##M}; user1=1} \
+#define posrule(x) cTakes##x##Dia c##x##Dia {attach {to=@1; at = x##S; with = x##M}; user1=1} \\
                         / ^ _ opt4(cnTakes##x##Dia) _{user1==0}
 
 table(positioning);
 pass(%d);
 """ % num)
         for p in self.points.values() :
-            fh.write("posrule(%s);\n" % p.name)
+            if p.hasDias() :
+                fh.write("posrule(%s);\n" % p.name)
         fh.write("endpass;\nendtable;\n")
 
 

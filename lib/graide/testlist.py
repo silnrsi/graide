@@ -103,12 +103,17 @@ class TestList(QtGui.QWidget) :
 
         self.loadTests(fname)
 
+    def initTests(self) :
+        self.addGroup('main')
+
     def loadTests(self, fname):
         self.tests = []
         self.combo.clear()
         for i in range(self.list.count() - 1, -1, -1) :
             self.list.removeWidget(self.list.widget(i))
-        if not fname or not os.path.exists(fname) : return
+        if not fname or not os.path.exists(fname) : 
+            self.initTests()
+            return
         try :
             e = et.parse(fname)
         except Exception as err:
