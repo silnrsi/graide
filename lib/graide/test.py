@@ -21,7 +21,7 @@
 from PySide import QtGui
 from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
-from graide.utils import Layout
+from graide.layout import Layout
 import re
 
 def asBool(txt) :

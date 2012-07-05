@@ -4412,8 +4412,8 @@ class Name(object) :
             self.psname = self.canonical()
         return self
 
-    def canonical(self) :
-        if self.cname : return self.cname
+    def canonical(self, noprefix = False) :
+        if self.cname and not noprefix : return self.cname
         res = ""
         if not len(self.components) :
             self.cname = self.psname
@@ -4428,17 +4428,18 @@ class Name(object) :
                 pass
             elif n in names :
                 res += names[n]
-            elif not res :
+            elif not res and not noprefix :
                 res = "u" + n
             else :
                 res += n
             if k[1] :
                 res += "." + k[1]
             res += "_"
-        self.cname = res[0:-1]
+        cname = res[0:-1]
         if self.ext :
-            self.cname += "." + self.ext
-        return self.cname
+            cname += "." + self.ext
+        if not noprefix : self.cname = cname
+        return cname
 
     def GDL(self) :
         if self.GDLName : return self.GDLName

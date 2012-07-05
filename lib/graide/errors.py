@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtCore, QtGui
-from graide.utils import Layout
+from graide.layout import Layout
 import os, re
 
 class Errors(QtGui.QListWidget) :

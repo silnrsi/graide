@@ -20,11 +20,10 @@
 
 from PySide import QtGui
 from graide import freetype
-import array, re, ctypes
-from xml.etree.cElementTree import SubElement
+import array, ctypes
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
-import graide.makegdl.makegdl as gdl
+from graide.makegdl.glyph import Glyph as gdlGlyph
 
 def ftGlyph(face, gid) :
     res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
@@ -51,97 +50,16 @@ class GlyphItem(object) :
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
         self.name = n.value
 
-class Glyph(gdl.Glyph, DataObj) :
+class Glyph(gdlGlyph, DataObj) :
 
-    def __init__(self, font, name, gid = 0, item = None) :
-        super(Glyph, self).__init__(name)
-        self.gid = gid
-        self.uid = ""     # this is a string!
+    def __init__(self, name, gid = 0, item = None) :
+        super(Glyph, self).__init__(name, gid)
         self.item = item
-        self.comment = ""
         self.isHigh = False
-
-    def clear(self) :
-        super(Glyph, self).clear()
-        self.properties = {}
 
     def __str__(self) :
         return self.psname
 
-    def readAP(self, elem, font) :
-        self.uid = elem.get('UID', None)
-        for p in elem.iterfind('property') :
-            n = p.get('name')
-            if n == 'GDLName' :
-                self.setGDL(p.get('value'))
-            elif n.startswith('GDL_') :
-                self.gdl_properties[n[4:]] = p.get('value')
-            else :
-                self.properties[n] = p.get('value')
-        for p in elem.iterfind('point') :
-            l = p.find('location')
-            self.anchors[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
-        p = elem.find('note')
-        if p is not None and p.text :
-            self.comment = p.text
-        if 'classes' in self.properties :
-            for c in self.properties['classes'].split() :
-                if c not in self.classes :
-                    self.classes.add(c)
-                    font.addGlyphClass(c, self.gid, editable = True)
-
-    def createAP(self, elem, font, apgdlfile) :
-        e = SubElement(elem, 'glyph')
-        if self.psname : e.set('PSName', self.psname)
-        if self.uid : e.set('UID', self.uid)
-        if self.gid is not None : e.set('GID', str(self.gid))
-        ce = None
-        if 'classes' in self.properties and self.properties['classes'].strip() :
-            tempClasses = self.properties['classes']
-            self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), apgdlfile))
-        for (k, v) in self.anchors.items() :
-            p = SubElement(e, 'point')
-            p.set('type', k)
-            p.text = "\n        "
-            l = SubElement(p, 'location')
-            l.set('x', str(v[0]))
-            l.set('y', str(v[1]))
-            l.tail = "\n    "
-            if ce is not None : ce.tail = "\n    "
-            ce = p
-        for (k, v) in self.gdl_properties.items() :
-            if v :
-                p = SubElement(e, 'property')
-                p.set('name', 'GDL_' + k)
-                p.set('value', v)
-                if ce is not None : ce.tail = "\n    "
-                ce = p
-        if self.gdl and (not self.name or self.gdl != self.name.GDL()) :
-            p = SubElement(e, 'property')
-            p.set('name', 'GDLName')
-            p.set('value', self.GDLName())
-            if ce is not None : ce.tail = "\n    "
-            ce = p
-        for (k, v) in self.properties.items() :
-            if v :
-                p = SubElement(e, 'property')
-                p.set('name', k)
-                p.set('value', v)
-                if ce is not None : ce.tail = "\n    "
-                ce = p
-        if self.comment :
-            p = SubElement(e, 'note')
-            p.text = self.comment
-            if ce is not None : ce.tail = "\n    "
-            ce = p
-        if 'classes' in self.properties and self.properties['classes'].strip() :
-            self.properties['classes'] = tempClasses
-        if ce is not None :
-            ce.tail = "\n"
-            e.text = "\n    "
-        e.tail = "\n"
-        return e
-      
     def attribModel(self) :
         res = []
         for a in ['psname', 'gid'] :

@@ -17,8 +17,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import re, psnames
-from graide.makegdl.psnames import Name
+import os
+from graide.makegdl.glyph import Glyph
+from xml.etree.cElementTree import ElementTree, parse, Element
 
 class PointClass(object) :
 
@@ -53,6 +54,18 @@ class PointClass(object) :
         else :
             return g not in self.dias and g not in self.glyphs
 
+class FontClass(object) :
+
+    def __init__(self, elements = None, fname = None, lineno = None, generated = False, editable = False) :
+        self.elements = elements or []
+        self.fname = fname
+        self.lineno = lineno
+        self.generated = generated
+        self.editable = editable
+
+    def append(self, element) :
+        self.elements.append(element)
+
 class Font(object) :
     
     def __init__(self) :
@@ -65,12 +78,35 @@ class Font(object) :
         self.subclasses = {}
         self.points = {}
         self.classes = {}
+        self.gnames = {}
+
+    def __len__(self) :
+        return len(self.glyphs)
+
+    def __getitem__(self, y) :
+        try :
+            return self.glyphs[y]
+        except IndexError :
+            return None
 
     def emunits(self) :
         return 0
 
-    def addGlyph(self, g, index = None, gdlname = None) :
+    def initGlyphs(self) :
+        self.glyphs = [None] * self.numGlyphs
+        self.psnames = {}
+        self.canons = {}
+        self.gdls = {}
+        self.classes = {}
+
+    def addGlyph(self, index = None, name = None, gdlname = None, factory = Glyph) :
+        if name and name in self.gnames :
+            index = self.gnames[name]
+#        else :
+#            name = None
+        g = factory(name, index)
         if index is None :
+            index = len(self.glyphs)
             self.glyphs.append(g)
         elif index >= len(self.glyphs) :
             self.glyphs.extend([None] * (len(self.glyphs) - index + 1))
@@ -78,13 +114,48 @@ class Font(object) :
         self.renameGlyph(g, g.psname, gdlname)
         return g
 
+    def addGDXGlyph(self, e) :
+        gid = int(e.get('glyphid'))
+        g = self[gid]
+        cname = e.get('className')
+        if cname and re.match('^\*GC\d+\*$', cname) :
+            cname = None
+        if not g :
+            if gid > len(self.glyphItems) :
+                g = self.addGlyph(gid, name = Name.createFromGDL(cname).canonical() if cname else None)
+            else :
+                g = self.addGlyph(gid)
+        else :
+            g.clear()
+        if cname : self.setGDL(g, cname)
+        storemirror = False
+        u = e.get('usv')
+        if u and u.startswith('U+') : u = u[2:]
+        if u : g.uid = u
+        for a in e.iterfind('glyphAttrValue') :
+            n = a.get('name')
+            if n == 'mirror.isEncoded' :
+                storemirror = True
+            elif n == 'mirror.glyph' :
+                mirrorglyph = a.get('value')
+            elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
+                pass
+            elif n.find('.') != -1 :
+                if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
+                elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
+            else :
+                g.setgdlproperty(n, a.get('value'))
+        if storemirror and mirrorglyph :
+            g.setgdlproperty('mirror.glyph', mirrorglyph)
+            g.setgdlproperty('mirror.isEncoded', '1')
+
     def renameGlyph(self, g, name, gdlname = None) :
         if g.psname != name :
             for n in g.parseNames() :
                 del self.psnames[n.psname]
                 del self.canons[n.canonical()]
         if gdlname :
-            self.setGDL(gdlname)
+            self.setGDL(g, gdlname)
         else :
             self.setGDL(g, g.GDLName())
         for n in g.parseNames() :
@@ -108,6 +179,64 @@ class Font(object) :
                 if count == 100 : index = -4
         self.gdls[name] = glyph
         glyph.setGDL(name)
+
+    def addClass(self, name, elements, fname = None, lineno = 0, generated = False, editable = False) :
+        self.classes[name] = FontClass(elements, fname, lineno, generated, editable)
+        for e in elements :
+            g = self[e]
+            if g : g.addClass(name)
+
+    def addGlyphClass(self, name, gid, editable = False) :
+        if name not in self.classes :
+            self.classes[name] = FontClass()
+        if gid not in self.classes[name].elements :
+            self.classes[name].append(gid)
+
+    def classUpdated(self, name, value) :
+        c = []
+        if name in self.classes :
+            for gid in self.classes[name].elements :
+                g = self[gid]
+                if g : g.removeClass(name)
+        if value is None and name in classes :
+            del self.classes[name]
+            return
+        for n in value.split() :
+            g = self.gdls.get(n, None)
+            if g :
+                c.append(g.gid)
+                g.addClass(name)
+        if name in self.classes :
+            self.classes[name].elements = c
+        else :
+            self.classes[name] = FontClass(c)
+
+    def filterAutoClasses(self, names, apgdlfile) :
+        res = []
+        for n in names :
+            c = self.classes[n]
+            if not c.generated and (not c.fname or c.fname == apgdlfile) : res.append(n)
+        return res
+
+    def loadAP(self, apfile) :
+        if not os.path.exists(apfile) : return False
+        self.initGlyphs()
+        etree = parse(apfile)
+        i = 0
+        for e in etree.getroot().iterfind("glyph") :
+            g = self.addGlyph(i, e.get('PSName'))
+            g.readAP(e, self)
+            i += 1
+        return True
+
+    def saveAP(self, fname, apgdlfile) :
+        root = Element('font')
+        root.set('upem', str(self.emunits))
+        root.set('producer', 'graide 1.0')
+        root.text = "\n\n"
+        for g in self.glyphs :
+            if g : g.createAP(root, self, apgdlfile)
+        ElementTree(root).write(fname, encoding="utf-8", xml_declaration=True)
 
     def createClasses(self) :
         self.subclasses = {}
@@ -149,10 +278,11 @@ class Font(object) :
                 if o and o[0].ext == t.ext :
                     t.ext = None
                     t.cname = None
-                    if t.canonical() in self.ligs :
-                        self.ligs[t.canonical()].append((g.GDLName(), o[0].GDL()))
+                    tn = t.canonical(noprefix = True)
+                    if tn in self.ligs :
+                        self.ligs[tn].append((g.GDLName(), o[0].GDL()))
                     else :
-                        self.ligs[t.canonical()] = [(g.GDLName(), o[0].GDL())]
+                        self.ligs[tn] = [(g.GDLName(), o[0].GDL())]
 
     def outGDL(self, fh) :
         munits = self.emunits()
@@ -242,50 +372,3 @@ pass(%d);
             count += 1
         fh.write(');\n\n')
 
-class Glyph(object) :
-
-    def __init__(self, name) :
-        self.clear()
-        self.setName(name)
-        self.gdl = None
-
-    def clear(self) :
-        self.anchors = {}
-        self.classes = set()
-        self.gdl_properties = {}
-
-    def setName(self, name) :
-        self.psname = name
-        self.name = next(self.parseNames())
-
-    def addAnchor(self, name, x, y, t = None) :
-        self.anchors[name] = (x, y)
-        # if not name.startswith("_") and t != 'basemark' :
-        #     self.isBase = True
-
-    def parseNames(self) :
-        if self.psname :
-            for name in self.psname.split("/") :
-                res = psnames.Name(name)
-                yield res
-        else :
-            yield None
-
-    def GDLName(self) :
-        if self.gdl :
-            return self.gdl
-        elif self.name :
-            return self.name.GDL()
-        else :
-            return None
-
-    def setGDL(self, name) :
-        self.gdl = name
-
-def isMakeGDLSpecialClass(name) :
-#    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
-#    if name.startswith('clig') : return True
-#    if name.startswith('cno_') : return True
-    if re.match(r'^\*GC\d+\*$', name) : return True
-    return False
-    

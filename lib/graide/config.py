@@ -1,4 +1,3 @@
-
 #    Copyright 2012, SIL International
 #    All rights reserved.
 #
@@ -177,11 +176,11 @@ class ConfigDialog(QtGui.QDialog) :
             self.build_inc.setText(nname)
 
     def updateConfig(self, app, config) :
-        self.updateChanged(self.main_font, config, 'main', 'font', app.loadFont)
-        self.updateChanged(self.main_gdl, config, 'build', 'gdlfile', app.selectLine)
-        self.updateChanged(self.main_tests, config, 'main', 'testsfile', app.loadTests)
+        self.updateChanged(self.main_font, config, 'main', 'font', (app.loadFont if app else None))
+        self.updateChanged(self.main_gdl, config, 'build', 'gdlfile', (app.selectLine if app else None))
+        self.updateChanged(self.main_tests, config, 'main', 'testsfile', (app.loadTests if app else None))
         self.cbChanged(self.main_rtl, config, 'main', 'defaultrtl')
-        self.updateChanged(self.build_ap, config, 'main', 'ap', app.loadAP)
+        self.updateChanged(self.build_ap, config, 'main', 'ap', (app.loadAP if app else None))
         if self.build_ap.text() :
             config.set('build', 'usemakegdl', "1")
             self.updateChanged(self.build_inc, config, 'build', 'makegdlfile')
@@ -194,15 +193,15 @@ class ConfigDialog(QtGui.QDialog) :
                 config.remove_option('build', 'makegdlcmd')
         else :
             config.set('build', 'usemakegdl', '0')
-            if config.has_option('build', 'makegdlfile')
+            if config.has_option('build', 'makegdlfile') :
                 config.remove_option('build', 'makegdlfile')
                 self.build_inc.setText("")
         if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
             config.set('ui', 'textsize', str(self.ui_size.value()))
-            app.tabEdit.setSize(self.ui_size.value())
+            if app : app.tabEdit.setSize(self.ui_size.value())
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
-            app.loadFont(configval(config, 'main', 'font'))
+            if app : app.loadFont(configval(config, 'main', 'font'))
         self.updateChanged(self.ui_sizes, config, 'ui', 'waterfall')
         self.cbChanged(self.ui_ent, config, 'ui', 'entities')
 

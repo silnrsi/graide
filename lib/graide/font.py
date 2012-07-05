@@ -17,52 +17,28 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from xml.etree.cElementTree import parse, ElementTree, Element
 from graide import freetype
 from graide.glyph import Glyph, GlyphItem
 from PySide import QtCore
-import graide.makegdl.makegdl as gdl
-from graide.makegdl.psnames import Name
-import re, os
+from graide.makegdl.font import Font as gdlFont
+import re
 
-class FontClass(object) :
-
-    def __init__(self, elements = None, fname = None, lineno = None, generated = False, editable = False) :
-        self.elements = elements or []
-        self.fname = fname
-        self.lineno = lineno
-        self.generated = generated
-        self.editable = editable
-
-    def append(self, element) :
-        self.elements.append(element)
-
-class Font(gdl.Font) :
+class Font(gdlFont) :
 
     def __init__(self) :
         super(Font, self).__init__()
         self.glyphItems = []
-        self.gnames = {}
         self.classes = {}
         self.pixrect = QtCore.QRect()
         self.isread = False
         self.highlighted = None
 
-    def __len__(self) :
-        return len(self.glyphs)
-
-    def __getitem__(self, y) :
-        try :
-            return self.glyphs[y]
-        except IndexError :
-            return None
-
     def isRead(self) : return self.isread
 
     def loadFont(self, fontfile, size = 40) :
         self.glyphItems = []
-        self.gnames = {}
         self.pixrect = QtCore.QRect()
+        self.gnames = {}
         self.top = 0
         self.size = size
         self.fname = fontfile
@@ -83,121 +59,23 @@ class Font(gdl.Font) :
                 g.item = self.glyphItems[i]
         self.isread = True
 
-    def initGlyphs(self) :
-        self.glyphs = [None] * self.numGlyphs
-        self.psnames = {}
-        self.canons = {}
-        self.gdls = {}
-        self.classes = {}
-
-    def loadAP(self, apfile) :
-        if not os.path.exists(apfile) : return False
-        self.initGlyphs()
-        etree = parse(apfile)
-        i = 0
-        for e in etree.getroot().iterfind("glyph") :
-            i = self.addglyph(i, e.get('PSName'))
-            g = self.glyphs[i]
-            g.readAP(e, self)
-            i += 1
-        return True
-
-    def saveAP(self, fname, apgdlfile) :
-        root = Element('font')
-        root.set('upem', str(self.upem))
-        root.set('producer', 'graide 1.0')
-        root.text = "\n\n"
-        for g in self.glyphs :
-            if g : g.createAP(root, self, apgdlfile)
-        ElementTree(root).write(fname, encoding="utf-8", xml_declaration=True)
-
     def loadEmptyGlyphs(self) :
         self.initGlyphs()
         for i in range(self.numGlyphs) :
-            self.addglyph(i)
+            self.addGlyph(i)
         face = freetype.Face(self.fname)
         (uni, gid) = face.get_first_char()
         while gid :
             self[gid].uid = "%04X" % uni
             (uni, gid) = face.get_next_char(uni, gid)
-            
 
-    def addGDXGlyph(self, e) :
-        gid = int(e.get('glyphid'))
-        g = self[gid]
-        cname = e.get('className')
-        if cname and re.match('^\*GC\d+\*$', cname) :
-            cname = None
-        if not g :
-            if gid > len(self.glyphItems) :
-                g = self[self.addglyph(gid, name = Name.createFromGDL(cname).canonical() if cname else None)]
-            else :
-                g = self[self.addglyph(gid)]
-        else :
-            g.clear()
-        if cname : self.setGDL(g, cname)
-        storemirror = False
-        u = e.get('usv')
-        if u and u.startswith('U+') : u = u[2:]
-        if u : g.uid = u
-        for a in e.iterfind('glyphAttrValue') :
-            n = a.get('name')
-            if n == 'mirror.isEncoded' :
-                storemirror = True
-            elif n == 'mirror.glyph' :
-                mirrorglyph = a.get('value')
-            elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
-                pass
-            elif n.find('.') != -1 :
-                if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
-                elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
-            else :
-                g.setgdlproperty(n, a.get('value'))
-        if storemirror and mirrorglyph :
-            g.setgdlproperty('mirror.glyph', mirrorglyph)
-            g.setgdlproperty('mirror.isEncoded', '1')
-
-    def addglyph(self, index, name = None, gdlname = None) :
-        if name and name in self.gnames :
-            index = self.gnames[name]
-        else :
-            name = None
+    def addGlyph(self, index, name = None, gdlname = None) :
         if not name and index < len(self.glyphItems) :
             name = self.glyphItems[index].name
-        g = Glyph(self, name, index, item = self.glyphItems[index] if index < len(self.glyphItems) else None)
-        super(Font, self).addGlyph(g, index, gdlname)
-        return index
-
-    def addClass(self, name, elements, fname = None, lineno = 0, generated = False, editable = False) :
-        self.classes[name] = FontClass(elements, fname, lineno, generated, editable)
-        for e in elements :
-            g = self[e]
-            if g : g.addClass(name)
-
-    def addGlyphClass(self, name, gid, editable = False) :
-        if name not in self.classes :
-            self.classes[name] = FontClass()
-        if gid not in self.classes[name].elements :
-            self.classes[name].append(gid)
-
-    def classUpdated(self, name, value) :
-        c = []
-        if name in self.classes :
-            for gid in self.classes[name].elements :
-                g = self[gid]
-                if g : g.removeClass(name)
-        if value is None and name in classes :
-            del self.classes[name]
-            return
-        for n in value.split() :
-            g = self.gdls.get(n, None)
-            if g :
-                c.append(g.gid)
-                g.addClass(name)
-        if name in self.classes :
-            self.classes[name].elements = c
-        else :
-            self.classes[name] = FontClass(c)
+        g = super(Font, self).addGlyph(index, name, gdlname, Glyph)
+        if index < len(self.glyphItems) :
+            g.item = self.glyphItems[index]
+        return g
 
     def classSelected(self, name) :
         if name :
@@ -216,12 +94,5 @@ class Font(gdl.Font) :
             for i in dif :
                 if self.glyphs[i] : self.glyphs[i].highlight(True)
         self.highlighted = nClass
-
-    def filterAutoClasses(self, names, apgdlfile) :
-        res = []
-        for n in names :
-            c = self.classes[n]
-            if not c.generated and (not c.fname or c.fname == apgdlfile) : res.append(n)
-        return res
 
     def emunits(self) : return self.upem

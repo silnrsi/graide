@@ -27,7 +27,9 @@ from graide.runview import RunView
 from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import runGraphite, buildGraphite, configval, configintval, Layout, registerErrorLog
+from graide.utils import buildGraphite, configval, configintval, registerErrorLog
+from graide.layout import Layout
+from graide.rungraphite import runGraphite
 from graide.featureselector import make_FeaturesMap, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test

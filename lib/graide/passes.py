@@ -21,7 +21,8 @@
 from PySide import QtGui, QtCore
 from graide.run import Run
 from graide.runview import RunView
-from graide.utils import ModelSuper, DataObj, Layout
+from graide.utils import ModelSuper, DataObj
+from graide.layout import Layout
 
 class PassesItem(QtGui.QTableWidgetItem) :
 

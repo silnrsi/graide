@@ -21,7 +21,8 @@
 from PySide import QtCore, QtGui
 from xml.etree import cElementTree as et
 from graide.test import Test
-from graide.utils import configval, Layout, reportError, relpath, ETcanon, ETinsert
+from graide.utils import configval, reportError, relpath, ETcanon, ETinsert
+from graide.layout import Layout
 import os, re
 from cStringIO import StringIO
 

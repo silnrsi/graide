@@ -17,29 +17,12 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtGui
-from graide.graphite import gr2
-from ctypes import *
-from ctypes.util import find_library
 import os, sys, subprocess, re
 from tempfile import mktemp
 from shutil import copyfile
 
-libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
-c = libc.fdopen
-c.restype = c_void_p
-c.argtypes = [c_int, c_char_p]
-
 mainapp = None
 pendingErrors = []
-
-class Layout(object) :
-    buttonSpacing = 1
-    buttonMargins = (0, 0, 0, 0)
-    runEditHeight = 60
-    errorColour = QtGui.QColor(255, 160, 160)
-    warnColour = QtGui.QColor(255, 255, 160)
-    activePassColour = QtGui.QColor(255, 255, 208)
 
 class DataObj(object) :
     
@@ -84,20 +67,6 @@ def strtolong(txt) :
         res = (res << 8) + ord(c)
     return res
 
-def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 16) :
-    grface = gr2.gr_make_file_face(font, 0)
-    lang = strtolong(lang)
-    grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
-    for f, v in feats.items() :
-        id = gr2.gr_str_to_tag(f)
-        fref = gr2.gr_face_find_fref(grface, id)
-        gr2.gr_fref_set_feature_value(fref, v, grfeats)
-    grfont = gr2.gr_make_font(size, grface)
-    fd = libc.fdopen(debugfile.fileno(), "w")
-    gr2.graphite_start_logging(fd, 0xFF)
-    seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
-    gr2.graphite_stop_logging()
-
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
@@ -105,8 +74,6 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             font.saveAP(config.get('main', 'ap'), gdlfile)
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
-            if config.has_option('main', 'ap') :
-                font.saveAP(config.get('main', 'ap'), gdlfile)
             makecmd = expandMakeCmd(config, cmd)
             subprocess.call(makecmd, shell = True)
         else :
@@ -120,7 +87,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             if configval(config, 'build', 'gdlfile') :
                 f.write('#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
             f.close()
-            app.updateFileEdit(gdlfile)
+            if app : app.updateFileEdit(gdlfile)
     else :
         gdlfile = configval(config, 'build', 'gdlfile')
     if not gdlfile or not os.path.exists(gdlfile) :

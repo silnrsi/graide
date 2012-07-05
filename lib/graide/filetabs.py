@@ -18,7 +18,8 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtGui, QtCore
-from graide.utils import Layout, configintval, configval
+from graide.utils import configintval, configval
+from graide.layout import Layout
 import os
 
 class FindDialog(QtGui.QDialog) :
