@@ -285,6 +285,7 @@ class TestList(QtGui.QWidget) :
         sio.close()
         f.close()
 
+    @QtCore.Slot(int)
     def changeGroup(self, index) :
         self.list.setCurrentIndex(index)
         if index < len(self.comments) :

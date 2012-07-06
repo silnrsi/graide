@@ -17,8 +17,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import os
+import os, re
 from graide.makegdl.glyph import Glyph
+from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import ElementTree, parse, Element
 
 class PointClass(object) :

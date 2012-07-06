@@ -96,7 +96,8 @@ class Glyph(object) :
         if 'classes' in self.properties and self.properties['classes'].strip() :
             tempClasses = self.properties['classes']
             self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), apgdlfile))
-        for (k, v) in self.anchors.items() :
+        for k in sorted(self.anchors.keys()) :
+            v = self.anchors[k]
             p = SubElement(e, 'point')
             p.set('type', k)
             p.text = "\n        "
@@ -106,7 +107,8 @@ class Glyph(object) :
             l.tail = "\n    "
             if ce is not None : ce.tail = "\n    "
             ce = p
-        for (k, v) in self.gdl_properties.items() :
+        for k in sorted(self.gdl_properties.keys()) :
+            v = self.gdl_properties[k]
             if v :
                 p = SubElement(e, 'property')
                 p.set('name', 'GDL_' + k)
@@ -119,7 +121,8 @@ class Glyph(object) :
             p.set('value', self.GDLName())
             if ce is not None : ce.tail = "\n    "
             ce = p
-        for (k, v) in self.properties.items() :
+        for k in sorted(self.properties.keys()) :
+            v = self.properties[k]
             if v :
                 p = SubElement(e, 'property')
                 p.set('name', k)
