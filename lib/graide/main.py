@@ -97,6 +97,7 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             fontsize = 40
         self.fontfile = str(fontname)
+        self.fonttime = os.stat(fontname).st_ctime
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
@@ -420,6 +421,8 @@ class MainWindow(QtGui.QMainWindow) :
 
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
+        if os.stat(self.fontfile).st_ctime > self.fonttime :
+            self.loadFont(self.fontfile)
         runfile = TemporaryFile(mode="rw")
         text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())

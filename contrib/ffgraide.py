@@ -196,6 +196,11 @@ class FfFont(gdlFont) :
 
 # font generation
 def doGenerate(font, outputfont) :
+    if 'GDL_generateFlag' not in font.temporary :
+        font.temporary['GDL_generateFlag'] = True
+        return
+    else :
+        del font.temporary['GDL_generateFlag']
     cfg = getcfg(font)
     if not cfg : return
     conf = RawConfigParser()
