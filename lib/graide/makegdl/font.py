@@ -105,13 +105,13 @@ class Font(object) :
 #        else :
 #            name = None
         g = factory(name, index)
+        self.renameGlyph(g, g.psname, gdlname)
         if index is None :
             index = len(self.glyphs)
             self.glyphs.append(g)
         elif index >= len(self.glyphs) :
             self.glyphs.extend([None] * (len(self.glyphs) - index + 1))
         self.glyphs[index] = g
-        self.renameGlyph(g, g.psname, gdlname)
         return g
 
     def addGDXGlyph(self, e) :

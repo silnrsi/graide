@@ -160,7 +160,7 @@ class TestList(QtGui.QWidget) :
                 else :
                     feats = {}
                     lng = None
-                te = Test(txt, feats, lng, t.get('rtl'), t.get('label'), comment = c)
+                te = Test(txt, feats, lang = lng, rtl = t.get('rtl'), name = t.get('label'), comment = c)
                 b = t.get('background')
                 if b :
                     res = QtGui.QColor(b)
@@ -185,7 +185,7 @@ class TestList(QtGui.QWidget) :
                 c = y.text
             else :
                 c = ""
-            te = Test(txt, feats, t.get('rtl'), t.get('name'), comment = c)
+            te = Test(txt, feats, rtl = t.get('rtl'), name = t.get('name'), comment = c)
             b = t.get('background')
             if b :
                 res = QtGui.QColor(b)

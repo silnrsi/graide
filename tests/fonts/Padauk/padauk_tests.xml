@@ -1,9 +1,21 @@
-<?xml version='1.0' encoding='utf-8'?>
-<tests>
-<test feats="kdot=0 lldt=0 vtta=0 ulon=0 hsln=0 wtri=0 dotc=1 utal=0 fdot=0 nnya=0 dotr=0" name="padauk3"><text>\u101e\u1004\u103a\u1039\u1001\u103b\u102d\u102f\u1004\u103a\u1038</text>
-</test>
-<test feats="kdot=0 lldt=0 vtta=0 ulon=0 hsln=0 wtri=0 dotc=1 utal=0 fdot=0 nnya=0 dotr=0" name="test1"><text>\u1000\u103e\u102f</text>
-</test>
-<test feats="kdot=0 lldt=0 vtta=0 ulon=0 hsln=0 wtri=0 dotc=1 utal=0 fdot=0 nnya=0 dotr=0" name="test2"><text>\u1000\u103c\u102d\u102f</text>
-</test>
-</tests>
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>
+<ftml version="1.0">
+  <head>
+    <fontsrc>url(Padauk.ttf)</fontsrc>
+    <styles>
+      <style lang="ksw" name="fset1"/>
+    </styles>
+  </head>
+  <testgroup label="main">
+    <test label="padauk3">
+      <string>သင်္ချိုင်း</string>
+    </test>
+    <test class="fset1" label="test1">
+      <string>ကှု</string>
+    </test>
+    <test label="test2">
+      <string>ကြို</string>
+    </test>
+  </testgroup>
+</ftml>

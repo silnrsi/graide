@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import os, sys, subprocess, re
+import os, subprocess, re
 from tempfile import mktemp
 from shutil import copyfile
 
@@ -56,16 +56,6 @@ def copyobj(src, dest) :
         y = getattr(src, x)
         if not callable(y) and not x.startswith('__') :
             setattr(dest, x, y)
-
-def strtolong(txt) :
-    res = 0
-    if txt :
-        txt = (txt + "\000\000\000\000")[:4]
-    else :
-        return 0
-    for c in txt :
-        res = (res << 8) + ord(c)
-    return res
 
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     if configintval(config, 'build', 'usemakegdl') :

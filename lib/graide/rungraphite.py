@@ -18,6 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from graide.graphite import gr2
+import sys
 from ctypes import *
 from ctypes.util import find_library
 
@@ -25,6 +26,16 @@ libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c
 c = libc.fdopen
 c.restype = c_void_p
 c.argtypes = [c_int, c_char_p]
+
+def strtolong(txt) :
+    res = 0
+    if txt :
+        txt = (txt + "\000\000\000\000")[:4]
+    else :
+        return 0
+    for c in txt :
+        res = (res << 8) + ord(c)
+    return res
 
 def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 16) :
     grface = gr2.gr_make_file_face(font, 0)

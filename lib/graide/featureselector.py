@@ -20,7 +20,7 @@
 
 from PySide import QtCore, QtGui
 import graide.graphite as gr
-from graide.utils import strtolong
+from graide.rungraphite import strtolong
 
 class FeatureRefs(object) :
 

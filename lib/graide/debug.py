@@ -19,6 +19,7 @@
 
 
 from PySide import QtCore, QtGui
+import json
 
 class ContextToolButton(QtGui.QToolButton) :
     rightClick = QtCore.Signal(QtGui.QContextMenuEvent)
@@ -40,5 +41,5 @@ class DebugMenu(QtGui.QMenu) :
 
     def runSave(self) :
         f = file('_graide.json', 'w')
-        json.dump(self.app.json, indent=2)
+        json.dump(self.app.json, f, indent=2)
         f.close()
