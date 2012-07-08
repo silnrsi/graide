@@ -61,7 +61,7 @@ class TestList(QtGui.QWidget) :
         self.vbox.addWidget(self.cbox)
         self.list = QtGui.QStackedWidget(self)
         self.vbox.addWidget(self.list)
-        self.combo.currentIndexChanged.connect(self.changeGroup)
+        self.combo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeGroup)
         self.addGroup('main')
         self.bbox = QtGui.QWidget(self)
         self.hbbox = QtGui.QHBoxLayout()
