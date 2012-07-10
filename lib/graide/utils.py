@@ -57,6 +57,32 @@ def copyobj(src, dest) :
         if not callable(y) and not x.startswith('__') :
             setattr(dest, x, y)
 
+grcompiler = None
+def findgrcompiler() :
+    if sys.platform == 'win32' :
+        try :
+            from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
+            node = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\Graphite Compiler_is1"
+            if sys.maxsize > 1 << 32 :
+                r = OpenKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\" + node)
+            else:
+                r = OpenKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\" + node)
+            p = QueryValue(r, "InstallLocation")
+            grcompiler = os.path.join(p, "GrCompiler.exe")
+        except WindowsError :
+            for p in os.environ['PATH'].split(';') :
+                a = os.join(p, 'grcompiler.exe')
+                if os.path.exists(a) :
+                    grcompiler = a
+                    break
+    else :
+        for p in os.environ['PATH'].split(':') :
+            a = os.join(p, "grcompiler")
+            if os.path.exists(a) :
+                grcompiler = a
+                break
+    return grcompiler
+
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
@@ -97,7 +123,9 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if errfile :
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = errfile
-    res = subprocess.call(("grcompiler", "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)
+    res = 1
+    if grcompiler is not None :
+        res = subprocess.call((grcompiler, "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)

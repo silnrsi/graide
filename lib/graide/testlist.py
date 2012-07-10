@@ -131,7 +131,7 @@ class TestList(QtGui.QWidget) :
             k = s.get('name')
             v = s.get('feats') or ""
             l = s.get('lang') or ""
-            fset = v + "\n" + k
+            fset = v + "\n" + l
             if fset not in self.fsets : self.fsets[fset] = k
             classes[k] = {}
             if l : langs[k] = l

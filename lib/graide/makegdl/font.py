@@ -232,7 +232,7 @@ class Font(object) :
 
     def saveAP(self, fname, apgdlfile) :
         root = Element('font')
-        root.set('upem', str(self.emunits))
+        root.set('upem', str(self.emunits()))
         root.set('producer', 'graide 1.0')
         root.text = "\n\n"
         for g in self.glyphs :

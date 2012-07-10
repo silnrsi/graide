@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<font producer="graide 1.0" upem="&lt;bound method Font.emunits of &lt;graide.font.Font object at 0x7ff14ad4ecd0&gt;&gt;">
+<font producer="graide 1.0" upem="1024">
 
 <glyph GID="0" PSName=".notdef" />
 <glyph GID="3" PSName="space" UID="0020">

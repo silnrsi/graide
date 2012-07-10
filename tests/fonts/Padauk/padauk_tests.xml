@@ -4,14 +4,14 @@
   <head>
     <fontsrc>url(Padauk.ttf)</fontsrc>
     <styles>
-      <style lang="ksw" name="fset3"/>
+      <style lang="ksw" name="fset5"/>
     </styles>
   </head>
   <testgroup label="main">
     <test label="padauk3">
       <string>သင်္ချိုင်း</string>
     </test>
-    <test class="fset3" label="test1">
+    <test class="fset5" label="test1">
       <string>ကှု</string>
     </test>
     <test label="test2">
