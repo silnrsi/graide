@@ -27,7 +27,7 @@ from graide.runview import RunView
 from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import buildGraphite, configval, configintval, registerErrorLog
+from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler
 from graide.layout import Layout
 from graide.rungraphite import runGraphite
 from graide.featureselector import make_FeaturesMap, FeatureDialog
@@ -65,6 +65,7 @@ class MainWindow(QtGui.QMainWindow) :
             QtGui.QIcon.setThemeSearchPaths(['/opt/local/share/icons', ':/icons'])
             QtGui.QIcon.setThemeName('Tango')
 
+        findgrcompiler()
         for s in ('main', 'build', 'ui') :
             if not config.has_section(s) :
                 config.add_section(s)

@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import os, subprocess, re
+import os, subprocess, re, sys
 from tempfile import mktemp
 from shutil import copyfile
 
@@ -59,6 +59,7 @@ def copyobj(src, dest) :
 
 grcompiler = None
 def findgrcompiler() :
+    global grcompiler
     if sys.platform == 'win32' :
         try :
             from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
@@ -71,19 +72,20 @@ def findgrcompiler() :
             grcompiler = os.path.join(p, "GrCompiler.exe")
         except WindowsError :
             for p in os.environ['PATH'].split(';') :
-                a = os.join(p, 'grcompiler.exe')
+                a = os.path.join(p, 'grcompiler.exe')
                 if os.path.exists(a) :
                     grcompiler = a
                     break
     else :
         for p in os.environ['PATH'].split(':') :
-            a = os.join(p, "grcompiler")
+            a = os.path.join(p, "grcompiler")
             if os.path.exists(a) :
                 grcompiler = a
                 break
     return grcompiler
 
 def buildGraphite(config, app, font, fontfile, errfile = None) :
+    global grcompiler
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
         if config.has_option('main', 'ap') :
@@ -91,15 +93,16 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
             makecmd = expandMakeCmd(config, cmd)
+            print makecmd
             subprocess.call(makecmd, shell = True)
         else :
             font.createClasses()
             font.pointClasses()
             font.ligClasses()
             v = int(config.get('build', 'pospass'))
-            if v > 0 : font.outPosRules(v)
             f = file(gdlfile, "w")
             font.outGDL(f)
+            if v > 0 : font.outPosRules(f, v)
             if configval(config, 'build', 'gdlfile') :
                 f.write('#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
             f.close()

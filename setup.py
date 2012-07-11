@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from distutils.core import setup
+import sys
 
 kw = {}
 if sys.platform == "win32" :
