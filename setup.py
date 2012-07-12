@@ -5,7 +5,7 @@ import sys
 
 kw = {}
 if sys.platform == "win32" :
-    kw['package_data'] = {'graide' : 'dll/*.dll'}
+    kw['package_data'] = {'graide' : ['dll/*.dll']}
 
 setup(  name = 'graide',
         version = '0.0.1',

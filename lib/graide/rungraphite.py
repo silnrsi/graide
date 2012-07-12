@@ -22,8 +22,12 @@ import sys
 from ctypes import *
 from ctypes.util import find_library
 
-libc = cdll.LoadLibrary(find_library("msvcrt" if sys.platform == "win32" else "c"))
-c = libc.fdopen
+libc = cdll.LoadLibrary(find_library("c"))
+if sys.platform == "win32" :
+    c = libc._fdopen
+else :
+    c = libc.fdopen
+
 c.restype = c_void_p
 c.argtypes = [c_int, c_char_p]
 
