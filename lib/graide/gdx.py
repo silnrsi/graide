@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from xml.etree.cElementTree import iterparse
-from makegdl.makegdl import isMakeGDLSpecialClass
+from graide.makegdl.glyph import isMakeGDLSpecialClass
 import os
 
 class Gdx(object) :

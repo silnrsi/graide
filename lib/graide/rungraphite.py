@@ -50,7 +50,7 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 
         fref = gr2.gr_face_find_fref(grface, id)
         gr2.gr_fref_set_feature_value(fref, v, grfeats)
     grfont = gr2.gr_make_font(size, grface)
-    fd = libc.fdopen(debugfile.fileno(), "w")
+    fd = c(debugfile.fileno(), "w+")
     gr2.graphite_start_logging(fd, 0xFF)
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
     gr2.graphite_stop_logging()

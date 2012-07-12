@@ -408,7 +408,7 @@ class MainWindow(QtGui.QMainWindow) :
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
         self.tab_errors.clear()
-        errfile = TemporaryFile(mode="rw")
+        errfile = TemporaryFile(mode="w+")
         res = buildGraphite(self.config, self, self.font, self.fontfile, errfile)
         if res :
             errfile.seek(0)
@@ -424,7 +424,7 @@ class MainWindow(QtGui.QMainWindow) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         if os.stat(self.fontfile).st_ctime > self.fonttime :
             self.loadFont(self.fontfile)
-        runfile = TemporaryFile(mode="rw")
+        runfile = TemporaryFile(mode="w+")
         text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
         if not text : return

@@ -24,7 +24,7 @@ from ft_types import *
 from ft_enums import *
 from ft_errors import *
 from ft_structs import *
-import ctypes.util
+import ctypes.util, os
 
 
 __dll__    = None
