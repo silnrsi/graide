@@ -31,10 +31,14 @@ __dll__    = None
 __handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
-    try:
-        __dll__ = ctypes.CDLL('libfreetype.so.6')
-    except OSError:
-        __dll__ = None
+    for n in ('libfreetype.so.6',
+              os.path.join(os.path.dirname(__file__), '..', 'dll', 'freetype6.dll')) :
+        try:
+            __dll__ = ctypes.CDLL(n)
+        except OSError:
+            __dll__ = None
+        if __dll__ is not None : break
+
 if not FT_Library_filename and not __dll__:
     raise RuntimeError, 'Freetype library not found'
 if not __dll__:
