@@ -65,7 +65,7 @@ class Test(object) :
         bl = QtGui.QHBoxLayout()
         bw.setLayout(bl)
         c = QtGui.QToolButton(bw)
-        c.setIcon(QtGui.QIcon.fromTheme('background'))
+        c.setIcon(QtGui.QIcon.fromTheme('background', QtGui.QIcon(":/images/format-fill-color.png")))
         c.setToolTip('Set background colour')
         c.clicked.connect(self.doColour)
         bl.addWidget(c)

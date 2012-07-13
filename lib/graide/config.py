@@ -37,7 +37,7 @@ class FileEntry(QtGui.QWidget) :
             self.le.setText(val)
         self.hb.addWidget(self.le)
         self.b = QtGui.QToolButton(self)
-        self.b.setIcon(QtGui.QIcon.fromTheme("document-open"))
+        self.b.setIcon(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")))
         self.hb.addWidget(self.b)
         self.b.clicked.connect(self.bClicked)
 

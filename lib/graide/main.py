@@ -38,6 +38,7 @@ from graide.config import ConfigDialog
 from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
+from graide.pyresources import qInitResources, qCleanupResources
 from PySide import QtCore, QtGui
 from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
@@ -144,6 +145,7 @@ class MainWindow(QtGui.QMainWindow) :
         event.accept()
 
     def setupUi(self) :
+        qInitResources()
         self.resize(994, 696)
         self.centralwidget = QtGui.QWidget(self)
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -191,7 +193,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runGo.clicked.connect(self.runClicked)
         self.test_hbox.addWidget(self.runGo)
         self.runWater = QtGui.QToolButton(self.test_widget)
-        self.runWater.setText(u'\u2693')
+        self.runWater.setIcon(QtGui.QIcon.fromTheme("document-preview", QtGui.QIcon(":/images/document-preview.png")))
         self.runWater.setToolTip('Display run as a waterfall')
         self.runWater.clicked.connect(self.doWaterfall)
         self.test_hbox.addWidget(self.runWater)
@@ -201,12 +203,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
         self.runFeats = QtGui.QToolButton(self.test_widget)
-        self.runFeats.setText(u'\u26A1')
+        self.runFeats.setIcon(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")))
         self.runFeats.clicked.connect(self.featuresClicked)
         self.runFeats.setToolTip("Edit run features")
         self.test_hbox.addWidget(self.runFeats)
         self.runAdd = QtGui.QToolButton(self.test_widget)
-        self.runAdd.setIcon(QtGui.QIcon.fromTheme('list-add'))
+        self.runAdd.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.runAdd.setToolTip("Add run to tests list under a new name")
         self.runAdd.clicked.connect(self.runAddClicked)
         self.test_hbox.addWidget(self.runAdd)
@@ -230,22 +232,23 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_hb.insertStretch(0)
         if self.apname :
             self.glyph_saveAP = QtGui.QToolButton(self.glyph_bbox)
-            self.glyph_saveAP.setIcon(QtGui.QIcon.fromTheme('document-save'))
+            self.glyph_saveAP.setIcon(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")))
             self.glyph_saveAP.clicked.connect(self.saveAP)
             self.glyph_saveAP.setToolTip('Save AP Database')
             self.glyph_hb.addWidget(self.glyph_saveAP)
         self.glyph_addPoint = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_addPoint.setIcon(QtGui.QIcon.fromTheme('character-set', QtGui.QIcon(":/images/character-set.png")))
         self.glyph_addPoint.setText(u'\u2022')
         self.glyph_addPoint.clicked.connect(self.glyphAddPoint)
         self.glyph_addPoint.setToolTip('Add Attachment Point to Glyph')
         self.glyph_hb.addWidget(self.glyph_addPoint)
         self.glyph_addProperty = QtGui.QToolButton(self.glyph_bbox)
-        self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('list-add'))
+        self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.glyph_addProperty.clicked.connect(self.glyphAddProperty)
         self.glyph_addProperty.setToolTip('Add Property to Glyph')
         self.glyph_hb.addWidget(self.glyph_addProperty)
         self.glyph_remove = QtGui.QToolButton(self.glyph_bbox)
-        self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('list-remove'))
+        self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.glyph_remove.clicked.connect(self.glyphRemoveProperty)
         self.glyph_remove.setToolTip('Remove Property from Glyph')
         self.glyph_hb.addWidget(self.glyph_remove)
@@ -273,18 +276,18 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox.setContentsMargins(*Layout.buttonMargins)
         self.cfg_hbox.setSpacing(Layout.buttonSpacing)
         self.cfg_button = ContextToolButton(self.cfg_widget)
-        self.cfg_button.setIcon(QtGui.QIcon.fromTheme("document-properties"))
+        self.cfg_button.setIcon(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")))
         self.cfg_button.setToolTip("Configure project")
         self.cfg_button.clicked.connect(self.configClicked)
         self.cfg_button.rightClick.connect(self.debugClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
-        self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open"))
+        self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")))
         self.cfg_open.setToolTip("Open existing project")
         self.cfg_open.clicked.connect(self.configOpenClicked)
         self.cfg_hbox.addWidget(self.cfg_open)
         self.cfg_new = QtGui.QToolButton(self.cfg_widget)
-        self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new"))
+        self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")))
         self.cfg_new.setToolTip("Create new project")
         self.cfg_new.clicked.connect(self.configNewClicked)
         self.cfg_hbox.addWidget(self.cfg_new)
@@ -362,6 +365,7 @@ class MainWindow(QtGui.QMainWindow) :
                 pass
         self.tabEdit.writeIfModified()
         self.saveAP()
+        qCleanupResources()
 
     def glyphSelected(self, data, model) :
         self.glyphAttrib.changeData(data, model)

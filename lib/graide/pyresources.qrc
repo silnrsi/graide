@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/character-set.png</file>
+    <file>images/configure.png</file>
+    <file>images/document-new.png</file>
+    <file>images/document-open.png</file>
+    <file>images/document-preview.png</file>
+    <file>images/document-properties.png</file>
+    <file>images/document-save.png</file>
+    <file>images/edit-clear.png</file>
+    <file>images/format-fill-color.png</file>
+    <file>images/list-add.png</file>
+    <file>images/list-remove.png</file>
+    <file>images/run-build.png</file>
+    <file>images/view-list-details.png</file>
+    <file>images/window-close.png</file>
+</qresource>
+</RCC>
