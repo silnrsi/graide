@@ -79,7 +79,6 @@ class Font(object) :
         self.subclasses = {}
         self.points = {}
         self.classes = {}
-        self.gnames = {}
 
     def __len__(self) :
         return len(self.glyphs)
@@ -101,10 +100,6 @@ class Font(object) :
         self.classes = {}
 
     def addGlyph(self, index = None, name = None, gdlname = None, factory = Glyph) :
-        if name and name in self.gnames :
-            index = self.gnames[name]
-#        else :
-#            name = None
         g = factory(name, index)
         self.renameGlyph(g, g.psname, gdlname)
         if index is None :
