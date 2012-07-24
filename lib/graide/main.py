@@ -27,7 +27,7 @@ from graide.runview import RunView
 from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler
+from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler, as_entities
 from graide.layout import Layout
 from graide.rungraphite import runGraphite
 from graide.featureselector import make_FeaturesMap, FeatureDialog
@@ -43,9 +43,6 @@ from PySide import QtCore, QtGui
 from tempfile import TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
-
-def as_entities(txt) :
-    return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), txt)
 
 class MainWindow(QtGui.QMainWindow) :
 

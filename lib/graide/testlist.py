@@ -21,10 +21,16 @@
 from PySide import QtCore, QtGui
 from xml.etree import cElementTree as et
 from graide.test import Test
-from graide.utils import configval, reportError, relpath, ETcanon, ETinsert
+from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
 import os, re
 from cStringIO import StringIO
+
+def asBool(txt) :
+    if not txt : return False
+    if txt.lower() == 'true' : return True
+    if txt.isdigit() : return int(txt) != 0
+    return False
 
 class TestList(QtGui.QWidget) :
 
@@ -160,7 +166,7 @@ class TestList(QtGui.QWidget) :
                 else :
                     feats = {}
                     lng = None
-                te = Test(txt, feats, lang = lng, rtl = t.get('rtl'), name = t.get('label'), comment = c)
+                te = Test(txt, feats, lang = lng, rtl = asBool(t.get('rtl')), name = t.get('label'), comment = c)
                 b = t.get('background')
                 if b :
                     res = QtGui.QColor(b)
@@ -309,7 +315,7 @@ class TestList(QtGui.QWidget) :
 
     def addClicked(self, t = None) :
         i = self.list.currentIndex()
-        if not t : t = Test('', self.app.feats[None].fval)
+        if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTest(t)
         res = self.editTest(len(self.tests[i]) - 1)
         if not t.name or not res :

@@ -22,13 +22,8 @@ from PySide import QtGui
 from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
 from graide.layout import Layout
+from graide.utils import configintval, as_entities
 import re
-
-def asBool(txt) :
-    if not txt : return False
-    if txt.lower() == 'true' : return True
-    if txt.isdigit() : return int(txt) != 0
-    return False
 
 class Test(object) :
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "") :
@@ -50,7 +45,11 @@ class Test(object) :
         eName = QtGui.QLineEdit(self.name, d)
         v.addWidget(eName, 0, 1)
         v.addWidget(QtGui.QLabel('Text:', d), 1, 0)
-        eText = QtGui.QPlainTextEdit(self.text, d)
+        if configintval(parent.config, 'ui', 'entities') :
+            t = as_entities(self.text)
+        else :
+            t = self.text
+        eText = QtGui.QPlainTextEdit(t, d)
         eText.setMaximumHeight(Layout.runEditHeight)
         v.addWidget(eText, 1, 1)
         v.addWidget(QtGui.QLabel('Comment:', d), 2, 0)
@@ -59,7 +58,7 @@ class Test(object) :
         eComment.setMaximumHeight(Layout.runEditHeight)
         v.addWidget(eComment, 2, 1)
         eRTL = QtGui.QCheckBox('RTL', d)
-        eRTL.setChecked(asBool(self.rtl))
+        eRTL.setChecked(self.rtl)
         v.addWidget(eRTL, 3, 1)
         bw = QtGui.QWidget(d)
         bl = QtGui.QHBoxLayout()
