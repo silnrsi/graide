@@ -83,7 +83,9 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.testsfile = None
 
+        self.setActions()
         self.setupUi()
+        self.setMenus()
         registerErrorLog(self)
 
         mainfile = configval(config, 'build', 'gdlfile')
@@ -141,6 +143,37 @@ class MainWindow(QtGui.QMainWindow) :
             self.rules.close()
         event.accept()
 
+    def setActions(self) :
+        self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
+        self.aRunGo.setToolTip("run string after rebuild")
+        self.aRunGo.triggered.connect(self.runClicked)
+        self.aWater = QtGui.QAction(QtGui.QIcon.fromTheme("document-preview", QtGui.QIcon(":/images/document-preview.png")), "&Waterfall ...", self)
+        self.aWater.setToolTip('Display run as a waterfall')
+        self.aWater.triggered.connect(self.doWaterfall)
+        self.aRunFeats = QtGui.QAction(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")), "Set &Features ...", self)
+        self.aRunFeats.triggered.connect(self.featuresClicked)
+        self.aRunFeats.setToolTip("Edit features of test run")
+        self.aRunAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Test from &Run ...", self)
+        self.aRunAdd.setToolTip("Add run to tests list under a new name")
+        self.aRunAdd.triggered.connect(self.runAddClicked)
+
+        self.aSaveAP = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "Save &APs", self)
+        self.aSaveAP.triggered.connect(self.saveAP)
+        self.aSaveAP.setToolTip('Save AP Database')
+
+        self.aCfg = QtGui.QAction(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")), "&Configure Project ...", self)
+        self.aCfg.setToolTip("Configure project")
+        self.aCfg.triggered.connect(self.configClicked)
+        self.aCfgOpen = QtGui.QAction(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")), "&Open Project ...", self)
+        self.aCfgOpen.setToolTip("Open existing project")
+        self.aCfgOpen.triggered.connect(self.configOpenClicked)
+        self.aCfgNew = QtGui.QAction(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")), "&New Project ...", self)
+        self.aCfgNew.setToolTip("Create new project")
+        self.aCfgNew.triggered.connect(self.configNewClicked)
+
+        self.aHAbout = QtGui.QAction("&About", self)
+        self.aHAbout.triggered.connect(self.helpAbout)
+
     def setupUi(self) :
         qInitResources()
         self.resize(994, 696)
@@ -185,14 +218,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.setContentsMargins(*Layout.buttonMargins)
         self.test_hbox.setSpacing(Layout.buttonSpacing)
         self.runGo = QtGui.QToolButton(self.test_widget)
-        self.runGo.setArrowType(QtCore.Qt.RightArrow)
-        self.runGo.setToolTip("run string after rebuild")
-        self.runGo.clicked.connect(self.runClicked)
+        self.runGo.setDefaultAction(self.aRunGo)
         self.test_hbox.addWidget(self.runGo)
         self.runWater = QtGui.QToolButton(self.test_widget)
-        self.runWater.setIcon(QtGui.QIcon.fromTheme("document-preview", QtGui.QIcon(":/images/document-preview.png")))
-        self.runWater.setToolTip('Display run as a waterfall')
-        self.runWater.clicked.connect(self.doWaterfall)
+        self.runWater.setDefaultAction(self.aWater)
         self.test_hbox.addWidget(self.runWater)
         self.test_hbox.addStretch()
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
@@ -200,14 +229,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
         self.runFeats = QtGui.QToolButton(self.test_widget)
-        self.runFeats.setIcon(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")))
-        self.runFeats.clicked.connect(self.featuresClicked)
-        self.runFeats.setToolTip("Edit run features")
+        self.runFeats.setDefaultAction(self.aRunFeats)
         self.test_hbox.addWidget(self.runFeats)
         self.runAdd = QtGui.QToolButton(self.test_widget)
-        self.runAdd.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
-        self.runAdd.setToolTip("Add run to tests list under a new name")
-        self.runAdd.clicked.connect(self.runAddClicked)
+        self.runAdd.setDefaultAction(self.aRunAdd)
         self.test_hbox.addWidget(self.runAdd)
         self.run = Run()
         self.runView = RunView(self.font)
@@ -229,9 +254,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_hb.insertStretch(0)
         if self.apname :
             self.glyph_saveAP = QtGui.QToolButton(self.glyph_bbox)
-            self.glyph_saveAP.setIcon(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")))
-            self.glyph_saveAP.clicked.connect(self.saveAP)
-            self.glyph_saveAP.setToolTip('Save AP Database')
+            self.glyph_saveAP.setDefaultAction(self.aSaveAP)
             self.glyph_hb.addWidget(self.glyph_saveAP)
         self.glyph_addPoint = QtGui.QToolButton(self.glyph_bbox)
         self.glyph_addPoint.setIcon(QtGui.QIcon.fromTheme('character-set', QtGui.QIcon(":/images/character-set.png")))
@@ -260,7 +283,7 @@ class MainWindow(QtGui.QMainWindow) :
         # file edit view
         self.tabEdit = FileTabs(self.config, self, self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 50, 100)
-        self.tabEdit.tabs.setTabsClosable(True)
+        self.tabEdit.setTabsClosable(True)
 
         self.horizontalLayout.addWidget(self.hsplitter)
 
@@ -273,20 +296,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox.setContentsMargins(*Layout.buttonMargins)
         self.cfg_hbox.setSpacing(Layout.buttonSpacing)
         self.cfg_button = ContextToolButton(self.cfg_widget)
-        self.cfg_button.setIcon(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")))
-        self.cfg_button.setToolTip("Configure project")
-        self.cfg_button.clicked.connect(self.configClicked)
+        self.cfg_button.setDefaultAction(self.aCfg)
         self.cfg_button.rightClick.connect(self.debugClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
         self.cfg_open = QtGui.QToolButton(self.cfg_widget)
-        self.cfg_open.setIcon(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")))
-        self.cfg_open.setToolTip("Open existing project")
-        self.cfg_open.clicked.connect(self.configOpenClicked)
+        self.cfg_open.setDefaultAction(self.aCfgOpen)
         self.cfg_hbox.addWidget(self.cfg_open)
         self.cfg_new = QtGui.QToolButton(self.cfg_widget)
-        self.cfg_new.setIcon(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")))
-        self.cfg_new.setToolTip("Create new project")
-        self.cfg_new.clicked.connect(self.configNewClicked)
+        self.cfg_new.setDefaultAction(self.aCfgNew)
         self.cfg_hbox.addWidget(self.cfg_new)
         self.tabResults.setCornerWidget(self.cfg_widget)
 
@@ -333,6 +350,44 @@ class MainWindow(QtGui.QMainWindow) :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
             self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
             self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+
+    def setMenus(self) :
+        filemenu = self.menuBar().addMenu("&File")
+        filemenu.addAction(self.tabEdit.aAdd)
+        filemenu.addAction(self.tabEdit.aSave)
+        filemenu.addAction(self.tabEdit.aBuild)
+
+        projectmenu = self.menuBar().addMenu("&Project")
+        projectmenu.addAction(self.aCfg)
+        projectmenu.addAction(self.aCfgOpen)
+        projectmenu.addAction(self.aCfgNew)
+        projectmenu.addAction(self.aSaveAP)
+
+        testmenu = self.menuBar().addMenu("&Tests")
+        testmenu.addAction(self.aRunGo)
+        testmenu.addAction(self.aWater)
+        testmenu.addAction(self.aRunFeats)
+        testmenu.addAction(self.aRunAdd)
+        testmenu.addSeparator()
+        testmenu.addAction(self.tabTest.aGAdd)
+        testmenu.addAction(self.tabTest.aGDel)
+        testmenu.addSeparator()
+        testmenu.addAction(self.tabTest.aAdd)
+        testmenu.addAction(self.tabTest.aEdit)
+        testmenu.addAction(self.tabTest.aSave)
+        testmenu.addAction(self.tabTest.aDel)
+        testmenu.addAction(self.tabTest.aUpp)
+        testmenu.addAction(self.tabTest.aDown)
+
+        helpmenu = self.menuBar().addMenu("&Help")
+        helpmenu.addAction(self.aHAbout)
+
+    def helpAbout(self) :
+        QtGui.QMessageBox.about(self, "Graide", """GRAphite Integrated Development Environment
+
+An environment for the creation and debugging of Graphite fonts.
+
+Copyright 2012 SIL International and M. Hosken""")
 
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)

@@ -141,56 +141,57 @@ class EditFile(QtGui.QPlainTextEdit) :
         if self.fIsOpen :
             self.fDialog.show()
 
-class FileTabs(QtGui.QWidget) :
+class FileTabs(QtGui.QTabWidget) :
 
     def __init__(self, config, app, parent = None) :
         super(FileTabs, self).__init__(parent)
-        self.vbox = QtGui.QVBoxLayout()
-        self.vbox.setContentsMargins(*Layout.buttonMargins)
-        self.vbox.setSpacing(Layout.buttonSpacing)
-        self.tabs = QtGui.QTabWidget(self)
-        self.tabs.tabCloseRequested.connect(self.closeRequest)
-        self.tabs.setContentsMargins(*Layout.buttonMargins)
-        self.tabs.currentChanged.connect(self.switchFile)
-        self.vbox.addWidget(self.tabs)
+        self.setActions(app)
+
+        self.tabCloseRequested.connect(self.closeRequest)
+        self.setContentsMargins(*Layout.buttonMargins)
+        self.currentChanged.connect(self.switchFile)
         self.bbox = QtGui.QWidget(self)
-        self.vbox.addWidget(self.bbox)
+        self.setCornerWidget(self.bbox)
         self.hbox = QtGui.QHBoxLayout()
         self.bbox.setLayout(self.hbox)
         self.hbox.setContentsMargins(*Layout.buttonMargins)
         self.hbox.setSpacing(Layout.buttonSpacing)
         self.hbox.insertStretch(0)
         self.bBuild = QtGui.QToolButton(self.bbox)
-        self.bBuild.setIcon(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")))
-        self.bBuild.setToolTip("Save files and force rebuild")
-        self.bBuild.clicked.connect(app.buildClicked)
+        self.bBuild.setDefaultAction(self.aBuild)
         self.hbox.addWidget(self.bBuild)
         self.bSave = QtGui.QToolButton(self.bbox)
-        self.bSave.setIcon(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")))
-        self.bSave.setToolTip('Save all files')
-        self.bSave.clicked.connect(self.writeIfModified)
+        self.bSave.setDefaultAction(self.aSave)
         self.hbox.addWidget(self.bSave)
         self.bAdd = QtGui.QToolButton(self.bbox)
-        self.bAdd.setIcon(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")))
-        self.bAdd.setToolTip('open file in editor')
-        self.bAdd.clicked.connect(self.addClicked)
+        self.bAdd.setDefaultAction(self.aAdd)
         self.hbox.addWidget(self.bAdd)
-        self.setLayout(self.vbox)
         self.currselIndex = None
         self.currselline = 0
         self.app = app
         self.currIndex = -1
         self.size = configintval(config, 'ui', 'size') or 10
 
+    def setActions(self, app) :
+        self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
+        self.aBuild.setToolTip("Save files and force rebuild")
+        self.aBuild.triggered.connect(app.buildClicked)
+        self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save File", app)
+        self.aSave.setToolTip('Save all files')
+        self.aSave.triggered.connect(self.writeIfModified)
+        self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")), "&Open File ...", app)
+        self.aAdd.setToolTip('open file in editor')
+        self.aAdd.triggered.connect(self.addClicked)
+
     def selectLine(self, fname, lineno) :
-        for i in range(self.tabs.count()) :
-            f = self.tabs.widget(i)
+        for i in range(self.count()) :
+            f = self.widget(i)
             if f.abspath == os.path.abspath(fname) :
                 self.highlightLine(i, lineno)
                 return
         newFile = EditFile(fname, os.path.abspath(fname), size = self.size)
-        self.tabs.addTab(newFile, fname)
-        self.highlightLine(self.tabs.count() - 1, lineno)
+        self.addTab(newFile, fname)
+        self.highlightLine(self.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
         if apgdlfile and os.path.abspath(apgdlfile) == os.path.abspath(fname) :
             newFile.setReadOnly(True)
@@ -198,40 +199,40 @@ class FileTabs(QtGui.QWidget) :
     def highlightLine(self, tabindex, lineno) :
         if lineno >= 0 :
             if self.currselIndex is not None and self.currselIndex > -1 and (self.currselIndex != tabindex or self.currselline != lineno) :
-                self.tabs.widget(self.currselIndex).unhighlight(self.currselline)
-            self.tabs.widget(tabindex).highlight(lineno)
+                self.widget(self.currselIndex).unhighlight(self.currselline)
+            self.widget(tabindex).highlight(lineno)
             self.currselIndex = tabindex
             self.currselline = lineno
-        self.tabs.setCurrentIndex(tabindex)
+        self.setCurrentIndex(tabindex)
 
     def writeIfModified(self) :
         res = False
-        for i in range(self.tabs.count()) :
-            res = res | self.tabs.widget(i).writeIfModified()
+        for i in range(self.count()) :
+            res = res | self.widget(i).writeIfModified()
         return res
 
     def closeRequest(self, index) :
         if index == self.currselIndex :
             self.currselIndex = -1
-        self.tabs.widget(index).close()
-        self.tabs.removeTab(index)
+        self.widget(index).close()
+        self.removeTab(index)
 
     def addClicked(self) :
         fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
         self.selectLine(fname, -1)
 
     def updateFileEdit(self, fname) :
-        for i in range(self.tabs.count()) :
-            f = self.tabs.widget(i)
+        for i in range(self.count()) :
+            f = self.widget(i)
             if f.fname == fname :
                 f.reload()
                 break
 
     def switchFile(self, widget) :
-        if self.currIndex > -1 : self.tabs.widget(self.currIndex).lostFocus()
-        self.currIndex = self.tabs.currentIndex()
-        self.tabs.widget(self.currIndex).gainedFocus()
+        if self.currIndex > -1 : self.widget(self.currIndex).lostFocus()
+        self.currIndex = self.currentIndex()
+        self.widget(self.currIndex).gainedFocus()
 
     def setSize(self, size) :
-        for i in range(self.tabs.count()) :
-            self.tabs.widget(i).setSize(size)
+        for i in range(self.count()) :
+            self.widget(i).setSize(size)

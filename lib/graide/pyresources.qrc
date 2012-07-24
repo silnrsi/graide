@@ -9,8 +9,11 @@
     <file>images/document-save.png</file>
     <file>images/edit-clear.png</file>
     <file>images/format-fill-color.png</file>
+    <file>images/go-down.png</file>
+    <file>images/go-up.png</file>
     <file>images/list-add.png</file>
     <file>images/list-remove.png</file>
+    <file>images/media-playback-start.png</file>
     <file>images/run-build.png</file>
     <file>images/view-list-details.png</file>
     <file>images/window-close.png</file>
