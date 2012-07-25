@@ -2,10 +2,11 @@
 
 from distutils.core import setup
 import sys
+from glob import glob
 
 kw = {}
 if sys.platform == "win32" :
-    kw['package_data'] = {'graide' : ['dll/*.dll']}
+    kw['data_files'] = [('Scripts', glob('lib/graide/dll/*.dll'))]
 
 setup(  name = 'graide',
         version = '0.0.1',
