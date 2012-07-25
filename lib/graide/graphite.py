@@ -45,6 +45,13 @@ if not gr2lib and not gr2 :
 if not gr2 :
     gr2 = CDLL(gr2lib)
 
+def grversion() :
+    a = c_int()
+    b = c_int()
+    c = c_int()
+    gr2.gr_engine_version(byref(a), byref(b), byref(c))
+    return (a.value, b.value, c.value)
+
 def fn(name, res, *params) :
     f = getattr(gr2, name)
     f.restype = res
@@ -53,6 +60,7 @@ def fn(name, res, *params) :
 tablefn = CFUNCTYPE(c_void_p, c_void_p, c_uint, POINTER(c_size_t))
 advfn = CFUNCTYPE(c_float, c_void_p, c_ushort)
 
+fn('gr_engine_version', None, POINTER(c_int), POINTER(c_int), POINTER(c_int))
 fn('gr_make_face', c_void_p, c_void_p, tablefn, c_uint)
 fn('gr_make_face_with_seg_cache', c_void_p, c_void_p, tablefn, c_uint, c_uint)
 fn('gr_str_to_tag', c_uint32, c_char_p)
@@ -115,8 +123,13 @@ fn('gr_slot_can_insert_before', c_int, c_void_p)
 fn('gr_slot_original', c_int, c_void_p)
 fn('gr_slot_linebreak_before', None, c_void_p)
 
-fn('graphite_start_logging', c_int, c_void_p, c_int)
-fn('graphite_stop_logging', None)
+(major, minor, debug) = grversion()
+if major > 1 or minor > 1 :
+    fn('graphite_start_logging', c_int, c_void_p, c_char_p)
+    fn('graphite_stop_logging', None, c_void_p)
+else :
+    fn('graphite_start_logging', c_int, c_void_p, c_int)
+    fn('graphite_stop_logging', None)
  
 def tag_to_str(num) :
     s = create_string_buffer('\000' * 5)

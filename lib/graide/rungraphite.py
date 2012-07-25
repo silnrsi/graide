@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide.graphite import gr2
+from graide.graphite import gr2, grversion
 import sys
 from ctypes import *
 from ctypes.util import find_library
@@ -41,7 +41,8 @@ def strtolong(txt) :
         res = (res << 8) + ord(c)
     return res
 
-def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 16) :
+def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 16) :
+    (major, minor, debug) = grversion()
     grface = gr2.gr_make_file_face(font, 0)
     lang = strtolong(lang)
     grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
@@ -50,8 +51,16 @@ def runGraphite(font, text, debugfile, feats = {}, rtl = 0, lang = None, size = 
         fref = gr2.gr_face_find_fref(grface, id)
         gr2.gr_fref_set_feature_value(fref, v, grfeats)
     grfont = gr2.gr_make_font(size, grface)
-    fd = c(debugfile.fileno(), "w+")
-    gr2.graphite_start_logging(fd, 0xFF)
+    if major > 1 or minor > 1 :
+        gr2.graphite_start_logging(grface, debugname)
+    else :
+        debugfile = open(debugname, "w+")
+        fd = c(debugfile.fileno(), "w+")
+        gr2.graphite_start_logging(fd, 0xFF)
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
-    gr2.graphite_stop_logging()
+    if major > 1 or minor > 1 :
+        gr2.graphite_stop_logging(grface)
+    else:
+        gr2.graphite_stop_logging()
+        debugfile.close()
 

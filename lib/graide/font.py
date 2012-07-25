@@ -70,9 +70,12 @@ class Font(gdlFont) :
             (uni, gid) = face.get_next_char(uni, gid)
 
     def addGlyph(self, index, name = None, gdlname = None) :
-        if (not name or name not in self.gnames) and index < len(self.glyphItems) :
-            name = self.glyphItems[index].name
-        elif name in self.gnames :
+        if index < len(self.glyphItems) :
+            if (not name or name not in self.gnames) :
+                name = self.glyphItems[index].name
+            elif name != self.glyphItems[index].name and name in self.gnames :
+                index = self.gnames[name]
+        elif name and name in self.gnames :
             index = self.gnames[name]
         g = super(Font, self).addGlyph(index, name, gdlname, Glyph)
         if g.gid < len(self.glyphItems) :

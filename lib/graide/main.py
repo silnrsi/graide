@@ -40,7 +40,7 @@ from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
 from PySide import QtCore, QtGui
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
 
@@ -480,7 +480,6 @@ Copyright 2012 SIL International and M. Hosken""")
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         if os.stat(self.fontfile).st_ctime > self.fonttime :
             self.loadFont(self.fontfile)
-        runfile = TemporaryFile(mode="w+")
         text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
                 lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
         if not text : return
@@ -496,11 +495,16 @@ Copyright 2012 SIL International and M. Hosken""")
                         self.currLang = None
             else :
                 self.currLang = None
-        runGraphite(self.fontfile, text, runfile, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang)
-        runfile.seek(0)
-        self.json = json.load(runfile)
+        runfile = NamedTemporaryFile(mode="w+")
+        runname = runfile.name
         runfile.close()
+        runGraphite(self.fontfile, text, runname, size = self.font.size, rtl = self.runRtl.isChecked(),
+            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang)
+        runfile = open(runname)
+        self.json = json.load(runfile)
+        if len(self.json) == 1 : self.json = self.json[0]
+        runfile.close()
+        os.unlink(runname)
         self.run = Run()
         self.run.addslots(self.json['output'])
         self.runView.loadrun(self.run, self.font, resize = False)
