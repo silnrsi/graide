@@ -40,7 +40,7 @@ from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
 from PySide import QtCore, QtGui
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
 
