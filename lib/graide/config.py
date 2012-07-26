@@ -217,13 +217,14 @@ class ConfigDialog(QtGui.QDialog) :
                 config.remove_option('build', 'makegdlfile')
                 self.build_inc.setText("")
                 
-        #if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
-        # Update regardless, until the initialization bug gets fixed:
-        config.set('ui', 'textsize', str(self.ui_size.value()))
-        if app : app.tabEdit.setSize(self.ui_size.value())
-        self.updateChanged(self.ui_editorfont, config, 'ui', 'editorfont')
+        if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
+		        config.set('ui', 'textsize', str(self.ui_size.value()))
+		        if app : app.tabEdit.setSize(self.ui_size.value())
+        self.updateChanged(self.ui_editorfont, config, 'ui', 'editorfont', \
+        				(app.tabEdit.updateFont(self.ui_editorfont.text(), self.ui_size.value()) if app else None))
         if self.ui_tabstop.value() != configintval(config, 'ui', 'tabstop') :
             config.set('ui', 'tabstop', str(self.ui_tabstop.value()))
+            if app : app.tabEdit.updateTabstop(self.ui_tabstop.value())
         
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))

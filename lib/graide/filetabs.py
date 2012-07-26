@@ -79,10 +79,9 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
         
         font = QtGui.QFont(fontspec)
-        self.setFont(font)
         font.setPointSize(size)
+        self.setFont(font)
         self.setTabStopWidth(tabstop)
-#        self.setFontPointSize(10)
 
         try :
             f = file(fname)
@@ -96,6 +95,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.addAction(a)
         self.fDialog = FindDialog(self)
         self.fIsOpen = False
+        #import pdb; pdb.set_trace() - debug
 
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
@@ -119,6 +119,14 @@ class EditFile(QtGui.QPlainTextEdit) :
         f = self.font()
         f.setPointSize(size)
         self.setFont(f)
+        
+    def updateFont(self, fontspec, size) :
+        font = QtGui.QFont(fontspec)
+        font.setPointSize(size)
+        self.setFont(font)
+        
+    def updateTabstop(self, tabstop) :
+    		self.setTabStopWidth(tabstop)
 
     def reload(self) :
         f = file(self.fname)
@@ -240,3 +248,11 @@ class FileTabs(QtGui.QTabWidget) :
     def setSize(self, size) :
         for i in range(self.count()) :
             self.widget(i).setSize(size)
+            
+    def updateFont(self, fontspec, size) :
+				for i in range(self.count()) :
+						self.widget(i).updateFont(fontspec, size)
+            
+    def updateTabstop(self, tabstop) :
+				for i in range(self.count()) :
+						self.widget(i).updateTabstop(tabstop)
