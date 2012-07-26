@@ -287,7 +287,7 @@ class MainWindow(QtGui.QMainWindow) :
 
         self.horizontalLayout.addWidget(self.hsplitter)
 
-        # bottom pain
+        # bottom pane
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
         self.setwidgetstretch(self.tabResults, 100, 45)
         self.tabResults.setTabPosition(QtGui.QTabWidget.South)

@@ -69,7 +69,7 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
-    def __init__(self, fname, abspath, size = 10) :
+    def __init__(self, fname, abspath, size = 14, fontspec = 'mono', tabstop = 40) :
         super(EditFile, self).__init__()
         self.fname = fname
         self.abspath = abspath
@@ -77,11 +77,13 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.selection.format = QtGui.QTextCharFormat()
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
-        font = QtGui.QFont('mono')
-        font.setPointSize(size)
+        
+        font = QtGui.QFont(fontspec)
         self.setFont(font)
-        self.setTabStopWidth(40)
+        font.setPointSize(size)
+        self.setTabStopWidth(tabstop)
 #        self.setFontPointSize(10)
+
         try :
             f = file(fname)
             self.setPlainText("".join(f.readlines()))
@@ -170,7 +172,9 @@ class FileTabs(QtGui.QTabWidget) :
         self.currselline = 0
         self.app = app
         self.currIndex = -1
-        self.size = configintval(config, 'ui', 'size') or 10
+        self.size = configintval(config, 'ui', 'textsize') or 14
+        self.fontspec = configval(config, 'ui', 'editorfont') or 'mono'
+        self.tabstop = configintval(config, 'ui', 'tabstop') or 40
 
     def setActions(self, app) :
         self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
@@ -189,7 +193,7 @@ class FileTabs(QtGui.QTabWidget) :
             if f.abspath == os.path.abspath(fname) :
                 self.highlightLine(i, lineno)
                 return
-        newFile = EditFile(fname, os.path.abspath(fname), size = self.size)
+        newFile = EditFile(fname, os.path.abspath(fname), size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
         self.addTab(newFile, fname)
         self.highlightLine(self.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
