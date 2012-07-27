@@ -49,6 +49,7 @@ class Run(list) :
             Returns the two indices for (start, end) on the input run before
             editing."""
         fin = len(self)
+        ini = 0
         for (i, s) in enumerate(self) :
             if s.id == start :
                 ini = i

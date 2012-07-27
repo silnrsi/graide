@@ -102,6 +102,7 @@ class PassesView(QtGui.QTableWidget) :
 
     def loadResults(self, font, json, gdx = None) :
         self.selectRow(-1)
+        self.currsel = None
         num = len(json['passes']) + 1
         if num != self.rowCount() :
             self.setRowCount(num)
@@ -128,6 +129,7 @@ class PassesView(QtGui.QTableWidget) :
 
     def loadRules(self, font, json, inirun, gdx) :
         self.selectRow(-1)
+        self.currsel = None
         self.views = []
         self.runs = [inirun.copy()]
         self.runs[0].label="Init"

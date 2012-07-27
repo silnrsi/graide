@@ -88,7 +88,7 @@ class RunView(QtCore.QObject, ModelSuper) :
     def loadrun(self, run, font, resize = True) :
         self.run = run
         self._font = font
-        self.currselection = None
+        self.currselection = -1
         self._scene.clear()
         self._pixmaps = []
         self._gindices = [0]
