@@ -25,6 +25,8 @@ class Slot(DataObj) :
 
     def __init__(self, info = {}) :
         self.highlighted = False
+        self.highlightType = ""
+        self.px = None # ????????????????
         for k, v in info.items() :
             setattr(self, k, v)
 
@@ -32,7 +34,13 @@ class Slot(DataObj) :
         res = Slot()
         copyobj(self, res)
         self.px = None
+        #self.highlighted = False
+        #self.highlightType = ""
         return res
+        
+    def clearHighlight(self) :
+        self.highlighted = False
+        self.highlightType = ""
 
     def attribModel(self) :
         res = []
@@ -67,12 +75,13 @@ class Slot(DataObj) :
         except :
             return None
 
-    def highlight(self) :
+    def highlight(self, type = "") :
         self.highlighted = True
+        self.highlightType = type
         if (self.px) :
-            self.px.highlight()
+            self.px.highlight(type)
 
     def pixmap(self, px) :
         self.px = px
         if self.highlighted :
-            px.highlight()
+            px.highlight(self.highlightType)

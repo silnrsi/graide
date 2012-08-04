@@ -131,29 +131,53 @@ class PassesView(QtGui.QTableWidget) :
         self.selectRow(-1)
         self.currsel = None
         self.views = []
-        self.runs = [inirun.copy()]
+        # runs correspond to rules matched (fired or failed)
+        self.runs = [inirun.copy()]	 # initialize with the Init run
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
-        for r in json :
-            for c in r['considered'] :
-                run = self.runs[-1].copy()
-                if c['failed'] :
-                    ind = self.runs[-1].idindex(c['input']['start'])
+        #import pdb; pdb.set_trace()  # debug
+        begprev = -1
+        endprev = -1
+        beg = -1
+        end = -1
+        for runinfo in json :		# graphite output for this run
+            for cRule in runinfo['considered'] :	# rules that matched for this pass
+                nextRun = self.runs[-1].copy()
+                
+                if begprev != -1 :
+                    for slot in self.runs[-1][begprev:endprev] :
+                	    slot.highlight('output')
+                if cRule['failed'] :
+                    ind = self.runs[-1].idindex(cRule['input']['start'])
                     lext = " (failed)"
-                    for s in self.runs[-1][ind:ind + c['input']['length']] :
-                        s.highlight()
+                    for slot in self.runs[-1][ind:ind + cRule['input']['length']] :
+                        slot.highlight('default')
+                    begprev = -1
                 else :
-                    (beg, end) = run.replace(r['output']['slots'], r['output']['range']['start'], r['output']['range']['end'])
+                    (beg, end) = nextRun.replace(runinfo['output']['slots'],
+                    		runinfo['output']['range']['start'], runinfo['output']['range']['end'])
                     lext = ""
-                    for s in self.runs[-1][beg:end] :
-                        s.highlight()
-                    if 'postshift' in r['output'] :
-                        for s in self.runs[-1][end:] :
-                            s.origin = (s.origin[0] + r['output']['postshift'][0], s.origin[1] + r['output']['postshift'][1])
-                self.runs.append(run)
-                run.label="Rule: %d%s" % (c['id'], lext)
-                run.passindex = self.index
-                run.ruleindex = int(c['id'])
+                    for slot in self.runs[-1][beg:end] :	# in the previous run, highlight the matched input glyphs
+                        slot.highlight('input')
+                    if 'postshift' in runinfo['output'] :
+                        for slot in self.runs[-1][end:] :
+                            slot.origin = (slot.origin[0] + runinfo['output']['postshift'][0], slot.origin[1] 
+                                                          + runinfo['output']['postshift'][1])
+                    begprev = beg # highlight the output glyphs in the next iteration
+                    endprev = end
+                    
+                self.runs.append(nextRun)
+                nextRun.label="Rule: %d%s" % (cRule['id'], lext)
+                nextRun.passindex = self.index
+                nextRun.ruleindex = int(cRule['id'])
+                # why can't we highlight the output glyphs here?
+                
+        
+        # highlight the output of the last run
+        if begprev != -1 :
+            for slot in self.runs[-1][begprev:endprev] :
+                slot.highlight('output')
+
         w = 0
         wt = 0
         self.setRowCount(len(self.runs))
@@ -163,6 +187,7 @@ class PassesView(QtGui.QTableWidget) :
                                     if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)
             wt = max(wt, newt)
+            
         self.finishLoad(w, wt)
 
     def setTopToolTip(self, txt) :
@@ -180,6 +205,7 @@ class PassesView(QtGui.QTableWidget) :
             self.rowActivated.emit(row, self.views[row], self)
  
     def selectRow(self, row) :
+        #import pdb; pdb.set_trace()  # debug
         if self.selectedRow >= 0 :
             it = self.item(self.selectedRow, 0)
             if it.highlight :

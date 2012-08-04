@@ -20,26 +20,28 @@
 
 from graide.slot import Slot
 
+# A Run is a list of Slots
+
 class Run(list) :
 
     def __init__(self) :
         pass
 
     def addslots(self, runinfo) :
-        for s in runinfo :
-            r = Slot(s)
-            self.append(r)
-            r.index = len(self) - 1
+        for slotinfo in runinfo :
+            slot = Slot(slotinfo)
+            self.append(slot)
+            slot.index = len(self) - 1
 
     def copy(self) :
         res = Run()
-        for s in self :
-            res.append(s.copy())
+        for slot in self :
+            res.append(slot.copy())
         return res
 
     def idindex(self, ident) :
-        for (i, s) in enumerate(self) :
-            if s.id == ident : return i
+        for (i, slot) in enumerate(self) :
+            if slot.id == ident : return i
         return -1
 
     def replace(self, runinfo, start, end = None) :
@@ -56,11 +58,11 @@ class Run(list) :
             elif s.id == end :
                 fin = i
         res = []
-        for r in runinfo :
-            s = Slot(r)
-            res.append(s)
+        for slotinfo in runinfo :
+            slot = Slot(slotinfo)
+            res.append(slot)
         self[ini:fin] = res
-        for (i, s) in enumerate(self) :
-            s.index = i
+        for (i, slot) in enumerate(self) :
+            slot.index = i
         return (ini, fin)
 

@@ -59,6 +59,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.font = Font()
         self.apname = None
 
+        #import pdb; pdb.set_trace()  # debug
+        
         if sys.platform == 'darwin' :
             QtGui.QIcon.setThemeSearchPaths(['/opt/local/share/icons', ':/icons'])
             QtGui.QIcon.setThemeName('Tango')
@@ -340,6 +342,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
 
+        # rules tab
         self.tab_rules = PassesView()
         self.tab_rules.slotSelected.connect(self.slotSelected)
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)

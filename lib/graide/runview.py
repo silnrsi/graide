@@ -29,7 +29,13 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         self.selected = False
         self.index = index
         self.highlighted = False
+        self.highlightType = ""
         self.model = model
+        # Keep in sync with RunView:
+        self.cHighlightDefault = QtGui.QColor(0, 0, 0, 32) # gray, semi-transparent
+        self.cHighlightIn = QtGui.QColor(200, 00, 0, 32)   # pink, semi-transparent
+        self.cHighlightOut = QtGui.QColor(0, 200, 0, 32)   # green, semi-transparent
+
 
     def mousePressEvent(self, mouseEvent) :
         if self.model :
@@ -39,15 +45,21 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         self.selected = state
         self.update()
 
-    def highlight(self) :
+    def highlight(self, type = False) :
         self.highlighted = True
+        self.highlightType = type
 
     def paint(self, painter, option, widget) :
         r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
         if self.selected :
             painter.fillRect(r, option.palette.highlight())
         elif self.highlighted :
-            painter.fillRect(r, QtGui.QColor(0, 0, 0, 32))
+            if self.highlightType == 'output' :
+                painter.fillRect(r, self.cHighlightOut)  # output = green
+            elif self.highlightType == 'input' :
+                painter.fillRect(r, self.cHighlightIn)  # input = pink
+            else :
+                painter.fillRect(r, self.cHighlightDefault) # default
         super(GlyphPixmapItem, self).paint(painter, option, widget)
 
 class RunTextView(QtGui.QPlainTextEdit) :
@@ -69,18 +81,24 @@ class RunView(QtCore.QObject, ModelSuper) :
 
     def __init__(self, run = None, font = None, parent = None) :
         super(RunView, self).__init__()
-        self.gview = QtGui.QGraphicsView(parent)
+                
+        self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         if font : self.gview.resize(self.gview.size().width(), font.pixrect.height())
         self._scene = QtGui.QGraphicsScene(self.gview)
         self._scene.keyPressEvent = self.keyPressEvent
-        self.tview = QtGui.QPlainTextEdit(parent)
+        self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
         self.tview.mousePressEvent = self.tEvent
         self._fSelect = QtGui.QTextCharFormat()
         self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
-        self._fHighlight = QtGui.QTextCharFormat()
-        self._fHighlight.setBackground(QtGui.QColor(0, 0, 0, 32))
+        self._fHighlightDefault = QtGui.QTextCharFormat()
+        # Keep colors in sync with GlyphPixmapItem:
+        self._fHighlightDefault.setBackground(QtGui.QColor(0, 0, 0, 32)) # gray, semi-transparent
+        self._fHighlightIn = QtGui.QTextCharFormat()
+        self._fHighlightIn.setBackground(QtGui.QColor(200, 0, 0, 32)) # pink, semi-transparent
+        self._fHighlightOut = QtGui.QTextCharFormat()
+        self._fHighlightOut.setBackground(QtGui.QColor(0, 200, 0, 32)) # green, semi-transparent
         if run and font :
             self.loadrun(run, font)
         self.gview.setScene(self._scene)
@@ -117,7 +135,12 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self._gindices.append(self._gindices[-1] + len(t) + 2)
                 if s.highlighted :
                     hselect = QtGui.QTextEdit.ExtraSelection()
-                    hselect.format = self._fHighlight
+                    if s.highlightType == 'output' :
+                    	hselect.format = self._fHighlightOut
+                    elif s.highlightType == 'input' :
+                        hselect.format = self._fHighlightIn
+                    else :
+                    	hselect.format = self._fHighlightDefault
                     hselect.cursor = QtGui.QTextCursor(self.tview.document())
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[-2])
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
@@ -131,6 +154,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.gview.setFixedSize(res.left() + res.width() + 2, res.height() - res.top() + 2)
             self.gview.resize(res.left() + res.width() + 2, res.height() - res.top() + 2)
             self.gview.updateScene([])
+
 
     def glyph_clicked(self, gitem, index) :
         s = self.tview.extraSelections()
