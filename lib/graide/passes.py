@@ -135,7 +135,6 @@ class PassesView(QtGui.QTableWidget) :
         self.runs = [inirun.copy()]	 # initialize with the Init run
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
-        #import pdb; pdb.set_trace()  # debug
         begprev = -1
         endprev = -1
         beg = -1
@@ -171,7 +170,6 @@ class PassesView(QtGui.QTableWidget) :
                 nextRun.passindex = self.index
                 nextRun.ruleindex = int(cRule['id'])
                 # why can't we highlight the output glyphs here?
-                
         
         # highlight the output of the last run
         if begprev != -1 :
@@ -205,7 +203,6 @@ class PassesView(QtGui.QTableWidget) :
             self.rowActivated.emit(row, self.views[row], self)
  
     def selectRow(self, row) :
-        #import pdb; pdb.set_trace()  # debug
         if self.selectedRow >= 0 :
             it = self.item(self.selectedRow, 0)
             if it.highlight :

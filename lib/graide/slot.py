@@ -75,7 +75,7 @@ class Slot(DataObj) :
         except :
             return None
 
-    def highlight(self, type = "") :
+    def highlight(self, type = "default") :
         self.highlighted = True
         self.highlightType = type
         if (self.px) :

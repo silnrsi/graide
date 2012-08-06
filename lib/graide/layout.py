@@ -26,4 +26,9 @@ class Layout(object) :
     errorColour = QtGui.QColor(255, 160, 160)
     warnColour = QtGui.QColor(255, 255, 160)
     activePassColour = QtGui.QColor(255, 255, 208)
+    slotColours = {
+        'default' : QtGui.QColor(0, 0, 0, 32),    # gray, semi-transparent
+        'input' : QtGui.QColor(200, 00, 0, 32),   # pink, semi-transparent
+        'output' : QtGui.QColor(0, 200, 0, 32),   # green, semi-transparent
+    }
 

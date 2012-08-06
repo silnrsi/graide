@@ -21,6 +21,7 @@
 
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
+from graide.layout import Layout
 
 class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
@@ -31,11 +32,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         self.highlighted = False
         self.highlightType = ""
         self.model = model
-        # Keep in sync with RunView:
-        self.cHighlightDefault = QtGui.QColor(0, 0, 0, 32) # gray, semi-transparent
-        self.cHighlightIn = QtGui.QColor(200, 00, 0, 32)   # pink, semi-transparent
-        self.cHighlightOut = QtGui.QColor(0, 200, 0, 32)   # green, semi-transparent
-
+        self.highlightColours = Layout.slotColours
 
     def mousePressEvent(self, mouseEvent) :
         if self.model :
@@ -45,7 +42,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         self.selected = state
         self.update()
 
-    def highlight(self, type = False) :
+    def highlight(self, type = 'default') :
         self.highlighted = True
         self.highlightType = type
 
@@ -53,13 +50,8 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
         if self.selected :
             painter.fillRect(r, option.palette.highlight())
-        elif self.highlighted :
-            if self.highlightType == 'output' :
-                painter.fillRect(r, self.cHighlightOut)  # output = green
-            elif self.highlightType == 'input' :
-                painter.fillRect(r, self.cHighlightIn)  # input = pink
-            else :
-                painter.fillRect(r, self.cHighlightDefault) # default
+        elif self.highlighted and self.highlightType in self.highlightColours :
+            painter.fillRect(r, self.highlightColours[self.highlightType])
         super(GlyphPixmapItem, self).paint(painter, option, widget)
 
 class RunTextView(QtGui.QPlainTextEdit) :
@@ -92,13 +84,10 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.tview.mousePressEvent = self.tEvent
         self._fSelect = QtGui.QTextCharFormat()
         self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
-        self._fHighlightDefault = QtGui.QTextCharFormat()
-        # Keep colors in sync with GlyphPixmapItem:
-        self._fHighlightDefault.setBackground(QtGui.QColor(0, 0, 0, 32)) # gray, semi-transparent
-        self._fHighlightIn = QtGui.QTextCharFormat()
-        self._fHighlightIn.setBackground(QtGui.QColor(200, 0, 0, 32)) # pink, semi-transparent
-        self._fHighlightOut = QtGui.QTextCharFormat()
-        self._fHighlightOut.setBackground(QtGui.QColor(0, 200, 0, 32)) # green, semi-transparent
+        self._fHighlights = {}
+        for n in Layout.slotColours.keys() :
+            self._fHighlights[n] = QtGui.QTextCharFormat()
+            self._fHighlights[n].setBackground(Layout.slotColours[n])
         if run and font :
             self.loadrun(run, font)
         self.gview.setScene(self._scene)
@@ -135,12 +124,10 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self._gindices.append(self._gindices[-1] + len(t) + 2)
                 if s.highlighted :
                     hselect = QtGui.QTextEdit.ExtraSelection()
-                    if s.highlightType == 'output' :
-                    	hselect.format = self._fHighlightOut
-                    elif s.highlightType == 'input' :
-                        hselect.format = self._fHighlightIn
+                    if s.highlightType in self._fHighlights :
+                        hselect.format = self._fHighlights[s.highlightType]
                     else :
-                    	hselect.format = self._fHighlightDefault
+                        hselect.format = self._fHighlights['default']
                     hselect.cursor = QtGui.QTextCursor(self.tview.document())
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[-2])
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
