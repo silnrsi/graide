@@ -144,7 +144,6 @@ class Label(unicode) :
         self.ref = ref
 
     def __del__(self) :
-#        import pdb; pdb.set_trace()
         if self.ref : gr2.gr_label_destroy(self.ref)
 
 

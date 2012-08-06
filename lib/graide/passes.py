@@ -143,9 +143,10 @@ class PassesView(QtGui.QTableWidget) :
             for cRule in runinfo['considered'] :	# rules that matched for this pass
                 nextRun = self.runs[-1].copy()
                 
-                if begprev != -1 :
+                if begprev != -1 :	# in the previous run, highlight the modified output glyphs, if any
                     for slot in self.runs[-1][begprev:endprev] :
                 	    slot.highlight('output')
+                	    
                 if cRule['failed'] :
                     ind = self.runs[-1].idindex(cRule['input']['start'])
                     lext = " (failed)"
@@ -162,7 +163,7 @@ class PassesView(QtGui.QTableWidget) :
                         for slot in self.runs[-1][end:] :
                             slot.origin = (slot.origin[0] + runinfo['output']['postshift'][0], slot.origin[1] 
                                                           + runinfo['output']['postshift'][1])
-                    begprev = beg # highlight the output glyphs in the next iteration
+                    begprev = beg  # remember where to highlight the output glyphs in the next iteration
                     endprev = end
                     
                 self.runs.append(nextRun)

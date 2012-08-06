@@ -95,7 +95,6 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.addAction(a)
         self.fDialog = FindDialog(self)
         self.fIsOpen = False
-        #import pdb; pdb.set_trace() - debug
 
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
