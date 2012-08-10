@@ -1,5 +1,7 @@
 table(glyph) {MUnits = 1024};
-g_notdef = glyphid(0);
+g_notdef = glyphid(0){order=0};
+g_glyph1 = glyphid(1){order=0};
+g_glyph2 = glyphid(2){order=0};
 g_space = postscript("space") {order=0};
 g_exclam = postscript("exclam") {order=0};
 g_quotedbl = postscript("quotedbl") {order=0};

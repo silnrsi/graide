@@ -130,16 +130,20 @@ class Font(object) :
         if u : g.uid = u
         for a in e.iterfind('glyphAttrValue') :
             n = a.get('name')
-            if n == 'mirror.isEncoded' :
+            m = re.match(ur'^justify.(\d).([^.]+)', n)
+            if m :
+                g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
+            elif n == 'mirror.isEncoded' :
                 storemirror = True
             elif n == 'mirror.glyph' :
                 mirrorglyph = a.get('value')
             elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
                 pass
-            elif n.find('.') != -1 :
-                if n.endswith('x') : g.setpointint(n[:-2], int(a.get('value')), None)
-                elif n.endswith('y') : g.setpointint(n[:-2], None, int(a.get('value')))
-            else :
+            elif n.endswith('.x') :
+                g.setpointint(n[:-2], int(a.get('value')), None)
+            elif n.endswith('.y') :
+                g.setpointint(n[:-2], None, int(a.get('value')))
+            elif n.find('.') == -1 :
                 g.setgdlproperty(n, a.get('value'))
         if storemirror and mirrorglyph :
             g.setgdlproperty('mirror.glyph', mirrorglyph)

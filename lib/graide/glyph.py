@@ -56,6 +56,7 @@ class Glyph(gdlGlyph, DataObj) :
         super(Glyph, self).__init__(name, gid)
         self.item = item
         self.isHigh = False
+        self.justifies = []
 
     def __str__(self) :
         return self.psname
@@ -71,12 +72,21 @@ class Glyph(gdlGlyph, DataObj) :
             res.append(Attribute(a, self.getproperty, self.setproperty, False, a))
         for a in sorted(self.gdl_properties.keys()) :
             res.append(Attribute(a, self.getgdlproperty, self.setgdlproperty, False, a))
+        resAttrib = AttribModel(res)
         pres = []
         for k in self.anchors.keys() :
             pres.append(Attribute(k, self.getpoint, self.setpoint, False, k))
-        resAttrib = AttribModel(res)
         pAttrib = AttribModel(pres, resAttrib)
         resAttrib.add(Attribute('points', None, None, True, pAttrib))
+        if len(self.justifies) :
+            jAttrib = AttribModel([], resAttrib)
+            for (i, j) in enumerate(self.justifies) :
+                jlevel = []
+                for k in j.keys() :
+                    jlevel.append(Attribute(k, self.getjustify, None, False, i, k))
+                lAttrib = AttribModel(jlevel, jAttrib)
+                jAttrib.add(Attribute(str(i), None, None, True, lAttrib))
+            resAttrib.add(Attribute('Justify', None, None, True, jAttrib))
         return resAttrib
 
     def getproperty(self, key) :
@@ -113,6 +123,15 @@ class Glyph(gdlGlyph, DataObj) :
             if x is None : x = self.anchors[key][0]
             if y is None : y = self.anchors[key][1]
         self.anchors[key] = (x, y)
+
+    def getjustify(self, level, name) :
+        if level >= len(self.justifies) or name not in self.justifies[level] : return None
+        return self.justifies[level][name]
+
+    def setjustify(self, level, name, val) :
+        if level >= len(self.justifies) :
+            self.justifies.extend(({},) * (level - len(self.justifies) + 1))
+        self.justifies[level][name] = val
 
     def addClass(self, name) :
         if name not in self.classes :

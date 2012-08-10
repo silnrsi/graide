@@ -193,6 +193,8 @@ class AttribView(QtGui.QTreeView) :
 
     def __init__(self, parent = None) :
         super(AttribView, self).__init__(parent)
+        self.header().setStretchLastSection(True)
+        self.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.header().hide()
         self.attribDelegate = AttributeDelegate(self)
         self.setItemDelegateForColumn(1, self.attribDelegate)
