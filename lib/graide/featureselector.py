@@ -83,18 +83,24 @@ class FeatureDialog(QtGui.QDialog) :
         self.table.verticalHeader().hide()
         self.vbox.addWidget(self.table)
         self.lbox = QtGui.QWidget(self)
-        self.lhbox = QtGui.QHBoxLayout(self.lbox)
-        self.lhbox.addWidget(QtGui.QLabel('Language', self.lbox))
+        self.gbox = QtGui.QGridLayout(self.lbox)
+        self.vbox.addWidget(self.lbox)
+        self.gbox.addWidget(QtGui.QLabel('Language', self.lbox), 0, 0)
         self.lang = QtGui.QLineEdit(self.lbox)
 #        self.lang.setInputMask("<AAan")
-        self.lhbox.addWidget(self.lang)
-        self.vbox.addWidget(self.lbox)
+        self.gbox.addWidget(self.lang, 0, 1)
+        self.runWidth = QtGui.QSpinBox(self.lbox)
+        self.runWidth.setRange(0, 1000)
+        self.runWidth.setValue(100)
+        self.runWidth.setSuffix("%")
+        self.gbox.addWidget(QtGui.QLabel('Justify', self.lbox), 1, 0)
+        self.gbox.addWidget(self.runWidth, 1, 1)
         o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.vbox.addWidget(o)
 
-    def set_feats(self, feats, vals = None, lang = None) :
+    def set_feats(self, feats, vals = None, lang = None, width = 100) :
         if not vals : vals = feats.fval
         while self.table.rowCount() :
             self.table.removeRow(0)
@@ -115,6 +121,7 @@ class FeatureDialog(QtGui.QDialog) :
             self.table.setItem(count, 0, l)
             count += 1
         if lang : self.lang.setText(lang)
+        self.runWidth.setValue(width)
         self.resize(600, 400)
 
     def get_feats(self, base = None) :
@@ -127,6 +134,9 @@ class FeatureDialog(QtGui.QDialog) :
 
     def get_lang(self) :
         return self.lang.text()
+
+    def get_width(self) :
+        return self.runWidth.value()
 
     def resizeEvent(self, event) :
         self.currsize = self.size()

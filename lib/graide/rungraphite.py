@@ -41,7 +41,7 @@ def strtolong(txt) :
         res = (res << 8) + ord(c)
     return res
 
-def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 16) :
+def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
     (major, minor, debug) = grversion()
     grface = gr2.gr_make_file_face(font, 0)
     lang = strtolong(lang)
@@ -58,9 +58,13 @@ def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 
         fd = c(debugfile.fileno(), "w+")
         gr2.graphite_start_logging(fd, 0xFF)
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
+    width = gr2.gr_seg_advance_X(seg)
+    if expand != 100 :
+        width = width * expand / 100
+        width = gr2.gr_seg_justify(seg, gr2.gr_seg_first_slot(), grfont, width, 0, 0, 0)
     if major > 1 or minor > 1 :
         gr2.graphite_stop_logging(grface)
     else:
         gr2.graphite_stop_logging()
         debugfile.close()
-
+    return width

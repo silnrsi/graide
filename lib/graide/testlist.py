@@ -186,6 +186,9 @@ class TestList(QtGui.QWidget) :
                 if b :
                     res = QtGui.QColor(b)
                     if res.isValid() : te.background = res
+                w = t.get('expand')
+                if w :
+                    te.setWidth(int(w))
                 self.appendTest(te, l)
 
     def loadOldTests(self, e) :

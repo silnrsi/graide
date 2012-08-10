@@ -26,7 +26,7 @@ from graide.utils import configintval, as_entities
 import re
 
 class Test(object) :
-    def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "") :
+    def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100) :
         self.text = text
         self.feats = dict(feats)
         self.name = name or text
@@ -35,6 +35,7 @@ class Test(object) :
         self.comment = comment
         self.foreground = QtGui.QColor('black')
         self.background = QtGui.QColor('white')
+        self.width = width
 
     def editDialog(self, parent) :
         self.parent = parent
@@ -94,6 +95,7 @@ class Test(object) :
                 if self.lang not in self.parent.feats :
                     self.lang = None
                 self.feats = self.featdialog.get_feats(self.parent.feats[self.lang])
+                self.width = self.featdialog.get_width()
         del self.featdialog
         del self.parent
         return res
@@ -106,6 +108,9 @@ class Test(object) :
         self.featdialog = d
         if not d.exec_() :
             self.featdialog = None
+
+    def setWidth(self, w) :
+        self.width = w
 
     def doColour(self) :
         self.background = QtGui.QColorDialog.getColor(self.background)
@@ -121,4 +126,5 @@ class Test(object) :
         e.set('label', self.name)
         if self.background != QtGui.QColor('white') : e.set('background', self.background.name())
         if self.rtl : e.set('rtl', 'True')
+        if self.width != 100 : e.set('expand', str(self.width))
         return e

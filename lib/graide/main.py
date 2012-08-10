@@ -56,6 +56,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.configfile = configfile
         self.currFeats = None
         self.currLang = None
+        self.currWidth = 100
         self.font = Font()
         self.apname = None
 
@@ -462,6 +463,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.runEdit.setPlainText(t)
         self.currFeats = dict(test.feats)
         self.currLang = test.lang
+        self.currWidth = test.width
         self.runView.clear()
 
     def buildClicked(self) :
@@ -502,7 +504,7 @@ Copyright 2012 SIL International and M. Hosken""")
         runname = runfile.name
         runfile.close()
         runGraphite(self.fontfile, text, runname, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang)
+            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang, width = self.currWidth)
         runfile = open(runname)
         self.json = json.load(runfile)
         if len(self.json) == 1 : self.json = self.json[0]
@@ -541,10 +543,11 @@ Copyright 2012 SIL International and M. Hosken""")
     def featuresClicked(self) :
         if self.font :
             fDialog = FeatureDialog(self)
-            fDialog.set_feats(self.feats[self.currLang], self.currFeats, lang = self.currLang)
+            fDialog.set_feats(self.feats[self.currLang], self.currFeats, lang = self.currLang, width = self.currWidth)
             if fDialog.exec_() :
                 self.currFeats = fDialog.get_feats()
                 self.currLang = fDialog.get_lang()
+                self.currWidth = fDialog.get_width()
 
     # called from utils
     def updateFileEdit(self, fname) :
