@@ -47,9 +47,10 @@ def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 
     lang = strtolong(lang)
     grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
     for f, v in feats.items() :
+        if v is None : continue
         id = gr2.gr_str_to_tag(f)
         fref = gr2.gr_face_find_fref(grface, id)
-        gr2.gr_fref_set_feature_value(fref, v, grfeats)
+        gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
     grfont = gr2.gr_make_font(size, grface)
     if major > 1 or minor > 1 :
         gr2.graphite_start_logging(grface, debugname)
@@ -61,7 +62,7 @@ def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 
     width = gr2.gr_seg_advance_X(seg)
     if expand != 100 :
         width = width * expand / 100
-        width = gr2.gr_seg_justify(seg, gr2.gr_seg_first_slot(), grfont, width, 0, 0, 0)
+        width = gr2.gr_seg_justify(seg, gr2.gr_seg_first_slot(seg), grfont, width, 0, 0, 0)
     if major > 1 or minor > 1 :
         gr2.graphite_stop_logging(grface)
     else:

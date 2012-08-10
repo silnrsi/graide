@@ -64,6 +64,7 @@ class PassesView(QtGui.QTableWidget) :
         self.connected = False
         self.views = []
         self.selectedRow = -1
+        self.rules = []
 
     def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.views) :
@@ -100,12 +101,21 @@ class PassesView(QtGui.QTableWidget) :
             self.cellDoubleClicked.connect(self.doCellDoubleClicked)
             self.connected = True
 
-    def loadResults(self, font, json, gdx = None) :
+    def loadResults(self, font, jsonall, gdx = None) :
+        self.rules = []
         self.selectRow(-1)
         self.currsel = None
+        json = jsonall[0]
         num = len(json['passes']) + 1
-        if num != self.rowCount() :
-            self.setRowCount(num)
+        count = num
+        if len(jsonall) > 1 :
+            if 'passes' in jsonall[1] :
+                count += len(jsonall[1]['passes']) + 1
+            else :
+                count += 1
+        if count != self.rowCount() :
+            if count < self.rowCount() : self.views = self.views[:count]
+            self.setRowCount(count)
         w = 0
         wt = 0
         for j in range(num) :
@@ -113,18 +123,58 @@ class PassesView(QtGui.QTableWidget) :
             highlight = False
             if j < num - 1 :
                 run.addslots(json['passes'][j]['slots'])
+                passid = int(json['passes'][j]['id']) - 1
             else :
                 run.addslots(json['output'])
+                passid = j
             if j > 0 :
-                pname = "Pass: %d" % j
+                pname = "Pass: %d" % passid
                 if gdx :
-                    pname += " - " + gdx.passtypes[j - 1]
-                if len(json['passes'][j-1]['rules']) : highlight = True
+                    pname += " - " + gdx.passtypes[passid - 1]
+                if len(json['passes'][j-1]['rules']) :
+                    highlight = True
+                    self.rules.append(json['passes'][j-1]['rules'])
+                else :
+                    self.rules.append(None)
             else :
                 pname = "Init"
+                self.rules.append(None)
             (neww, newt) = self.addrun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
+        # import pdb; pdb.set_trace()
+        if len(jsonall) > 1 :
+            json = jsonall[1]
+            base = num
+            num = 0
+            if 'passes' in json :
+                num = len(json['passes']) - 1
+            else :
+                json['passes'] = []
+            num += 1
+            for j in range(num) :
+                run = Run()
+                highlight = False
+                if j < len(json['passes']) :
+                    passid = int(json['passes'][j]['id']) - 1
+                    if len(json['passes'][j]['rules']) :
+                        highlight = True
+                        self.rules.append(json['passes'][j]['rules'])
+                    else :
+                        self.rules.append(None)
+                    pname = "Pass: %d" % passid
+                    if gdx :
+                        pname += " - " + gdx.passtypes[passid - 1]
+                else :
+                    pname = "Justification"
+                    self.rules.append(None)
+                if j < len(json['passes']) - 1 :
+                    run.addslots(json['passes'][j+1]['slots'])
+                else :
+                    run.addslots(json['output'])
+                (neww, newt) = self.addrun(font, run, pname, base + j, highlight = highlight)
+                w = max(w, neww)
+                wt = max(wt, newt)
         self.finishLoad(w, wt)
 
     def loadRules(self, font, json, inirun, gdx) :

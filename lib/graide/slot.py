@@ -26,7 +26,7 @@ class Slot(DataObj) :
     def __init__(self, info = {}) :
         self.highlighted = False
         self.highlightType = ""
-        self.px = None # ????????????????
+        self.px = None          # set in self.pixmap()
         for k, v in info.items() :
             setattr(self, k, v)
 
@@ -44,8 +44,9 @@ class Slot(DataObj) :
 
     def attribModel(self) :
         res = []
-        for k in ('index', 'id', 'gid', 'break', 'insert') :
-            res.append(Attribute(k, self.__getattribute__, None, False, k))
+        for k in ('index', 'id', 'gid', 'break', 'insert', 'justification') :
+            if hasattr(self, k) :
+                res.append(Attribute(k, self.__getattribute__, None, False, k))
         for k in ('origin', 'advance') :
             res.append(Attribute(k, self.getpos, None, False, k))
         for k in ('before', 'after') :

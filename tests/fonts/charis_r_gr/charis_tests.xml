@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>
+<ftml version="1.0">
+  <head>
+    <fontsrc>url(charis_r_gr.ttf)</fontsrc>
+  </head>
+  <testgroup label="main">
+    <test label="Hello Mum">
+      <string>Hello Mum</string>
+    </test>
+    <test expand="110" label="Hello Mum(j)">
+      <string>Hello Mum</string>
+    </test>
+  </testgroup>
+</ftml>

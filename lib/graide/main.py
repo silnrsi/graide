@@ -435,7 +435,7 @@ Copyright 2012 SIL International and M. Hosken""")
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
         self.tab_rules.index = row - 1
-        self.tab_rules.loadRules(self.font, self.json['passes'][row - 1]['rules'], passview.views[row-1].run, self.gdx)
+        self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
         passview.selectRow(row)
         self.tabResults.setCurrentWidget(self.tab_rules)
 
@@ -504,14 +504,14 @@ Copyright 2012 SIL International and M. Hosken""")
         runname = runfile.name
         runfile.close()
         runGraphite(self.fontfile, text, runname, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang, width = self.currWidth)
+            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang, expand = self.currWidth)
         runfile = open(runname)
         self.json = json.load(runfile)
-        if len(self.json) == 1 : self.json = self.json[0]
+        if isinstance(self.json, dict) : self.json = [self.json]
         runfile.close()
         os.unlink(runname)
         self.run = Run()
-        self.run.addslots(self.json['output'])
+        self.run.addslots(self.json[-1]['output'])
         self.runView.loadrun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
