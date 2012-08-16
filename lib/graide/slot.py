@@ -47,11 +47,14 @@ class Slot(DataObj) :
         for k in ('index', 'id', 'gid', 'break', 'insert', 'justification') :
             if hasattr(self, k) :
                 res.append(Attribute(k, self.__getattribute__, None, False, k))
-        for k in ('origin', 'advance') :
-            res.append(Attribute(k, self.getpos, None, False, k))
+        for k in ('origin', 'advance', "shift") :
+            if hasattr(self, k) :
+                res.append(Attribute(k, self.getpos, None, False, k))
         for k in ('before', 'after') :
             res.append(Attribute(k, self.getcharinfo, None, False, k))
-        res.append(Attribute('parent', self.getparent, None, False, 'parent'))
+        if hasattr(self, 'parent') :
+            res.append(Attribute('parent', self.getparent, None, False, 'parent'))
+            res.append(Attribute('parent offset', self.getoffset, None, False))
         ures = []
         for i in range(len(self.user)) :
             ures.append(Attribute(str(i), self.getuser, None, False, i))
@@ -73,6 +76,13 @@ class Slot(DataObj) :
     def getparent(self, name) :
         try :
             return self.parent['id']
+        except :
+            return None
+
+    def getoffset(self) :
+        try :
+            res = self.parent['offset']
+            return "(%d, %d)" % (res[0], res[1])
         except :
             return None
 

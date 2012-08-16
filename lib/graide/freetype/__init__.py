@@ -24,15 +24,20 @@ from ft_types import *
 from ft_enums import *
 from ft_errors import *
 from ft_structs import *
-import ctypes.util, os
+import ctypes.util, os, sys
 
 
 __dll__    = None
 __handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
+    if not getattr(sys, 'frozen', None) :
+        basedir = sys._MEIPASS
+    else :
+        basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
+
     for n in ('libfreetype.so.6', 'freetype6.dll',
-              os.path.join(os.path.dirname(__file__), '..', 'dll', 'freetype6.dll')) :
+              os.path.join(basedir, 'freetype6.dll')) :
         try:
             __dll__ = ctypes.CDLL(n)
         except OSError:

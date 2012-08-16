@@ -22,11 +22,16 @@ from ctypes import *
 import ctypes.util
 import sys, os
 
+if not getattr(sys, 'frozen', None) :
+    basedir = sys._MEIPASS
+else :
+    basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
+
 grfiles = {
     'darwin' : 'libgraphite2.dylib',
     'linux2' : 'ligraphite2.so',
-    'win32' : os.path.join(os.path.dirname(__file__), 'dll', 'graphite2.dll'),
-    'win64' : os.path.join(os.path.dirname(__file__), 'dll', 'graphite2-x64.dll')
+    'win32' : os.path.join(basedir, 'graphite2.dll'),
+    'win64' : os.path.join(basedir, 'graphite2-x64.dll')
 }
 gr2 = None
 gr2lib = ctypes.util.find_library("graphite2")
