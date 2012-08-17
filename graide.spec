@@ -8,16 +8,18 @@ elif sys.platform == 'win32' :
     ext = '.exe'
 
 a = Analysis(['build/scripts-2.7/graide'],
-             pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir + '/graide'],
+             pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir],
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)
 bins = a.binaries
 if sys.platform == 'win32' :
     for d in ('zlib1', 'freetype6') :
-        bins += [(d + '.dll', 'build/' + libdir + '/graide/dll/' + d + '.dll', 'BINARY')]
+        bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
 #    import pdb; pdb.set_trace()
-    bins += bindepend.Dependencies([('graphite2.dll', 'build/' + libdir + '/graide/dll/graphite2.dll', 'BINARY')])
+    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
+    bins += grdeps
+    print grdeps
 
 exe = EXE(pyz,
           a.scripts,
@@ -25,7 +27,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           name=os.path.join('build', 'graide' + ext),
-          debug=False,
+          debug=True,
           strip=None,
           upx=True,
           console=True )

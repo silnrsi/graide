@@ -26,7 +26,6 @@ from ft_errors import *
 from ft_structs import *
 import ctypes.util, os, sys
 
-
 __dll__    = None
 __handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')

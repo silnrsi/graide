@@ -5,8 +5,9 @@ import sys
 from glob import glob
 
 kw = {}
+scripts = ['graide']
 if sys.platform == "win32" :
-    kw['data_files'] = [('Scripts', glob('lib/graide/dll/*.dll'))]
+    scripts += glob('lib/graide/dll/*.dll')
 
 setup(  name = 'graide',
         version = '0.0.1',
@@ -14,7 +15,7 @@ setup(  name = 'graide',
         author = 'M. Hosken',
         package_dir = {'' : 'lib'},
         packages = ['graide', 'graide/freetype', 'graide/makegdl'],
-        scripts = ['graide'],
+        scripts = scripts,
         **kw
 )
 
