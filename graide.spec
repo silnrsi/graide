@@ -1,5 +1,6 @@
 # -*- mode: python -*-
-import sys, platform
+import sys, platform, glob
+
 libdir = 'lib'
 ext = ''
 if sys.platform == 'linux2' :
@@ -16,6 +17,8 @@ bins = a.binaries
 if sys.platform == 'win32' :
     for d in ('zlib1', 'freetype6', 'graphite2', 'msvcr100') :
         bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
+    for d in glob.glob('grcompiler_win/*.*') :
+        bins += [(d[16:], d, 'BINARY')]
 #    import pdb; pdb.set_trace()
 #    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
 #    bins += grdeps

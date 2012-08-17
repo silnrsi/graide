@@ -32,7 +32,6 @@ FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
     if getattr(sys, 'frozen', None) :
         basedir = sys._MEIPASS
-	os.environ['PATH'] += os.pathsep + basedir
     else :
         basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
 

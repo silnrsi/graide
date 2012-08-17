@@ -50,6 +50,8 @@ if args.project :
     (dname, args.project) = os.path.split(args.project)
     if dname : os.chdir(dname)
 
+if getattr(sys, 'frozen', None) :
+    os.environ['PATH'] += os.pathsep + sys._MEIPASS
 mainWindow = main.MainWindow(config, args.project, args.results)
 mainWindow.show()
 sys.exit(app.exec_())
