@@ -30,14 +30,16 @@ __dll__    = None
 __handle__ = None
 FT_Library_filename = ctypes.util.find_library('freetype')
 if not FT_Library_filename:
-    if not getattr(sys, 'frozen', None) :
+    if getattr(sys, 'frozen', None) :
         basedir = sys._MEIPASS
+	os.environ['PATH'] += os.pathsep + basedir
     else :
         basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
 
     for n in ('libfreetype.so.6', 'freetype6.dll',
               os.path.join(basedir, 'freetype6.dll')) :
         try:
+	    print "Trying " + n
             __dll__ = ctypes.CDLL(n)
         except OSError:
             __dll__ = None
