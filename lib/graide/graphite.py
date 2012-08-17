@@ -22,7 +22,7 @@ from ctypes import *
 import ctypes.util
 import sys, os
 
-if not getattr(sys, 'frozen', None) :
+if getattr(sys, 'frozen', None) :
     basedir = sys._MEIPASS
 else :
     basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
@@ -41,6 +41,7 @@ if not gr2lib :
             grfile = grfiles['win64']
         else :
             grfile = grfiles[sys.platform]
+	print "Trying " + grfile
         gr2 = CDLL(grfile)
     except OSError :
         gr2 = None

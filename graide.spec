@@ -14,12 +14,12 @@ a = Analysis(['build/scripts-2.7/graide'],
 pyz = PYZ(a.pure)
 bins = a.binaries
 if sys.platform == 'win32' :
-    for d in ('zlib1', 'freetype6') :
+    for d in ('zlib1', 'freetype6', 'graphite2', 'msvcr100') :
         bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
 #    import pdb; pdb.set_trace()
-    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
-    bins += grdeps
-    print grdeps
+#    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
+#    bins += grdeps
+#    print grdeps
 
 exe = EXE(pyz,
           a.scripts,
@@ -27,7 +27,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           name=os.path.join('build', 'graide' + ext),
-          debug=True,
+          debug=False,
           strip=None,
           upx=True,
           console=True )
