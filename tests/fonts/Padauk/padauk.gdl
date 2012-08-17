@@ -1,7 +1,5 @@
 table(glyph) {MUnits = 1024};
-g_notdef = glyphid(0){order=0};
-g_glyph1 = glyphid(1){order=0};
-g_glyph2 = glyphid(2){order=0};
+g_notdef = glyphid(0);
 g_space = postscript("space") {order=0};
 g_exclam = postscript("exclam") {order=0};
 g_quotedbl = postscript("quotedbl") {order=0};
@@ -236,18 +234,18 @@ g103b = postscript("u103B") {BDS=point(250m, -53m); LLS=point(-351m, -53m); LS=p
 g103b_103d = postscript("u103B_u103D") {LLS=point(-540m, -53m); US=point(-36m, 495m); LS=point(250m, -53m); dotS=point(-218m, -53m); BSS=point(250m, -53m); origWidth=162m; order=4};
 g103b_103d_103e = postscript("u103B_u103D_u103E") {LLS=point(-540m, -53m); US=point(-36m, 495m); LS=point(250m, -53m); dotS=point(-218m, -53m); BSS=point(250m, -53m); origWidth=162m; order=4};
 g103b_103e = postscript("u103B_u103E") {LLS=point(-401m, 79m); US=point(-36m, 495m); LS=point(250m, -53m); dotS=point(-263m, -53m); BSS=point(250m, -53m); origWidth=202m; order=4};
-g103c = postscript("u103C") {BDS=point(841m, -53m); LLS=point(502m, -53m); RS=point(172m, 0m); LS=point(841m, -53m); BSS=point(841m, -53m); order=5; advx=753m};
-g103c_alt_narr = postscript("u103C.alt.narr") {BDS=point(841m, -53m); LLS=point(502m, -53m); RS=point(172m, 0m); LS=point(841m, -53m); BSS=point(841m, -53m); order=5; advx=753m};
-g103c_alt_wide = postscript("u103C.alt.wide") {BDS=point(1263m, -53m); LLS=point(924m, -53m); RS=point(172m, 0m); LS=point(1263m, -53m); BSS=point(1263m, -53m); order=5; advx=1174m};
-g103c_wide = postscript("u103C.wide") {BDS=point(1263m, -53m); LLS=point(924m, -53m); RS=point(172m, 0m); LS=point(1263m, -53m); BSS=point(1263m, -53m); order=5; advx=1174m};
-g103c_103d_narr = postscript("u103C_u103D.narr") {RS=point(172m, 0m); LS=point(796m, -53m); BSS=point(796m, -53m); origWidth=172m; order=5; advx=753m};
-g103c_103d_wide = postscript("u103C_u103D.wide") {LLS=point(553m, -53m); RS=point(172m, 0m); LS=point(1198m, -53m); BSS=point(1198m, -53m); origWidth=172m; order=5; advx=1174m};
-g103c_103d_alt_narr = postscript("u103C_u103D.alt.narr") {RS=point(172m, 0m); LS=point(796m, -53m); BSS=point(796m, -53m); origWidth=172m; order=5; advx=753m};
-g103c_103d_alt_wide = postscript("u103C_u103D.alt.wide") {LLS=point(553m, -53m); RS=point(172m, 0m); LS=point(1198m, -53m); BSS=point(1198m, -53m); origWidth=172m; order=5; advx=1174m};
-g103c_102f_narr = postscript("u103C_u102F.narr") {BDS=point(781m, -53m); LLS=point(295m, -53m); RS=point(172m, 0m); LS=point(781m, -53m); BSS=point(781m, -53m); order=5; advx=753m};
-g103c_102f_wide = postscript("u103C_u102F.wide") {BDS=point(1195m, -53m); LLS=point(709m, -53m); RS=point(172m, 0m); LS=point(1195m, -53m); BSS=point(1195m, -53m); order=5; advx=1174m};
-g103c_102f_alt_narr = postscript("u103C_u102F.alt.narr") {BDS=point(781m, -53m); LLS=point(295m, -53m); RS=point(172m, 0m); LS=point(781m, -53m); BSS=point(781m, -53m); order=5; advx=753m};
-g103c_102f_alt_wide = postscript("u103C_u102F.alt.wide") {BDS=point(1195m, -53m); LLS=point(709m, -53m); RS=point(172m, 0m); LS=point(1195m, -53m); BSS=point(1195m, -53m); order=5; advx=1174m};
+g103c = postscript("u103C") {BDS=point(841m, -53m); LLS=point(502m, -53m); RS=point(172m, 0m); LS=point(841m, -53m); BSS=point(841m, -53m); advx=753m; order=5};
+g103c_alt_narr = postscript("u103C.alt.narr") {BDS=point(841m, -53m); LLS=point(502m, -53m); RS=point(172m, 0m); LS=point(841m, -53m); BSS=point(841m, -53m); advx=753m; order=5};
+g103c_alt_wide = postscript("u103C.alt.wide") {BDS=point(1263m, -53m); LLS=point(924m, -53m); RS=point(172m, 0m); LS=point(1263m, -53m); BSS=point(1263m, -53m); advx=1174m; order=5};
+g103c_wide = postscript("u103C.wide") {BDS=point(1263m, -53m); LLS=point(924m, -53m); RS=point(172m, 0m); LS=point(1263m, -53m); BSS=point(1263m, -53m); advx=1174m; order=5};
+g103c_103d_narr = postscript("u103C_u103D.narr") {RS=point(172m, 0m); LS=point(796m, -53m); BSS=point(796m, -53m); origWidth=172m; advx=753m; order=5};
+g103c_103d_wide = postscript("u103C_u103D.wide") {LLS=point(553m, -53m); RS=point(172m, 0m); LS=point(1198m, -53m); BSS=point(1198m, -53m); origWidth=172m; advx=1174m; order=5};
+g103c_103d_alt_narr = postscript("u103C_u103D.alt.narr") {RS=point(172m, 0m); LS=point(796m, -53m); BSS=point(796m, -53m); origWidth=172m; advx=753m; order=5};
+g103c_103d_alt_wide = postscript("u103C_u103D.alt.wide") {LLS=point(553m, -53m); RS=point(172m, 0m); LS=point(1198m, -53m); BSS=point(1198m, -53m); origWidth=172m; advx=1174m; order=5};
+g103c_102f_narr = postscript("u103C_u102F.narr") {BDS=point(781m, -53m); LLS=point(295m, -53m); RS=point(172m, 0m); LS=point(781m, -53m); BSS=point(781m, -53m); advx=753m; order=5};
+g103c_102f_wide = postscript("u103C_u102F.wide") {BDS=point(1195m, -53m); LLS=point(709m, -53m); RS=point(172m, 0m); LS=point(1195m, -53m); BSS=point(1195m, -53m); advx=1174m; order=5};
+g103c_102f_alt_narr = postscript("u103C_u102F.alt.narr") {BDS=point(781m, -53m); LLS=point(295m, -53m); RS=point(172m, 0m); LS=point(781m, -53m); BSS=point(781m, -53m); advx=753m; order=5};
+g103c_102f_alt_wide = postscript("u103C_u102F.alt.wide") {BDS=point(1195m, -53m); LLS=point(709m, -53m); RS=point(172m, 0m); LS=point(1195m, -53m); BSS=point(1195m, -53m); advx=1174m; order=5};
 g103d = postscript("u103D") {BSMM=point(-233m, -53m); LLS=point(-556m, -53m); LS=point(89m, -53m); BSM=point(-233m, -53m); LLMM=point(-556m, -53m); LMM=point(89m, -53m); origWidth=55m; order=6};
 g103d_103e = postscript("u103D_u103E") {BSMM=point(-234m, -53m); LLS=point(-611m, -53m); LS=point(88m, -53m); BSM=point(-234m, -53m); LLMM=point(-611m, -53m); LMM=point(88m, -53m); origWidth=522m; order=6};
 g103d_103e_small = postscript("u103D_u103E.small") {BSMM=point(-254m, -53m); BSM=point(-254m, -53m); origWidth=615m; order=6};
@@ -484,10 +482,10 @@ gaa7b_dot = postscript("uAA7B.dot") {order=21};
 g1010_103d_med_tri = postscript("u1010_u103D.med.tri") {BSMM=point(-231m, -51m); LLS=point(-554m, -53m); LS=point(88m, -53m); BSM=point(-231m, -51m); LLMM=point(-554m, -53m); LMM=point(88m, -53m); origWidth=465m; order=2};
 g103b_103d_tri = postscript("u103B_u103D.tri") {LLS=point(-519m, -53m); US=point(-36m, 495m); LS=point(250m, -53m); dotS=point(-218m, -53m); BSS=point(250m, -53m); origWidth=162m; order=4};
 g103b_103d_103e_tri = postscript("u103B_u103D_u103E.tri") {LLS=point(-540m, -53m); US=point(-36m, 495m); LS=point(250m, -53m); dotS=point(-218m, -53m); BSS=point(250m, -53m); origWidth=162m; order=3};
-g103c_103d_alt_narr_tri = postscript("u103C_u103D.alt.narr.tri") {RS=point(172m, 0m); LS=point(744m, -53m); BSS=point(744m, -53m); origWidth=172m; order=5; advx=753m};
-g103c_103d_alt_wide_tri = postscript("u103C_u103D.alt.wide.tri") {LLS=point(607m, -53m); RS=point(172m, 0m); LS=point(1135m, -53m); BSS=point(1135m, -53m); origWidth=172m; order=5; advx=1174m};
-g103c_103d_narr_tri = postscript("u103C_u103D.narr.tri") {RS=point(172m, 0m); LS=point(744m, -53m); BSS=point(744m, -53m); origWidth=172m; order=5; advx=753m};
-g103c_103d_wide_tri = postscript("u103C_u103D.wide.tri") {LLS=point(607m, -53m); RS=point(172m, 0m); LS=point(1135m, -53m); BSS=point(1135m, -53m); origWidth=172m; order=5; advx=1174m};
+g103c_103d_alt_narr_tri = postscript("u103C_u103D.alt.narr.tri") {RS=point(172m, 0m); LS=point(744m, -53m); BSS=point(744m, -53m); origWidth=172m; advx=753m; order=5};
+g103c_103d_alt_wide_tri = postscript("u103C_u103D.alt.wide.tri") {LLS=point(607m, -53m); RS=point(172m, 0m); LS=point(1135m, -53m); BSS=point(1135m, -53m); origWidth=172m; advx=1174m; order=5};
+g103c_103d_narr_tri = postscript("u103C_u103D.narr.tri") {RS=point(172m, 0m); LS=point(744m, -53m); BSS=point(744m, -53m); origWidth=172m; advx=753m; order=5};
+g103c_103d_wide_tri = postscript("u103C_u103D.wide.tri") {LLS=point(607m, -53m); RS=point(172m, 0m); LS=point(1135m, -53m); BSS=point(1135m, -53m); origWidth=172m; advx=1174m; order=5};
 g103d_tri = postscript("u103D.tri") {BSMM=point(-222m, -53m); LLS=point(-530m, -53m); LS=point(82m, -53m); BSM=point(-222m, -53m); LLMM=point(-530m, -53m); LMM=point(82m, -53m); origWidth=450m; order=6};
 g103d_103e_tri = postscript("u103D_u103E.tri") {BSMM=point(-225m, -53m); LLS=point(-530m, -53m); LS=point(82m, -53m); BSM=point(-225m, -53m); LLMM=point(-530m, -53m); LMM=point(82m, -53m); origWidth=441m; order=6};
 g103d_103e_small_tri = postscript("u103D_u103E.small.tri") {BSMM=point(-197m, -53m); BSM=point(-197m, -53m); origWidth=514m; order=5};
@@ -627,388 +625,6 @@ cnTakesBDDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar,
          g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri, g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth,
          g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
 
-cFAKEDia = ();
-
-cTakesFAKEDia = (g1037, g1038, g1087, g1089, g108a, g108b, g108c);
-
-cnFAKEDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_med, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1001_med, g1002,
-         g1002_med, g1003, g1003_med, g1004, g1004_med, g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e,
-         g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005, g1005_med, g1006,
-         g1006_med, g1007, g1007_med, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_med, g100a_100a, g100b, g100b_alt, g100b_med, g100b_100b, g100b_100c,
-         g100c, g100c_med, g100d, g100d_med, g100d_100d, g100d_100e, g100e, g100e_med,
-         g100f, g100f_med, g100f_100b, g100f_100d, g1010, g1010_med, g1010_103d_med, g1011,
-         g1011_med, g1012, g1012_med, g1013, g1013_med, g1014, g1014_alt, g1014_med,
-         g1014_1010_103b, g1014_1010_103c, g1015, g1015_med, g1016, g1016_med, g1017, g1017_med,
-         g1018, g1018_med, g1019, g1019_med, g101a, g101a_med, g101b, g101b_alt,
-         g101b_long, g101b_med, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101c_med,
-         g101c_med_103d, g101d, g101e, g101e_med, g101e_1010_103c, g101f, g1020, g1020_long,
-         g1020_1020, g1020_103e, g1021, g1021_med, g1022, g1023, g1024, g1025,
-         g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a, g102c,
-         g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g102f_med, g102f_108d,
-         g1030, g1030_med, g1030_108d, g1031, g1032, g1032_102d, g1033, g1034,
-         g1035, g1036, g1037, g1038, g1039, g103a, g103a_1036, g103b,
-         g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr,
-         g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d,
-         g103d_103e, g103d_103e_small, g103d_108d, g103e, g103e_alt, g103e_102f, g103e_1030, g103f,
-         g1040, g1041, g1042, g1043, g1044, g1045, g1046, g1047,
-         g1048, g1049, g104a, g104b, g104c, g104d, g104e, g104f,
-         g1050, g1050_med, g1051, g1051_med, g1051_100c, g1051_100d, g1052, g1053,
-         g1054, g1055, g1056, g1057, g1058, g1059, g105a, g105a_med,
-         g105b, g105b_med, g105c, g105c_med, g105d, g105e, g105f, g1060,
-         g1061, g1062, g1062_103a, g1063, g1063_103a, g1064, g1065, g1066,
-         g1067, g1068, g1069, g106a, g106b, g106c, g106d, g106e,
-         g106f, g1070, g1071, g1072, g1073, g1074, g1075, g1076,
-         g1077, g1078, g1079, g107a, g107b, g107c, g107d, g107e,
-         g107f, g1080, g1081, g1082, g1082_108d, g1083, g1084, g1085,
-         g1086, g1086_aa7c, g1087, g1088, g1089, g108a, g108b, g108c,
-         g108d, g108e, g108f, g1090, g1091, g1092, g1093, g1094,
-         g1095, g1096, g1097, g1098, g1099, g109a, g109b, g109c,
-         g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft, g_quotedblright,
-         g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash, g1700,
-         ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5, ga9e5_aa7c,
-         ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec, ga9ed,
-         ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe, ga9f0,
-         ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7, ga9f8,
-         ga9f9, gaa60, gaa60_med, gaa60_med_kham, gaa61, gaa62, gaa63, gaa64,
-         gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c,
-         gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74,
-         gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c,
-         gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham,
-         g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham,
-         gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham,
-         gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
-         g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
-         g1010_103d_med_tri, g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri,
-         g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cnTakesFAKEDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_med, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1001_med, g1002,
-         g1002_med, g1003, g1003_med, g1004, g1004_med, g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e,
-         g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005, g1005_med, g1006,
-         g1006_med, g1007, g1007_med, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_med, g100a_100a, g100b, g100b_alt, g100b_med, g100b_100b, g100b_100c,
-         g100c, g100c_med, g100d, g100d_med, g100d_100d, g100d_100e, g100e, g100e_med,
-         g100f, g100f_med, g100f_100b, g100f_100d, g1010, g1010_med, g1010_103d_med, g1011,
-         g1011_med, g1012, g1012_med, g1013, g1013_med, g1014, g1014_alt, g1014_med,
-         g1014_1010_103b, g1014_1010_103c, g1015, g1015_med, g1016, g1016_med, g1017, g1017_med,
-         g1018, g1018_med, g1019, g1019_med, g101a, g101a_med, g101b, g101b_alt,
-         g101b_long, g101b_med, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101c_med,
-         g101c_med_103d, g101d, g101e, g101e_med, g101e_1010_103c, g101f, g1020, g1020_long,
-         g1020_1020, g1020_103e, g1021, g1021_med, g1022, g1023, g1024, g1025,
-         g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a, g102c,
-         g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g102f_med, g102f_108d,
-         g1030, g1030_med, g1030_108d, g1031, g1032, g1032_102d, g1033, g1034,
-         g1035, g1036, g1039, g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e,
-         g103b_103e, g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr,
-         g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d, g103d_103e, g103d_103e_small,
-         g103d_108d, g103e, g103e_alt, g103e_102f, g103e_1030, g103f, g1040, g1041,
-         g1042, g1043, g1044, g1045, g1046, g1047, g1048, g1049,
-         g104a, g104b, g104c, g104d, g104e, g104f, g1050, g1050_med,
-         g1051, g1051_med, g1051_100c, g1051_100d, g1052, g1053, g1054, g1055,
-         g1056, g1057, g1058, g1059, g105a, g105a_med, g105b, g105b_med,
-         g105c, g105c_med, g105d, g105e, g105f, g1060, g1061, g1062,
-         g1062_103a, g1063, g1063_103a, g1064, g1065, g1066, g1067, g1068,
-         g1069, g106a, g106b, g106c, g106d, g106e, g106f, g1070,
-         g1071, g1072, g1073, g1074, g1075, g1076, g1077, g1078,
-         g1079, g107a, g107b, g107c, g107d, g107e, g107f, g1080,
-         g1081, g1082, g1082_108d, g1083, g1084, g1085, g1086, g1086_aa7c,
-         g1088, g108d, g108e, g108f, g1090, g1091, g1092, g1093,
-         g1094, g1095, g1096, g1097, g1098, g1099, g109a, g109b,
-         g109c, g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft,
-         g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash,
-         g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5,
-         ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec,
-         ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe,
-         ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7,
-         ga9f8, ga9f9, gaa60, gaa60_med, gaa60_med_kham, gaa61, gaa62, gaa63,
-         gaa64, gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b,
-         gaa6c, gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73,
-         gaa74, gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b,
-         gaa7c, gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham,
-         g1015_kham, g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham,
-         g1080_kham, gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham,
-         gaa6b_kham, gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70,
-         g1036_dot, g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot,
-         gaa7b_dot, g1010_103d_med_tri, g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri,
-         g103d_tri, g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr,
-         g103e_1030_slanth);
-
-cLLDia = ();
-
-cTakesLLDia = (g1000_med, g1000_1001_103b, g1001_med, g1002_med, g1003_med, g1004_med, g1005_med, g1006_med,
-         g1007_med, g1008, g1009, g100a_med, g100b_alt, g100b_med, g100c_med, g100d,
-         g100d_med, g100d_100e, g100e_med, g100f_med, g100f_100b, g100f_100d, g1010_med, g1010_103d_med,
-         g1011_med, g1012_med, g1013_med, g1014_med, g1015_med, g1017_med, g1018_med, g1019_med,
-         g101a_med, g101b, g101b_alt, g101b_long, g101b_med, g101c_med, g101c_med_103d, g101e_med,
-         g1020_long, g1021_med, g1023, g102f_med, g102f_108d, g1030_med, g1030_108d, g1039,
-         g103b, g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide,
-         g103c_103d_wide, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d, g103d_103e,
-         g103d_108d, g103e, g103e_alt, g103e_102f, g103e_1030, g1050_med, g1051_med, g1051_100c,
-         g1051_100d, g1058, g1059, g105a_med, g105b_med, g105c_med, g105e, g105f,
-         g1060, g1061, g107a, g1082, g1082_108d, g108d, gaa60_med, gaa60_med_kham,
-         gaa65, gaa77, gaa79, gaa65_kham, g1010_103d_med_tri, g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_wide_tri,
-         g103c_103d_wide_tri, g103d_tri, g103d_103e_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr,
-         g103e_1030_slanth);
-
-cnLLDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_med, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1001_med, g1002,
-         g1002_med, g1003, g1003_med, g1004, g1004_med, g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e,
-         g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005, g1005_med, g1006,
-         g1006_med, g1007, g1007_med, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_med, g100a_100a, g100b, g100b_alt, g100b_med, g100b_100b, g100b_100c,
-         g100c, g100c_med, g100d, g100d_med, g100d_100d, g100d_100e, g100e, g100e_med,
-         g100f, g100f_med, g100f_100b, g100f_100d, g1010, g1010_med, g1010_103d_med, g1011,
-         g1011_med, g1012, g1012_med, g1013, g1013_med, g1014, g1014_alt, g1014_med,
-         g1014_1010_103b, g1014_1010_103c, g1015, g1015_med, g1016, g1016_med, g1017, g1017_med,
-         g1018, g1018_med, g1019, g1019_med, g101a, g101a_med, g101b, g101b_alt,
-         g101b_long, g101b_med, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101c_med,
-         g101c_med_103d, g101d, g101e, g101e_med, g101e_1010_103c, g101f, g1020, g1020_long,
-         g1020_1020, g1020_103e, g1021, g1021_med, g1022, g1023, g1024, g1025,
-         g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a, g102c,
-         g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g102f_med, g102f_108d,
-         g1030, g1030_med, g1030_108d, g1031, g1032, g1032_102d, g1033, g1034,
-         g1035, g1036, g1037, g1038, g1039, g103a, g103a_1036, g103b,
-         g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr,
-         g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d,
-         g103d_103e, g103d_103e_small, g103d_108d, g103e, g103e_alt, g103e_102f, g103e_1030, g103f,
-         g1040, g1041, g1042, g1043, g1044, g1045, g1046, g1047,
-         g1048, g1049, g104a, g104b, g104c, g104d, g104e, g104f,
-         g1050, g1050_med, g1051, g1051_med, g1051_100c, g1051_100d, g1052, g1053,
-         g1054, g1055, g1056, g1057, g1058, g1059, g105a, g105a_med,
-         g105b, g105b_med, g105c, g105c_med, g105d, g105e, g105f, g1060,
-         g1061, g1062, g1062_103a, g1063, g1063_103a, g1064, g1065, g1066,
-         g1067, g1068, g1069, g106a, g106b, g106c, g106d, g106e,
-         g106f, g1070, g1071, g1072, g1073, g1074, g1075, g1076,
-         g1077, g1078, g1079, g107a, g107b, g107c, g107d, g107e,
-         g107f, g1080, g1081, g1082, g1082_108d, g1083, g1084, g1085,
-         g1086, g1086_aa7c, g1087, g1088, g1089, g108a, g108b, g108c,
-         g108d, g108e, g108f, g1090, g1091, g1092, g1093, g1094,
-         g1095, g1096, g1097, g1098, g1099, g109a, g109b, g109c,
-         g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft, g_quotedblright,
-         g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash, g1700,
-         ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5, ga9e5_aa7c,
-         ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec, ga9ed,
-         ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe, ga9f0,
-         ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7, ga9f8,
-         ga9f9, gaa60, gaa60_med, gaa60_med_kham, gaa61, gaa62, gaa63, gaa64,
-         gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c,
-         gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74,
-         gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c,
-         gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham,
-         g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham,
-         gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham,
-         gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
-         g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
-         g1010_103d_med_tri, g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri,
-         g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cnTakesLLDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_103b_1015_103a, g1001, g1002, g1003, g1004, g1004_kinzi,
-         g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005,
-         g1006, g1007, g1008_med, g1009_102c, g100a, g100a_alt, g100a_100a, g100b,
-         g100b_100b, g100b_100c, g100c, g100d_100d, g100e, g100f, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1016_med, g1017, g1018, g1019, g101a, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e,
-         g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c, g101f, g1020, g1020_1020,
-         g1020_103e, g1021, g1022, g1024, g1025, g1026, g1027, g1028,
-         g1029, g102a, g102b, g102b_103a, g102c, g102d, g102d_1036, g102d_aa7c,
-         g102e, g102e_aa7c, g102f, g1030, g1031, g1032, g1032_102d, g1033,
-         g1034, g1035, g1036, g1037, g1038, g103a, g103a_1036, g103c_103d_narr,
-         g103c_103d_alt_narr, g103d_103e_small, g103f, g1040, g1041, g1042, g1043, g1044,
-         g1045, g1046, g1047, g1048, g1049, g104a, g104b, g104c,
-         g104d, g104e, g104f, g1050, g1051, g1052, g1053, g1054,
-         g1055, g1056, g1057, g105a, g105b, g105c, g105d, g1062,
-         g1062_103a, g1063, g1063_103a, g1064, g1065, g1066, g1067, g1068,
-         g1069, g106a, g106b, g106c, g106d, g106e, g106f, g1070,
-         g1071, g1072, g1073, g1074, g1075, g1076, g1077, g1078,
-         g1079, g107b, g107c, g107d, g107e, g107f, g1080, g1081,
-         g1083, g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089,
-         g108a, g108b, g108c, g108e, g108f, g1090, g1091, g1092,
-         g1093, g1094, g1095, g1096, g1097, g1098, g1099, g109a,
-         g109b, g109c, g109d, g109e, g109f, g200b, g200c, g200d,
-         g_quotedblleft, g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal,
-         g_circledash, g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4,
-         ga9e5, ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb,
-         ga9ec, ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd,
-         ga9fe, ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6,
-         ga9f7, ga9f8, ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64,
-         gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c, gaa6d,
-         gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74, gaa75,
-         gaa76, gaa78, gaa7a, gaa7b, gaa7c, gaa7d, gaa7e, gaa7f,
-         g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham, g1019_kham, g101a_kham, g101c_kham,
-         g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham, gaa60_kham, gaa61_kham, gaa62_kham,
-         gaa63_kham, gaa64_kham, gaa66_kham, gaa6b_kham, gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham,
-         gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot, g1038_dot, g1087_dot, g1088_dot, g1089_dot,
-         g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g103c_103d_alt_narr_tri, g103c_103d_narr_tri, g103d_103e_small_tri);
-
-cLMDia = (g1000_med, g1001_med, g1002_med, g1003_med, g1004_med, g1005_med, g1006_med, g1007_med,
-         g100a_med, g100b_med, g100c_med, g100d_med, g100e_med, g100f_med, g1010_med, g1010_103d_med,
-         g1011_med, g1012_med, g1013_med, g1014_med, g1015_med, g1016_med, g1017_med, g1018_med,
-         g1019_med, g101a_med, g101b_med, g101c_med, g101c_med_103d, g101e_med, g1021_med, g102f_med,
-         g102f_108d, g1030_med, g1030_108d, g1037, g1039, g103d, g103d_103e, g103d_108d,
-         g103e, g103e_alt, g103e_102f, g103e_1030, g1050_med, g1051_med, g1058, g1059,
-         g105a_med, g105c_med, g105e, g105f, g1060, g1082, g1082_108d, g108d,
-         gaa60_med, gaa60_med_kham, g1010_103d_med_tri, g103d_tri, g103d_103e_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr,
-         g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cTakesLMDia = ();
-
-cnLMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long, g101b_kinzi,
-         g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c, g101f,
-         g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023, g1024,
-         g1025, g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a,
-         g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g1030,
-         g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036, g1038,
-         g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr,
-         g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide,
-         g103c_102f_alt_narr, g103c_102f_alt_wide, g103d_103e_small, g103f, g1040, g1041, g1042, g1043,
-         g1044, g1045, g1046, g1047, g1048, g1049, g104a, g104b,
-         g104c, g104d, g104e, g104f, g1050, g1051, g1051_100c, g1051_100d,
-         g1052, g1053, g1054, g1055, g1056, g1057, g105a, g105b,
-         g105b_med, g105c, g105d, g1061, g1062, g1062_103a, g1063, g1063_103a,
-         g1064, g1065, g1066, g1067, g1068, g1069, g106a, g106b,
-         g106c, g106d, g106e, g106f, g1070, g1071, g1072, g1073,
-         g1074, g1075, g1076, g1077, g1078, g1079, g107a, g107b,
-         g107c, g107d, g107e, g107f, g1080, g1081, g1083, g1084,
-         g1085, g1086, g1086_aa7c, g1087, g1088, g1089, g108a, g108b,
-         g108c, g108e, g108f, g1090, g1091, g1092, g1093, g1094,
-         g1095, g1096, g1097, g1098, g1099, g109a, g109b, g109c,
-         g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft, g_quotedblright,
-         g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash, g1700,
-         ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5, ga9e5_aa7c,
-         ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec, ga9ed,
-         ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe, ga9f0,
-         ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7, ga9f8,
-         ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64, gaa65, gaa66,
-         gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c, gaa6d, gaa6e,
-         gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74, gaa75, gaa76,
-         gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c, gaa7d, gaa7e,
-         gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham, g1019_kham, g101a_kham,
-         g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham, gaa60_kham, gaa61_kham,
-         gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham, gaa6c_kham, gaa6f_kham,
-         gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot, g1038_dot, g1087_dot,
-         g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g103b_103d_tri, g103b_103d_103e_tri,
-         g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_103e_small_tri);
-
-cnTakesLMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long, g101b_kinzi,
-         g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c, g101f,
-         g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023, g1024,
-         g1025, g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a,
-         g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g1030,
-         g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036, g1038,
-         g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr,
-         g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide,
-         g103c_102f_alt_narr, g103c_102f_alt_wide, g103d_103e_small, g103f, g1040, g1041, g1042, g1043,
-         g1044, g1045, g1046, g1047, g1048, g1049, g104a, g104b,
-         g104c, g104d, g104e, g104f, g1050, g1051, g1051_100c, g1051_100d,
-         g1052, g1053, g1054, g1055, g1056, g1057, g105a, g105b,
-         g105b_med, g105c, g105d, g1061, g1062, g1062_103a, g1063, g1063_103a,
-         g1064, g1065, g1066, g1067, g1068, g1069, g106a, g106b,
-         g106c, g106d, g106e, g106f, g1070, g1071, g1072, g1073,
-         g1074, g1075, g1076, g1077, g1078, g1079, g107a, g107b,
-         g107c, g107d, g107e, g107f, g1080, g1081, g1083, g1084,
-         g1085, g1086, g1086_aa7c, g1087, g1088, g1089, g108a, g108b,
-         g108c, g108e, g108f, g1090, g1091, g1092, g1093, g1094,
-         g1095, g1096, g1097, g1098, g1099, g109a, g109b, g109c,
-         g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft, g_quotedblright,
-         g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash, g1700,
-         ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5, ga9e5_aa7c,
-         ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec, ga9ed,
-         ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe, ga9f0,
-         ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7, ga9f8,
-         ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64, gaa65, gaa66,
-         gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c, gaa6d, gaa6e,
-         gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74, gaa75, gaa76,
-         gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c, gaa7d, gaa7e,
-         gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham, g1019_kham, g101a_kham,
-         g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham, gaa60_kham, gaa61_kham,
-         gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham, gaa6c_kham, gaa6f_kham,
-         gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot, g1038_dot, g1087_dot,
-         g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g103b_103d_tri, g103b_103d_103e_tri,
-         g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_103e_small_tri);
-
 cLDia = (g1037, g1060);
 
 cTakesLDia = (g1000, g1000_med, g1000_1001_103b, g1001, g1001_med, g1002, g1002_med, g1003,
@@ -1138,128 +754,6 @@ cnTakesLDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, 
          gaa7c, gaa7d, g1032_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
          g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
          g103d_103e_small_tri);
-
-cBSMDia = (g1000_med, g1001_med, g1002_med, g1003_med, g1004_med, g1005_med, g1006_med, g1007_med,
-         g100a_med, g100b_med, g100c_med, g100d_med, g100e_med, g100f_med, g1010_med, g1010_103d_med,
-         g1011_med, g1012_med, g1013_med, g1014_med, g1015_med, g1016_med, g1017_med, g1018_med,
-         g1019_med, g101a_med, g101b_med, g101c_med, g101c_med_103d, g101e_med, g1021_med, g102f_med,
-         g102f_108d, g1030_med, g1030_108d, g1039, g103d, g103d_103e, g103d_103e_small, g103d_108d,
-         g103e, g103e_alt, g103e_102f, g103e_1030, g1050_med, g1051_med, g1058, g1059,
-         g105a_med, g105c_med, g105e, g105f, g1082, g1082_108d, g108d, gaa60_med,
-         gaa60_med_kham, g1010_103d_med_tri, g103d_tri, g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr,
-         g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cTakesBSMDia = ();
-
-cnBSMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long, g101b_kinzi,
-         g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c, g101f,
-         g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023, g1024,
-         g1025, g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a,
-         g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g1030,
-         g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036, g1037,
-         g1038, g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e, g103c,
-         g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr,
-         g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103f, g1040, g1041, g1042, g1043,
-         g1044, g1045, g1046, g1047, g1048, g1049, g104a, g104b,
-         g104c, g104d, g104e, g104f, g1050, g1051, g1051_100c, g1051_100d,
-         g1052, g1053, g1054, g1055, g1056, g1057, g105a, g105b,
-         g105b_med, g105c, g105d, g1060, g1061, g1062, g1062_103a, g1063,
-         g1063_103a, g1064, g1065, g1066, g1067, g1068, g1069, g106a,
-         g106b, g106c, g106d, g106e, g106f, g1070, g1071, g1072,
-         g1073, g1074, g1075, g1076, g1077, g1078, g1079, g107a,
-         g107b, g107c, g107d, g107e, g107f, g1080, g1081, g1083,
-         g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089, g108a,
-         g108b, g108c, g108e, g108f, g1090, g1091, g1092, g1093,
-         g1094, g1095, g1096, g1097, g1098, g1099, g109a, g109b,
-         g109c, g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft,
-         g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash,
-         g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5,
-         ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec,
-         ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe,
-         ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7,
-         ga9f8, ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64, gaa65,
-         gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c, gaa6d,
-         gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74, gaa75,
-         gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c, gaa7d,
-         gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham, g1019_kham,
-         g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham, gaa60_kham,
-         gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham, gaa6c_kham,
-         gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot, g1038_dot,
-         g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g103b_103d_tri,
-         g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri);
-
-cnTakesBSMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long, g101b_kinzi,
-         g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c, g101f,
-         g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023, g1024,
-         g1025, g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a,
-         g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g1030,
-         g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036, g1037,
-         g1038, g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e, g103c,
-         g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr,
-         g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103f, g1040, g1041, g1042, g1043,
-         g1044, g1045, g1046, g1047, g1048, g1049, g104a, g104b,
-         g104c, g104d, g104e, g104f, g1050, g1051, g1051_100c, g1051_100d,
-         g1052, g1053, g1054, g1055, g1056, g1057, g105a, g105b,
-         g105b_med, g105c, g105d, g1060, g1061, g1062, g1062_103a, g1063,
-         g1063_103a, g1064, g1065, g1066, g1067, g1068, g1069, g106a,
-         g106b, g106c, g106d, g106e, g106f, g1070, g1071, g1072,
-         g1073, g1074, g1075, g1076, g1077, g1078, g1079, g107a,
-         g107b, g107c, g107d, g107e, g107f, g1080, g1081, g1083,
-         g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089, g108a,
-         g108b, g108c, g108e, g108f, g1090, g1091, g1092, g1093,
-         g1094, g1095, g1096, g1097, g1098, g1099, g109a, g109b,
-         g109c, g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft,
-         g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash,
-         g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5,
-         ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec,
-         ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe,
-         ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7,
-         ga9f8, ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64, gaa65,
-         gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c, gaa6d,
-         gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74, gaa75,
-         gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c, gaa7d,
-         gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham, g1019_kham,
-         g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham, gaa60_kham,
-         gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham, gaa6c_kham,
-         gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot, g1038_dot,
-         g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g103b_103d_tri,
-         g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri);
 
 cRDia = (g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004, g1005,
          g1006, g1007, g1008, g1009, g1009_102c, g100a, g100a_alt, g100a_100a,
@@ -1493,128 +987,6 @@ cnTakesUDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, 
          g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot, g1010_103d_med_tri,
          g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri, g103d_103e_tri, g103d_103e_small_tri, g103e_slantr,
          g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cLLMDia = (g1000_med, g1001_med, g1002_med, g1003_med, g1004_med, g1005_med, g1006_med, g1007_med,
-         g100a_med, g100b_med, g100c_med, g100d_med, g100e_med, g100f_med, g1010_med, g1010_103d_med,
-         g1011_med, g1012_med, g1013_med, g1014_med, g1015_med, g1017_med, g1018_med, g1019_med,
-         g101a_med, g101b_med, g101c_med, g101c_med_103d, g101e_med, g1021_med, g102f_med, g102f_108d,
-         g1030_med, g1030_108d, g1039, g103d, g103d_103e, g103d_108d, g103e, g103e_alt,
-         g103e_102f, g103e_1030, g1050_med, g1051_med, g1058, g1059, g105a_med, g105c_med,
-         g105e, g105f, g1060, g1082, g1082_108d, g108d, gaa60_med, gaa60_med_kham,
-         g1010_103d_med_tri, g103d_tri, g103d_103e_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr,
-         g103e_1030_slanth);
-
-cTakesLLMDia = ();
-
-cnLLMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1016_med, g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long,
-         g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c,
-         g101f, g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023,
-         g1024, g1025, g1026, g1027, g1028, g1029, g102a, g102b,
-         g102b_103a, g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f,
-         g1030, g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036,
-         g1037, g1038, g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e,
-         g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide,
-         g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d_103e_small, g103f, g1040, g1041,
-         g1042, g1043, g1044, g1045, g1046, g1047, g1048, g1049,
-         g104a, g104b, g104c, g104d, g104e, g104f, g1050, g1051,
-         g1051_100c, g1051_100d, g1052, g1053, g1054, g1055, g1056, g1057,
-         g105a, g105b, g105b_med, g105c, g105d, g1061, g1062, g1062_103a,
-         g1063, g1063_103a, g1064, g1065, g1066, g1067, g1068, g1069,
-         g106a, g106b, g106c, g106d, g106e, g106f, g1070, g1071,
-         g1072, g1073, g1074, g1075, g1076, g1077, g1078, g1079,
-         g107a, g107b, g107c, g107d, g107e, g107f, g1080, g1081,
-         g1083, g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089,
-         g108a, g108b, g108c, g108e, g108f, g1090, g1091, g1092,
-         g1093, g1094, g1095, g1096, g1097, g1098, g1099, g109a,
-         g109b, g109c, g109d, g109e, g109f, g200b, g200c, g200d,
-         g_quotedblleft, g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal,
-         g_circledash, g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4,
-         ga9e5, ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb,
-         ga9ec, ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd,
-         ga9fe, ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6,
-         ga9f7, ga9f8, ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64,
-         gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c,
-         gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74,
-         gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c,
-         gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham,
-         g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham,
-         gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham,
-         gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
-         g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
-         g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_103e_small_tri);
-
-cnTakesLLMDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1002, g1003, g1004,
-         g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e, g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036,
-         g1005, g1006, g1007, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_100a, g100b, g100b_alt, g100b_100b, g100b_100c, g100c, g100d,
-         g100d_100d, g100d_100e, g100e, g100f, g100f_100b, g100f_100d, g1010, g1011,
-         g1012, g1013, g1014, g1014_alt, g1014_1010_103b, g1014_1010_103c, g1015, g1016,
-         g1016_med, g1017, g1018, g1019, g101a, g101b, g101b_alt, g101b_long,
-         g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101d, g101e, g101e_1010_103c,
-         g101f, g1020, g1020_long, g1020_1020, g1020_103e, g1021, g1022, g1023,
-         g1024, g1025, g1026, g1027, g1028, g1029, g102a, g102b,
-         g102b_103a, g102c, g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f,
-         g1030, g1031, g1032, g1032_102d, g1033, g1034, g1035, g1036,
-         g1037, g1038, g103a, g103a_1036, g103b, g103b_103d, g103b_103d_103e, g103b_103e,
-         g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide,
-         g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d_103e_small, g103f, g1040, g1041,
-         g1042, g1043, g1044, g1045, g1046, g1047, g1048, g1049,
-         g104a, g104b, g104c, g104d, g104e, g104f, g1050, g1051,
-         g1051_100c, g1051_100d, g1052, g1053, g1054, g1055, g1056, g1057,
-         g105a, g105b, g105b_med, g105c, g105d, g1061, g1062, g1062_103a,
-         g1063, g1063_103a, g1064, g1065, g1066, g1067, g1068, g1069,
-         g106a, g106b, g106c, g106d, g106e, g106f, g1070, g1071,
-         g1072, g1073, g1074, g1075, g1076, g1077, g1078, g1079,
-         g107a, g107b, g107c, g107d, g107e, g107f, g1080, g1081,
-         g1083, g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089,
-         g108a, g108b, g108c, g108e, g108f, g1090, g1091, g1092,
-         g1093, g1094, g1095, g1096, g1097, g1098, g1099, g109a,
-         g109b, g109c, g109d, g109e, g109f, g200b, g200c, g200d,
-         g_quotedblleft, g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal,
-         g_circledash, g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4,
-         ga9e5, ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb,
-         ga9ec, ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd,
-         ga9fe, ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6,
-         ga9f7, ga9f8, ga9f9, gaa60, gaa61, gaa62, gaa63, gaa64,
-         gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c,
-         gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74,
-         gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c,
-         gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham,
-         g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham,
-         gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham,
-         gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
-         g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
-         g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_103e_small_tri);
 
 cBSDia = (g1001_med, g1002_med, g1004_med, g1005_med, g1007_med, g100b_med, g100d_med, g100e_med,
          g1010_103d_med, g1012_med, g1013_med, g1014_med, g1015_med, g1016_med, g1017_med, g1019_med,
@@ -1867,137 +1239,35 @@ cnTakesYDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, 
          g103c_103d_wide_tri, g103d_tri, g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth,
          g103e_1030_slantr, g103e_1030_slanth);
 
-cdotDia = ();
-
-cTakesdotDia = (g1008_med, g103b, g103b_103d, g103b_103d_103e, g103b_103e, g105b_med, g103b_103d_tri, g103b_103d_103e_tri);
-
-cndotDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_med, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1001_med, g1002,
-         g1002_med, g1003, g1003_med, g1004, g1004_med, g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e,
-         g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005, g1005_med, g1006,
-         g1006_med, g1007, g1007_med, g1008, g1008_med, g1009, g1009_102c, g100a,
-         g100a_alt, g100a_med, g100a_100a, g100b, g100b_alt, g100b_med, g100b_100b, g100b_100c,
-         g100c, g100c_med, g100d, g100d_med, g100d_100d, g100d_100e, g100e, g100e_med,
-         g100f, g100f_med, g100f_100b, g100f_100d, g1010, g1010_med, g1010_103d_med, g1011,
-         g1011_med, g1012, g1012_med, g1013, g1013_med, g1014, g1014_alt, g1014_med,
-         g1014_1010_103b, g1014_1010_103c, g1015, g1015_med, g1016, g1016_med, g1017, g1017_med,
-         g1018, g1018_med, g1019, g1019_med, g101a, g101a_med, g101b, g101b_alt,
-         g101b_long, g101b_med, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101c_med,
-         g101c_med_103d, g101d, g101e, g101e_med, g101e_1010_103c, g101f, g1020, g1020_long,
-         g1020_1020, g1020_103e, g1021, g1021_med, g1022, g1023, g1024, g1025,
-         g1026, g1027, g1028, g1029, g102a, g102b, g102b_103a, g102c,
-         g102d, g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g102f_med, g102f_108d,
-         g1030, g1030_med, g1030_108d, g1031, g1032, g1032_102d, g1033, g1034,
-         g1035, g1036, g1037, g1038, g1039, g103a, g103a_1036, g103b,
-         g103b_103d, g103b_103d_103e, g103b_103e, g103c, g103c_alt_narr, g103c_alt_wide, g103c_wide, g103c_103d_narr,
-         g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103d,
-         g103d_103e, g103d_103e_small, g103d_108d, g103e, g103e_alt, g103e_102f, g103e_1030, g103f,
-         g1040, g1041, g1042, g1043, g1044, g1045, g1046, g1047,
-         g1048, g1049, g104a, g104b, g104c, g104d, g104e, g104f,
-         g1050, g1050_med, g1051, g1051_med, g1051_100c, g1051_100d, g1052, g1053,
-         g1054, g1055, g1056, g1057, g1058, g1059, g105a, g105a_med,
-         g105b, g105b_med, g105c, g105c_med, g105d, g105e, g105f, g1060,
-         g1061, g1062, g1062_103a, g1063, g1063_103a, g1064, g1065, g1066,
-         g1067, g1068, g1069, g106a, g106b, g106c, g106d, g106e,
-         g106f, g1070, g1071, g1072, g1073, g1074, g1075, g1076,
-         g1077, g1078, g1079, g107a, g107b, g107c, g107d, g107e,
-         g107f, g1080, g1081, g1082, g1082_108d, g1083, g1084, g1085,
-         g1086, g1086_aa7c, g1087, g1088, g1089, g108a, g108b, g108c,
-         g108d, g108e, g108f, g1090, g1091, g1092, g1093, g1094,
-         g1095, g1096, g1097, g1098, g1099, g109a, g109b, g109c,
-         g109d, g109e, g109f, g200b, g200c, g200d, g_quotedblleft, g_quotedblright,
-         g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal, g_circledash, g1700,
-         ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4, ga9e5, ga9e5_aa7c,
-         ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb, ga9ec, ga9ed,
-         ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd, ga9fe, ga9f0,
-         ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6, ga9f7, ga9f8,
-         ga9f9, gaa60, gaa60_med, gaa60_med_kham, gaa61, gaa62, gaa63, gaa64,
-         gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6b, gaa6c,
-         gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72, gaa73, gaa74,
-         gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a, gaa7b, gaa7c,
-         gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham, g1010_kham, g1015_kham,
-         g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham, g1078_kham, g1080_kham,
-         gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6b_kham,
-         gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70, g103a_aa70, g1036_dot,
-         g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot, g109b_dot, gaa7b_dot,
-         g1010_103d_med_tri, g103b_103d_tri, g103b_103d_103e_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri,
-         g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cnTakesdotDia = (g_notdef, g_space, g_exclam, g_quotedbl, g_numbersign, g_dollar, g_percent, g_ampersand,
-         g_quotesingle, g_parenleft, g_parenright, g_asterisk, g_plus, g_comma, g_hyphen, g_period,
-         g_slash, g_zero, g_one, g_two, g_three, g_four, g_five, g_six,
-         g_seven, g_eight, g_nine, g_colon, g_semicolon, g_less, g_equal, g_greater,
-         g_question, g_at, g__a, g__b, g__c, g__d, g__e, g__f,
-         g__g, g__h, g__i, g__j, g__k, g__l, g__m, g__n,
-         g__o, g__p, g__q, g__r, g__s, g__t, g__u, g__v,
-         g__w, g__x, g__y, g__z, g_bracketleft, g_backslash, g_bracketright, g_asciicircum,
-         g_underscore, g_grave, g_a, g_b, g_c, g_d, g_e, g_f,
-         g_g, g_h, g_i, g_j, g_k, g_l, g_m, g_n,
-         g_o, g_p, g_q, g_r, g_s, g_t, g_u, g_v,
-         g_w, g_x, g_y, g_z, g_braceleft, g_bar, g_braceright, g_asciitilde,
-         g_multiply, g1000, g1000_med, g1000_1001_103b, g1000_103b_1015_103a, g1001, g1001_med, g1002,
-         g1002_med, g1003, g1003_med, g1004, g1004_med, g1004_kinzi, g1004_kinzi_102d, g1004_kinzi_102e,
-         g1004_kinzi_1032, g1004_kinzi_1033, g1004_kinzi_1036, g1004_kinzi_103a, g1004_kinzi_102d_1036, g1005, g1005_med, g1006,
-         g1006_med, g1007, g1007_med, g1008, g1009, g1009_102c, g100a, g100a_alt,
-         g100a_med, g100a_100a, g100b, g100b_alt, g100b_med, g100b_100b, g100b_100c, g100c,
-         g100c_med, g100d, g100d_med, g100d_100d, g100d_100e, g100e, g100e_med, g100f,
-         g100f_med, g100f_100b, g100f_100d, g1010, g1010_med, g1010_103d_med, g1011, g1011_med,
-         g1012, g1012_med, g1013, g1013_med, g1014, g1014_alt, g1014_med, g1014_1010_103b,
-         g1014_1010_103c, g1015, g1015_med, g1016, g1016_med, g1017, g1017_med, g1018,
-         g1018_med, g1019, g1019_med, g101a, g101a_med, g101b, g101b_alt, g101b_long,
-         g101b_med, g101b_kinzi, g101b_kinzi_102d, g101b_kinzi_102e, g101b_kinzi_103a, g101c, g101c_med, g101c_med_103d,
-         g101d, g101e, g101e_med, g101e_1010_103c, g101f, g1020, g1020_long, g1020_1020,
-         g1020_103e, g1021, g1021_med, g1022, g1023, g1024, g1025, g1026,
-         g1027, g1028, g1029, g102a, g102b, g102b_103a, g102c, g102d,
-         g102d_1036, g102d_aa7c, g102e, g102e_aa7c, g102f, g102f_med, g102f_108d, g1030,
-         g1030_med, g1030_108d, g1031, g1032, g1032_102d, g1033, g1034, g1035,
-         g1036, g1037, g1038, g1039, g103a, g103a_1036, g103c, g103c_alt_narr,
-         g103c_alt_wide, g103c_wide, g103c_103d_narr, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide, g103c_102f_narr, g103c_102f_wide,
-         g103c_102f_alt_narr, g103c_102f_alt_wide, g103d, g103d_103e, g103d_103e_small, g103d_108d, g103e, g103e_alt,
-         g103e_102f, g103e_1030, g103f, g1040, g1041, g1042, g1043, g1044,
-         g1045, g1046, g1047, g1048, g1049, g104a, g104b, g104c,
-         g104d, g104e, g104f, g1050, g1050_med, g1051, g1051_med, g1051_100c,
-         g1051_100d, g1052, g1053, g1054, g1055, g1056, g1057, g1058,
-         g1059, g105a, g105a_med, g105b, g105c, g105c_med, g105d, g105e,
-         g105f, g1060, g1061, g1062, g1062_103a, g1063, g1063_103a, g1064,
-         g1065, g1066, g1067, g1068, g1069, g106a, g106b, g106c,
-         g106d, g106e, g106f, g1070, g1071, g1072, g1073, g1074,
-         g1075, g1076, g1077, g1078, g1079, g107a, g107b, g107c,
-         g107d, g107e, g107f, g1080, g1081, g1082, g1082_108d, g1083,
-         g1084, g1085, g1086, g1086_aa7c, g1087, g1088, g1089, g108a,
-         g108b, g108c, g108d, g108e, g108f, g1090, g1091, g1092,
-         g1093, g1094, g1095, g1096, g1097, g1098, g1099, g109a,
-         g109b, g109c, g109d, g109e, g109f, g200b, g200c, g200d,
-         g_quotedblleft, g_quotedblright, g_quoteleft, g_quoteright, g_endash, g_emdash, g2060, g_notequal,
-         g_circledash, g1700, ga92e, ga9e0, ga9e1, ga9e2, ga9e3, ga9e4,
-         ga9e5, ga9e5_aa7c, ga9e6, ga9e7, ga9e8, ga9e9, ga9ea, ga9eb,
-         ga9ec, ga9ed, ga9ee, ga9ef, ga9fa, ga9fb, ga9fc, ga9fd,
-         ga9fe, ga9f0, ga9f1, ga9f2, ga9f3, ga9f4, ga9f5, ga9f6,
-         ga9f7, ga9f8, ga9f9, gaa60, gaa60_med, gaa60_med_kham, gaa61, gaa62,
-         gaa63, gaa64, gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a,
-         gaa6b, gaa6c, gaa6d, gaa6e, gaa6f, gaa70, gaa71, gaa72,
-         gaa73, gaa74, gaa75, gaa76, gaa77, gaa78, gaa79, gaa7a,
-         gaa7b, gaa7c, gaa7d, gaa7e, gaa7f, g1000_kham, g1002_kham, g1004_kham,
-         g1010_kham, g1015_kham, g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1032_kham, g1075_kham,
-         g1078_kham, g1080_kham, gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham,
-         gaa66_kham, gaa6b_kham, gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham, g1032_aa70,
-         g103a_aa70, g1036_dot, g1038_dot, g1087_dot, g1088_dot, g1089_dot, g108a_dot, g109a_dot,
-         g109b_dot, gaa7b_dot, g1010_103d_med_tri, g103c_103d_alt_narr_tri, g103c_103d_alt_wide_tri, g103c_103d_narr_tri, g103c_103d_wide_tri, g103d_tri,
-         g103d_103e_tri, g103d_103e_small_tri, g103e_slantr, g103e_slanth, g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
 
 /* Classes */
+cConsWide = (g1000, g1003, g1006, g1008, g1009, g100a, g100f, g1010,
+         g1011, g1018, g101a, g101c, g101e, g101f, g1020, g1021,
+         g1022, g1029, g103f, g106e, g106f, g1070, g1078, g1079,
+         g107a, g107b, g107c, g107d, g107e, g1080, ga9e1, ga9e2,
+         ga9e3, ga9e4, ga9e7, ga9e8, ga9e9, gaa60, gaa61, gaa63,
+         gaa64, gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6c,
+         gaa6e, gaa71, gaa72, gaa74, gaa75, gaa76, gaa7a, gaa7f,
+         g1000_kham, g1010_kham, g101a_kham, g101c_kham, g1022_kham, g1078_kham, g1080_kham, gaa60_kham,
+         gaa61_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6c_kham, gaa75_kham, gaa76_kham);
+
+cConsNar = (g1001, g1002, g1004, g1005, g1007, g100b, g100c, g100d,
+         g100e, g1012, g1013, g1014, g1014_alt, g1015, g1016, g1017,
+         g1019, g101b, g101d, g1027, g1028, g104e, g1050, g1051,
+         g105a, g105b, g105c, g105d, g1061, g1065, g1066, g1075,
+         g1076, g1077, g107f, g108e, g_circledash, ga9e0, gaa62, gaa6b,
+         gaa6d, gaa6f, gaa73, gaa7e, g1002_kham, g1004_kham, g1015_kham, g1019_kham,
+         g1075_kham, gaa62_kham, gaa6b_kham, gaa6f_kham, gaa73_kham);
+
+c103d = (g103b_103d, g103d, g103d_103e, g103d_103e_small, g103b_103d_tri, g103d_tri, g103d_103e_tri);
+
+c103e = (g103b_103e, g103d_103e, g103e, g103e_102f, g103e_1030, g103d_103e_tri, g103e_slantr, g103e_slanth,
+         g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
+
+cToneDia = (g108d, gaa7c);
+
+cSpaceVowel = (g102b, g102c, g1062, g1063, g1067, g1068, g1083);
+
 cCons = (g1000, g1001, g1002, g1003, g1004, g1005, g1006, g1007,
          g1008, g1009, g100a, g100b, g100c, g100d, g100e, g100f,
          g1010, g1011, g1012, g1013, g1014, g1015, g1016, g1017,
@@ -2015,33 +1285,10 @@ cCons = (g1000, g1001, g1002, g1003, g1004, g1005, g1006, g1007,
          g1080_kham, gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham,
          gaa6b_kham, gaa6c_kham, gaa6f_kham, gaa73_kham, gaa75_kham, gaa76_kham);
 
-cSpaceVowel = (g102b, g102c, g1062, g1063, g1067, g1068, g1083);
-
-c103e = (g103b_103e, g103d_103e, g103e, g103e_102f, g103e_1030, g103d_103e_tri, g103e_slantr, g103e_slanth,
-         g103e_102f_slantr, g103e_102f_slanth, g103e_1030_slantr, g103e_1030_slanth);
-
-cConsWide = (g1000, g1003, g1006, g1008, g1009, g100a, g100f, g1010,
-         g1011, g1018, g101a, g101c, g101e, g101f, g1020, g1021,
-         g1022, g1029, g103f, g106e, g106f, g1070, g1078, g1079,
-         g107a, g107b, g107c, g107d, g107e, g1080, ga9e1, ga9e2,
-         ga9e3, ga9e4, ga9e7, ga9e8, ga9e9, gaa60, gaa61, gaa63,
-         gaa64, gaa65, gaa66, gaa67, gaa68, gaa69, gaa6a, gaa6c,
-         gaa6e, gaa71, gaa72, gaa74, gaa75, gaa76, gaa7a, gaa7f,
-         g1000_kham, g1010_kham, g101a_kham, g101c_kham, g1022_kham, g1078_kham, g1080_kham, gaa60_kham,
-         gaa61_kham, gaa63_kham, gaa64_kham, gaa65_kham, gaa66_kham, gaa6c_kham, gaa75_kham, gaa76_kham);
-
 cMedWide = (g1000_med, g1003_med, g1006_med, g100a_med, g100f_med, g1010_med, g1011_med, g1018_med,
          g101a_med, g101c_med, g101c_med_103d, g1021_med);
 
-cConsNar = (g1001, g1002, g1004, g1005, g1007, g100b, g100c, g100d,
-         g100e, g1012, g1013, g1014, g1014_alt, g1015, g1016, g1017,
-         g1019, g101b, g101d, g1027, g1028, g104e, g1050, g1051,
-         g105a, g105b, g105c, g105d, g1061, g1065, g1066, g1075,
-         g1076, g1077, g107f, g108e, g_circledash, ga9e0, gaa62, gaa6b,
-         gaa6d, gaa6f, gaa73, gaa7e, g1002_kham, g1004_kham, g1015_kham, g1019_kham,
-         g1075_kham, gaa62_kham, gaa6b_kham, gaa6f_kham, gaa73_kham);
-
-c103d = (g103b_103d, g103d, g103d_103e, g103d_103e_small, g103b_103d_tri, g103d_tri, g103d_103e_tri);
+c103b = (g103b, g103b_103d, g103b_103e, g103b_103d_tri);
 
 cConsSVowel = (g1000, g1001, g1002, g1003, g1004, g1005, g1006, g1007,
          g100a_alt, g100e, g100f, g1010, g1011, g1012, g1013, g1014,
@@ -2056,10 +1303,6 @@ cConsSVowel = (g1000, g1001, g1002, g1003, g1004, g1005, g1006, g1007,
          g1015_kham, g1019_kham, g101a_kham, g101c_kham, g1022_kham, g1075_kham, g1078_kham, g1080_kham,
          gaa60_kham, gaa61_kham, gaa62_kham, gaa63_kham, gaa64_kham, gaa66_kham, gaa6b_kham, gaa6c_kham,
          gaa6f_kham, gaa73_kham);
-
-c103b = (g103b, g103b_103d, g103b_103e, g103b_103d_tri);
-
-cToneDia = (g108d, gaa7c);
 
 cno_tri = (g103b_103d, g103d, g103d_103e, g103b_103d_103e);
 
@@ -2138,75 +1381,76 @@ cno_wide = (g103c);
 cwide = (g103c_wide);
 
 /* Ligature Classes */
-cligu1020 = (g1020_1020);
+clig103A = (g102b_103a, g1062_103a, g1063_103a);
 
-cligno_u1020 = (g1020);
+cligno_103A = (g102b, g1062, g1063);
 
-cligu1030 = (g103e_1030, g103e_1030_slantr, g103e_1030_slanth);
+clig1020 = (g1020_1020);
 
-cligno_u1030 = (g103e, g103e_slantr, g103e_slanth);
+cligno_1020 = (g1020);
 
-cligu108D = (g102f_108d, g1030_108d, g103d_108d, g1082_108d);
+cligAA70 = (g1032_aa70, g103a_aa70);
 
-cligno_u108D = (g102f, g1030, g103d, g1082);
+cligno_AA70 = (g1032, g103a);
 
-cligu1036 = (g1004_kinzi_102d_1036, g102d_1036, g103a_1036);
+clig100E = (g100d_100e);
 
-cligno_u1036 = (g1004_kinzi_102d, g102d, g103a);
+cligno_100E = (g100d);
 
-cliguAA70 = (g1032_aa70, g103a_aa70);
+clig100D = (g100d_100d, g100f_100d, g1051_100d);
 
-cligno_uAA70 = (g1032, g103a);
+cligno_100D = (g100d, g100f, g1051);
 
-cligu102F = (g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103e_102f, g103e_102f_slantr, g103e_102f_slanth);
+clig100C = (g100b_100c, g1051_100c);
 
-cligno_u102F = (g103c_wide, g103c_alt_narr, g103c_alt_wide, g103e, g103e_slantr, g103e_slanth);
+cligno_100C = (g100b, g1051);
 
-cligu102C = (g1009_102c);
+clig100B = (g100b_100b, g100f_100b);
 
-cligno_u102C = (g1009);
+cligno_100B = (g100b, g100f);
 
-cligu103A = (g102b_103a, g1062_103a, g1063_103a);
+clig100A = (g100a_100a);
 
-cligno_u103A = (g102b, g1062, g1063);
+cligno_100A = (g100a);
 
-cliguAA7C = (g102d_aa7c, g102e_aa7c, g1086_aa7c, ga9e5_aa7c);
+clig103E = (g1020_103e, g103b_103d_103e, g103b_103e, g103d_103e, g103b_103d_103e_tri, g103d_103e_tri);
 
-cligno_uAA7C = (g102d, g102e, g1086, ga9e5);
+cligno_103E = (g1020, g103b_103d, g103b, g103d, g103b_103d_tri, g103d_tri);
 
-cligu102D = (g1032_102d);
+clig102D = (g1032_102d);
 
-cligno_u102D = (g1032);
+cligno_102D = (g1032);
 
-cligu103D = (g1010_103d_med, g103b_103d, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide);
+clig108D = (g102f_108d, g1030_108d, g103d_108d, g1082_108d);
 
-cligno_u103D = (g1010_med, g103b, g103c_wide, g103c_alt_narr, g103c_alt_wide);
+cligno_108D = (g102f, g1030, g103d, g1082);
 
-cligu103E = (g1020_103e, g103b_103d_103e, g103b_103e, g103d_103e, g103b_103d_103e_tri, g103d_103e_tri);
+cligAA7C = (g102d_aa7c, g102e_aa7c, g1086_aa7c, ga9e5_aa7c);
 
-cligno_u103E = (g1020, g103b_103d, g103b, g103d, g103b_103d_tri, g103d_tri);
+cligno_AA7C = (g102d, g102e, g1086, ga9e5);
 
-cligu100E = (g100d_100e);
+clig103D = (g1010_103d_med, g103b_103d, g103c_103d_wide, g103c_103d_alt_narr, g103c_103d_alt_wide);
 
-cligno_u100E = (g100d);
+cligno_103D = (g1010_med, g103b, g103c_wide, g103c_alt_narr, g103c_alt_wide);
 
-cligu100D = (g100d_100d, g100f_100d, g1051_100d);
+clig102C = (g1009_102c);
 
-cligno_u100D = (g100d, g100f, g1051);
+cligno_102C = (g1009);
 
-cligu100C = (g100b_100c, g1051_100c);
+clig102F = (g103c_102f_wide, g103c_102f_alt_narr, g103c_102f_alt_wide, g103e_102f, g103e_102f_slantr, g103e_102f_slanth);
 
-cligno_u100C = (g100b, g1051);
+cligno_102F = (g103c_wide, g103c_alt_narr, g103c_alt_wide, g103e, g103e_slantr, g103e_slanth);
 
-cligu100B = (g100b_100b, g100f_100b);
+clig1030 = (g103e_1030, g103e_1030_slantr, g103e_1030_slanth);
 
-cligno_u100B = (g100b, g100f);
+cligno_1030 = (g103e, g103e_slantr, g103e_slanth);
 
-cligu100A = (g100a_100a);
+clig1036 = (g1004_kinzi_102d_1036, g102d_1036, g103a_1036);
 
-cligno_u100A = (g100a);
+cligno_1036 = (g1004_kinzi_102d, g102d, g103a);
 
 
 endtable;
 #define MAXGLYPH 497
-#include "myanmar5.gdl"
+
+#include "C:\Users\mhosken\Work\graide\tests\fonts\Padauk\myanmar5.gdl"

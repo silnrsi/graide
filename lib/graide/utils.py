@@ -129,7 +129,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if errfile :
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = errfile
-    if gettatr(sys, 'frozen', None) : parms['env'] = sys.environ
+    if getattr(sys, 'frozen', None) : parms['env'] = os.environ
     res = 1
     if grcompiler is not None :
         res = subprocess.call((grcompiler, "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)

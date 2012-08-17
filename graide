@@ -19,6 +19,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+if getattr(sys, 'frozen', None) :
+    os.environ['PATH'] += os.pathsep + sys._MEIPASS
+
 from PySide import QtGui
 from graide import main
 from argparse import ArgumentParser
@@ -50,8 +53,6 @@ if args.project :
     (dname, args.project) = os.path.split(args.project)
     if dname : os.chdir(dname)
 
-if getattr(sys, 'frozen', None) :
-    os.environ['PATH'] += os.pathsep + sys._MEIPASS
 mainWindow = main.MainWindow(config, args.project, args.results)
 mainWindow.show()
 sys.exit(app.exec_())

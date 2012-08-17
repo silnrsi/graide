@@ -38,7 +38,6 @@ if not FT_Library_filename:
     for n in ('libfreetype.so.6', 'freetype6.dll',
               os.path.join(basedir, 'freetype6.dll')) :
         try:
-	    print "Trying " + n
             __dll__ = ctypes.CDLL(n)
         except OSError:
             __dll__ = None
