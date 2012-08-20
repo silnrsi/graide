@@ -4453,7 +4453,7 @@ class Name(object) :
             u = k[0]
             if not isinstance(u, basestring) and u :
                 n = "%04X" % u
-            else :
+            elif u :
                 n = u.replace('.', '_')
 
             if not u :

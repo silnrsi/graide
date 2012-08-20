@@ -20,7 +20,7 @@
 from PySide import QtGui, QtCore
 from graide.utils import configintval, configval
 from graide.layout import Layout
-import os
+import os, codecs
 
 class FindDialog(QtGui.QDialog) :
 
@@ -84,7 +84,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.setTabStopWidth(tabstop)
 
         try :
-            f = file(fname)
+            f = codecs.open(fname, encoding="UTF-8")
             self.setPlainText("".join(f.readlines()))
             f.close()
         except :
@@ -106,7 +106,7 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     def writeIfModified(self) :
         if self.document().isModified() :
-            f = file(self.fname, "w")
+            f = codecs.open(self.fname, "w", encoding="UTF-8")
             f.write(self.document().toPlainText())
             f.close()
             self.document().setModified(False)
