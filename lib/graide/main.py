@@ -193,9 +193,22 @@ class MainWindow(QtGui.QMainWindow) :
         self.hsplitter = QtGui.QSplitter(self.widget)
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
-
-        # tests list
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
+
+        self.ui_tests(self.tabInfo)
+        self.ui_left(self.tabInfo)
+        self.ui_fileEdits(self.hsplitter)
+
+        self.horizontalLayout.addWidget(self.hsplitter)
+
+        self.tabResults = QtGui.QTabWidget(self.vsplitter)
+        self.ui_bottom(self.tabResults)
+        if self.config.has_section('window') :
+            self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
+            self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
+            self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+
+    def ui_tests(self, parent) :
         self.setwidgetstretch(self.tabInfo, 30, 100)
         self.test_splitter = QtGui.QSplitter()
         self.test_splitter.setOrientation(QtCore.Qt.Vertical)
@@ -241,8 +254,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
-        self.tabInfo.addTab(self.test_splitter, "Tests")
+        parent.addTab(self.test_splitter, "Tests")
 
+    def ui_left(self, parent) :
         # glyph, slot, classes, tabview
         self.tab_glyph = QtGui.QWidget()
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
@@ -283,17 +297,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
 
+    def ui_fileEdits(self, parent) :
         # file edit view
         self.tabEdit = FileTabs(self.config, self, self.hsplitter)
         self.setwidgetstretch(self.tabEdit, 50, 100)
         self.tabEdit.setTabsClosable(True)
 
-        self.horizontalLayout.addWidget(self.hsplitter)
-
+    def ui_bottom(self, parent) :
         # bottom pane
-        self.tabResults = QtGui.QTabWidget(self.vsplitter)
         self.setwidgetstretch(self.tabResults, 100, 45)
-        self.tabResults.setTabPosition(QtGui.QTabWidget.South)
+        parent.setTabPosition(QtGui.QTabWidget.South)
         self.cfg_widget = QtGui.QWidget()
         self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
         self.cfg_hbox.setContentsMargins(*Layout.buttonMargins)
@@ -308,7 +321,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_new = QtGui.QToolButton(self.cfg_widget)
         self.cfg_new.setDefaultAction(self.aCfgNew)
         self.cfg_hbox.addWidget(self.cfg_new)
-        self.tabResults.setCornerWidget(self.cfg_widget)
+        parent.setCornerWidget(self.cfg_widget)
 
         # font tab
         if self.font.isRead() :
@@ -349,11 +362,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
-
-        if self.config.has_section('window') :
-            self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
-            self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
-            self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
 
     def setMenus(self) :
         filemenu = self.menuBar().addMenu("&File")
