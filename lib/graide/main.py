@@ -181,28 +181,29 @@ class MainWindow(QtGui.QMainWindow) :
         qInitResources()
         self.resize(994, 696)
         self.centralwidget = QtGui.QWidget(self)
-        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
-        self.vsplitter = QtGui.QSplitter(self.centralwidget)
-        self.vsplitter.setOrientation(QtCore.Qt.Vertical)
-        self.vsplitter.setHandleWidth(2)
-
-        self.widget = QtGui.QWidget(self.vsplitter)
-        self.setwidgetstretch(self.widget, 100, 55)
-        self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
-        self.horizontalLayout.setContentsMargins(*Layout.buttonMargins)
-        self.hsplitter = QtGui.QSplitter(self.widget)
+        self.verticalLayout = QtGui.QHBoxLayout(self.centralwidget)
+        self.hsplitter = QtGui.QSplitter(self.centralwidget)
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
+        self.verticalLayout.addWidget(self.hsplitter)
+
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
+        self.widget = QtGui.QWidget(self.hsplitter)
+        self.setwidgetstretch(self.widget, 55, 100)
+        self.topLayout = QtGui.QVBoxLayout(self.widget)
+        self.topLayout.setContentsMargins(*Layout.buttonMargins)
+        self.vsplitter = QtGui.QSplitter(self.widget)
+        self.vsplitter.setOrientation(QtCore.Qt.Vertical)
+        self.vsplitter.setHandleWidth(2)
+        self.topLayout.addWidget(self.vsplitter)
 
         self.ui_tests(self.tabInfo)
         self.ui_left(self.tabInfo)
-        self.ui_fileEdits(self.hsplitter)
-
-        self.horizontalLayout.addWidget(self.hsplitter)
+        self.ui_fileEdits(self.vsplitter)
 
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
         self.ui_bottom(self.tabResults)
+
         if self.config.has_section('window') :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
             self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
@@ -299,8 +300,8 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_fileEdits(self, parent) :
         # file edit view
-        self.tabEdit = FileTabs(self.config, self, self.hsplitter)
-        self.setwidgetstretch(self.tabEdit, 50, 100)
+        self.tabEdit = FileTabs(self.config, self, parent)
+        self.setwidgetstretch(self.tabEdit, 100, 50)
         self.tabEdit.setTabsClosable(True)
 
     def ui_bottom(self, parent) :
@@ -353,7 +354,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runloaded = True
-        self.verticalLayout.addWidget(self.vsplitter)
         self.setCentralWidget(self.centralwidget)
 
         # rules tab
