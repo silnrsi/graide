@@ -21,6 +21,20 @@ import re
 from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import SubElement
 
+def gr_ap(txt) :
+    if txt.endswith('M') :
+        return "_" + txt[:-1]
+    elif txt.endswith('S') :
+        return txt[:-1]
+    else :
+        return txt
+
+def ap_gr(txt) :
+    if txt.startswith('_') :
+        return txt[1:] + 'M'
+    else :
+        return txt + 'S'
+
 class Glyph(object) :
 
     def __init__(self, name, gid = 0) :
@@ -41,8 +55,17 @@ class Glyph(object) :
         self.psname = name
         self.name = next(self.parseNames())
 
-    def addAnchor(self, name, x, y, t = None) :
+    def setAnchor(self, name, x, y, t = None) :
+        send = True
+        if name in self.anchors :
+            if x is None and y is None :
+                del self.anchors[name]
+                return True
+            if x is None : x = self.anchors[name][0]
+            if y is None : y = self.anchors[name][1]
+            send = self.anchors[name] != (x, y)
         self.anchors[name] = (x, y)
+        return send
         # if not name.startswith("_") and t != 'basemark' :
         #     self.isBase = True
 
@@ -77,7 +100,7 @@ class Glyph(object) :
                 self.properties[n] = p.get('value')
         for p in elem.iterfind('point') :
             l = p.find('location')
-            self.anchors[p.get('type')] = (int(l.get('x', 0)), int(l.get('y', 0)))
+            self.setAnchor(ap_gr(p.get('type')), int(l.get('x', 0)), int(l.get('y', 0)))
         p = elem.find('note')
         if p is not None and p.text :
             self.comment = p.text
@@ -99,7 +122,7 @@ class Glyph(object) :
         for k in sorted(self.anchors.keys()) :
             v = self.anchors[k]
             p = SubElement(e, 'point')
-            p.set('type', k)
+            p.set('type', gr_ap(k))
             p.text = "\n        "
             l = SubElement(p, 'location')
             l.set('x', str(v[0]))

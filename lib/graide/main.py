@@ -39,6 +39,7 @@ from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
+from graide.posedit import PosEdit, PosView
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
@@ -258,7 +259,7 @@ class MainWindow(QtGui.QMainWindow) :
         parent.addTab(self.test_splitter, "Tests")
 
     def ui_left(self, parent) :
-        # glyph, slot, classes, tabview
+        # glyph, slot, classes, positions
         self.tab_glyph = QtGui.QWidget()
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
         self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
@@ -297,6 +298,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'makegdlfile') if configval(self.config, 'main', 'ap') else None)
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
+        self.tab_poses = PosEdit(self.font, self)
+        self.tabInfo.addTab(self.tab_poses, "Positions")
 
     def ui_fileEdits(self, parent) :
         # file edit view
@@ -362,6 +365,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
+
+        # positioning tab
+        self.tab_pos = PosView(size = configintval(self.config, 'ui', 'posglyphsize'))
+        if hasattr(self, 'tab_poses') : self.tab_poses.view = self.tab_pos
+        self.tabResults.addTab(self.tab_pos, "Positions")
 
     def setMenus(self) :
         filemenu = self.menuBar().addMenu("&File")
@@ -644,6 +652,9 @@ Copyright 2012 SIL International and M. Hosken""")
     def debugClicked(self, event) :
         m = DebugMenu(self)
         m.exec_(event.globalPos())
+
+    def setposglyphsize(self, size) :
+        if hasattr(self, 'tab_pos') : self.tab_pos.size = size
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

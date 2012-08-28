@@ -394,41 +394,41 @@
         <location x="508" y="-53" />
     </point>
     <point type="BS">
-        <location x="714" y="-53" />
+        <location x="720" y="-53" />
     </point>
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="100" PSName="u1000.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-872" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-393" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-872" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-872" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -443,17 +443,17 @@
     <point type="BS">
         <location x="1236" y="-53" />
     </point>
-    <point type="L">
-        <location x="1236" y="-53" />
-    </point>
     <point type="LL">
         <location x="394" y="-53" />
     </point>
-    <point type="U">
-        <location x="940" y="495" />
+    <point type="L">
+        <location x="1236" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="940" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -475,23 +475,17 @@
     <point type="L">
         <location x="283" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="104" PSName="u1001.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-557" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-237" y="-53" />
     </point>
@@ -501,7 +495,13 @@
     <point type="_LLM">
         <location x="-557" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-557" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -518,23 +518,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="106" PSName="u1002.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-566" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-239" y="-53" />
     </point>
@@ -544,7 +538,13 @@
     <point type="_LLM">
         <location x="-566" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-566" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -561,36 +561,36 @@
     <point type="L">
         <location x="712" y="-53" />
     </point>
-    <point type="U">
-        <location x="712" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="712" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="108" PSName="u1003.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-884" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-401" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-884" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-884" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -608,23 +608,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="110" PSName="u1004.med">
-    <point type="L">
-        <location x="69" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-495" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-216" y="-53" />
     </point>
@@ -634,7 +628,13 @@
     <point type="_LLM">
         <location x="-495" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-495" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="69" y="-53" />
+    </point>
+    <point type="L">
         <location x="69" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -725,23 +725,17 @@
     <point type="L">
         <location x="288" y="-53" />
     </point>
-    <point type="U">
-        <location x="288" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="288" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="120" PSName="u1005.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-557" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-234" y="-53" />
     </point>
@@ -751,7 +745,13 @@
     <point type="_LLM">
         <location x="-557" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-557" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -768,36 +768,36 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="122" PSName="u1006.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-878" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-395" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-878" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-878" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -815,25 +815,19 @@
     <point type="L">
         <location x="286" y="-53" />
     </point>
-    <point type="U">
-        <location x="288" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="288" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="124" PSName="u1007.med">
-    <point type="L">
-        <location x="25" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-596" y="-53" />
-    </point>
     <point type="_BS">
-        <location x="-283" y="-53" />
+        <location x="-286" y="-53" />
     </point>
     <point type="_BSM">
         <location x="-283" y="-53" />
@@ -841,7 +835,13 @@
     <point type="_LLM">
         <location x="-596" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-596" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="25" y="-53" />
+    </point>
+    <point type="L">
         <location x="25" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -855,17 +855,17 @@
     <point type="BS">
         <location x="810" y="-53" />
     </point>
-    <point type="L">
-        <location x="810" y="-53" />
-    </point>
     <point type="LL">
         <location x="208" y="-53" />
     </point>
-    <point type="U">
-        <location x="549" y="486" />
+    <point type="L">
+        <location x="810" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="549" y="486" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -895,17 +895,17 @@
     <point type="BS">
         <location x="450" y="-53" />
     </point>
-    <point type="L">
-        <location x="276" y="-53" />
-    </point>
     <point type="LL">
         <location x="724" y="-53" />
     </point>
-    <point type="U">
-        <location x="276" y="495" />
+    <point type="L">
+        <location x="276" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="276" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -921,11 +921,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -940,11 +940,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -960,36 +960,36 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="131" PSName="u100A.med">
-    <point type="BS">
-        <location x="110" y="-53" />
-    </point>
-    <point type="L">
-        <location x="110" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-832" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-368" y="-53" />
     </point>
     <point type="_BSM">
         <location x="110" y="-53" />
     </point>
+    <point type="BS">
+        <location x="110" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-832" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-832" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="110" y="-53" />
+    </point>
+    <point type="L">
         <location x="110" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1007,11 +1007,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="1123" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="1123" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1026,11 +1026,11 @@
     <point type="L">
         <location x="657" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
@@ -1043,30 +1043,24 @@
     <point type="BS">
         <location x="207" y="-173" />
     </point>
-    <point type="L">
-        <location x="642" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
+    <point type="L">
+        <location x="642" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="135" PSName="u100B.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-416" y="-53" />
-    </point>
     <point type="_BS">
-        <location x="-161" y="-53" />
+        <location x="-161" y="-176" />
     </point>
     <point type="_BSM">
         <location x="-161" y="-53" />
@@ -1074,7 +1068,13 @@
     <point type="_LLM">
         <location x="-416" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-416" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1091,11 +1091,11 @@
     <point type="L">
         <location x="657" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1110,11 +1110,11 @@
     <point type="L">
         <location x="642" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1129,36 +1129,36 @@
     <point type="L">
         <location x="657" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="139" PSName="u100C.med">
-    <point type="BS">
-        <location x="89" y="-53" />
-    </point>
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-900" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-405" y="-53" />
     </point>
     <point type="_BSM">
         <location x="89" y="-53" />
     </point>
+    <point type="BS">
+        <location x="89" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-900" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-900" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1172,29 +1172,23 @@
     <point type="BS">
         <location x="168" y="-173" />
     </point>
-    <point type="L">
-        <location x="612" y="-53" />
-    </point>
     <point type="LL">
         <location x="280" y="-51" />
     </point>
-    <point type="U">
-        <location x="276" y="495" />
+    <point type="L">
+        <location x="612" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="276" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="141" PSName="u100D.med">
-    <point type="L">
-        <location x="50" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-465" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-204" y="-53" />
     </point>
@@ -1204,7 +1198,13 @@
     <point type="_LLM">
         <location x="-465" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-465" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="50" y="-53" />
+    </point>
+    <point type="L">
         <location x="50" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1221,11 +1221,11 @@
     <point type="L">
         <location x="627" y="-53" />
     </point>
-    <point type="U">
-        <location x="276" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="276" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1237,17 +1237,17 @@
     <point type="BS">
         <location x="528" y="-53" />
     </point>
-    <point type="L">
-        <location x="468" y="-53" />
-    </point>
     <point type="LL">
         <location x="115" y="-53" />
     </point>
-    <point type="U">
-        <location x="285" y="495" />
+    <point type="L">
+        <location x="468" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="285" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1262,23 +1262,17 @@
     <point type="L">
         <location x="285" y="-53" />
     </point>
-    <point type="U">
-        <location x="285" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="285" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="145" PSName="u100E.med">
-    <point type="L">
-        <location x="95" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-559" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-238" y="-53" />
     </point>
@@ -1288,7 +1282,13 @@
     <point type="_LLM">
         <location x="-559" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-559" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="95" y="-53" />
+    </point>
+    <point type="L">
         <location x="95" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1305,36 +1305,36 @@
     <point type="L">
         <location x="759" y="-53" />
     </point>
-    <point type="U">
-        <location x="759" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="759" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="147" PSName="u100F.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-908" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-410" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-908" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-908" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1349,17 +1349,17 @@
     <point type="BS">
         <location x="1027" y="-53" />
     </point>
-    <point type="L">
-        <location x="932" y="-53" />
-    </point>
     <point type="LL">
         <location x="372" y="-53" />
     </point>
-    <point type="U">
-        <location x="759" y="495" />
+    <point type="L">
+        <location x="932" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="759" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1371,17 +1371,17 @@
     <point type="BS">
         <location x="-30" y="-53" />
     </point>
-    <point type="L">
-        <location x="965" y="-53" />
-    </point>
     <point type="LL">
         <location x="30" y="-53" />
     </point>
-    <point type="U">
-        <location x="759" y="495" />
+    <point type="L">
+        <location x="965" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="759" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1396,36 +1396,36 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="151" PSName="u1010.med">
-    <point type="BS">
-        <location x="104" y="-53" />
-    </point>
-    <point type="L">
-        <location x="104" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-867" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-379" y="-53" />
     </point>
     <point type="_BSM">
         <location x="104" y="-53" />
     </point>
+    <point type="BS">
+        <location x="104" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-867" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-867" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="104" y="-53" />
+    </point>
+    <point type="L">
         <location x="104" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1434,12 +1434,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="152" PSName="u1010_u103D.med">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-553" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-231" y="-53" />
     </point>
@@ -1449,7 +1443,13 @@
     <point type="_LLM">
         <location x="-553" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-553" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1466,36 +1466,36 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="154" PSName="u1011.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="-878" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="88" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-395" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="88" y="-53" />
     </point>
+    <point type="LL">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="-878" y="-53" />
+    </point>
+    <point type="L">
         <location x="-878" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1513,23 +1513,17 @@
     <point type="L">
         <location x="267" y="-53" />
     </point>
-    <point type="U">
-        <location x="267" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="267" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="156" PSName="u1012.med">
-    <point type="L">
-        <location x="82" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-533" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-225" y="-53" />
     </point>
@@ -1539,7 +1533,13 @@
     <point type="_LLM">
         <location x="-533" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-533" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="82" y="-53" />
+    </point>
+    <point type="L">
         <location x="82" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1556,23 +1556,17 @@
     <point type="L">
         <location x="288" y="-53" />
     </point>
-    <point type="U">
-        <location x="288" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="288" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="158" PSName="u1013.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-557" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-234" y="-53" />
     </point>
@@ -1582,7 +1576,13 @@
     <point type="_LLM">
         <location x="-557" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-557" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1599,11 +1599,11 @@
     <point type="L">
         <location x="480" y="-53" />
     </point>
-    <point type="U">
-        <location x="273" y="495" />
-    </point>
     <point type="_R">
         <location x="12" y="0" />
+    </point>
+    <point type="U">
+        <location x="273" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -1619,23 +1619,17 @@
     <point type="L">
         <location x="271" y="-53" />
     </point>
-    <point type="U">
-        <location x="271" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="271" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="161" PSName="u1014.med">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-522" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-210" y="-53" />
     </point>
@@ -1645,7 +1639,13 @@
     <point type="_LLM">
         <location x="-522" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-522" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1662,11 +1662,11 @@
     <point type="L">
         <location x="999" y="-53" />
     </point>
-    <point type="U">
-        <location x="765" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="765" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -1697,23 +1697,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="165" PSName="u1015.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-566" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-239" y="-53" />
     </point>
@@ -1723,7 +1717,13 @@
     <point type="_LLM">
         <location x="-566" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-566" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1740,20 +1740,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="167" PSName="u1016.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-239" y="-53" />
     </point>
@@ -1762,6 +1759,9 @@
     </point>
     <point type="_LM">
         <location x="-566" y="-53" />
+    </point>
+    <point type="L">
+        <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
     <property name="GDL_origWidth" value="477m" />
@@ -1777,23 +1777,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="169" PSName="u1017.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-567" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-240" y="-53" />
     </point>
@@ -1803,7 +1797,13 @@
     <point type="_LLM">
         <location x="-567" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-567" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1820,36 +1820,36 @@
     <point type="L">
         <location x="699" y="-53" />
     </point>
-    <point type="U">
-        <location x="699" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="699" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="171" PSName="u1018.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-875" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-393" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-875" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-875" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1867,23 +1867,17 @@
     <point type="L">
         <location x="294" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="173" PSName="u1019.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-566" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-239" y="-53" />
     </point>
@@ -1893,7 +1887,13 @@
     <point type="_LLM">
         <location x="-566" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-566" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1910,36 +1910,36 @@
     <point type="L">
         <location x="706" y="-53" />
     </point>
-    <point type="U">
-        <location x="706" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="706" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="175" PSName="u101A.med">
-    <point type="BS">
-        <location x="69" y="-53" />
-    </point>
-    <point type="L">
-        <location x="69" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-866" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-392" y="-53" />
     </point>
     <point type="_BSM">
         <location x="69" y="-53" />
     </point>
+    <point type="BS">
+        <location x="69" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-866" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-866" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="69" y="-53" />
+    </point>
+    <point type="L">
         <location x="69" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -1954,17 +1954,17 @@
     <point type="BS">
         <location x="247" y="-53" />
     </point>
-    <point type="L">
-        <location x="646" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="295" y="495" />
+    <point type="L">
+        <location x="646" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="295" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -1977,17 +1977,17 @@
     <point type="BS">
         <location x="348" y="-53" />
     </point>
-    <point type="L">
-        <location x="676" y="-53" />
-    </point>
     <point type="LL">
         <location x="87" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
+    <point type="L">
+        <location x="676" y="-53" />
     </point>
     <point type="_R">
         <location x="3" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cConsSVowel" />
@@ -2000,28 +2000,22 @@
     <point type="BS">
         <location x="270" y="-53" />
     </point>
-    <point type="L">
-        <location x="676" y="-53" />
-    </point>
     <point type="LL">
         <location x="87" y="-53" />
     </point>
-    <point type="U">
-        <location x="308" y="495" />
+    <point type="L">
+        <location x="676" y="-53" />
     </point>
     <point type="_R">
         <location x="3" y="0" />
+    </point>
+    <point type="U">
+        <location x="308" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="179" PSName="u101B.med">
-    <point type="L">
-        <location x="97" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-550" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-217" y="-53" />
     </point>
@@ -2031,7 +2025,13 @@
     <point type="_LLM">
         <location x="-550" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-550" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="97" y="-53" />
+    </point>
+    <point type="L">
         <location x="97" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -2085,36 +2085,36 @@
     <point type="L">
         <location x="679" y="-53" />
     </point>
-    <point type="U">
-        <location x="679" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="679" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="185" PSName="u101C.med">
-    <point type="BS">
-        <location x="88" y="-53" />
-    </point>
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-854" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-390" y="-53" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />
     </point>
+    <point type="BS">
+        <location x="88" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-854" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-854" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -2123,25 +2123,25 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="186" PSName="u101C.med_u103D">
-    <point type="BS">
-        <location x="91" y="-53" />
-    </point>
-    <point type="L">
-        <location x="91" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-1257" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-560" y="-53" />
     </point>
     <point type="_BSM">
         <location x="91" y="-53" />
     </point>
+    <point type="BS">
+        <location x="91" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-1257" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-1257" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="91" y="-53" />
+    </point>
+    <point type="L">
         <location x="91" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -2159,11 +2159,11 @@
     <point type="L">
         <location x="286" y="-53" />
     </point>
-    <point type="U">
-        <location x="286" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="286" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -2179,36 +2179,36 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="189" PSName="u101E.med">
-    <point type="BS">
-        <location x="85" y="-53" />
-    </point>
-    <point type="L">
-        <location x="85" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-878" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-396" y="-53" />
     </point>
     <point type="_BSM">
         <location x="85" y="-53" />
     </point>
+    <point type="BS">
+        <location x="85" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-878" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-878" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="85" y="-53" />
+    </point>
+    <point type="L">
         <location x="85" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -2241,11 +2241,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -2261,11 +2261,11 @@
     <point type="L">
         <location x="654" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -2278,17 +2278,17 @@
     <point type="BS">
         <location x="168" y="-173" />
     </point>
-    <point type="L">
-        <location x="612" y="-53" />
-    </point>
     <point type="LL">
         <location x="280" y="-51" />
     </point>
-    <point type="U">
-        <location x="276" y="495" />
+    <point type="L">
+        <location x="612" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="276" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -2303,11 +2303,11 @@
     <point type="L">
         <location x="657" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -2319,11 +2319,11 @@
     <point type="L">
         <location x="657" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="GDL_origWidth" value="583m" />
@@ -2339,36 +2339,36 @@
     <point type="L">
         <location x="648" y="-53" />
     </point>
-    <point type="U">
-        <location x="648" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="648" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="197" PSName="u1021.med">
-    <point type="BS">
-        <location x="150" y="-53" />
-    </point>
-    <point type="L">
-        <location x="150" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-813" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-331" y="-53" />
     </point>
     <point type="_BSM">
         <location x="150" y="-53" />
     </point>
+    <point type="BS">
+        <location x="150" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-813" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-813" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="150" y="-53" />
+    </point>
+    <point type="L">
         <location x="150" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -2386,11 +2386,11 @@
     <point type="L">
         <location x="712" y="-53" />
     </point>
-    <point type="U">
-        <location x="712" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="712" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -2403,11 +2403,11 @@
     <point type="BS">
         <location x="993" y="-53" />
     </point>
-    <point type="L">
-        <location x="993" y="-53" />
-    </point>
     <point type="LL">
         <location x="15" y="-53" />
+    </point>
+    <point type="L">
+        <location x="993" y="-53" />
     </point>
     <point type="U">
         <location x="715" y="495" />
@@ -2546,11 +2546,11 @@
     <point type="L">
         <location x="133" y="-53" />
     </point>
-    <point type="U">
-        <location x="133" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="133" y="495" />
     </point>
     <property name="GDL_order" value="15" />
     <property name="classes" value="cSpaceVowel" />
@@ -2626,12 +2626,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="216" PSName="u102F.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-251" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-81" y="-53" />
     </point>
@@ -2641,7 +2635,13 @@
     <point type="_LLM">
         <location x="-251" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-251" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="12" />
@@ -2650,12 +2650,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="217" PSName="u102F_u108D">
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-89" y="-53" />
-    </point>
     <point type="_BS">
         <location x="81" y="-53" />
     </point>
@@ -2665,7 +2659,13 @@
     <point type="_LLM">
         <location x="-89" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-89" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="250" y="-53" />
+    </point>
+    <point type="L">
         <location x="250" y="-53" />
     </point>
     <property name="GDL_order" value="1" />
@@ -2691,12 +2691,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="219" PSName="u1030.med">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-399" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-156" y="-53" />
     </point>
@@ -2706,7 +2700,13 @@
     <point type="_LLM">
         <location x="-399" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-399" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="12" />
@@ -2715,12 +2715,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="220" PSName="u1030_u108D">
-    <point type="L">
-        <location x="399" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-89" y="-53" />
-    </point>
     <point type="_BS">
         <location x="154" y="-53" />
     </point>
@@ -2730,7 +2724,13 @@
     <point type="_LLM">
         <location x="-89" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-89" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="399" y="-53" />
+    </point>
+    <point type="L">
         <location x="399" y="-53" />
     </point>
     <property name="GDL_order" value="1" />
@@ -2746,11 +2746,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="9" />
     <property name="mark" value="80" />
@@ -2836,12 +2836,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="230" PSName="u1039" UID="1039">
-    <point type="L">
-        <location x="144" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-501" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-178" y="-53" />
     </point>
@@ -2851,7 +2845,13 @@
     <point type="_LLM">
         <location x="-501" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-501" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="144" y="-53" />
+    </point>
+    <point type="L">
         <location x="144" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -2878,11 +2878,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-351" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -2901,11 +2901,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-540" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -2922,11 +2922,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-540" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -2942,11 +2942,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-401" y="79" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -2966,11 +2966,11 @@
     <point type="BS">
         <location x="841" y="-53" />
     </point>
-    <point type="L">
-        <location x="841" y="-53" />
-    </point>
     <point type="LL">
         <location x="502" y="-53" />
+    </point>
+    <point type="L">
+        <location x="841" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -2986,11 +2986,11 @@
     <point type="BS">
         <location x="841" y="-53" />
     </point>
-    <point type="L">
-        <location x="841" y="-53" />
-    </point>
     <point type="LL">
         <location x="502" y="-53" />
+    </point>
+    <point type="L">
+        <location x="841" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3006,11 +3006,11 @@
     <point type="BS">
         <location x="1263" y="-53" />
     </point>
-    <point type="L">
-        <location x="1263" y="-53" />
-    </point>
     <point type="LL">
         <location x="924" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1263" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3026,11 +3026,11 @@
     <point type="BS">
         <location x="1263" y="-53" />
     </point>
-    <point type="L">
-        <location x="1263" y="-53" />
-    </point>
     <point type="LL">
         <location x="924" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1263" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3058,11 +3058,11 @@
     <point type="BS">
         <location x="1198" y="-53" />
     </point>
-    <point type="L">
-        <location x="1198" y="-53" />
-    </point>
     <point type="LL">
         <location x="553" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1198" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3091,11 +3091,11 @@
     <point type="BS">
         <location x="1198" y="-53" />
     </point>
-    <point type="L">
-        <location x="1198" y="-53" />
-    </point>
     <point type="LL">
         <location x="553" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1198" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3112,11 +3112,11 @@
     <point type="BS">
         <location x="781" y="-53" />
     </point>
-    <point type="L">
-        <location x="781" y="-53" />
-    </point>
     <point type="LL">
         <location x="295" y="-53" />
+    </point>
+    <point type="L">
+        <location x="781" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3132,11 +3132,11 @@
     <point type="BS">
         <location x="1195" y="-53" />
     </point>
-    <point type="L">
-        <location x="1195" y="-53" />
-    </point>
     <point type="LL">
         <location x="709" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1195" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3152,11 +3152,11 @@
     <point type="BS">
         <location x="781" y="-53" />
     </point>
-    <point type="L">
-        <location x="781" y="-53" />
-    </point>
     <point type="LL">
         <location x="295" y="-53" />
+    </point>
+    <point type="L">
+        <location x="781" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3172,11 +3172,11 @@
     <point type="BS">
         <location x="1195" y="-53" />
     </point>
-    <point type="L">
-        <location x="1195" y="-53" />
-    </point>
     <point type="LL">
         <location x="709" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1195" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -3186,12 +3186,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="249" PSName="u103D" UID="103D">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-556" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-233" y="-53" />
     </point>
@@ -3201,7 +3195,13 @@
     <point type="_LLM">
         <location x="-556" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-556" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -3210,12 +3210,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="250" PSName="u103D_u103E">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-611" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-234" y="-53" />
     </point>
@@ -3225,7 +3219,13 @@
     <point type="_LLM">
         <location x="-611" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-611" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -3246,12 +3246,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="252" PSName="u103D_u108D">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-556" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-233" y="-53" />
     </point>
@@ -3261,7 +3255,13 @@
     <point type="_LLM">
         <location x="-556" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-556" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="1" />
@@ -3269,12 +3269,6 @@
     <property name="mark" value="1" />
 </glyph>
 <glyph GID="253" PSName="u103E" UID="103E">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-250" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-81" y="-53" />
     </point>
@@ -3284,7 +3278,13 @@
     <point type="_LLM">
         <location x="-250" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-250" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -3293,12 +3293,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="254" PSName="u103E.alt">
-    <point type="L">
-        <location x="39" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-341" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-88" y="-53" />
     </point>
@@ -3308,7 +3302,13 @@
     <point type="_LLM">
         <location x="-341" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-341" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="39" y="-53" />
+    </point>
+    <point type="L">
         <location x="39" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -3316,12 +3316,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="255" PSName="u103E_u102F">
-    <point type="L">
-        <location x="21" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-466" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-223" y="-53" />
     </point>
@@ -3331,7 +3325,13 @@
     <point type="_LLM">
         <location x="-466" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-466" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="21" y="-53" />
+    </point>
+    <point type="L">
         <location x="21" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -3341,12 +3341,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="256" PSName="u103E_u1030">
-    <point type="L">
-        <location x="21" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-609" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-294" y="-53" />
     </point>
@@ -3356,7 +3350,13 @@
     <point type="_LLM">
         <location x="-609" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-609" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="21" y="-53" />
+    </point>
+    <point type="L">
         <location x="21" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -3375,11 +3375,11 @@
     <point type="L">
         <location x="1123" y="-53" />
     </point>
-    <point type="U">
-        <location x="1123" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="1123" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -3411,11 +3411,11 @@
     <point type="L">
         <location x="272" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="130" />
@@ -3595,23 +3595,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="16" />
 </glyph>
 <glyph GID="275" PSName="u1050.med">
-    <point type="L">
-        <location x="86" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-568" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-251" y="-53" />
     </point>
@@ -3621,7 +3615,13 @@
     <point type="_LLM">
         <location x="-568" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-568" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="86" y="-53" />
+    </point>
+    <point type="L">
         <location x="86" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -3638,23 +3638,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="16" />
 </glyph>
 <glyph GID="277" PSName="u1051.med">
-    <point type="L">
-        <location x="86" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-568" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-251" y="-53" />
     </point>
@@ -3664,7 +3658,13 @@
     <point type="_LLM">
         <location x="-568" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-568" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="86" y="-53" />
+    </point>
+    <point type="L">
         <location x="86" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -3678,17 +3678,17 @@
     <point type="BS">
         <location x="207" y="-173" />
     </point>
-    <point type="L">
-        <location x="642" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
+    <point type="L">
+        <location x="642" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -3700,17 +3700,17 @@
     <point type="BS">
         <location x="207" y="-173" />
     </point>
-    <point type="L">
-        <location x="642" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
+    <point type="L">
+        <location x="642" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -3725,11 +3725,11 @@
     <point type="L">
         <location x="285" y="-53" />
     </point>
-    <point type="U">
-        <location x="285" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="285" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
@@ -3744,11 +3744,11 @@
     <point type="L">
         <location x="315" y="-53" />
     </point>
-    <point type="U">
-        <location x="315" y="495" />
-    </point>
     <point type="_R">
         <location x="30" y="0" />
+    </point>
+    <point type="U">
+        <location x="315" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
@@ -3763,11 +3763,11 @@
     <point type="L">
         <location x="283" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
@@ -3782,11 +3782,11 @@
     <point type="L">
         <location x="283" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
@@ -3801,11 +3801,11 @@
     <point type="L">
         <location x="238" y="-53" />
     </point>
-    <point type="U">
-        <location x="277" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="277" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
@@ -3820,22 +3820,16 @@
     <point type="L">
         <location x="238" y="-53" />
     </point>
-    <point type="U">
-        <location x="277" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="277" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="16" />
 </glyph>
 <glyph GID="286" PSName="u1058" UID="1058">
-    <point type="L">
-        <location x="556" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-89" y="-53" />
-    </point>
     <point type="_BS">
         <location x="231" y="-53" />
     </point>
@@ -3845,19 +3839,19 @@
     <point type="_LLM">
         <location x="-89" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-89" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="556" y="-53" />
+    </point>
+    <point type="L">
         <location x="556" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
     <property name="mark" value="16" />
 </glyph>
 <glyph GID="287" PSName="u1059" UID="1059">
-    <point type="L">
-        <location x="556" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-89" y="-53" />
-    </point>
     <point type="_BS">
         <location x="238" y="-53" />
     </point>
@@ -3867,7 +3861,13 @@
     <point type="_LLM">
         <location x="-89" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-89" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="556" y="-53" />
+    </point>
+    <point type="L">
         <location x="556" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -3883,23 +3883,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
     <property name="mark" value="130" />
 </glyph>
 <glyph GID="289" PSName="u105A.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-377" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-146" y="-53" />
     </point>
@@ -3909,7 +3903,13 @@
     <point type="_LLM">
         <location x="-377" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-377" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -3926,11 +3926,11 @@
     <point type="L">
         <location x="245" y="-53" />
     </point>
-    <point type="U">
-        <location x="288" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="288" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
@@ -3940,11 +3940,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-540" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -3966,23 +3966,17 @@
     <point type="L">
         <location x="290" y="-69" />
     </point>
-    <point type="U">
-        <location x="286" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="286" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
     <property name="mark" value="130" />
 </glyph>
 <glyph GID="293" PSName="u105C.med">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-557" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-234" y="-53" />
     </point>
@@ -3992,7 +3986,13 @@
     <point type="_LLM">
         <location x="-557" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-557" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -4009,23 +4009,17 @@
     <point type="L">
         <location x="294" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
     <property name="mark" value="130" />
 </glyph>
 <glyph GID="295" PSName="u105E" UID="105E">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-250" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-80" y="-53" />
     </point>
@@ -4035,19 +4029,19 @@
     <point type="_LLM">
         <location x="-250" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-250" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="4" />
     <property name="mark" value="130" />
 </glyph>
 <glyph GID="296" PSName="u105F" UID="105F">
-    <point type="L">
-        <location x="89" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-250" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-80" y="-53" />
     </point>
@@ -4057,21 +4051,27 @@
     <point type="_LLM">
         <location x="-250" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-250" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="89" y="-53" />
+    </point>
+    <point type="L">
         <location x="89" y="-53" />
     </point>
     <property name="GDL_order" value="4" />
     <property name="mark" value="130" />
 </glyph>
 <glyph GID="297" PSName="u1060" UID="1060">
+    <point type="_LLM">
+        <location x="-556" y="-53" />
+    </point>
     <point type="LL">
         <location x="-556" y="-53" />
     </point>
     <point type="_L">
         <location x="-235" y="-53" />
-    </point>
-    <point type="_LLM">
-        <location x="-556" y="-53" />
     </point>
     <point type="_LM">
         <location x="-235" y="-53" />
@@ -4086,17 +4086,17 @@
     <point type="BS">
         <location x="247" y="-53" />
     </point>
-    <point type="L">
-        <location x="646" y="-53" />
-    </point>
     <point type="LL">
         <location x="236" y="-53" />
     </point>
-    <point type="U">
-        <location x="295" y="495" />
+    <point type="L">
+        <location x="646" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="295" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
@@ -4142,11 +4142,11 @@
     <point type="L">
         <location x="276" y="-53" />
     </point>
-    <point type="U">
-        <location x="276" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="276" y="495" />
     </point>
     <property name="GDL_order" value="15" />
     <property name="classes" value="cSpaceVowel" />
@@ -4191,11 +4191,11 @@
     <point type="L">
         <location x="279" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -4211,11 +4211,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
@@ -4262,11 +4262,11 @@
     <point type="L">
         <location x="180" y="-53" />
     </point>
-    <point type="U">
-        <location x="186" y="496" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="186" y="496" />
     </point>
     <property name="GDL_order" value="17" />
     <property name="mark" value="80" />
@@ -4329,11 +4329,11 @@
     <point type="L">
         <location x="174" y="-51" />
     </point>
-    <point type="U">
-        <location x="168" y="496" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="168" y="496" />
     </point>
     <property name="GDL_order" value="17" />
     <property name="mark" value="80" />
@@ -4348,11 +4348,11 @@
     <point type="L">
         <location x="898" y="-53" />
     </point>
-    <point type="U">
-        <location x="898" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="898" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4368,11 +4368,11 @@
     <point type="L">
         <location x="530" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -4388,11 +4388,11 @@
     <point type="L">
         <location x="530" y="-53" />
     </point>
-    <point type="U">
-        <location x="712" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="712" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -4442,11 +4442,11 @@
     <point type="L">
         <location x="285" y="-53" />
     </point>
-    <point type="U">
-        <location x="285" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="285" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -4462,11 +4462,11 @@
     <point type="L">
         <location x="289" y="-53" />
     </point>
-    <point type="U">
-        <location x="289" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="289" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -4482,11 +4482,11 @@
     <point type="L">
         <location x="285" y="-53" />
     </point>
-    <point type="U">
-        <location x="285" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="285" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -4502,11 +4502,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4522,11 +4522,11 @@
     <point type="L">
         <location x="645" y="-53" />
     </point>
-    <point type="U">
-        <location x="652" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="652" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4539,17 +4539,17 @@
     <point type="BS">
         <location x="750" y="-53" />
     </point>
-    <point type="L">
-        <location x="720" y="-53" />
-    </point>
     <point type="LL">
         <location x="286" y="-53" />
     </point>
-    <point type="U">
-        <location x="720" y="495" />
+    <point type="L">
+        <location x="720" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="720" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -4565,11 +4565,11 @@
     <point type="L">
         <location x="640" y="-53" />
     </point>
-    <point type="U">
-        <location x="645" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="645" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4585,11 +4585,11 @@
     <point type="L">
         <location x="703" y="-53" />
     </point>
-    <point type="U">
-        <location x="703" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="703" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4605,11 +4605,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4625,11 +4625,11 @@
     <point type="L">
         <location x="469" y="-53" />
     </point>
-    <point type="U">
-        <location x="715" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="715" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -4645,11 +4645,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -4665,11 +4665,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -4685,23 +4685,17 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="333" PSName="u1082" UID="1082">
-    <point type="L">
-        <location x="556" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-239" y="-53" />
-    </point>
     <point type="_BS">
         <location x="238" y="-53" />
     </point>
@@ -4711,19 +4705,19 @@
     <point type="_LLM">
         <location x="-239" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-239" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="556" y="-53" />
+    </point>
+    <point type="L">
         <location x="556" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="334" PSName="u1082_u108D">
-    <point type="L">
-        <location x="76" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-719" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-242" y="-53" />
     </point>
@@ -4733,7 +4727,13 @@
     <point type="_LLM">
         <location x="-719" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-719" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="76" y="-53" />
+    </point>
+    <point type="L">
         <location x="76" y="-53" />
     </point>
     <property name="GDL_order" value="1" />
@@ -4821,12 +4821,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="346" PSName="u108D" UID="108D">
-    <point type="L">
-        <location x="585" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-89" y="-53" />
-    </point>
     <point type="_BS">
         <location x="290" y="-53" />
     </point>
@@ -4836,7 +4830,13 @@
     <point type="_LLM">
         <location x="-89" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-89" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="585" y="-53" />
+    </point>
+    <point type="L">
         <location x="585" y="-53" />
     </point>
     <property name="GDL_order" value="21" />
@@ -4853,11 +4853,11 @@
     <point type="L">
         <location x="288" y="-53" />
     </point>
-    <point type="U">
-        <location x="288" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="288" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5048,11 +5048,11 @@
     <point type="L">
         <location x="318" y="-53" />
     </point>
-    <point type="U">
-        <location x="318" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="318" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5068,11 +5068,11 @@
     <point type="L">
         <location x="318" y="-53" />
     </point>
-    <point type="U">
-        <location x="318" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="318" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="80" />
@@ -5091,11 +5091,11 @@
     <point type="L">
         <location x="283" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5111,11 +5111,11 @@
     <point type="L">
         <location x="649" y="-53" />
     </point>
-    <point type="U">
-        <location x="649" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="649" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5131,11 +5131,11 @@
     <point type="L">
         <location x="645" y="-53" />
     </point>
-    <point type="U">
-        <location x="645" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="645" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5151,11 +5151,11 @@
     <point type="L">
         <location x="707" y="-53" />
     </point>
-    <point type="U">
-        <location x="707" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="707" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5171,11 +5171,11 @@
     <point type="L">
         <location x="711" y="-53" />
     </point>
-    <point type="U">
-        <location x="711" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="711" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5215,11 +5215,11 @@
     <point type="L">
         <location x="783" y="-53" />
     </point>
-    <point type="U">
-        <location x="712" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="712" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5235,11 +5235,11 @@
     <point type="L">
         <location x="711" y="-53" />
     </point>
-    <point type="U">
-        <location x="711" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="711" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5255,11 +5255,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5275,11 +5275,11 @@
     <point type="L">
         <location x="679" y="-53" />
     </point>
-    <point type="U">
-        <location x="679" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="679" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5294,11 +5294,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5313,11 +5313,11 @@
     <point type="L">
         <location x="717" y="-53" />
     </point>
-    <point type="U">
-        <location x="717" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="717" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5332,11 +5332,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5351,11 +5351,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5370,11 +5370,11 @@
     <point type="L">
         <location x="411" y="-53" />
     </point>
-    <point type="U">
-        <location x="411" y="495" />
-    </point>
     <point type="_R">
         <location x="-10" y="0" />
+    </point>
+    <point type="U">
+        <location x="411" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5389,11 +5389,11 @@
     <point type="L">
         <location x="679" y="-53" />
     </point>
-    <point type="U">
-        <location x="679" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="679" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5408,11 +5408,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5427,11 +5427,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5446,11 +5446,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5465,11 +5465,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="711" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="711" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="1" />
@@ -5524,36 +5524,36 @@
     <point type="L">
         <location x="645" y="-53" />
     </point>
-    <point type="U">
-        <location x="645" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="645" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
     <property name="mark" value="210" />
 </glyph>
 <glyph GID="412" PSName="uAA60.med">
-    <point type="BS">
-        <location x="68" y="-53" />
-    </point>
-    <point type="L">
-        <location x="68" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-826" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-382" y="-53" />
     </point>
     <point type="_BSM">
         <location x="68" y="-53" />
     </point>
+    <point type="BS">
+        <location x="68" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-826" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-826" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="68" y="-53" />
+    </point>
+    <point type="L">
         <location x="68" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -5561,25 +5561,25 @@
     <property name="mark" value="210" />
 </glyph>
 <glyph GID="413" PSName="uAA60.med.kham">
-    <point type="BS">
-        <location x="68" y="-53" />
-    </point>
-    <point type="L">
-        <location x="68" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-826" y="-53" />
-    </point>
     <point type="_BD">
         <location x="-382" y="-53" />
     </point>
     <point type="_BSM">
         <location x="68" y="-53" />
     </point>
+    <point type="BS">
+        <location x="68" y="-53" />
+    </point>
     <point type="_LLM">
         <location x="-826" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-826" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="68" y="-53" />
+    </point>
+    <point type="L">
         <location x="68" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -5596,11 +5596,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="705" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="705" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5616,11 +5616,11 @@
     <point type="L">
         <location x="303" y="-53" />
     </point>
-    <point type="U">
-        <location x="303" y="495" />
-    </point>
     <point type="_R">
         <location x="15" y="0" />
+    </point>
+    <point type="U">
+        <location x="303" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5636,11 +5636,11 @@
     <point type="L">
         <location x="701" y="-53" />
     </point>
-    <point type="U">
-        <location x="701" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="701" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5656,11 +5656,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5673,17 +5673,17 @@
     <point type="BS">
         <location x="744" y="-53" />
     </point>
-    <point type="L">
-        <location x="718" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="718" y="495" />
+    <point type="L">
+        <location x="718" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="718" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -5699,11 +5699,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5719,11 +5719,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5739,11 +5739,11 @@
     <point type="L">
         <location x="645" y="-53" />
     </point>
-    <point type="U">
-        <location x="645" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="645" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5759,11 +5759,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5779,11 +5779,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5799,11 +5799,11 @@
     <point type="L">
         <location x="421" y="-53" />
     </point>
-    <point type="U">
-        <location x="421" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="421" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5819,11 +5819,11 @@
     <point type="L">
         <location x="717" y="-53" />
     </point>
-    <point type="U">
-        <location x="717" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="717" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5839,11 +5839,11 @@
     <point type="L">
         <location x="555" y="-53" />
     </point>
-    <point type="U">
-        <location x="555" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="555" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5859,11 +5859,11 @@
     <point type="L">
         <location x="679" y="-53" />
     </point>
-    <point type="U">
-        <location x="679" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="679" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5879,11 +5879,11 @@
     <point type="L">
         <location x="436" y="-53" />
     </point>
-    <point type="U">
-        <location x="434" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="434" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5903,11 +5903,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5923,11 +5923,11 @@
     <point type="L">
         <location x="917" y="-53" />
     </point>
-    <point type="U">
-        <location x="917" y="495" />
-    </point>
     <point type="_R">
         <location x="-2" y="0" />
+    </point>
+    <point type="U">
+        <location x="917" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -5943,11 +5943,11 @@
     <point type="L">
         <location x="303" y="-53" />
     </point>
-    <point type="U">
-        <location x="303" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="303" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -5975,11 +5975,11 @@
     <point type="BS">
         <location x="264" y="-53" />
     </point>
-    <point type="L">
-        <location x="646" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
+    </point>
+    <point type="L">
+        <location x="646" y="-53" />
     </point>
     <point type="R">
         <location x="0" y="0" />
@@ -6001,17 +6001,17 @@
     <point type="BS">
         <location x="256" y="-53" />
     </point>
-    <point type="L">
-        <location x="646" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
+    <point type="L">
+        <location x="646" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="mark" value="183" />
@@ -6026,11 +6026,11 @@
     <point type="L">
         <location x="860" y="-53" />
     </point>
-    <point type="U">
-        <location x="795" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="795" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -6062,11 +6062,11 @@
     <point type="L">
         <location x="67" y="-53" />
     </point>
-    <point type="U">
-        <location x="283" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="283" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar" />
@@ -6082,11 +6082,11 @@
     <point type="L">
         <location x="489" y="-53" />
     </point>
-    <point type="U">
-        <location x="702" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="702" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -6102,11 +6102,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6122,11 +6122,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6142,11 +6142,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6162,11 +6162,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6182,11 +6182,11 @@
     <point type="L">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6202,11 +6202,11 @@
     <point type="L">
         <location x="294" y="-53" />
     </point>
-    <point type="U">
-        <location x="292" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="292" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6222,11 +6222,11 @@
     <point type="L">
         <location x="706" y="-53" />
     </point>
-    <point type="U">
-        <location x="706" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="706" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6242,11 +6242,11 @@
     <point type="L">
         <location x="679" y="-53" />
     </point>
-    <point type="U">
-        <location x="679" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="679" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6262,11 +6262,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="705" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="705" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6289,11 +6289,11 @@
     <point type="L">
         <location x="284" y="-53" />
     </point>
-    <point type="U">
-        <location x="286" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="286" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6309,11 +6309,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6329,11 +6329,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6349,11 +6349,11 @@
     <point type="L">
         <location x="645" y="-53" />
     </point>
-    <point type="U">
-        <location x="645" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="645" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6369,11 +6369,11 @@
     <point type="L">
         <location x="702" y="-53" />
     </point>
-    <point type="U">
-        <location x="705" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="705" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6389,11 +6389,11 @@
     <point type="L">
         <location x="303" y="-53" />
     </point>
-    <point type="U">
-        <location x="303" y="495" />
-    </point>
     <point type="_R">
         <location x="15" y="0" />
+    </point>
+    <point type="U">
+        <location x="303" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6409,11 +6409,11 @@
     <point type="L">
         <location x="701" y="-53" />
     </point>
-    <point type="U">
-        <location x="701" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="701" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6429,11 +6429,11 @@
     <point type="L">
         <location x="714" y="-53" />
     </point>
-    <point type="U">
-        <location x="714" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="714" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6446,17 +6446,17 @@
     <point type="BS">
         <location x="744" y="-53" />
     </point>
-    <point type="L">
-        <location x="718" y="-53" />
-    </point>
     <point type="LL">
         <location x="292" y="-53" />
     </point>
-    <point type="U">
-        <location x="718" y="495" />
+    <point type="L">
+        <location x="718" y="-53" />
     </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="718" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsWide" />
@@ -6472,11 +6472,11 @@
     <point type="L">
         <location x="709" y="-53" />
     </point>
-    <point type="U">
-        <location x="709" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="709" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6492,11 +6492,11 @@
     <point type="L">
         <location x="421" y="-53" />
     </point>
-    <point type="U">
-        <location x="421" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="421" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6512,11 +6512,11 @@
     <point type="L">
         <location x="717" y="-53" />
     </point>
-    <point type="U">
-        <location x="717" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="717" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsSVowel cConsWide" />
@@ -6532,11 +6532,11 @@
     <point type="L">
         <location x="436" y="-53" />
     </point>
-    <point type="U">
-        <location x="434" y="495" />
-    </point>
     <point type="_R">
         <location x="0" y="0" />
+    </point>
+    <point type="U">
+        <location x="434" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6552,11 +6552,11 @@
     <point type="L">
         <location x="303" y="-53" />
     </point>
-    <point type="U">
-        <location x="303" y="495" />
-    </point>
     <point type="_R">
         <location x="15" y="0" />
+    </point>
+    <point type="U">
+        <location x="303" y="495" />
     </point>
     <property name="GDL_order" value="1" />
     <property name="classes" value="cCons cConsNar cConsSVowel" />
@@ -6626,12 +6626,6 @@
     <property name="mark" value="210" />
 </glyph>
 <glyph GID="482" PSName="u1010_u103D.med.tri">
-    <point type="L">
-        <location x="88" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-554" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-231" y="-51" />
     </point>
@@ -6641,7 +6635,13 @@
     <point type="_LLM">
         <location x="-554" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-554" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="88" y="-53" />
+    </point>
+    <point type="L">
         <location x="88" y="-53" />
     </point>
     <property name="GDL_order" value="2" />
@@ -6652,11 +6652,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-519" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -6673,11 +6673,11 @@
     <point type="BS">
         <location x="250" y="-53" />
     </point>
-    <point type="L">
-        <location x="250" y="-53" />
-    </point>
     <point type="LL">
         <location x="-540" y="-53" />
+    </point>
+    <point type="L">
+        <location x="250" y="-53" />
     </point>
     <point type="U">
         <location x="-36" y="495" />
@@ -6708,11 +6708,11 @@
     <point type="BS">
         <location x="1135" y="-53" />
     </point>
-    <point type="L">
-        <location x="1135" y="-53" />
-    </point>
     <point type="LL">
         <location x="607" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1135" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -6741,11 +6741,11 @@
     <point type="BS">
         <location x="1135" y="-53" />
     </point>
-    <point type="L">
-        <location x="1135" y="-53" />
-    </point>
     <point type="LL">
         <location x="607" y="-53" />
+    </point>
+    <point type="L">
+        <location x="1135" y="-53" />
     </point>
     <point type="R">
         <location x="172" y="0" />
@@ -6756,12 +6756,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="489" PSName="u103D.tri">
-    <point type="L">
-        <location x="82" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-530" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-222" y="-53" />
     </point>
@@ -6771,7 +6765,13 @@
     <point type="_LLM">
         <location x="-530" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-530" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="82" y="-53" />
+    </point>
+    <point type="L">
         <location x="82" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -6780,12 +6780,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="490" PSName="u103D_u103E.tri">
-    <point type="L">
-        <location x="82" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-530" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-225" y="-53" />
     </point>
@@ -6795,7 +6789,13 @@
     <point type="_LLM">
         <location x="-530" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-530" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="82" y="-53" />
+    </point>
+    <point type="L">
         <location x="82" y="-53" />
     </point>
     <property name="GDL_order" value="6" />
@@ -6815,12 +6815,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="492" PSName="u103E.slantr">
-    <point type="L">
-        <location x="77" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-262" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-30" y="-53" />
     </point>
@@ -6830,7 +6824,13 @@
     <point type="_LLM">
         <location x="-262" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-262" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="77" y="-53" />
+    </point>
+    <point type="L">
         <location x="77" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -6839,12 +6839,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="493" PSName="u103E.slanth">
-    <point type="L">
-        <location x="62" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="-262" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-41" y="-53" />
     </point>
@@ -6854,7 +6848,13 @@
     <point type="_LLM">
         <location x="-262" y="-53" />
     </point>
+    <point type="LL">
+        <location x="-262" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="62" y="-53" />
+    </point>
+    <point type="L">
         <location x="62" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -6863,12 +6863,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="494" PSName="u103E_u102F.slantr">
-    <point type="L">
-        <location x="-466" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="21" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-223" y="-53" />
     </point>
@@ -6878,7 +6872,13 @@
     <point type="_LLM">
         <location x="21" y="-53" />
     </point>
+    <point type="LL">
+        <location x="21" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="-466" y="-53" />
+    </point>
+    <point type="L">
         <location x="-466" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -6887,12 +6887,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="495" PSName="u103E_u102F.slanth">
-    <point type="L">
-        <location x="-473" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="21" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-223" y="-53" />
     </point>
@@ -6902,7 +6896,13 @@
     <point type="_LLM">
         <location x="21" y="-53" />
     </point>
+    <point type="LL">
+        <location x="21" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="-473" y="-53" />
+    </point>
+    <point type="L">
         <location x="-473" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -6911,12 +6911,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="496" PSName="u103E_u1030.slantr">
-    <point type="L">
-        <location x="-609" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="21" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-294" y="-53" />
     </point>
@@ -6926,7 +6920,13 @@
     <point type="_LLM">
         <location x="21" y="-53" />
     </point>
+    <point type="LL">
+        <location x="21" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="-609" y="-53" />
+    </point>
+    <point type="L">
         <location x="-609" y="-53" />
     </point>
     <property name="GDL_order" value="7" />
@@ -6935,12 +6935,6 @@
     <property name="mark" value="80" />
 </glyph>
 <glyph GID="497" PSName="u103E_u1030.slanth">
-    <point type="L">
-        <location x="-615" y="-53" />
-    </point>
-    <point type="LL">
-        <location x="21" y="-53" />
-    </point>
     <point type="_BS">
         <location x="-294" y="-53" />
     </point>
@@ -6950,7 +6944,13 @@
     <point type="_LLM">
         <location x="21" y="-53" />
     </point>
+    <point type="LL">
+        <location x="21" y="-53" />
+    </point>
     <point type="_LM">
+        <location x="-615" y="-53" />
+    </point>
+    <point type="L">
         <location x="-615" y="-53" />
     </point>
     <property name="GDL_order" value="7" />

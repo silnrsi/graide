@@ -166,19 +166,29 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(QtGui.QLabel('Font glyph pixel size'), 3, 0)
         self.ui_vb.addWidget(self.ui_gsize, 3, 1)
         
+        self.ui_psize = QtGui.QSpinBox(self.ui)
+        self.ui_psize.setRange(1, 1088)
+        if config.has_option('ui', 'posglyphsize') :
+            self.ui_psize.setValue(configintval(config, 'ui', 'posglyphsize'))
+        else :
+            self.ui_psize.setValue(200)
+        self.ui_psize.setToolTip('Pixel size of glyphs in the position editing window')
+        self.ui_vb.addWidget(QtGui.QLabel('Positioning glyph pixel size'), 4, 0)
+        self.ui_vb.addWidget(self.ui_psize, 4, 1)
+        
         self.ui_sizes = QtGui.QLineEdit(self.ui)
         self.ui_sizes.setText(configval(config, 'ui', 'waterfall'))
         self.ui_sizes.setToolTip('Point sizes for waterfall display, space separated')
-        self.ui_vb.addWidget(QtGui.QLabel('Waterfall sizes'), 4, 0)
-        self.ui_vb.addWidget(self.ui_sizes, 4, 1)
+        self.ui_vb.addWidget(QtGui.QLabel('Waterfall sizes'), 5, 0)
+        self.ui_vb.addWidget(self.ui_sizes, 5, 1)
         
         self.ui_ent = QtGui.QCheckBox()
         self.ui_ent.setChecked(configintval(config, 'ui', 'entities'))
         self.ui_ent.setToolTip('Display entry strings using \\u type entities for non-ASCII chars')
-        self.ui_vb.addWidget(QtGui.QLabel('Display character entities'), 5, 0)
-        self.ui_vb.addWidget(self.ui_ent, 5, 1)
+        self.ui_vb.addWidget(QtGui.QLabel('Display character entities'), 6, 0)
+        self.ui_vb.addWidget(self.ui_ent, 6, 1)
         
-        self.ui_vb.setRowStretch(6, 1)
+        self.ui_vb.setRowStretch(7, 1)
         self.tb.addItem(self.ui, 'User Interface')
 
         self.resize(500, 500)
@@ -229,6 +239,9 @@ class ConfigDialog(QtGui.QDialog) :
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
             if app : app.loadFont(configval(config, 'main', 'font'))
+        if self.ui_psize.value() != configintval(config, 'ui', 'posglyphsize') :
+            config.set('ui', 'posglyphsize', str(self.ui_psize.value()))
+            if app : app.setposglyphsize(self.ui_psize.value())
         self.updateChanged(self.ui_sizes, config, 'ui', 'waterfall')
         self.cbChanged(self.ui_ent, config, 'ui', 'entities')
 

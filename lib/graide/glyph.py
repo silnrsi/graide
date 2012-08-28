@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui
+from PySide import QtCore, QtGui
 from graide import freetype
 import array, ctypes
 from graide.attribview import Attribute, AttribModel
@@ -49,11 +49,23 @@ class GlyphItem(object) :
         n = ctypes.create_string_buffer(64)
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
         self.name = n.value
+        self.pixmaps = {height : (self.pixmap, self.left, self.top)}
+        self.face = face
+        self.gid = gid
 
-class Glyph(gdlGlyph, DataObj) :
+    def pixmapAt(self, height) :
+        if height not in self.pixmaps :
+            self.face.set_char_size(height * 64)
+            self.pixmaps[height] = ftGlyph(self.face, self.gid)
+        return self.pixmaps[height]
+
+class Glyph(gdlGlyph, DataObj, QtCore.QObject) :
+
+    anchorChanged = QtCore.Signal(str, int, int)
 
     def __init__(self, name, gid = 0, item = None) :
         super(Glyph, self).__init__(name, gid)
+        QtCore.QObject.__init__(self)
         self.item = item
         self.isHigh = False
         self.justifies = []
@@ -92,6 +104,11 @@ class Glyph(gdlGlyph, DataObj) :
     def getproperty(self, key) :
         return self.properties[key]
 
+    def setAnchor(self, name, x, y, t = None) :
+        send = super(Glyph, self).setAnchor(name, x, y, t)
+        if send :
+            self.anchorChanged.emit(name, x, y)
+
     def setproperty(self, key, value) :
         if value == None :
             del self.properties[key]
@@ -112,17 +129,12 @@ class Glyph(gdlGlyph, DataObj) :
 
     def setpoint(self, key, value) :
         if value == None :
-            del self.anchors[key]
+            (x, y) = (None, None)
         elif value == "" :
-            self.anchors[key] = (0, 0)
+            (x, y) = (0, 0)
         else :
-            self.anchors[key] = map(int, re.split(r",\s*", value[1:-1]))
-
-    def setpointint(self, key, x, y) :
-        if key in self.anchors :
-            if x is None : x = self.anchors[key][0]
-            if y is None : y = self.anchors[key][1]
-        self.anchors[key] = (x, y)
+            (x, y) = map(int, re.split(r",\s*", value[1:-1]))
+        self.setAnchor(key, x, y)
 
     def getjustify(self, level, name) :
         if level >= len(self.justifies) or name not in self.justifies[level] : return None

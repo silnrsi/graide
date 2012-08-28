@@ -259,11 +259,10 @@ class Font(object) :
         for g in self.glyphs :
             if not g : continue
             for a in g.anchors.keys() :
-                b = a
-                if a.startswith("_") : b = a[1:]
+                b = a[:-1]
                 if b not in self.points :
                     self.points[b] = PointClass(b)
-                if a == b :
+                if a.endswith('S') : 
                     self.points[b].addBaseGlyph(g)
                 else :
                     self.points[b].addDiaGlyph(g)
@@ -297,11 +296,7 @@ class Font(object) :
             if len(g.anchors) :
                 for a in g.anchors.keys() :
                     v = g.anchors[a]
-                    if a.startswith("_") :
-                        name = a[1:] + "M"
-                    else :
-                        name = a + "S"
-                    outs.append(name + "=point(" + str(int(v[0])) + "m, " + str(int(v[1])) + "m)")
+                    outs.append(a + "=point(" + str(int(v[0])) + "m, " + str(int(v[1])) + "m)")
             for (p, v) in g.gdl_properties.items() :
                 outs.append("%s=%s" % (p, v))
             if len(outs) : fh.write(" {" + "; ".join(outs) + "}")
