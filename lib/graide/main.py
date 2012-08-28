@@ -87,6 +87,9 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.testsfile = None
 
+        if config.has_option('ui', 'posglyphsize') :
+            self.setposglyphsize(configintval(config, 'ui', 'posglyphsize'))
+
         self.setActions()
         self.setupUi()
         self.setMenus()
@@ -367,8 +370,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.addTab(self.tab_rules, "Rules")
 
         # positioning tab
-        self.tab_pos = PosView(size = configintval(self.config, 'ui', 'posglyphsize'))
-        if hasattr(self, 'tab_poses') : self.tab_poses.view = self.tab_pos
+        self.tab_pos = PosView(self)
+        if hasattr(self, 'tab_poses') : self.tab_poses.setView(self.tab_pos)
         self.tabResults.addTab(self.tab_pos, "Positions")
 
     def setMenus(self) :
@@ -464,6 +467,9 @@ Copyright 2012 SIL International and M. Hosken""")
         if self.gdx and hasattr(view.run, 'passindex') :
             rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
             self.selectLine(rule.srcfile, rule.srcline)
+
+    def posSelected(self) :
+        self.tabResults.setCurrentWidget(self.tab_pos)
 
     def selectLine(self, fname = None, srcline = -1) :
         if not fname :
@@ -654,7 +660,7 @@ Copyright 2012 SIL International and M. Hosken""")
         m.exec_(event.globalPos())
 
     def setposglyphsize(self, size) :
-        if hasattr(self, 'tab_pos') : self.tab_pos.size = size
+        if self.font : self.font.posglyphSize = size
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

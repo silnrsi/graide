@@ -108,6 +108,7 @@ class Glyph(gdlGlyph, DataObj, QtCore.QObject) :
         send = super(Glyph, self).setAnchor(name, x, y, t)
         if send :
             self.anchorChanged.emit(name, x, y)
+        return send
 
     def setproperty(self, key, value) :
         if value == None :
