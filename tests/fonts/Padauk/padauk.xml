@@ -391,7 +391,7 @@
 </glyph>
 <glyph GID="99" PSName="u1000" UID="1000">
     <point type="BD">
-        <location x="508" y="-53" />
+        <location x="489" y="-40" />
     </point>
     <point type="BS">
         <location x="720" y="-53" />
@@ -573,7 +573,7 @@
 </glyph>
 <glyph GID="108" PSName="u1003.med">
     <point type="_BD">
-        <location x="-401" y="-53" />
+        <location x="-414" y="0" />
     </point>
     <point type="_BSM">
         <location x="88" y="-53" />

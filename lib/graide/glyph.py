@@ -25,7 +25,7 @@ from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 from graide.makegdl.glyph import Glyph as gdlGlyph
 
-def ftGlyph(face, gid) :
+def ftGlyph(face, gid, fill = 0) :
     res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
     b = face.glyph.bitmap
     top = face.glyph.bitmap_top
@@ -33,8 +33,8 @@ def ftGlyph(face, gid) :
     if b.rows :
         data = array.array('B', b.buffer)
         mask = QtGui.QImage(data, b.width, b.rows, b.pitch, QtGui.QImage.Format_Indexed8)
-        image = QtGui.QImage(b.width, b.rows, QtGui.QImage.Format_Mono)
-        image.fill(0)
+        image = QtGui.QImage(b.width, b.rows, QtGui.QImage.Format_ARGB32)
+        image.fill(0xFF000000 + fill)
         image.setAlphaChannel(mask)
         pixmap = QtGui.QPixmap(image)
     else :

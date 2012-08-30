@@ -31,4 +31,6 @@ class Layout(object) :
         'input' : QtGui.QColor(200, 00, 0, 32),   # pink, semi-transparent
         'output' : QtGui.QColor(0, 200, 0, 32),   # green, semi-transparent
     }
+    posdotColour = QtGui.QColor(0, 160, 0, 192)
+    posdotShiftColour = QtGui.QColor(0, 0, 160, 192)
 

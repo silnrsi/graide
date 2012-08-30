@@ -20,6 +20,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtCore, QtGui
+from graide.layout import Layout
 
 POSGLYPHID = 1
 WHEELSCALEINCREMENT = 1.05
@@ -35,6 +36,11 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
         self.font = font
         self.position = (0, 0)
         self.glyph = None
+        self.dialog = None
+        self.scale = font.posglyphSize * 1. / font.upem
+
+    def setDialog(self, d) :
+        self.dialog = d
 
     def getAnchor(self, apname) :
         if self.glyph and apname in self.glyph.anchors:
@@ -65,19 +71,28 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
                 self.px = PosPixmapItem(px, self, scene = scene)
             self.px.left = left
             self.px.top = top
+            self.px.setOffset(left, -top)
         elif self.px is not None :
             self.clearpx()
 
     def setAnchor(self, name, x, y) :
         if self.glyph and self.glyph.setAnchor(name, x, y) :
             self.posGlyphChanged.emit()
-
-    def pos(self) :
-        return self.position
+        # print "setAnchor: ", name, (x, y)
 
     def setPos(self, x, y) :
+        """Sets glyph position in design units"""
+        x *= self.scale
+        y *= -self.scale        # scene units have 0 at top
         self.position = (x, y)
-        if self.px : self.px.setOffset(x + self.px.left, y - self.px.top)
+        if self.px :
+            # self.px.setOffset(self.px.left, -self.px.top)
+            self.px.setPos(x, y)
+            # print "pos, left, top ", (x, y), self.px.left, self.px.top
+
+    def pos(self) :
+        """Returns glyph position in scene units"""
+        return self.position
 
     def clearpx(self) :
         if self.px is None : return
@@ -85,6 +100,116 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
         scene.removeItem(self.px)
         self.px = None
         scene.update()
+
+    def getActiveAPs(self) :
+        """Return (anchor_scene_pos, [moveable_anchor_pos, stationary_anchor_pos])
+            Both moveable and stationary anchor positions are in scene units relative to their glyphs"""
+        res1 = self.getAnchor(self.text(1))
+        res2 = self.parent().getAnchor(self.text(2))
+        # print (self.position[0]/self.scale + res1[0], self.position[1]/self.scale + res1[1])
+        return ((self.position[0] + self.scale * res1[0], self.position[1] - self.scale * res1[1]),
+                self.position,
+                [(res1[0] * self.scale, -res1[1] * self.scale), (res2[0] * self.scale, -res2[1] * self.scale)])
+
+    def setMoveableAnchor(self, sx, sy) :
+        """Adjust anchor point based on scene offsets"""
+        x = int(sx / self.scale)
+        y = -int(sy / self.scale)
+        if self.dialog :
+            self.dialog.setAPPos(x, y)
+        else :
+            self.glyph.setAnchor(self.text(1), x, y)
+
+    def setBaseAnchor(self, sx, sy) :
+        """Adjust base anchor position for this diacritic"""
+        x = int(sx / self.scale)
+        y = -int(sy / self.scale)
+        if self.parent().dialog :
+            self.parent().dialog.setAPPos(x, y)
+        else :
+            self.parent().glyph.setAnchor(self.text(2), x, y)
+
+
+class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
+
+    def __init__(self, px, item, parent = None, scene = None) :
+        super(PosPixmapItem, self).__init__(px, parent, scene)
+        if parent is not None : raise TypeError
+        self.item = item
+        self.shiftState = False
+        self.moveState = False
+        self.apItem = None
+        self.movepx = None
+        self.shiftpx = None
+        if item.parent() : self.setFlags(QtGui.QGraphicsItem.ItemIsMovable | QtGui.QGraphicsItem.ItemIsFocusable)
+
+    def keyPressEvent(self, event) :
+        if event.modifiers() & QtCore.Qt.ShiftModifier :
+            # print "Shift pressed for " + str(self.item.glyph.name)
+            self.shiftState = True
+            if self.moveState :
+                if self.apItem :
+                    self.apItem.setPos(self.sceneAP[0], self.sceneAP[1])
+                    self.apItem.setBrush(Layout.posdotShiftColour)
+                self.item.setMoveableAnchor(self.diff[0] + self.origAPs[0][0], self.diff[1] + self.origAPs[0][1])
+                self.item.setBaseAnchor(self.origAPs[1][0], self.origAPs[1][1])
+        try : event.ignore()
+        except TypeError : pass
+
+    def keyReleaseEvent(self, event) :
+        if not event.modifiers() & QtCore.Qt.ShiftModifier :
+            # print "Shift released for " + str(self.item.glyph.name)
+            self.shiftState = False
+            if self.moveState :
+                if self.apItem :
+                    self.apItem.setPos(self.diff[0] + self.sceneAP[0], self.diff[1] + self.sceneAP[1])
+                    self.apItem.setBrush(Layout.posdotColour)
+                self.item.setMoveableAnchor(self.origAPs[0][0], self.origAPs[0][1])
+                self.item.setBaseAnchor(self.diff[0] + self.origAPs[1][0], self.diff[1] + self.origAPs[1][1])
+        try : event.ignore()
+        except TypeError : pass
+
+    def mousePressEvent(self, event) :
+        (self.sceneAP, self.origPos, self.origAPs) = self.item.getActiveAPs()
+        self.diff = (0, 0)
+        self.shiftState = False
+        self.keyPressEvent(event)
+        try : event.accept()
+        except TypeError : pass
+        self.moveState = True
+        self.scene().view.updateable(False)
+        radius = self.item.font.posglyphSize / 20
+        self.apItem = self.scene().addEllipse(-radius / 2, -radius / 2, radius, radius,
+                brush = Layout.posdotShiftColour if self.shiftState else Layout.posdotColour)
+        self.apItem.setPos(self.sceneAP[0], self.sceneAP[1])
+        # print self.sceneAP, self.apItem.scenePos()
+        super(PosPixmapItem, self).mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event) :
+        self.moveState = False
+        self.scene().view.updateable(True)
+        self.scene().view.posGlyphChanged()
+        if self.apItem :
+            self.scene().removeItem(self.apItem)
+            self.apItem = None
+        super(PosPixmapItem, self).mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, event) :
+        spos = event.scenePos()
+        bpos = event.buttonDownScenePos(QtCore.Qt.LeftButton)
+        self.diff = (spos - bpos).toTuple()
+        if self.shiftState :
+            self.item.setMoveableAnchor(self.origAPs[0][0] - self.diff[0], self.origAPs[0][1] - self.diff[1])
+        else :
+            self.item.setBaseAnchor(self.diff[0] + self.origAPs[1][0], self.diff[1] + self.origAPs[1][1])
+            #print self.diff, self.sceneAP
+            if self.apItem :
+                appos = (self.sceneAP[0] + self.diff[0], self.sceneAP[1] + self.diff[1])
+                self.apItem.setPos(*appos)
+                # print "    ", (self.apItem.scenePos().x() / self.item.scale, self.apItem.scenePos().y() / self.item.scale)
+        self.item.position = (self.origPos[0] + self.diff[0], self.origPos[1] + self.diff[1])
+        super(PosPixmapItem, self).mouseMoveEvent(event)
+
 
 class PosGlyphInfoWidget(QtGui.QFrame) :
 
@@ -144,6 +269,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
     def setGlyph(self, font, gname, apname, item, apitem) :
         self.font = font
         self.item = item
+        self.item.setDialog(self)
         self.apitem = apitem
         if gname in font.gdls :
             glist = sorted(filter(lambda x : apname in font.gdls[x].anchors, font.gdls.keys()))
@@ -159,6 +285,10 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         self.x.setValue(self.orig[0])
         self.y.setValue(self.orig[1])
         self.reset.setEnabled(False)
+
+    def setAPPos(self, x, y) :
+        self.x.setValue(x)
+        self.y.setValue(y)
 
 class PosGlyphAPDialog(QtGui.QDialog) :
 
@@ -261,22 +391,17 @@ class PosEdit(QtGui.QWidget) :
         self.view.promote()
         self.view.posGlyphChanged()
 
-class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
-
-    def __init__(self, px, item, parent = None, scene = None) :
-        super(PosPixmapItem, self).__init__(px, parent, scene)
-        self.item = item
-        if item.parent() : self.setFlags(QtGui.QGraphicsItem.ItemIsMovable)
-
-
 class PosView(QtGui.QGraphicsView) :
 
     def __init__(self, app = None, parent = None) :
         super(PosView, self).__init__(parent)
-        self.setScene(QtGui.QGraphicsScene())
+        self._scene = QtGui.QGraphicsScene()
+        self._scene.view = self
+        self.setScene(self._scene)
         self.centerOn(0, 0)
         self.app = app
         self.root = None
+        self._updateable = True
         # self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 
     def promote(self) :
@@ -285,23 +410,27 @@ class PosView(QtGui.QGraphicsView) :
     def setRoot(self, item) :
         self.root = item
 
+    def updateable(self, state) :
+        self._updateable = state
+
     def posGlyphChanged(self) :
-        if self.root is not None :
-            # import pdb; pdb.set_trace()
+        if self.root is not None and self._updateable :
             self.addTree(self.root, base = (0, 0))
+#            self.org = QtGui.QGraphicsEllipseItem(0, 0, 2, 2, scene = self.scene())
 
     def addTree(self, item, base = (0, 0)) :
-        size = item.font.posglyphSize
-        factor = size * 1. / item.font.upem
+        """Adds the glyph and its children at the given position in design units"""
         pos = list(base)
         parent = item.parent()
         if parent :
             ppos = parent.getAnchor(item.text(2))
+            if ppos is None : ppos = (0, 0)
             dpos = item.getAnchor(item.text(1))
+            if dpos is None : dpos = (0, 0)
             pos[0] += ppos[0] - dpos[0]
             pos[1] += ppos[1] - dpos[1]
         if not item.px : item.setPixmap(scene = self.scene())
-        item.setPos(pos[0] * factor, -pos[1] * factor)
+        item.setPos(pos[0], pos[1])
         for i in range(item.childCount()) :
             self.addTree(item.child(i), pos)
 
@@ -309,4 +438,3 @@ class PosView(QtGui.QGraphicsView) :
         scale = pow(WHEELSCALEINCREMENT, event.delta() / 120.)
         self.scale(scale, scale)
 
-            
