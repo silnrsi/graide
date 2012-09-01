@@ -379,6 +379,7 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu.addAction(self.tabEdit.aAdd)
         filemenu.addAction(self.tabEdit.aSave)
         filemenu.addAction(self.tabEdit.aBuild)
+        filemenu.addAction('&Reset Names', self.resetNames)
 
         projectmenu = self.menuBar().addMenu("&Project")
         projectmenu.addAction(self.aCfg)
@@ -654,6 +655,12 @@ Copyright 2012 SIL International and M. Hosken""")
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
         self.configClicked()
+
+    def resetNames(self) :
+        if self.font :
+            self.font.loadEmptyGlyphs()
+            self.tab_classes.loadFont(self.font)
+            if self.tab_font : self.tab_font.update()
 
     def debugClicked(self, event) :
         m = DebugMenu(self)

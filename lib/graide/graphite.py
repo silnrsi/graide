@@ -131,8 +131,8 @@ fn('gr_slot_linebreak_before', None, c_void_p)
 
 (major, minor, debug) = grversion()
 if major > 1 or minor > 1 :
-    fn('graphite_start_logging_face', c_int, c_void_p, c_char_p)
-    fn('graphite_stop_logging_face', None, c_void_p)
+    fn('gr_start_logging', c_int, c_void_p, c_char_p)
+    fn('gr_stop_logging', None, c_void_p)
 else :
     fn('graphite_start_logging', c_int, c_void_p, c_int)
     fn('graphite_stop_logging', None)

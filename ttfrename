@@ -1,0 +1,85 @@
+#!/usr/bin/python
+
+#    Copyright 2012, SIL International
+#    All rights reserved.
+#
+#    This library is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published
+#    by the Free Software Foundation; either version 2.1 of License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should also have received a copy of the GNU Lesser General Public
+#    License along with this library in the file named "LICENSE".
+#    If not, write to the Free Software Foundation, 51 Franklin Street,
+#    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
+#    internet at http://www.fsf.org/licenses/lgpl.html.
+
+from PySide import QtGui
+from ttfrename.font import Font
+from ttfrename.fontview import FontView
+import sys
+
+class MainWindow(QtGui.QMainWindow) :
+
+    def __init__(self, app, font) :
+        super(MainWindow, self).__init__()
+        self.font = font
+        self.app = app
+        self.table = None
+        self.setupUI()
+        self.setupMenus()
+
+    def setupUI(self) :
+        self.resize(800, 600)
+        #self.centralwidget = QtGui.QWidget(self)
+        #self.layout = QtGui.QVBoxLayout(self.centralwidget)
+        if self.font : self.loadFont()
+        #self.layout.addWidget(self.table)
+
+    def setupMenus(self) :
+        self.fileMenu = self.menuBar().addMenu("&File")
+        self.fileMenu.addAction("&Open...", self.open, QtGui.QKeySequence.Open)
+        self.fileMenu.addAction("&Save", self.save, QtGui.QKeySequence.Save)
+        self.fileMenu.addAction("Save&As...", self.saveas, QtGui.QKeySequence.SaveAs)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction("E&xit", self.close, "Ctrl+Q")
+
+    def loadFont(self) :
+        self.table = FontView(self.font)
+        self.table.activated.connect(self.glyphClicked)
+        self.setCentralWidget(self.table)
+
+    def glyphClicked(self, index) :
+        self.font.editGlyph(index.data())
+
+    def open(self) :
+        fileName, filtr = QtGui.QFileDialog.getOpenFileName(self)
+        if fileName :
+            self.font.loadFont(str(fileName))
+            if self. table :
+                self.table.resizeRowsToContents()
+                self.table.resizeColumnsToContents()
+            else :
+                self.loadFont()
+
+    def save(self) :
+        self.font.save()
+
+    def saveas(self) :
+        fileName, filtr = QtGui.QFileDialog.getSaveFileName(self, filter="TrueType Fonts (*.ttf)")
+        if fileName : self.font.save(fileName)
+
+def clicked(index) :
+    font.editGlyph(index.data())
+
+app = QtGui.QApplication(sys.argv)
+font = Font()
+if len(sys.argv) > 1 : font.loadFont(sys.argv[1], 40)
+mainWindow = MainWindow(app, font)
+mainWindow.show()
+sys.exit(app.exec_())
