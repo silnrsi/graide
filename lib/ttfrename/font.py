@@ -116,7 +116,9 @@ class Font(object) :
         for c in self.ttx['cmap'].tables :
             if isUnicodeCmap(c) :
                 self.cmaps.append(c.cmap)
-        cmap = self.ttx['cmap'].getcmap(3, 1).cmap
+        cmap = self.ttx['cmap'].getcmap(3, 1)
+        if not cmap : cmap = self.ttx['cmap'].getcmap(3, 0)
+        if cmap : cmap = cmap.cmap
         for k, v in cmap.items() :
             if v in self.gnames :
                 self.glyphItems[self.gnames[v]].uid = k
