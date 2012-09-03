@@ -10,7 +10,8 @@ elif sys.platform == 'win32' :
 
 a = Analysis(['build/scripts-2.7/ttfrename'],
              pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir],
-             hiddenimports=[],
+             hiddenimports=['fontTools.ttLib.tables._p_o_s_t'],
+	     excludes=['win32com', 'numpy.test', 'tcl', 'tk', '_tkinter'],
              hookspath=None)
 pyz = PYZ(a.pure)
 bins = a.binaries

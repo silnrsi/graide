@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import freetype
+from graide import freetype
 from ttfrename.glyph import GlyphItem
 from PySide import QtCore, QtGui
 from fontTools import ttLib

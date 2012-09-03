@@ -19,7 +19,7 @@
 
 
 from PySide import QtGui
-import freetype
+from graide import freetype
 import array, ctypes
 
 def ftGlyph(face, gid, fill = 0) :

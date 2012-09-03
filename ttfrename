@@ -19,6 +19,11 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+import os, sys
+
+if getattr(sys, 'frozen', None) :
+    os.environ['PATH'] += os.pathsep + sys._MEIPASS
+
 from PySide import QtGui
 from ttfrename.font import Font
 from ttfrename.fontview import FontView
