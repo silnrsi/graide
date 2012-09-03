@@ -38,6 +38,7 @@ class Namedit(QtGui.QDialog) :
         self.layout = QtGui.QGridLayout(self)
         self.name = QtGui.QLineEdit(self)
         self.name.setText(name)
+        self.name.setSelection(0, -1)
         self.layout.addWidget(QtGui.QLabel('Name'), 0, 0)
         self.layout.addWidget(self.name, 0, 1)
         self.uid = QtGui.QLineEdit(self)
@@ -113,9 +114,12 @@ class Font(object) :
             if g.top > self.top : self.top = g.top
         self.ttx = Ttx(fontfile)
         self.cmaps = []
+        self.bytemaps = []
         for c in self.ttx['cmap'].tables :
             if isUnicodeCmap(c) :
                 self.cmaps.append(c.cmap)
+            else :
+                self.bytemaps.append(c.cmap)
         cmap = self.ttx['cmap'].getcmap(3, 1)
         if not cmap : cmap = self.ttx['cmap'].getcmap(3, 0)
         if cmap : cmap = cmap.cmap
@@ -150,10 +154,18 @@ class Font(object) :
         d = Namedit(g.name, g.uid)
         if d.exec_() :
             (name, uid) = d.getValues()
+        else :
+            return
         if g.name != name or g.uid != uid :
             for c in self.cmaps :
                 if g.uid != uid and g.uid in c : del c[g.uid]
                 c[uid] = name
+            if g.uid != uid and g.uid and g.uid < 256 :
+                for c in self.bytemaps :
+                    c[g.uid] = '.notdef'
+            if uid and uid < 256 :
+                for c in self.bytemaps :
+                    c[uid] = name
             if g.name != name :
                 gid = self.gnames[g.name]
                 del self.gnames[g.name]
