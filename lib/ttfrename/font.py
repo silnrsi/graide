@@ -38,7 +38,7 @@ class Namedit(QtGui.QDialog) :
         self.layout = QtGui.QGridLayout(self)
         self.name = QtGui.QLineEdit(self)
         self.name.setText(name)
-        self.name.setSelection(0, -1)
+        self.name.setSelection(0, len(name))
         self.layout.addWidget(QtGui.QLabel('Name'), 0, 0)
         self.layout.addWidget(self.name, 0, 1)
         self.uid = QtGui.QLineEdit(self)
