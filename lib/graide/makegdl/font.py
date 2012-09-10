@@ -140,9 +140,9 @@ class Font(object) :
             elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
                 pass
             elif n.endswith('.x') :
-                g.setpointint(n[:-2], int(a.get('value')), None)
+                g.setAnchor(n[:-2], int(a.get('value')), None)
             elif n.endswith('.y') :
-                g.setpointint(n[:-2], None, int(a.get('value')))
+                g.setAnchor(n[:-2], None, int(a.get('value')))
             elif n.find('.') == -1 :
                 g.setgdlproperty(n, a.get('value'))
         if storemirror and mirrorglyph :
