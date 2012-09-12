@@ -28,6 +28,8 @@ class FeatureRefs(object) :
         self.feats = {}
         self.featids = {}
         self.fval = {}
+        self.order = []
+        self.forders = {}
         if grface :
             langid = 0x0409
             length = 0
@@ -36,21 +38,26 @@ class FeatureRefs(object) :
                 name = f.name(langid)
                 if not name : continue
                 name = name[:]
+                self.order.append(name)
                 n = f.num()
                 finfo = {}
+                forder = []
                 for i in range(n) :
                     v = f.val(i)
                     k = f.label(i, langid)[:]
                     finfo[k] = v
+                    forder.append(k)
                 self.feats[name] = finfo
                 self.featids[name] = f.tag()
                 self.fval[f.tag()] = grval.get(f)
+                self.forders[name] = forder
 
     def copy(self) :
         res = FeatureRefs()
         res.feats = dict(self.feats)
         res.featids = dict(self.featids)
         res.fval = dict(self.fval)
+        res.order = list(self.order)
         return res
 
     def apply(self, fvals) :
@@ -105,13 +112,13 @@ class FeatureDialog(QtGui.QDialog) :
         while self.table.rowCount() :
             self.table.removeRow(0)
         self.combos = []
-        num = len(feats.feats.keys())
+        num = len(feats.order)
         self.table.setRowCount(num)
         count = 0
-        for f in sorted(feats.feats.keys(), cmp = lambda x,y: cmp(x.index, y.index)) :
+        for f in feats.order :
             c = QtGui.QComboBox()
             c.userTag = feats.featids[f]
-            for k in sorted(feats.feats[f].keys(), cmp = lambda a, b: cmp(a.index, b.index)) :
+            for k in feats.forders[f] :
                 c.addItem(k, feats.feats[f][k])
                 if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
                     c.setCurrentIndex(c.count() - 1)
@@ -123,6 +130,7 @@ class FeatureDialog(QtGui.QDialog) :
         if lang : self.lang.setText(lang)
         self.runWidth.setValue(width)
         self.resize(600, 400)
+        self.table.resizeColumnsToContents()
 
     def get_feats(self, base = None) :
         res = {}

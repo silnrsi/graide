@@ -455,9 +455,10 @@ Copyright 2012 SIL International and M. Hosken""")
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
         self.tab_rules.index = row - 1
-        self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
+        if passview.rules[row] is not None :
+            self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
+            self.tabResults.setCurrentWidget(self.tab_rules)
         passview.selectRow(row)
-        self.tabResults.setCurrentWidget(self.tab_rules)
 
     def rulesclosed(self, dialog) :
         self.ruleView.slotSelected.disconnect()
