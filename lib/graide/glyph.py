@@ -20,7 +20,7 @@
 
 from PySide import QtCore, QtGui
 from graide import freetype
-import array, ctypes
+import array, ctypes, re
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 from graide.makegdl.glyph import Glyph as gdlGlyph
@@ -48,7 +48,7 @@ class GlyphItem(object) :
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
         n = ctypes.create_string_buffer(64)
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = n.value
+        self.name = re.sub(ur'[^A-Za-z0-9._]', '', n.value)
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid
