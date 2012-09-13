@@ -30,7 +30,7 @@ class FeatureRefs(object) :
         self.fval = {}
         self.order = []
         self.forders = {}
-        if grface :
+        if grface and grface.face :
             langid = 0x0409
             length = 0
             grval = grface.get_featureval(strtolong(lang))
@@ -58,6 +58,8 @@ class FeatureRefs(object) :
         res.featids = dict(self.featids)
         res.fval = dict(self.fval)
         res.order = list(self.order)
+        for k, v in self.forders.items() :
+            res.forders[k] = list(v)
         return res
 
     def apply(self, fvals) :
@@ -67,8 +69,8 @@ class FeatureRefs(object) :
 def make_FeaturesMap(font) :
     grface = gr.Face(font)
     res = {}
-    if not grface.face : return res
     res[None] = FeatureRefs(grface)
+    if not grface.face : return res
     for l in grface.featureLangs :
         lang = gr.tag_to_str(l)
         res[lang] = FeatureRefs(grface, lang)
