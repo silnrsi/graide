@@ -33,4 +33,5 @@ exe = EXE(pyz,
           debug=False,
           strip=None,
           upx=True,
-          console=True )
+          icon=path.join('lib', 'graide', 'images', 'graide.ico'),
+          console=False )

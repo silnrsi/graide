@@ -17,5 +17,8 @@
     <file>images/run-build.png</file>
     <file>images/view-list-details.png</file>
     <file>images/window-close.png</file>
+    <file>images/graide-logo_256px.png</file>
+    <file>images/graide-logo_96px.png</file>
+    <file>images/graide logo.svg</file>
 </qresource>
 </RCC>
