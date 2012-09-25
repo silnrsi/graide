@@ -33,5 +33,5 @@ exe = EXE(pyz,
           debug=False,
           strip=None,
           upx=True,
-          icon=path.join('lib', 'graide', 'images', 'graide.ico'),
+          icon=path.join('lib', 'graide', 'images', ('graide.ico' if sys.platform == 'win32' else 'graide.icns')),
           console=False )
