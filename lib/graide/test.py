@@ -81,6 +81,10 @@ class Test(object) :
         bcancel = QtGui.QPushButton('Cancel', hw)
         h.addWidget(bcancel)
         d.setLayout(v)
+        if (self.name == "") :
+            d.setWindowTitle("Add test")
+        else :
+            d.setWindowTitle("Edit test")
         b.clicked.connect(self.featClicked)
         bok.clicked.connect(d.accept)
         bcancel.clicked.connect(d.reject)

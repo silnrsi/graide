@@ -70,6 +70,8 @@ class ConfigDialog(QtGui.QDialog) :
     def __init__(self, config, parent = None) :
         super(ConfigDialog, self).__init__(parent)
         self.config = config
+        
+        self.setWindowTitle("Configuration")
 
         self.vb = QtGui.QVBoxLayout(self)
         self.tb = QtGui.QToolBox(self)

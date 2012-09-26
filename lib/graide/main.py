@@ -60,6 +60,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.currWidth = 100
         self.font = Font()
         self.apname = None
+        
+        if (self.configfile == None) :
+            self.setWindowTitle("Graide")
+        else :
+        	self.setWindowTitle("[" + self.configfile + "] - Graide")
 
         #import pdb; pdb.set_trace()  # debug
         
@@ -690,3 +695,4 @@ if __name__ == "__main__" :
         mainWindow = MainWindow(args.font, args.ap, args.results, 40)
         mainWindow.show()
         sys.exit(app.exec_())
+
