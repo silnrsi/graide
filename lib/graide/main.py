@@ -467,6 +467,8 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tab_rules.index = row - 1
         if passview.rules[row] is not None :
             self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
+            ruleLabel = "Rules: pass %d" %  row
+            self.tabResults.setTabText(3, ruleLabel)
             self.tabResults.setCurrentWidget(self.tab_rules)
         passview.selectRow(row)
 

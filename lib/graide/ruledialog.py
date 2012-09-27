@@ -17,6 +17,8 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+# This class is no longer used. The PassesView class is used for the Rules tab.
+
 from PySide import QtGui, QtCore
 
 class RuleDialog(QtGui.QDialog) :

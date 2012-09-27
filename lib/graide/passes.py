@@ -29,6 +29,8 @@ class PassesItem(QtGui.QTableWidgetItem) :
     def __init__(self, data) :
         super(PassesItem, self).__init__()
         self.data = data
+        
+# The PassesView class is also used for the Rules tab.
 
 class PassesView(QtGui.QTableWidget) : pass
 
