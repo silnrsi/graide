@@ -191,7 +191,7 @@ class FileTabs(QtGui.QTabWidget) :
         self.aSave.setToolTip('Save all files')
         self.aSave.triggered.connect(self.writeIfModified)
         self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")), "&Open File ...", app)
-        self.aAdd.setToolTip('open file in editor')
+        self.aAdd.setToolTip('Open file in editor')
         self.aAdd.triggered.connect(self.addClicked)
 
     def selectLine(self, fname, lineno) :

@@ -71,7 +71,7 @@ class ConfigDialog(QtGui.QDialog) :
         super(ConfigDialog, self).__init__(parent)
         self.config = config
         
-        self.setWindowTitle("Configuration")
+        self.setWindowTitle("Configure project")
 
         self.vb = QtGui.QVBoxLayout(self)
         self.tb = QtGui.QToolBox(self)
@@ -164,7 +164,7 @@ class ConfigDialog(QtGui.QDialog) :
             self.ui_gsize.setValue(configintval(config, 'main', 'size'))
         else :
             self.ui_gsize.setValue(40)
-        self.ui_gsize.setToolTip('Pixel size of glyphs in the font window and results, passes, rules, etc.')
+        self.ui_gsize.setToolTip('Pixel size of glyphs in the font window and results, passes, and rules panes')
         self.ui_vb.addWidget(QtGui.QLabel('Font glyph pixel size'), 3, 0)
         self.ui_vb.addWidget(self.ui_gsize, 3, 1)
         

@@ -82,7 +82,7 @@ class Test(object) :
         h.addWidget(bcancel)
         d.setLayout(v)
         if (self.name == "") :
-            d.setWindowTitle("Add test")
+            d.setWindowTitle("Add new test")
         else :
             d.setWindowTitle("Edit test")
         b.clicked.connect(self.featClicked)
