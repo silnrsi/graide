@@ -150,6 +150,8 @@ class EditFile(QtGui.QPlainTextEdit) :
         if self.fIsOpen :
             self.fDialog.show()
 
+
+# The window containing all the code files.
 class FileTabs(QtGui.QTabWidget) :
 
     def __init__(self, config, app, parent = None) :
@@ -249,9 +251,19 @@ class FileTabs(QtGui.QTabWidget) :
             self.widget(i).setSize(size)
             
     def updateFont(self, fontspec, size) :
-				for i in range(self.count()) :
-						self.widget(i).updateFont(fontspec, size)
+		for i in range(self.count()) :
+			self.widget(i).updateFont(fontspec, size)
             
     def updateTabstop(self, tabstop) :
-				for i in range(self.count()) :
-						self.widget(i).updateTabstop(tabstop)
+		for i in range(self.count()) :
+			self.widget(i).updateTabstop(tabstop)
+
+    def updateFromConfigSettings(self, config) :
+        editorfont = config.get('ui', 'editorfont') if config.has_option('ui', 'editorfont') else "monospace"
+        fontsize = config.get('ui', 'textsize') if config.has_option('ui', 'textsize') else "10"
+        fontsize = int(fontsize)
+        self.updateFont(editorfont, fontsize)
+        
+        tabstop = config.get('ui', 'tabstop') if config.has_option('ui', 'tabstop') else 10
+        tabstop = int(tabstop)
+        self.updateTabstop(tabstop)

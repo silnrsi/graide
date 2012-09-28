@@ -648,6 +648,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 self.config.write(f)
                 f.close()
 
+
     def configOpenClicked(self) :
         (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(fname) : return
@@ -665,7 +666,11 @@ Copyright 2012 SIL International and M. Hosken""")
                 self.loadAP(self.config.get('main', 'ap'))
         if self.config.has_option('main', 'testsfile') :
             self.loadTests(self.config.get('main', 'testsfile'))
-
+        if self.config.has_option('build', 'gdlfile') :
+            self.selectLine(self.config.get('build', 'gdlfile'), -1)
+            self.tabEdit.updateFromConfigSettings(self.config)
+        
+        
     def configNewClicked(self) :
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
