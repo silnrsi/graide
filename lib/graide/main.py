@@ -118,7 +118,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.fonttime = os.stat(fontname).st_ctime
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
+        
+        # Look for the GDX file with the font; if it's not there, look in the current directory.
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
+        if not os.path.exists(self.gdxfile) :
+        	basename = os.path.basename(fontname)
+        	self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
+        
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
             if self.tab_font :
@@ -467,7 +473,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tab_rules.index = row - 1
         if passview.rules[row] is not None :
             self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
-            ruleLabel = "Rules: pass %d" %  row
+            ruleLabel = "Rules: pass %d" % row
             self.tabResults.setTabText(3, ruleLabel)
             self.tabResults.setCurrentWidget(self.tab_rules)
         passview.selectRow(row)
@@ -648,6 +654,8 @@ Copyright 2012 SIL International and M. Hosken""")
         (dname, fname) = os.path.split(fname)
         if dname :
             os.chdir(dname)
+        if os.path.splitext(fname)[1] == "" :
+        	fname = fname + ".cfg"
         self.configfile = fname
         self.config = RawConfigParser()
         self.config.read(fname)
@@ -664,6 +672,8 @@ Copyright 2012 SIL International and M. Hosken""")
         (dname, fname) = os.path.split(fname)
         if dname :
             os.chdir(dname)
+        if os.path.splitext(fname)[1] == "" :
+        	fname = fname + ".cfg"
         self.configfile = fname
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)

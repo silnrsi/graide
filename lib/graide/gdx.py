@@ -30,6 +30,7 @@ class Gdx(object) :
 
     def readfile(self, fname, font, apgdlfile = None, ronly = False) :
         relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
+        
         self.file = file(fname)
         if not apgdlfile :
             font.initGlyphs()
@@ -68,7 +69,7 @@ class Gdx(object) :
 
 class Rule(object) :
 
-    def __init__(self, e, relbase) :
+    def __init__(self, e, relbase) :   	
         self.srcfile = os.path.join(relbase, e.get('inFile'))
         self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')
