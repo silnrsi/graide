@@ -69,10 +69,11 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
-    def __init__(self, fname, abspath, size = 14, fontspec = 'mono', tabstop = 40) :
+    def __init__(self, fname, abspath, fileTabs, size = 14, fontspec = 'mono', tabstop = 40) :
         super(EditFile, self).__init__()
         self.fname = fname
         self.abspath = abspath
+        self.fileTabs = fileTabs
         self.selection = QtGui.QTextEdit.ExtraSelection()
         self.selection.format = QtGui.QTextCharFormat()
         self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
@@ -84,6 +85,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.setTabStopWidth(tabstop)
 
         try :
+            self.fileTabs.addOpenFile(self.fname)
             f = codecs.open(fname, encoding="UTF-8")
             self.setPlainText("".join(f.readlines()))
             f.close()
@@ -125,7 +127,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.setFont(font)
         
     def updateTabstop(self, tabstop) :
-    		self.setTabStopWidth(tabstop)
+    	self.setTabStopWidth(tabstop)
 
     def reload(self) :
         f = file(self.fname)
@@ -133,6 +135,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         f.close()
 
     def closeEvent(self, event) :
+        self.fileTabs.deleteOpenFile(self.fname)
         self.writeIfModified()
         self.fDialog.close()
 
@@ -184,6 +187,12 @@ class FileTabs(QtGui.QTabWidget) :
         self.size = configintval(config, 'ui', 'textsize') or 14
         self.fontspec = configval(config, 'ui', 'editorfont') or 'mono'
         self.tabstop = configintval(config, 'ui', 'tabstop') or 40
+        if self.app.config.has_option('window', 'openfiles') :
+            openFileString = configval(config, 'window', 'openfiles')
+            self.openFiles = openFileString.split(';')
+            self.openFiles.remove('')
+        else :
+            self.openFiles = []
 
     def setActions(self, app) :
         self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
@@ -202,7 +211,7 @@ class FileTabs(QtGui.QTabWidget) :
             if f.abspath == os.path.abspath(fname) :
                 self.highlightLine(i, lineno)
                 return
-        newFile = EditFile(fname, os.path.abspath(fname), size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
+        newFile = EditFile(fname, os.path.abspath(fname), self, size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
         self.addTab(newFile, fname)
         self.highlightLine(self.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
@@ -230,9 +239,10 @@ class FileTabs(QtGui.QTabWidget) :
         self.widget(index).close()
         self.removeTab(index)
 
-    def addClicked(self) :
+    def addClicked(self) :        
         fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
         self.selectLine(fname, -1)
+        self.updateFromConfigSettings(self.app.config)
 
     def updateFileEdit(self, fname) :
         for i in range(self.count()) :
@@ -242,7 +252,8 @@ class FileTabs(QtGui.QTabWidget) :
                 break
 
     def switchFile(self, widget) :
-        if self.currIndex > -1 : self.widget(self.currIndex).lostFocus()
+        if self.currIndex > -1 and self.widget(self.currIndex) :
+        	self.widget(self.currIndex).lostFocus()
         self.currIndex = self.currentIndex()
         self.widget(self.currIndex).gainedFocus()
 
@@ -267,3 +278,22 @@ class FileTabs(QtGui.QTabWidget) :
         tabstop = config.get('ui', 'tabstop') if config.has_option('ui', 'tabstop') else 10
         tabstop = int(tabstop)
         self.updateTabstop(tabstop)
+
+    def addOpenFile(self, filename) :
+        if filename != '' :
+            for f in self.openFiles :
+                if f == filename :
+                    return
+            self.openFiles.append(filename)
+            self.formatOpenFiles()
+	    
+    def deleteOpenFile(self, filename) :
+	    self.openFiles.remove(filename)
+	    self.formatOpenFiles()
+	    
+    def formatOpenFiles(self) :
+		openFileString = ''
+		for f in self.openFiles :
+			openFileString = openFileString + f + ';'
+		self.app.config.set('window', 'openfiles', openFileString)
+		

@@ -105,6 +105,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.setMenus()
         registerErrorLog(self)
 
+        # Open all the previously open files.
+        if self.config.has_option('window', 'openfiles') :
+            openFileString = self.config.get('window', 'openfiles')
+            openFiles = openFileString.split(';')
+            for f in openFiles :
+                if (f) :
+            	    self.tabEdit.selectLine(f, -1)
+        # Open the main file.
         mainfile = configval(config, 'build', 'gdlfile')
         if mainfile :
             self.tabEdit.selectLine(mainfile, -1)
@@ -119,11 +127,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
         
-        # Look for the GDX file with the font; if it's not there, look in the current directory.
-        self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
-        if not os.path.exists(self.gdxfile) :
-        	basename = os.path.basename(fontname)
-        	self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
+       	basename = os.path.basename(fontname) # look in current directory
+       	self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
         
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
@@ -446,6 +451,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.config.set('window', 'mainheight', str(s.height()))
         self.config.set('window', 'vsplitter', self.vsplitter.saveState().toBase64())
         self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
+            
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
         if self.configfile :
