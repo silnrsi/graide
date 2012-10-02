@@ -152,6 +152,18 @@ class EditFile(QtGui.QPlainTextEdit) :
     def gainedFocus(self) :
         if self.fIsOpen :
             self.fDialog.show()
+        selectedText = self.textCursor().selectedText()
+        self.fileTabs.setSelectedText(selectedText)
+            
+    def mouseReleaseEvent(self, event) :
+        super(EditFile,self).mouseReleaseEvent(event)
+        selectedText = self.textCursor().selectedText()
+        self.fileTabs.setSelectedText(selectedText)
+        
+    def mouseDoubleClickEvent(self, event) :
+        super(EditFile,self).mouseDoubleClickEvent(event)
+        selectedText = self.textCursor().selectedText()
+        self.fileTabs.setSelectedText(selectedText)
 
 
 # The window containing all the code files.
@@ -193,6 +205,7 @@ class FileTabs(QtGui.QTabWidget) :
             self.openFiles.remove('')
         else :
             self.openFiles = []
+        self.selectedText = ''
 
     def setActions(self, app) :
         self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
@@ -256,6 +269,9 @@ class FileTabs(QtGui.QTabWidget) :
         	self.widget(self.currIndex).lostFocus()
         self.currIndex = self.currentIndex()
         self.widget(self.currIndex).gainedFocus()
+        
+    def setSelectedText(self, text) :
+        self.selectedText = text
 
     def setSize(self, size) :
         for i in range(self.count()) :

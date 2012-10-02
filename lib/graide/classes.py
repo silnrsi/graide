@@ -48,7 +48,7 @@ class Classes(QtGui.QWidget) :
         self.hb.setSpacing(Layout.buttonSpacing)
         self.hb.addStretch()
         self.vb.addWidget(self.bbox)
-        self.cButton = QtGui.QToolButton()
+        self.cButton = QtGui.QToolButton()	# clear highlights
         self.cButton.setIcon(QtGui.QIcon.fromTheme('edit-clear', QtGui.QIcon(":/images/edit-clear.png")))
         self.cButton.clicked.connect(self.clearHighlights)
         self.cButton.setToolTip('Clear glyph highlights')
@@ -64,17 +64,27 @@ class Classes(QtGui.QWidget) :
             self.rButton.clicked.connect(self.delCurrent)
             self.rButton.setToolTip('Remove currently selected class')
             self.hb.addWidget(self.rButton)
+        self.fButton = QtGui.QToolButton()	# find class
+        self.fButton.setIcon(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")))
+        self.fButton.clicked.connect(self.findSelectedClass)
+        self.fButton.setToolTip('Find class selected in source code')
+        self.hb.addWidget(self.fButton)
+        self.classCount = 0
         self.font = font
         if font :
             self.loadFont(font)
+            
+        self.selClassName = ''
 
     def resizeEvent(self, event) :
         self.tab.setColumnWidth(1, self.size().width() - self.tab.columnWidth(0) - 2)
 
+    # Populate the Classes tab with the defined classes.
     def loadFont(self, font) :
         self.font = font
         keys = sorted(font.classes.keys())
         num = len(keys)
+        self.classCount = num
         oldnum = self.tab.rowCount()
         if num != oldnum :
             self.tab.setRowCount(num)
@@ -102,6 +112,13 @@ class Classes(QtGui.QWidget) :
             self.tab.setItem(i, 1, m)
 
     def doubleClicked(self, row, col) :
+        self.findSourceForClass(row)
+
+    def clicked(self, row, cell) :
+        self.classSelected.emit(self.tab.item(row, 0).text())
+        
+    # Highlight the source code where the given class is defined in the code pane.
+    def findSourceForClass(self, row) :
         c = self.tab.item(row, 1)
         if not c.loc[0] or c.loc[2] :
             d = QtGui.QDialog(self)
@@ -120,10 +137,7 @@ class Classes(QtGui.QWidget) :
                 self.classUpdated.emit(name, t)
         elif c.loc[0] :
             self.app.selectLine(*c.loc[:2])
-            return True
-
-    def clicked(self, row, cell) :
-        self.classSelected.emit(self.tab.item(row, 0).text())
+            return True    	
 
     def clearHighlights(self) :
         self.classSelected.emit(None)
@@ -146,3 +160,28 @@ class Classes(QtGui.QWidget) :
         name = self.tab.item(r, 0).text()
         self.classUpdated.emit(name, None)
         self.tab.removeRow(r)
+    
+    # Scroll to the selected class and highlight it.
+    def findSelectedClass(self) :
+    	className = self.app.tabEdit.selectedText
+    	d = QtGui.QDialog(self)
+    	rowMatched = -1
+    	for row in range(0, self.classCount) :
+    	    edit = QtGui.QPlainTextEdit(self.tab.item(row, 0).text(), d)
+    	    cname = edit.toPlainText()
+    	    if cname == className :
+    	    	rowMatched = row
+    	    	break
+    	
+    	if rowMatched > -1 :
+    	    item = self.tab.item(rowMatched, 0)
+    	    self.tab.scrollToItem(item)
+    	    item.setBackground(Layout.activePassColour)
+    	    
+    	    if self.selClassName == className :  # second time clicked
+    	        self.findSourceForClass(rowMatched)
+    	#else :
+    	#    QtGui.QSound.play()
+    	        
+    	self.selClassName = className
+

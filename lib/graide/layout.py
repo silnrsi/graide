@@ -25,12 +25,12 @@ class Layout(object) :
     runEditHeight = 60
     errorColour = QtGui.QColor(255, 160, 160)
     warnColour = QtGui.QColor(255, 255, 160)
-    activePassColour = QtGui.QColor(255, 255, 208)
+    activePassColour = QtGui.QColor(255, 255, 208)	# light yellow
     slotColours = {
         'default' : QtGui.QColor(0, 0, 0, 32),    # gray, semi-transparent
         'input' : QtGui.QColor(200, 00, 0, 32),   # pink, semi-transparent
         'output' : QtGui.QColor(0, 200, 0, 32),   # green, semi-transparent
     }
-    posdotColour = QtGui.QColor(0, 160, 0, 192)
-    posdotShiftColour = QtGui.QColor(0, 0, 192, 192)
+    posdotColour = QtGui.QColor(0, 160, 0, 192)	  # green
+    posdotShiftColour = QtGui.QColor(0, 0, 192, 192)  # blue
 
