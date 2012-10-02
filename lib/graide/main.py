@@ -73,7 +73,8 @@ class MainWindow(QtGui.QMainWindow) :
         #    QtGui.QIcon.setThemeName('Tango')
         app = QtCore.QCoreApplication.instance()
         appicon = QtGui.QIcon(':/images/graide_logo_256px.png')
-        appicon.addFile(':/images/graide_logo_96px.png')
+        appicon.addFile(':/images/graide-logo_16px.png')
+        appicon.addFile(':/images/graide-logo_96px.png')
         appicon.addFile(':/images/graide logo.svg')
         app.setWindowIcon(appicon)
 
@@ -399,6 +400,7 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu = self.menuBar().addMenu("&File")
         filemenu.addAction(self.tabEdit.aAdd)
         filemenu.addAction(self.tabEdit.aSave)
+        filemenu.addSeparator()
         filemenu.addAction(self.tabEdit.aBuild)
         filemenu.addAction('&Reset Names', self.resetNames)
 
@@ -406,6 +408,7 @@ class MainWindow(QtGui.QMainWindow) :
         projectmenu.addAction(self.aCfg)
         projectmenu.addAction(self.aCfgOpen)
         projectmenu.addAction(self.aCfgNew)
+        projectmenu.addSeparator()
         projectmenu.addAction(self.aSaveAP)
 
         testmenu = self.menuBar().addMenu("&Tests")
