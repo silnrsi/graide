@@ -71,11 +71,11 @@ class MainWindow(QtGui.QMainWindow) :
         #if sys.platform == 'darwin' :
         #    QtGui.QIcon.setThemeSearchPaths(['/opt/local/share/icons', ':/icons'])
         #    QtGui.QIcon.setThemeName('Tango')
-        app = QtCore.QCoreApplication.instance()
+        #app = QtCore.QCoreApplication.instance()
         appicon = QtGui.QIcon(':/images/graide_logo_256px.png')
         appicon.addFile(':/images/graide_logo_96px.png')
         appicon.addFile(':/images/graide logo.svg')
-        app.setWindowIcon(appicon)
+        self.setWindowIcon(appicon)
 
         findgrcompiler()
         for s in ('main', 'build', 'ui') :
