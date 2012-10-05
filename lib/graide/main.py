@@ -56,12 +56,14 @@ class MainWindow(QtGui.QMainWindow) :
         self.fDialog = None
         self.config = config
         self.configfile = configfile
-        self.recentProjects = RecentProjectList()
+        self.appSettings = QtCore.QSettings("SIL", "Graide")
+        self.recentProjects = RecentProjectList(self.appSettings)
         self.currFeats = None
         self.currLang = None
         self.currWidth = 100
         self.font = Font()
         self.apname = None
+
         
         if (self.configfile == None) :
             self.setWindowTitle("Graide")

@@ -26,10 +26,13 @@ import os
 
 class RecentProjectList(object) :
 
-    def __init__(self) :
+    def __init__(self, appSettings) :
         self.maxCount = 4
+
+        self.settings = appSettings
+         
+        filesAbsPath = self._getFileList()
         
-        filesAbsPath = self.getFileList_Win()  # TODO: extend for other OSes
         self.files = []
         for f in filesAbsPath :
             basename = os.path.basename(f)
@@ -38,7 +41,7 @@ class RecentProjectList(object) :
 
     # Ensure any changes are saved.
     def saveFiles(self) :
-        self._save_Win(self._absFiles())        # TODO: extend for other OSes
+        self._save(self._absFiles())
 
     # Add a project to the list, keeping the list to the specified length.
     def addProject(self, fname) :
@@ -51,8 +54,7 @@ class RecentProjectList(object) :
             
         self.files.insert(0, (fname,abspath))
         self.limitFileList()
-
-        self.putFileList_Win(self._absFiles())  # TODO: extend for other OSes
+        self._putFileList(self._absFiles())
 
     # Return the list of projects.
     def projects(self) :
@@ -70,13 +72,42 @@ class RecentProjectList(object) :
             self.files.remove(self.files[-1])
 
     def close(self) :
-        self._close_Win()  # TODO: extend for other OSes
+        self._close()
 
+### QSettings routines ###
 
-### Windows registry routines ###
+    def _getFileList(self) :
+        self.settings.beginGroup('Recent')
+        value = self.settings.value('projects')
+        self.settings.endGroup();
+
+        if value :
+            files = value.split(';')
+            files.remove('')
+        else :
+            files = []
+        return files
+
+    def _putFileList(self, files) :
+        fileString = ""
+        for f in files :
+            fileString = fileString + f + ';'
+            
+        self.settings.beginGroup('Recent')
+        self.settings.setValue('projects', fileString)
+        self.settings.endGroup()
+
+    def _save(self, files) :
+        self.settings.sync()
+
+    def _close(self) :
+        # do nothing
+        pass
+
+### Windows registry routines -- not used ###
 
     # On Windows, get the list from the registry.
-    def getFileList_Win(self) :
+    def _getFileList_Win(self) :
         self.regPath = r"\Software\SIL\Graide\RecentProjects"
         h1 = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
         # Add the keys for the path
@@ -90,7 +121,7 @@ class RecentProjectList(object) :
         files.remove('')
         return files
 
-    def putFileList_Win(self, files) :
+    def _putFileList_Win(self, files) :
         fileString = ""
         for f in files :
             fileString = fileString + f + ';'
