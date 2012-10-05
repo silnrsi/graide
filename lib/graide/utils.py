@@ -79,6 +79,9 @@ def findgrcompiler() :
                 if os.path.exists(a) :
                     grcompiler = a
                     break
+    elif sys.platform == 'darwin' and getattr(sys, 'frozen', None) :
+        grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
+        return grcompiler
     else :
         for p in os.environ['PATH'].split(':') :
             a = os.path.join(p, "grcompiler")

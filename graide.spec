@@ -6,7 +6,7 @@ import sys
 import os
 
 f = os.path.join(sys._MEIPASS, 'libqtcore.4.dylib')
-os.unlink(f)
+if os.path.exists(f) : os.unlink(f)
 os.symlink(os.path.join(sys._MEIPASS, 'QtCore'), f)
 '''
 
@@ -36,6 +36,8 @@ elif sys.platform == 'darwin' :
     pth = '/opt/local/Library/Frameworks/QtGui.framework/Versions/4/Resources/'
     for d in glob.glob(pth + 'qt_menu.nib/*') :
         a.datas.append((d[len(pth):], d, 'DATA'))
+    for d in glob.glob('grcompiler_mac/*') :
+        bins += [(d[15:], d, 'BINARY')]
 #    pth = '/opt/local/lib/'
 #    for d in ('QtSvg', 'QtXml') :
 #        lname = 'lib'+d+'.4.dylib'
@@ -55,6 +57,7 @@ elif sys.platform == 'darwin' :
     f.write(macfixup)
     f.close()
     a.scripts.insert(-1, ("myrthook", "build/myrthook", "PYSOURCE"))
+    bins -= [('libqtcore.4.dylib', '', '')]
 
 exe = EXE(pyz,
           a.scripts,
