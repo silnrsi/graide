@@ -232,8 +232,8 @@ class ConfigDialog(QtGui.QDialog) :
                 self.build_inc.setText("")
                 
         if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
-		        config.set('ui', 'textsize', str(self.ui_size.value()))
-		        if app : app.tabEdit.setSize(self.ui_size.value())
+            config.set('ui', 'textsize', str(self.ui_size.value()))
+            if app : app.tabEdit.setSize(self.ui_size.value())
         self.updateChanged(self.ui_editorfont, config, 'ui', 'editorfont', "", \
         				(app.tabEdit.updateFont(self.ui_editorfont.text(), self.ui_size.value()) if app else None))
         if self.ui_tabstop.value() != configintval(config, 'ui', 'tabstop') :

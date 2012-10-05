@@ -35,6 +35,7 @@ from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
 from graide.config import ConfigDialog
+from graide.recentprojects import RecentProjectList
 from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
@@ -55,6 +56,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.fDialog = None
         self.config = config
         self.configfile = configfile
+        self.recentProjects = RecentProjectList()
         self.currFeats = None
         self.currLang = None
         self.currWidth = 100
@@ -64,7 +66,8 @@ class MainWindow(QtGui.QMainWindow) :
         if (self.configfile == None) :
             self.setWindowTitle("Graide")
         else :
-        	self.setWindowTitle("[" + self.configfile + "] - Graide")
+            basename = os.path.basename(self.configfile)
+            self.setWindowTitle("[" + basename + "] - Graide")
 
         #import pdb; pdb.set_trace()  # debug
         
@@ -106,17 +109,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.setMenus()
         registerErrorLog(self)
 
-        # Open all the previously open files.
-        if self.config.has_option('window', 'openfiles') :
-            openFileString = self.config.get('window', 'openfiles')
-            openFiles = openFileString.split(';')
-            for f in openFiles :
-                if (f) :
-            	    self.tabEdit.selectLine(f, -1)
-        # Open the main file.
-        mainfile = configval(config, 'build', 'gdlfile')
-        if mainfile :
-            self.tabEdit.selectLine(mainfile, -1)
+        self._openFileList()
+
+        # end of __init__
+
 
     def loadFont(self, fontname) :
         if self.config.has_option('main', 'size') :
@@ -128,8 +124,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
         
-       	basename = os.path.basename(fontname) # look in current directory
-       	self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
+        basename = os.path.basename(fontname) # look in current directory
+        self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
         
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
@@ -167,7 +163,8 @@ class MainWindow(QtGui.QMainWindow) :
         if self.tabTest :
             self.tabTest.loadTests(testsname)
 
-    def closeEvent(self, event) :
+    def closeEvent(self, event) :   # WHY ARE THERE TWO METHODS CALLED closeEvent????
+        print "MainWindow::closeEvent1" ###
         if self.rules :
             self.rules.close()
         event.accept()
@@ -202,6 +199,24 @@ class MainWindow(QtGui.QMainWindow) :
 
         self.aHAbout = QtGui.QAction("&About", self)
         self.aHAbout.triggered.connect(self.helpAbout)
+        
+        # Recent projects
+        # TODO: use QSignalMapper instead of four openRecentProject methods:
+        # http://stackoverflow.com/questions/8824311/how-to-pass-arguments-to-callback-functions-in-pyqt
+        recentProjectFiles = self.recentProjects.projects()
+        self.aRecProjs = []
+        cnt = 0
+        for (basename, fullname) in recentProjectFiles :
+            if basename != '' :
+                projAction = QtGui.QAction(basename, self)
+                if   cnt == 0 : projAction.triggered.connect(self.openRecentProject1)
+                elif cnt == 1 : projAction.triggered.connect(self.openRecentProject2)
+                elif cnt == 2 : projAction.triggered.connect(self.openRecentProject3)
+                elif cnt == 3 : projAction.triggered.connect(self.openRecentProject4)
+                self.aRecProjs.append((basename, fullname, projAction))
+                cnt = cnt + 1
+                
+        # end of setActions
 
     def setupUi(self) :
         qInitResources()
@@ -234,6 +249,8 @@ class MainWindow(QtGui.QMainWindow) :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
             self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
             self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+
+        # end of setupUi
 
     def ui_tests(self, parent) :
         self.setwidgetstretch(self.tabInfo, 30, 100)
@@ -283,6 +300,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_splitter.addWidget(self.runView.gview)
         parent.addTab(self.test_splitter, "Tests")
 
+        # end of ui_tests
+
     def ui_left(self, parent) :
         # glyph, slot, classes, positions
         self.tab_glyph = QtGui.QWidget()
@@ -325,6 +344,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabInfo.addTab(self.tab_classes, "Classes")
         self.tab_poses = PosEdit(self.font, self)
         self.tabInfo.addTab(self.tab_poses, "Positions")
+
+        # end of ui_left
 
     def ui_fileEdits(self, parent) :
         # file edit view
@@ -396,6 +417,8 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, 'tab_poses') : self.tab_poses.setView(self.tab_pos)
         self.tabResults.addTab(self.tab_pos, "Positions")
 
+        # end of ui_bottom
+
     def setMenus(self) :
         filemenu = self.menuBar().addMenu("&File")
         filemenu.addAction(self.tabEdit.aAdd)
@@ -410,6 +433,11 @@ class MainWindow(QtGui.QMainWindow) :
         projectmenu.addAction(self.aCfgNew)
         projectmenu.addSeparator()
         projectmenu.addAction(self.aSaveAP)
+        
+        # Add recent projects
+        if (len(self.aRecProjs) > 0) : projectmenu.addSeparator()
+        for (basename, fullname, aProj) in self.aRecProjs :
+        	projectmenu.addAction(aProj)
 
         testmenu = self.menuBar().addMenu("&Tests")
         testmenu.addAction(self.aRunGo)
@@ -430,6 +458,8 @@ class MainWindow(QtGui.QMainWindow) :
         helpmenu = self.menuBar().addMenu("&Help")
         helpmenu.addAction(self.aHAbout)
 
+        # end of setMenus
+
     def helpAbout(self) :
         QtGui.QMessageBox.about(self, "Graide", """GRAphite Integrated Development Environment
 
@@ -447,6 +477,14 @@ Copyright 2012 SIL International and M. Hosken""")
         widget.setSizePolicy(sizePolicy)
 
     def closeEvent(self, event) :
+        self._saveProjectData()
+        self.recentProjects.close()
+        qCleanupResources()
+
+    def _saveProjectData(self) :
+        self.recentProjects.addProject(self.configfile)  # remember that this was a recent project
+        self.recentProjects.saveFiles()
+
         if not self.config.has_section('window') :
             self.config.add_section('window')
         s = self.size()
@@ -454,7 +492,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.config.set('window', 'mainheight', str(s.height()))
         self.config.set('window', 'vsplitter', self.vsplitter.saveState().toBase64())
         self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
-            
+
         if self.testsfile :
             self.tabTest.writeXML(self.testsfile)
         if self.configfile :
@@ -466,7 +504,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 pass
         self.tabEdit.writeIfModified()
         self.saveAP()
-        qCleanupResources()
+        
 
     def glyphSelected(self, data, model) :
         self.glyphAttrib.changeData(data, model)
@@ -487,7 +525,7 @@ Copyright 2012 SIL International and M. Hosken""")
             self.tabResults.setCurrentWidget(self.tab_rules)
         passview.selectRow(row)
 
-    def rulesclosed(self, dialog) :
+    def rulesClosed(self, dialog) :
         self.ruleView.slotSelected.disconnect()
         self.ruleView.glyphSelected.disconnect()
         self.ruleView = None
@@ -532,8 +570,10 @@ Copyright 2012 SIL International and M. Hosken""")
         self.feats = make_FeaturesMap(self.fontfile)
         return True
 
+    # Run Graphite over a test string.
     def runClicked(self) :
         if self.tabEdit.writeIfModified() and not self.buildClicked() : return
+        
         if os.stat(self.fontfile).st_ctime > self.fonttime :
             self.loadFont(self.fontfile)
         text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
@@ -574,6 +614,8 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tabResults.setCurrentWidget(self.tab_passes)
+
+        # end of runClicked
 
     def doWaterfall(self) :
         self.runClicked()
@@ -657,30 +699,64 @@ Copyright 2012 SIL International and M. Hosken""")
                 self.config.write(f)
                 f.close()
 
-
+    # Open an (existing) project.
     def configOpenClicked(self) :
         (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(fname) : return
+        if os.path.splitext(fname)[1] == "" :
+        	fname = fname + ".cfg"
+        self._configOpenExisting(fname)
+
+    def _configOpenExisting(self, fname) :
+        self._saveProjectData()
+        
+        self.tabEdit.closeAllTabs()
+
         (dname, fname) = os.path.split(fname)
         if dname :
             os.chdir(dname)
-        if os.path.splitext(fname)[1] == "" :
-        	fname = fname + ".cfg"
+
         self.configfile = fname
+        self.setWindowTitle("[" + fname + "] - Graide")
+        
         self.config = RawConfigParser()
         self.config.read(fname)
+
         if self.config.has_option('main', 'font') :
             self.loadFont(self.config.get('main', 'font'))
             if self.config.has_option('main', 'ap') :
                 self.loadAP(self.config.get('main', 'ap'))
+            
         if self.config.has_option('main', 'testsfile') :
             self.loadTests(self.config.get('main', 'testsfile'))
+
+        self._openFileList()
+
         if self.config.has_option('build', 'gdlfile') :
-            self.selectLine(self.config.get('build', 'gdlfile'), -1)
+            #self.selectLine(self.config.get('build', 'gdlfile'), -1)
             self.tabEdit.updateFromConfigSettings(self.config)
-        
-        
+            
+
+
+    # When opening project, open the list of previously open files.
+    def _openFileList(self) :        
+        if self.config.has_option('window', 'openfiles') :
+            openFileString = self.config.get('window', 'openfiles')
+            openFiles = openFileString.split(';')
+            for f in openFiles :
+                if (f) :
+                    self.tabEdit.selectLine(f, -1)
+        # Open the main file.
+        mainfile = configval(self.config, 'build', 'gdlfile')
+        if mainfile :
+            self.tabEdit.selectLine(mainfile, -1)
+            
+    # Create a new project.
     def configNewClicked(self) :
+        if self.configfile :
+            # record this as a recent project
+            self.recentProjects.addProject(self.configfile)
+            
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
         (dname, fname) = os.path.split(fname)
@@ -689,9 +765,11 @@ Copyright 2012 SIL International and M. Hosken""")
         if os.path.splitext(fname)[1] == "" :
         	fname = fname + ".cfg"
         self.configfile = fname
+        self.recentProjects.addProject(self.configfile)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
         self.configClicked()
+        
 
     def resetNames(self) :
         if self.font :
@@ -705,6 +783,24 @@ Copyright 2012 SIL International and M. Hosken""")
 
     def setposglyphsize(self, size) :
         if self.font : self.font.posglyphSize = size
+
+    # TODO: use QSignalMapper instead of four openRecentProject methods:
+    def openRecentProject1(self) :
+        self.openRecentProject(1)
+    def openRecentProject2(self) :
+        self.openRecentProject(2)
+    def openRecentProject3(self) :
+        self.openRecentProject(3)
+    def openRecentProject4(self) :
+        self.openRecentProject(4)
+
+    def openRecentProject(self, i) :
+        (basename, fullname, action) = self.aRecProjs[i-1]
+        if not os.path.exists(fullname) :
+            print "ERROR: project " + fullname + " does not exist"
+        else :
+            self._configOpenExisting(fullname)
+        
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser

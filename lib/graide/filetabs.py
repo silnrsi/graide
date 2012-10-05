@@ -252,6 +252,12 @@ class FileTabs(QtGui.QTabWidget) :
         self.widget(index).close()
         self.removeTab(index)
 
+    def closeAllTabs(self) :
+        while self.widget(0) :
+            self.widget(0).close()
+            self.removeTab(0)
+        self.openFiles = []
+
     def addClicked(self) :        
         fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
         self.selectLine(fname, -1)
@@ -265,10 +271,14 @@ class FileTabs(QtGui.QTabWidget) :
                 break
 
     def switchFile(self, widget) :
+        if (self.widget(0) == 0 ) :   # no tabs
+            return
+        
         if self.currIndex > -1 and self.widget(self.currIndex) :
         	self.widget(self.currIndex).lostFocus()
         self.currIndex = self.currentIndex()
-        self.widget(self.currIndex).gainedFocus()
+        if self.widget(self.currIndex) :
+            self.widget(self.currIndex).gainedFocus()
         
     def setSelectedText(self, text) :
         self.selectedText = text
@@ -278,12 +288,12 @@ class FileTabs(QtGui.QTabWidget) :
             self.widget(i).setSize(size)
             
     def updateFont(self, fontspec, size) :
-		for i in range(self.count()) :
-			self.widget(i).updateFont(fontspec, size)
+        for i in range(self.count()) :
+            self.widget(i).updateFont(fontspec, size)
             
     def updateTabstop(self, tabstop) :
-		for i in range(self.count()) :
-			self.widget(i).updateTabstop(tabstop)
+        for i in range(self.count()) :
+            self.widget(i).updateTabstop(tabstop)
 
     def updateFromConfigSettings(self, config) :
         editorfont = config.get('ui', 'editorfont') if config.has_option('ui', 'editorfont') else "monospace"
@@ -301,15 +311,15 @@ class FileTabs(QtGui.QTabWidget) :
                 if f == filename :
                     return
             self.openFiles.append(filename)
-            self.formatOpenFiles()
-	    
+            self.saveOpenFiles()
+
     def deleteOpenFile(self, filename) :
-	    self.openFiles.remove(filename)
-	    self.formatOpenFiles()
-	    
-    def formatOpenFiles(self) :
-		openFileString = ''
-		for f in self.openFiles :
-			openFileString = openFileString + f + ';'
-		self.app.config.set('window', 'openfiles', openFileString)
+        self.openFiles.remove(filename)
+        self.saveOpenFiles()
+    
+    def saveOpenFiles(self) :
+        openFileString = ''
+        for f in self.openFiles :
+            openFileString = openFileString + f + ';'
+        self.app.config.set('window', 'openfiles', openFileString)
 		
