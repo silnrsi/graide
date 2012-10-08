@@ -5,10 +5,16 @@ macfixup='''
 import sys
 import os
 
-f = os.path.join(sys._MEIPASS, 'libqtcore.4.dylib')
-if os.path.exists(f) : os.unlink(f)
-os.symlink(os.path.join(sys._MEIPASS, 'QtCore'), f)
+for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
+    s = os.path.join(sys._MEIPASS, t)
+    f = os.path.join(sys._MEIPASS, 'lib' + t + '.4.dylib')
+    if not os.path.exists(s) : continue
+    if os.path.exists(f) : os.unlink(f)
+    os.symlink(s, f)
 '''
+
+def toc_remove(atoc, *anames) :
+    atoc.data = filter(lambda x: x[0] not in anames, atoc.data)
 
 libdir = 'lib'
 ext = ''
@@ -38,17 +44,16 @@ elif sys.platform == 'darwin' :
         a.datas.append((d[len(pth):], d, 'DATA'))
     for d in glob.glob('grcompiler_mac/*') :
         bins += [(d[15:], d, 'BINARY')]
-#    pth = '/opt/local/lib/'
-#    for d in ('QtSvg', 'QtXml') :
-#        lname = 'lib'+d+'.4.dylib'
-#        rname = os.path.realpath(os.path.join(pth, lname))
-#        if os.path.exists(rname) :
-#            bins += [(lname, rname, 'BINARY')]
-#    pth = '/opt/local/share/qt4/plugins/'
-#    for d in glob.glob(pth + 'imageformats/*') :
-#        if os.path.exists(d) :
-#            bins += [(d[len(pth):], d, 'BINARY')]
-    for d in ('freetype.6', 'graphite2') :
+    pth = '/opt/local/lib/'
+    for d in ('QtSvg', 'QtXml') :
+        rname = '/opt/local/Library/Frameworks/{0}.framework/Versions/4/{0}'.format(d)
+        if os.path.exists(rname) :
+            bins += [(d, rname, 'BINARY')]
+    pth = '/opt/local/share/qt4/plugins/'
+    for d in glob.glob(pth + 'imageformats/*') :
+        if os.path.exists(d) :
+            bins += [(d[len(pth):], d, 'BINARY')]
+    for d in ('freetype.6', 'graphite2', 'icui18n.48', 'icuuc.48', 'icudata.48') :
         fn = 'lib' + d + '.dylib'
         for pth in ('/usr/local/lib', '/opt/local/lib') :
             if os.path.exists(os.path.join(pth, fn)) :
@@ -57,7 +62,8 @@ elif sys.platform == 'darwin' :
     f.write(macfixup)
     f.close()
     a.scripts.insert(-1, ("myrthook", "build/myrthook", "PYSOURCE"))
-    bins -= [('libqtcore.4.dylib', '', '')]
+    bins.append(('QtGui', '/opt/local/Library/Frameworks/QtGui.framework/Versions/4/QtGui', 'BINARY'))
+    toc_remove(bins, 'libQtCore.4.dylib', 'libQtGui.4.dylib')
 
 exe = EXE(pyz,
           a.scripts,
