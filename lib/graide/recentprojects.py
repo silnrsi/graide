@@ -20,8 +20,8 @@
 
 from PySide import QtCore, QtGui
 from graide.utils import configval, configintval
-import _winreg
-import os
+import os, sys
+if sys.platform == "win32" : import _winreg
 
 
 class RecentProjectList(object) :
