@@ -45,6 +45,7 @@ class RecentProjectList(object) :
 
     # Add a project to the list, keeping the list to the specified length.
     def addProject(self, fname) :
+        if fname == None : return
         abspath = os.path.abspath(fname)
         for x in self.files :
             (xf,xa) = x
