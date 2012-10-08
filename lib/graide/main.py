@@ -82,6 +82,8 @@ class MainWindow(QtGui.QMainWindow) :
         appicon.addFile(':/images/graide-logo_96px.png')
         appicon.addFile(':/images/graide logo.svg')
         self.setWindowIcon(appicon)
+	self.setWindowIcon(appicon)
+	self.setWindowTitle("Graide v0.5")
 
         findgrcompiler()
         for s in ('main', 'build', 'ui') :

@@ -34,6 +34,14 @@ if sys.platform == 'win32' :
         bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
     for d in glob.glob('grcompiler_win/*.*') :
         bins += [(d[15:], d, 'BINARY')]
+    pydir = os.path.dirname(sys.executable)
+    pth = os.path.join(pydir, 'lib\\site-packages\\pyside')
+    for d in ('QtSvg', 'QtXml') :
+	bins += [(d+'4.dll', os.path.join(pth, d+'4.dll'), 'BINARY')]
+    pth = os.path.join(pth, 'plugins')
+    for d in glob.glob(os.path.join(pth, 'imageformats/*')) :
+	if os.path.exists(d) :
+	     bins += [(d[len(pth):], d, 'BINARY')]
 #    import pdb; pdb.set_trace()
 #    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
 #    bins += grdeps

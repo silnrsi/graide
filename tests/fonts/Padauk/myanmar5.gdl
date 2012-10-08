@@ -11,7 +11,7 @@
 1.01    MJPH    16-SEP-2003     Latest ZWJ and ZWNJ usages,
                                 Start to finesse: centre clusters in wraps, narrow cons
                                 with wide diacritics take a wide wrap.
-1.02    MJPH     8-OCT-2003     Add u1004.med_u102F
+1.02    MJPH     8-OCT-2003     Add u1004.med_u102F  
 1.03    MJPH    28-OCT-2003     Add support for contractions (reduplication) killer order
 1.04	KRS		31-MAY-2004		Fixed some ligature issues with kinzi
 1.05	KRS		09-JUN-2004		Added breakweights for section markers
