@@ -21,6 +21,6 @@
     <file>images/graide-logo_16px.png</file>
     <file>images/graide-logo_256px.png</file>
     <file>images/graide-logo_96px.png</file>
-<!--    <file>images/graide logo.svg</file>  mac pyinstaller can't handle svg yet -->
+    <file>images/graide logo.svg</file>
 </qresource>
 </RCC>
