@@ -24,14 +24,16 @@ import sys, os
 
 if getattr(sys, 'frozen', None) :
     basedir = sys._MEIPASS
-else :
+elif sys.platform == 'win32' :
     basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
+else :
+    basedir = ''
 
 grfiles = {
     'darwin' : 'libgraphite2.dylib',
     'linux2' : 'ligraphite2.so',
-    'win32' : os.path.join(basedir, 'graphite2.dll'),
-    'win64' : os.path.join(basedir, 'graphite2-x64.dll')
+    'win32' : 'graphite2.dll',
+    'win64' : 'graphite2-x64.dll'
 }
 gr2 = None
 gr2lib = ctypes.util.find_library("graphite2")
@@ -41,7 +43,8 @@ if not gr2lib :
             grfile = grfiles['win64']
         else :
             grfile = grfiles[sys.platform]
-	print "Trying " + grfile
+        grfile = os.path.join(basedir, grfile)
+        print "Trying " + grfile
         gr2 = CDLL(grfile)
     except OSError :
         gr2 = None
