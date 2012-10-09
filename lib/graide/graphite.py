@@ -31,28 +31,24 @@ else :
 
 grfiles = {
     'darwin' : 'libgraphite2.dylib',
-    'linux2' : 'ligraphite2.so',
+    'linux2' : 'libgraphite2.so',
     'win32' : 'graphite2.dll',
     'win64' : 'graphite2-x64.dll'
 }
 gr2 = None
-gr2lib = ctypes.util.find_library("graphite2")
-if not gr2lib :
-    try :
-        if sys.platform == 'win32' and sys.maxsize > (1 << 32) :
-            grfile = grfiles['win64']
-        else :
-            grfile = grfiles[sys.platform]
-        grfile = os.path.join(basedir, grfile)
-        print "Trying " + grfile
-        gr2 = CDLL(grfile)
-    except OSError :
-        gr2 = None
+try :
+    if sys.platform == 'win32' and sys.maxsize > (1 << 32) :
+        grfile = grfiles['win64']
+    else :
+        grfile = grfiles[sys.platform]
+    grfile = os.path.join(basedir, grfile)
+    print "Trying " + grfile
+    gr2 = CDLL(grfile)
+except OSError :
+    gr2 = None
 
-if not gr2lib and not gr2 :
-    raise RuntimeError, "Graphite2 library not found"
 if not gr2 :
-    gr2 = CDLL(gr2lib)
+    raise RuntimeError, "Graphite2 library not found"
 
 def grversion() :
     a = c_int()

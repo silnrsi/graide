@@ -28,27 +28,22 @@ import ctypes.util, os, sys
 
 __dll__    = None
 __handle__ = None
-FT_Library_filename = ctypes.util.find_library('freetype')
-if not FT_Library_filename:
-    if getattr(sys, 'frozen', None) :
-        basedir = sys._MEIPASS
-    elif sys.platform == "win32" :
-        basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
-    else :
-        basedir = ''
+if getattr(sys, 'frozen', None) :
+    basedir = sys._MEIPASS
+elif sys.platform == "win32" :
+    basedir = os.path.join(os.path.dirname(__file__), '..', 'dll')
+else :
+    basedir = ''
 
-    for n in ('libfreetype.so.6', 'freetype6.dll', 'libfreetype6.dylib') :
-        try:
-            __dll__ = ctypes.CDLL(os.path.join(basedir, n))
-        except OSError:
-            __dll__ = None
-        if __dll__ is not None : break
+for n in ('libfreetype.so.6', 'freetype6.dll', 'libfreetype.6.dylib') :
+    try:
+        __dll__ = ctypes.CDLL(os.path.join(basedir, n))
+        break
+    except OSError:
+        __dll__ = None
 
-if not FT_Library_filename and not __dll__:
-    raise RuntimeError, 'Freetype library not found'
 if not __dll__:
-  __dll__ = ctypes.CDLL(FT_Library_filename)
-
+    raise RuntimeError, 'Freetype library not found'
 
 
 # -----------------------------------------------------------------------------
