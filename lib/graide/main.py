@@ -224,7 +224,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def setupUi(self) :
         qInitResources()
-        self.resize(994, 696)
+        self.resize(*Layout.initWinSize)
         self.centralwidget = QtGui.QWidget(self)
         self.verticalLayout = QtGui.QHBoxLayout(self.centralwidget)
         self.hsplitter = QtGui.QSplitter(self.centralwidget)
@@ -253,6 +253,8 @@ class MainWindow(QtGui.QMainWindow) :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
             self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
             self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+        else :
+            self.hsplitter.setSizes((Layout.initHSplitWidth, Layout.initWinSize[0] - Layout.initHSplitWidth))
 
         # end of setupUi
 

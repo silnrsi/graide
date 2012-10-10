@@ -18,8 +18,11 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from PySide import QtGui
+import sys
 
-class Layout(object) :
+Layout = None
+
+class BaseLayout(object) :
     buttonSpacing = 1
     buttonMargins = (0, 0, 0, 0)
     runEditHeight = 60
@@ -33,4 +36,19 @@ class Layout(object) :
     }
     posdotColour = QtGui.QColor(0, 160, 0, 192)	  # green
     posdotShiftColour = QtGui.QColor(0, 0, 192, 192)  # blue
+    initHSplitWidth = 300
+    initWinSize = (1000, 700)
+
+class MacLayout(BaseLayout) :
+    pass
+
+class WinLayout(BaseLayout) :
+    pass
+
+layouts = {
+    'darwin' : MacLayout,
+    'win32' : WinLayout
+}
+
+Layout = layouts.get(sys.platform, BaseLayout)
 

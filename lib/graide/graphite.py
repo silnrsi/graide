@@ -42,7 +42,7 @@ try :
     else :
         grfile = grfiles[sys.platform]
     grfile = os.path.join(basedir, grfile)
-    print "Trying " + grfile
+#    print "Trying " + grfile
     gr2 = CDLL(grfile)
 except OSError :
     gr2 = None
