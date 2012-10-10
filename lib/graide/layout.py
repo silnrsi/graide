@@ -38,9 +38,10 @@ class BaseLayout(object) :
     posdotShiftColour = QtGui.QColor(0, 0, 192, 192)  # blue
     initHSplitWidth = 300
     initWinSize = (1000, 700)
+    noMenuIcons = False
 
 class MacLayout(BaseLayout) :
-    pass
+    noMenuIcons = True
 
 class WinLayout(BaseLayout) :
     pass
