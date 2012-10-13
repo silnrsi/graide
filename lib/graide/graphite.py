@@ -48,6 +48,13 @@ except OSError :
     gr2 = None
 
 if not gr2 :
+    grlibrary = ctypes.util.find_library("graphite2")
+    try :
+        gr2 = CDLL(grlibrary)
+    except :
+        gr2 = None
+
+if not gr2 :
     raise RuntimeError, "Graphite2 library not found"
 
 def grversion() :

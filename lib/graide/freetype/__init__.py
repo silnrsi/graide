@@ -43,6 +43,13 @@ for n in ('libfreetype.so.6', 'freetype6.dll', 'libfreetype.6.dylib') :
         __dll__ = None
 
 if not __dll__:
+    libname = ctypes.util.find_library('freetype')
+    try :
+        __dll__ = ctypes.CDLL(libname)
+    except :
+        __dll__ = None
+
+if not __dll__:
     raise RuntimeError, 'Freetype library not found'
 
 

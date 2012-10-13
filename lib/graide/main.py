@@ -83,7 +83,7 @@ class MainWindow(QtGui.QMainWindow) :
         appicon.addFile(':/images/graide logo.svg')
         self.setWindowIcon(appicon)
         self.setWindowTitle("Graide v0.5")
-        Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
+        if Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
 
         findgrcompiler()
         for s in ('main', 'build', 'ui') :
