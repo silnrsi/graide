@@ -63,16 +63,15 @@ class MainWindow(QtGui.QMainWindow) :
         self.currWidth = 100
         self.font = Font()
         self.apname = None
-
+        self.appTitle = "Graide v0.5"
         
-        if (self.configfile == None) :
-            self.setWindowTitle("Graide")
-        else :
+        windowTitle = ''
+        if (self.configfile != None) :
             basename = os.path.basename(self.configfile)
-            self.setWindowTitle("[" + basename + "] - Graide")
+            windowTitle = windowTitle + "[" + basename + "] - "
+        windowTitle = windowTitle + self.appTitle
+        self.setWindowTitle(windowTitle)
 
-        #import pdb; pdb.set_trace()  # debug
-        
         #if sys.platform == 'darwin' :
         #    QtGui.QIcon.setThemeSearchPaths(['/opt/local/share/icons', ':/icons'])
         #    QtGui.QIcon.setThemeName('Tango')
@@ -82,7 +81,6 @@ class MainWindow(QtGui.QMainWindow) :
         appicon.addFile(':/images/graide-logo_96px.png')
         appicon.addFile(':/images/graide logo.svg')
         self.setWindowIcon(appicon)
-        self.setWindowTitle("Graide v0.5")
         if Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
 
         findgrcompiler()
@@ -723,7 +721,7 @@ Copyright 2012 SIL International and M. Hosken""")
             os.chdir(dname)
 
         self.configfile = fname
-        self.setWindowTitle("[" + fname + "] - Graide")
+        self.setWindowTitle("[" + fname + "] - " + self.appTitle)
         
         self.config = RawConfigParser()
         self.config.read(fname)
