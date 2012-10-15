@@ -217,7 +217,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.updateChanged(self.build_ap, config, 'main', 'ap', "xml", (app.loadAP if app else None))
         if self.build_ap.text() :
             config.set('build', 'usemakegdl', "1")
-            self.updateChanged(self.build_inc, config, 'build', "", 'makegdlfile')
+            self.updateChanged(self.build_inc, config, 'build', 'makegdlfile', "gdl")
             config.set('build', 'pospass', str(self.build_pos.value()))
             self.cbChanged(self.build_apronly, config, 'build', 'apronly')
             txt = self.build_cmd.text()
