@@ -191,7 +191,7 @@ class MainWindow(QtGui.QMainWindow) :
 
         self.aCfg = QtGui.QAction(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")), "&Configure Project ...", self)
         self.aCfg.setToolTip("Configure project")
-        self.aCfg.triggered.connect(self.configClicked)
+        self.aCfg.triggered.connect(self.runConfigDialog)
         self.aCfgOpen = QtGui.QAction(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")), "&Open Project ...", self)
         self.aCfgOpen.setToolTip("Open existing project")
         self.aCfgOpen.triggered.connect(self.configOpenClicked)
@@ -691,7 +691,7 @@ Copyright 2012 SIL International and M. Hosken""")
         if self.apname and not configintval(self.config, 'build', 'apronly') :
             self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
 
-    def configClicked(self) :
+    def runConfigDialog(self) :
         if not self.configfile :
             self.configNewClicked()
             return
@@ -741,7 +741,6 @@ Copyright 2012 SIL International and M. Hosken""")
             self.tabEdit.updateFromConfigSettings(self.config)
             
 
-
     # When opening project, open the list of previously open files.
     def _openFileList(self) :        
         if self.config.has_option('window', 'openfiles') :
@@ -758,7 +757,7 @@ Copyright 2012 SIL International and M. Hosken""")
     # Create a new project.
     def configNewClicked(self) :
         if self.configfile :
-            # record this as a recent project
+            # record current config, if any, as a recent project
             self.recentProjects.addProject(self.configfile)
             
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
@@ -772,8 +771,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.recentProjects.addProject(self.configfile)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
-        self.configClicked()
-        
+        self.runConfigDialog()      
 
     def resetNames(self) :
         if self.font :

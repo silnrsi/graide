@@ -84,13 +84,15 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.setFont(font)
         self.setTabStopWidth(tabstop)
 
-        try :
-            self.fileTabs.addOpenFile(self.fname)
+        try : # open the file
             f = codecs.open(fname, encoding="UTF-8")
-            self.setPlainText("".join(f.readlines()))
+            text = f.readlines()
+            self.setPlainText("".join(text))
             f.close()
         except :
             self.setPlainText("")
+            
+        self.fileTabs.addOpenFile(self.fname)
         a = QtGui.QAction(self)
         a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         a.triggered.connect(self.search)
@@ -321,5 +323,7 @@ class FileTabs(QtGui.QTabWidget) :
         openFileString = ''
         for f in self.openFiles :
             openFileString = openFileString + f + ';'
+        if not self.app.config.has_section('window') :
+            self.app.config.add_section('window')
         self.app.config.set('window', 'openfiles', openFileString)
 		
