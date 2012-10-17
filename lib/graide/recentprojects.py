@@ -105,33 +105,4 @@ class RecentProjectList(object) :
         # do nothing
         pass
 
-### Windows registry routines -- not used ###
-
-    # On Windows, get the list from the registry.
-    def _getFileList_Win(self) :
-        self.regPath = r"\Software\SIL\Graide\RecentProjects"
-        h1 = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
-        # Add the keys for the path
-        h2 = _winreg.CreateKeyEx(h1, "Software", 0, _winreg.KEY_ALL_ACCESS)
-        h3 = _winreg.CreateKeyEx(h2, "SIL", 0, _winreg.KEY_ALL_ACCESS)
-        h4 = _winreg.CreateKeyEx(h3, "Graide", 0, _winreg.KEY_ALL_ACCESS)
-        self.regKey = _winreg.CreateKeyEx(h4, "RecentProjects", 0, _winreg.KEY_ALL_ACCESS)
-
-        value = _winreg.QueryValue(self.regKey, None)
-        files = value.split(';')
-        files.remove('')
-        return files
-
-    def _putFileList_Win(self, files) :
-        fileString = ""
-        for f in files :
-            fileString = fileString + f + ';'
-        _winreg.SetValue(self.regKey, None, _winreg.REG_SZ, fileString)
-        # _winreg.FlushKey(self.regKey) - documentation says this is not required
-        
-    def _save_Win(self, files) :
-        self.putFileList_Win(files)
-
-    def _close_Win(self) :
-        _winreg.CloseKey(self.regKey)
 
