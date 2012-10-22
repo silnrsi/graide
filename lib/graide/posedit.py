@@ -105,6 +105,9 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
         """Return (anchor_scene_pos, [moveable_anchor_pos, stationary_anchor_pos])
             Both moveable and stationary anchor positions are in scene units relative to their glyphs"""
         res1 = self.getAnchor(self.text(1))
+        if not self.parent() :
+            # this is not the kind of thing that should be moved, eg, a base
+            return False
         res2 = self.parent().getAnchor(self.text(2))
         # print (self.position[0]/self.scale + res1[0], self.position[1]/self.scale + res1[1])
         return ((self.position[0] + self.scale * res1[0], self.position[1] - self.scale * res1[1]),
@@ -170,7 +173,11 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
         except TypeError : pass
 
     def mousePressEvent(self, event) :
-        (self.sceneAP, self.origPos, self.origAPs) = self.item.getActiveAPs()
+        apData = self.item.getActiveAPs()
+        if apData == False :
+            self.origAPs = None
+            return  # this is not the kind of thing to move, eg, a base character
+        (self.sceneAP, self.origPos, self.origAPs) = apData
         self.diff = (0, 0)
         self.shiftState = False
         self.keyPressEvent(event)
@@ -186,6 +193,9 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
         super(PosPixmapItem, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event) :
+        if self.origAPs == None :
+            # this is not the kind of thing to move
+            return
         self.moveState = False
         self.scene().view.updateable(True)
         self.scene().view.posGlyphChanged()
@@ -195,6 +205,9 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
         super(PosPixmapItem, self).mouseReleaseEvent(event)
 
     def mouseMoveEvent(self, event) :
+        if self.origAPs == None :
+            # this is not the kind of thing to move
+            return
         spos = event.scenePos()
         bpos = event.buttonDownScenePos(QtCore.Qt.LeftButton)
         self.diff = (spos - bpos).toTuple()
