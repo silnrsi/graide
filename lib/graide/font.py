@@ -102,3 +102,45 @@ class Font(gdlFont) :
         self.highlighted = nClass
 
     def emunits(self) : return self.upem
+
+    # Return a likely pair of glyphs to initialize the Positions tab tree control.
+#    def stationaryMobilePair(self) :
+#        for (i, sglyph) in enumerate(self.glyphs) :
+#            sAnchors = sglyph.anchors.keys()
+#            sname = sglyph.GDLName()
+#            if len(sAnchors) > 0 :
+#                # Find a second glyph with a matching anchor.
+#                for (i, mglyph) in enumerate(self.glyphs) :
+#                    mAnchors = mglyph.anchors.keys()
+#                    mname = mglyph.GDLName()
+#                    for sAP in sAnchors :
+#                        for mAP in mAnchors:
+#                            if self.apNamesMatch(sAP, mAP) :
+#                                return (sname, mname, sAP, mAP)
+#        return False
+    
+    # Return true if the two anchor names are a likely stationary/mobile pair.
+#    def apNamesMatch(self, sName, mName) :
+#        if (mName == sName + "_") : # eg, upper and upper_
+#            return True
+#        if (sName[-1] == "S" and mName[-1] == "M" and sName[0:-1] == mName[0:-1]) : # eg, upperS and upperM
+#            return True
+#        return False
+    
+    # Return the real existing attachment point name, given the generic one.
+    def actualAPName(self, genericName, mobile = False) :
+        for g in self.glyphs :
+            if not g : continue
+            for apName in g.anchors.keys() :
+                if mobile == True and apName == genericName + "M" :
+                    return genericName + "M"
+                elif not mobile and apName == genericName + "S" :
+                    return genericName + "S"
+            # Try again, looking for xxx and xxx_ pairs
+            for apName in g.anchors.keys() :
+                if mobile == True and apName == genericName + "_" :
+                    return genericName + "_"
+                elif not mobile and apName == genericName :
+                    return genericName
+        return ""                
+                    

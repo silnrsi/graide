@@ -22,6 +22,7 @@ from graide.makegdl.glyph import Glyph
 from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import ElementTree, parse, Element
 
+# A collection of glyphs that have a given attachment point defined
 class PointClass(object) :
 
     def __init__(self, name) :
@@ -55,6 +56,7 @@ class PointClass(object) :
         else :
             return g not in self.dias and g not in self.glyphs
 
+
 class FontClass(object) :
 
     def __init__(self, elements = None, fname = None, lineno = None, generated = False, editable = False) :
@@ -66,6 +68,7 @@ class FontClass(object) :
 
     def append(self, element) :
         self.elements.append(element)
+
 
 class Font(object) :
     
@@ -258,14 +261,19 @@ class Font(object) :
         self.points = {}
         for g in self.glyphs :
             if not g : continue
-            for a in g.anchors.keys() :
-                b = a[:-1]
-                if b not in self.points :
-                    self.points[b] = PointClass(b)
-                if a.endswith('S') : 
-                    self.points[b].addBaseGlyph(g)
+            for apName in g.anchors.keys() :
+                genericName = apName[:-1] # without the M or S
+                if genericName not in self.points :
+                    self.points[genericName] = PointClass(genericName)
+                if apName.endswith('S') : 
+                    self.points[genericName].addBaseGlyph(g)
                 else :
-                    self.points[b].addDiaGlyph(g)
+                    self.points[genericName].addDiaGlyph(g)
+    
+    def getPointClasses(self) :
+        if len(self.points) == 0 :
+            self.pointClasses() # calculate it
+        return self.points
 
     def ligClasses(self) :
         self.ligs = {}
