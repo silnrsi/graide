@@ -231,6 +231,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.verticalLayout.addWidget(self.hsplitter)
 
         self.tabInfo = QtGui.QTabWidget(self.hsplitter)
+        #self.tabInfo = InfoTabs(self.hsplitter)
         self.widget = QtGui.QWidget(self.hsplitter)
         self.setwidgetstretch(self.widget, 55, 100)
         self.topLayout = QtGui.QVBoxLayout(self.widget)
@@ -346,8 +347,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'makegdlfile') if configval(self.config, 'main', 'ap') else None)
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
-        self.tab_poses = PosEdit(self.font, self)
-        self.tabInfo.addTab(self.tab_poses, "Positions")
+        self.tab_posedit = PosEdit(self.font, self)
+        self.tabInfo.addTab(self.tab_posedit, "Positions")
+        self.tabInfo.currentChanged.connect(self.tab_posedit.updatePositions)
 
         # end of ui_left
 
@@ -417,9 +419,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.tabResults.addTab(self.tab_rules, "Rules")
 
         # positioning tab
-        self.tab_pos = PosView(self)
-        if hasattr(self, 'tab_poses') : self.tab_poses.setView(self.tab_pos)
-        self.tabResults.addTab(self.tab_pos, "Positions")
+        self.tab_posview = PosView(self)
+        if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
+        self.tabResults.addTab(self.tab_posview, "Positions")
 
         # end of ui_bottom
 
@@ -540,7 +542,7 @@ Copyright 2012 SIL International and M. Hosken""")
             self.selectLine(rule.srcfile, rule.srcline)
 
     def posSelected(self) :
-        self.tabResults.setCurrentWidget(self.tab_pos)
+        self.tabResults.setCurrentWidget(self.tab_posview)
 
     def selectLine(self, fname = None, srcline = -1) :
         if not fname :
@@ -802,7 +804,7 @@ Copyright 2012 SIL International and M. Hosken""")
             print "ERROR: project " + fullname + " does not exist"
         else :
             self._configOpenExisting(fullname)
-        
+            
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
