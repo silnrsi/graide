@@ -26,14 +26,14 @@ POSGLYPHID = 1
 WHEELSCALEINCREMENT = 1.05
 
 
-# One element of the tree control, representing a glyph in the cluster
-class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
+# One node of the tree control in the upper-left pane, representing a glyph in the cluster
+class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
 
     posGlyphChanged = QtCore.Signal()
 
     def __init__(self, font, parent, data) :
         QtCore.QObject.__init__(self)       # Qt not happy if this isn't first
-        super(PosGlyph, self).__init__(parent, data, type = QtGui.QTreeWidgetItem.UserType + POSGLYPHID)
+        super(PosGlyphTreeItem, self).__init__(parent, data, type = QtGui.QTreeWidgetItem.UserType + POSGLYPHID)
         self.px = None
         self.font = font
         self.position = (0, 0)
@@ -51,7 +51,7 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
 
     def setText(self, col, txt) :
         if txt == self.text(col) : return
-        super(PosGlyph, self).setText(col, txt)
+        super(PosGlyphTreeItem, self).setText(col, txt)
         if col == 0 :       # set glyph
             self.setGlyph(txt)
 
@@ -60,7 +60,7 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
         if glyph == self.glyph : return
         self.glyph = glyph
         self.setPixmap()
-        self.posGlyphChanged.emit()
+        self.posGlyphChanged.emit() # make glyphs redraw
         
     def setPixmap(self, scene = None) :
         if (scene is None and not self.px) : return
@@ -79,8 +79,8 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
 
     def setAnchor(self, name, x, y) :
         if self.glyph and self.glyph.setAnchor(name, x, y) :
-            self.posGlyphChanged.emit()
-        # print "setAnchor: ", name, (x, y)
+            self.posGlyphChanged.emit() # make glyphs redraw
+        #print "setAnchor: ", name, (x, y) ###
 
     def setPos(self, x, y) :
         """Sets glyph position in design units"""
@@ -95,7 +95,7 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
     def pos(self) :
         """Returns glyph position in scene units"""
         return self.position
-
+        
     def clearpx(self) :
         if self.px is None : return
         scene = self.px.scene()
@@ -135,14 +135,15 @@ class PosGlyph(QtGui.QTreeWidgetItem, QtCore.QObject) :
             self.parent().glyph.setAnchor(self.text(2), x, y)
 
 
+# A visible glyph in the lower-right pane
 class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
 
     def __init__(self, px, item, parent = None, scene = None) :
         super(PosPixmapItem, self).__init__(px, parent, scene)
         if parent is not None : raise TypeError
         self.item = item
-        self.shiftState = False
-        self.moveState = False
+        self.shiftState = False # are they pressing Shift key?
+        self.moveState = False  # is the mouse key down?
         self.apItem = None
         self.movepx = None
         self.shiftpx = None
@@ -224,13 +225,18 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
                 # print "    ", (self.apItem.scenePos().x() / self.item.scale, self.apItem.scenePos().y() / self.item.scale)
         self.item.position = (self.origPos[0] + self.diff[0], self.origPos[1] + self.diff[1])
         super(PosPixmapItem, self).mouseMoveEvent(event)
+        
+    def paint(self, painter, option, widget) :
+        print "PosPixmapItem::paint" + " - " + str(self.item.text(0)) ###
+        super(PosPixmapItem, self).paint(painter, option, widget)
 
 
 # One of the controls at the bottom of the pane that allows choice of glyph and AP
 class PosGlyphInfoWidget(QtGui.QFrame) :
 
-    def __init__(self, title, isBase = False, parent = None) :
+    def __init__(self, title, app, isBase = False, parent = None) :
         super(PosGlyphInfoWidget, self).__init__(parent)
+        self.app = app
         self.isBase = isBase
         self.item = None
         self.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
@@ -249,8 +255,8 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         self.aps = QtGui.QComboBox(self)
         self.layout.addWidget(QtGui.QLabel("Attachment"), 2, 0, 1, 2)
         self.layout.addWidget(self.aps, 2, 3, 1, 2)
-        self.aps.currentIndexChanged[unicode].connect(self.posChanged)
-        self.aps.editTextChanged.connect(self.posChanged)
+        self.aps.currentIndexChanged[unicode].connect(self.apChanged)
+        self.aps.editTextChanged.connect(self.apChanged)
         self.x = QtGui.QSpinBox(self)
         self.x.setRange(-32768, 32767)
         self.x.valueChanged[int].connect(self.changePos)
@@ -285,6 +291,10 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
             index = 0
         print "ap index = " + str(index)  ###
         self.aps.setCurrentIndex(index)
+        
+    def apChanged(self, text) :
+        self.posChanged(text)
+        self.app.tab_posview.repaint()
 
     # The glyph or AP has changed.
     def posChanged(self, text) :
@@ -303,7 +313,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
                 self.orig = pos
                 self.reset.setEnabled(False)
                 if self.isBase :
-                    self.apitem.setText(2, ap)
+                    self.apItem.setText(2, ap)
                 else :
                     self.item.setText(1, ap)
  
@@ -312,12 +322,12 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         self.item.setAnchor(self.aps.currentText(), self.x.value(), self.y.value())
         self.reset.setEnabled(True)
 
-    def setGlyph(self, font, gname, apname, item, apitem) :
+    def setGlyph(self, font, gname, apname, item, apItem) :
         print "PosGlyphInfoWidget::setGlyph(" + gname + "," + apname + "...)"  ###
         self.font = font
         self.item = item
         self.item.setDialog(self)
-        self.apitem = apitem
+        self.apItem = apItem    # for a stationary glyph, the item corresponding to the mobile glyph
         if gname in font.gdls :
             self.gname = gname
             self.apname = apname
@@ -343,7 +353,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         
     def updateDialog(self) :
         if self.gname != "" :
-            self.setGlyph(self.font, self.gname, self.apname, self.item, self.apitem)
+            self.setGlyph(self.font, self.gname, self.apname, self.item, self.apItem)
 
     def chooseGlyphAndAP(self, gname, ap) :
         if ap is None :
@@ -351,7 +361,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
             self.glyph.addItems([gname])
             self.glyph.setCurrentIndex(0)
         else :
-            self.setGlyph(self.font, gname, ap, self.item, self.apitem)
+            self.setGlyph(self.font, gname, ap, self.item, self.apItem)
             
     def clearItem(self) :
         self.item = None
@@ -515,13 +525,13 @@ class PosEditTree(QtGui.QTreeWidget) :
                 gName = d.names.currentText()
                 if base is None :
                     # We're adding a stationary glyph.
-                    res = PosGlyph(self.font, None, (gName,))
+                    res = PosGlyphTreeItem(self.font, None, (gName,))
                     self.addTopLevelItem(res)
                 else :
                     # We're adding a mobile glyph.
                     withap = d.withaps.currentText()
                     atap = d.ataps.currentText()
-                    res = PosGlyph(self.font, item, (gName, withap, atap))
+                    res = PosGlyphTreeItem(self.font, item, (gName, withap, atap))
                     item.setExpanded(True)
                 if self.view is not None : res.posGlyphChanged.connect(self.view.posGlyphChanged)
                     
@@ -531,14 +541,14 @@ class PosEditTree(QtGui.QTreeWidget) :
                 apName = d.aps.currentText()
                 sGlyph = d.stationary.currentText()
                 mGlyph = d.mobile.currentText()
-                res = PosGlyph(self.font, None, (sGlyph,))
+                res = PosGlyphTreeItem(self.font, None, (sGlyph,))
                 self.addTopLevelItem(res)
                 if self.view is not None : res.posGlyphChanged.connect(self.view.posGlyphChanged)
                 
                 sItem = self.itemAt(0,0)
                 sApName = self.font.actualAPName(apName, False)
                 mApName = self.font.actualAPName(apName, True)
-                resM = PosGlyph(self.font, sItem, (mGlyph, mApName, sApName))
+                resM = PosGlyphTreeItem(self.font, sItem, (mGlyph, mApName, sApName))
                 sItem.setExpanded(True)
                 if self.view is not None : 
                     resM.posGlyphChanged.connect(self.view.posGlyphChanged)
@@ -598,9 +608,9 @@ class PosEdit(QtGui.QWidget) :
         self.treeView = PosEditTree(self.font, self)
         self.treeView.itemClicked.connect(self.itemClicked)
         self.layout.addWidget(self.treeView)
-        self.stationaryInfo = PosGlyphInfoWidget("Stationary", True, self)
+        self.stationaryInfo = PosGlyphInfoWidget("Stationary", self.app, True, self)
         self.layout.addWidget(self.stationaryInfo)
-        self.mobileInfo = PosGlyphInfoWidget("Mobile", False, self)
+        self.mobileInfo = PosGlyphInfoWidget("Mobile", self.app, False, self)
         self.layout.addWidget(self.mobileInfo)
 
     def setView(self, view) :
@@ -626,12 +636,11 @@ class PosEdit(QtGui.QWidget) :
         self.mobileInfo.setGlyph(self.font, mGlyph, mAP, mItem, mItem)
 
     def updatePositions(self) :
-        # todo: only do this if the Positions pane is in focus
+        # todo: only do this if the Position pane is in focus
         self.stationaryInfo.updateDialog()
         self.mobileInfo.updateDialog()
         
     def reinitialize(self) :
-        print "PosEdit::reinitialize" ###
         self.layout.removeWidget(self.treeView)
         self.layout.removeWidget(self.stationaryInfo)
         self.layout.removeWidget(self.mobileInfo)
@@ -660,6 +669,9 @@ class PosView(QtGui.QGraphicsView) :
 
     def updateable(self, state) :
         self._updateable = state
+
+    def repaint(self) :
+        self.scene().update()
 
     def posGlyphChanged(self) :
         if self.curTreeItem is not None and self._updateable :
