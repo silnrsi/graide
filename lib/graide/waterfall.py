@@ -32,6 +32,7 @@ class WaterfallDialog(QtGui.QDialog) :
 
         self.vbox = QtGui.QVBoxLayout(self)
         self.setLayout(self.vbox)
+        self.setWindowTitle("Waterfall")
         self.gview = QtGui.QGraphicsView(self)
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         self.scene = QtGui.QGraphicsScene(self.gview)
