@@ -80,6 +80,7 @@ class FeatureDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) :
         super(FeatureDialog, self).__init__(parent)
+        self.setWindowTitle("Set Features")
         self.vbox = QtGui.QVBoxLayout(self)
         self.currsize = None
         self.position = None
