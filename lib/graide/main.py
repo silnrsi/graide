@@ -126,8 +126,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
         
-        basename = os.path.basename(fontname) # look in current directory
-        self.gdxfile = os.path.splitext(basename)[0] + '.gdx'
+        # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
+        self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
         
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
