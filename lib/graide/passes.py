@@ -108,8 +108,35 @@ class PassesView(QtGui.QTableWidget) :
         self.selectRow(-1)
         self.currsel = None
         json = jsonall[0]
-        num = len(json['passes']) + 1
+        num = len(json['passes']) + 1  # 0 = Init
         count = num
+        
+        # JSON format:
+        #   'passes': [
+        #      0:
+        #        'id' : 1
+        #        'slots' : <initial data>
+        #        'rules' : <rules run by pass 1>
+        #      1:
+        #        'id' : 2
+        #        'slots' : <output of pass 1>
+        #        'rules' : <rules run by pass 2>
+        #      ...
+        #      N-1:
+        #        'id' : N
+        #        'slots' : <output of pass N-1>
+        #        'rules' : <rules run by pass N>
+        #   ]
+        #   'output': <output of pass N>
+        
+        # Also note that pass IDs in JSON do not match pass indices in GDX when there is
+        # a bidi pass. In JSON, the pass ID of a bidi pass in json is -1, with the
+        # first positioning pass index = last subs pass + 1. (More accurately, -1 indicates
+        # the INPUT to the bidi pass.) In GDX, pass indices include the bidi pass, so first
+        # positioning pass index = last subs pass + 2.
+        #
+        # Best thing to do is to more or less ignore the JSON IDs, since they are not reliable.
+            
         if len(jsonall) > 1 :
             if 'passes' in jsonall[1] :
                 count += len(jsonall[1]['passes']) + 1
@@ -121,29 +148,37 @@ class PassesView(QtGui.QTableWidget) :
         w = 0
         wt = 0
         for j in range(num) :
+            # Process the output of pass J which = input to pass J+1, rules run by pass J+1.
+            # Note that rules[J] are the rules run by pass J+1!
             run = Run()
             highlight = False
             if j < num - 1 :
-                run.addslots(json['passes'][j]['slots'])
+                run.addslots(json['passes'][j]['slots'])  # output of pass J
                 passid = int(json['passes'][j]['id']) - 1
             else :
-                run.addslots(json['output'])
+                run.addslots(json['output'])   # final output
                 passid = j
-            if j > 0 :
-                pname = "Pass: %d" % passid
-                if gdx :
-                    pname += " - " + gdx.passtypes[passid - 1]
-                if len(json['passes'][j-1]['rules']) :
-                    highlight = True
-                    self.rules.append(json['passes'][j-1]['rules'])
-                else :
-                    self.rules.append(None)
-            else :
+                
+            if j == 0 :
                 pname = "Init"
                 self.rules.append(None)
+                
+            else :
+                pname = "Pass: %d" % j
+                if gdx :
+                    pname += " - " + gdx.passtypes[j-1]  # j-1 because Init is not in the passtypes array
+                if len(json['passes'][j-1]['rules']) :
+                    highlight = True
+                    self.rules.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
+                else :
+                    self.rules.append(None)
+                    
+                # if passid == -1, NEXT pass is bidi pass
+                    
             (neww, newt) = self.addrun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
+            
         # import pdb; pdb.set_trace()
         if len(jsonall) > 1 :
             json = jsonall[1]
