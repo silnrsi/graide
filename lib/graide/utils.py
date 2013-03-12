@@ -190,5 +190,8 @@ def relpath(p, base) :
     return os.path.relpath(p, d)
 
 def as_entities(txt) :
-    return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), txt)
+    if txt :
+        return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), txt)
+    else :
+        return ""
 

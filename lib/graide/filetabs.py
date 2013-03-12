@@ -90,7 +90,7 @@ class EditFile(QtGui.QPlainTextEdit) :
             self.setPlainText("".join(text))
             f.close()
         except :
-            self.setPlainText("")
+            self.setPlainText("Error in opening file " + fname)
             
         self.fileTabs.addOpenFile(self.fname)
         a = QtGui.QAction(self)
