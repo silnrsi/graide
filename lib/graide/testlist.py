@@ -239,11 +239,12 @@ class TestList(QtGui.QWidget) :
         w = QtGui.QListWidgetItem(t.name or "", l)
         if t.comment :
             w.setToolTip(t.comment)
-            w.setBackground(QtGui.QBrush(t.background))
+        w.setBackground(QtGui.QBrush(t.background))
 
     def editTest(self, index) :
         i = self.list.currentIndex()
         t = self.tests[i][index]
+        bgndSave = t.background
         if t.editDialog(self.app) :
             l = self.list.widget(i)
             l.item(index).setText(t.name)
@@ -251,7 +252,8 @@ class TestList(QtGui.QWidget) :
             l.item(index).setBackground(QtGui.QBrush(t.background))
             return True
         else :
-            return False
+            # Undo any change to background.
+            t.background = bgndSave
 
     def writeXML(self, fname) :
         e = et.Element('ftml', {'version' : '1.0'})

@@ -26,7 +26,7 @@ from graide.utils import configintval, as_entities
 import re
 
 class Test(object) :
-    def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100) :
+    def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white') :
         self.text = text
         self.feats = dict(feats)
         self.name = name or text
@@ -34,7 +34,11 @@ class Test(object) :
         self.lang = lang
         self.comment = comment
         self.foreground = QtGui.QColor('black')
-        self.background = QtGui.QColor('white')
+        bcolorRes = QtGui.QColor(bgnd)
+        if bcolorRes.isValid() :
+            self.background = bcolorRes
+        else :
+            self.background = QtGui.QColor('white')
         self.width = width
 
     def editDialog(self, parent) :
@@ -116,9 +120,15 @@ class Test(object) :
     def setWidth(self, w) :
         self.width = w
 
+    # Launch the color dialog and store the result.
     def doColour(self) :
-        self.background = QtGui.QColorDialog.getColor(self.background)
+        d = QtGui.QColorDialog
+        res = d.getColor(self.background)
+        if res.isValid() :
+            self.background = res
+        #else they hit Cancel
 
+    # Add this test to the XML tree.
     def addTree(self, parent) :
         e = et.SubElement(parent, 'test')
         if self.comment :
@@ -131,7 +141,8 @@ class Test(object) :
         else :
             t.text = ""
         e.set('label', self.name)
-        if self.background != QtGui.QColor('white') : e.set('background', self.background.name())
+        if self.background != QtGui.QColor('white') : 
+            e.set('background', self.background.name())
         if self.rtl : e.set('rtl', 'True')
         if self.width != 100 : e.set('expand', str(self.width))
         return e
