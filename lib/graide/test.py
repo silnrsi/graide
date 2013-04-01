@@ -130,19 +130,25 @@ class Test(object) :
 
     # Add this test to the XML tree.
     def addTree(self, parent) :
-        e = et.SubElement(parent, 'test')
-        if self.comment :
-            c = et.SubElement(e, 'comment')
-            c.text = self.comment
-        t = et.SubElement(e, 'string')
-        if self.text :
-            t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
-        else :
-            t.text = ""
-        e.set('label', self.name)
-        if self.background != QtGui.QColor('white') : 
-            e.set('background', self.background.name())
-        if self.rtl : e.set('rtl', 'True')
-        if self.width != 100 : e.set('expand', str(self.width))
+        try :
+            e = et.SubElement(parent, 'test')
+            if self.comment :
+                c = et.SubElement(e, 'comment')
+                c.text = self.comment
+            t = et.SubElement(e, 'string')
+            if self.text :
+                t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
+                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
+            else :
+                t.text = ""
+            e.set('label', self.name)
+            if self.background != QtGui.QColor('white') : 
+                e.set('background', self.background.name())
+            if self.rtl : e.set('rtl', 'True')
+            if self.width != 100 : e.set('expand', str(self.width))
+        except :
+            msg = "ERROR: test could not be saved: " + self.name
+            errorDialog = QtGui.QMessageBox()
+            errorDialog.setText(msg)
+            errorDialog.exec_()
         return e
