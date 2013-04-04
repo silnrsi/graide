@@ -94,7 +94,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
-        if config.has_option('main', 'ap') :
+        if config.has_option('main', 'ap') :    # AP XML file
             apFilename = config.get('main', 'ap')
             font.saveAP(apFilename, gdlfile)
             if app : app.updateFileEdit(apFilename)

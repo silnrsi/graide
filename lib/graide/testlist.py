@@ -165,7 +165,7 @@ class TestList(QtGui.QWidget) :
                 i = int(m.group(1))
                 if i > self.fcount : self.fcount = i
         for g in e.iterfind('testgroup') :
-            l = self.addGroup(g.get('label'))
+            listwidget = self.addGroup(g.get('label'))
             y = g.find('comment')
             self.comments.append(y.text if y else '')
             for t in g.iterfind('test') :
@@ -189,7 +189,7 @@ class TestList(QtGui.QWidget) :
                 w = t.get('expand')
                 if w :
                     te.setWidth(int(w))
-                self.appendTest(te, l)
+                self.appendTest(te, listwidget)
 
     def loadOldTests(self, e) :
         l = self.addGroup('main')
@@ -273,7 +273,7 @@ class TestList(QtGui.QWidget) :
             g = et.SubElement(e, 'testgroup')
             g.set('label', self.combo.itemText(i))
             for t in self.tests[i] :
-                te = t.addTree(g)
+                te = t.addXML(g)
                 c = self.findClass(t)
                 if c :
                     te.set('class', c)

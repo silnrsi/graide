@@ -128,8 +128,8 @@ class Test(object) :
             self.background = res
         #else they hit Cancel
 
-    # Add this test to the XML tree.
-    def addTree(self, parent) :
+    # Add this test to the XML output tree.
+    def addXML(self, parent) :
         try :
             e = et.SubElement(parent, 'test')
             if self.comment :
