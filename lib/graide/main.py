@@ -33,6 +33,7 @@ from graide.rungraphite import runGraphite
 from graide.featureselector import make_FeaturesMap, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
+from graide.tweaker import TweakList
 from graide.classes import Classes
 from graide.config import ConfigDialog
 from graide.recentprojects import RecentProjectList
@@ -102,6 +103,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.testsfile = config.get('main', 'testsfile')
         else :
             self.testsfile = None
+            
+        if config.has_option('build', 'tweakxmlfile') :
+            self.tweaksfile = config.get('build', 'tweakxmlfile')
+        else :
+            self.tweaksfile = None
 
         if config.has_option('ui', 'posglyphsize') :
             self.setposglyphsize(configintval(config, 'ui', 'posglyphsize'))
@@ -160,10 +166,15 @@ class MainWindow(QtGui.QMainWindow) :
             self.gdx = None
         if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
-    def loadTests(self, testsname) :
-        self.testsfile = testsname
+    def loadTests(self, testsfile) :
+        self.testsfile = testsfile
         if self.tabTest :
-            self.tabTest.loadTests(testsname)
+            self.tabTest.loadTests(testsfile)
+            
+    def loadTweaks(self, tweaksfile) :
+        self.tweaksfile = tweaksfile
+#        if self.tabTweak :
+#            self.tabTweak.loadTweaks(tweaksfile)
 
     def closeEvent(self, event) :   # WHY ARE THERE TWO METHODS CALLED closeEvent????
         print "MainWindow::closeEvent1" ###
@@ -267,6 +278,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
+        
+        # Tests tab
         self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
         self.test_vbox.addWidget(self.tabTest)
         self.test_vbox.addSpacing(2)
@@ -309,6 +322,8 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_left(self, parent) :
         # glyph, slot, classes, positions
+        
+        # Glyph tab
         self.tab_glyph = QtGui.QWidget()
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
         self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
@@ -342,13 +357,18 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_hb.addWidget(self.glyph_remove)
         self.glyph_vb.addWidget(self.glyph_bbox)
         self.tabInfo.addTab(self.tab_glyph, "Glyph")
+        
+        # Slot tab
         self.tab_slot = AttribView()
         self.tabInfo.addTab(self.tab_slot, "Slot")
+        # Classes tab
         self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'makegdlfile') if configval(self.config, 'main', 'ap') else None)
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tabInfo.addTab(self.tab_classes, "Classes")
+        # Positions tab
         self.tab_posedit = PosEdit(self.font, self)
         self.tabInfo.addTab(self.tab_posedit, "Positions")
+        
         self.tabInfo.currentChanged.connect(self.tab_posedit.updatePositions)
 
         # end of ui_left
@@ -379,7 +399,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.cfg_hbox.addWidget(self.cfg_new)
         parent.setCornerWidget(self.cfg_widget)
 
-        # font tab
+        # Font tab
         if self.font.isRead() :
             self.tab_font = FontView(self.font)
             self.tab_font.changeGlyph.connect(self.glyphSelected)
@@ -388,12 +408,12 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_font = None
         self.tabResults.addTab(self.tab_font, "Font")
 
-        # errors tab
+        # Errors tab
         self.tab_errors = Errors()
         self.tabResults.addTab(self.tab_errors, "Errors")
         self.tab_errors.errorSelected.connect(self.tabEdit.selectLine)
 
-        # passes tab
+        # Passes tab
         self.tab_passes = PassesView()
         self.tab_passes.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
@@ -411,14 +431,14 @@ class MainWindow(QtGui.QMainWindow) :
             self.runloaded = True
         self.setCentralWidget(self.centralwidget)
 
-        # rules tab
+        # Rules tab
         self.tab_rules = PassesView()
         self.tab_rules.slotSelected.connect(self.slotSelected)
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
 
-        # positioning tab
+        # Positioning tab
         self.tab_posview = PosView(self)
         if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
         self.tabResults.addTab(self.tab_posview, "Positions")
@@ -735,6 +755,9 @@ Copyright 2012 SIL International and M. Hosken""")
             
         if self.config.has_option('main', 'testsfile') :
             self.loadTests(self.config.get('main', 'testsfile'))
+            
+        if self.config.has_option('build', 'tweakxmlfile') :
+            self.loadTweaks(self.config.get('build', 'tweakxmlfile'))
 
         self._openFileList()
 
