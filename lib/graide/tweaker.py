@@ -192,7 +192,7 @@ class TweakList(QtGui.QWidget) :
         self.aGDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
         self.aGDel.setToolTip('Remove tweak group')
         self.aGDel.triggered.connect(self.delGroupClicked)
-        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Test ...", app)
+        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Tweak ...", app)
         self.aEdit.setToolTip('Edit tweak')
         self.aEdit.triggered.connect(self.editClicked)
         self.aUpp = QtGui.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Tweak &Up", app)
@@ -207,7 +207,7 @@ class TweakList(QtGui.QWidget) :
         self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Tweak ...", app)
         self.aAdd.setToolTip('Add new tweak')
         self.aAdd.triggered.connect(self.addClicked)
-        self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
+        self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Tweak", app)
         self.aDel.setToolTip('Delete tweak')
         self.aDel.triggered.connect(self.delClicked)
 
@@ -249,21 +249,24 @@ class TweakList(QtGui.QWidget) :
                 if i > self.fcount : self.fcount = i
         for g in e.iterfind('tweakgroup') :
             listwidget = self.addGroup(g.get('label'))
-            y = g.find('comment')
-            self.comments.append(y.text if y else '')
+            tmp = g.find('comment')
+            self.comments.append(tmp.text if tmp else '')
             for t in g.iterfind('tweak') :
-                y = t.find('string')
-                if y is None : y = t.find('text')
-                txt = y.text if y is not None else ""
-                y = t.find('comment')
-                c = y.text if y is not None else ""
-                y = t.get('class')  # named style, group of features
-                if y and y in classes :
-                    feats = classes[y]
-                    lng = langs.get(y)
+                tmp = t.find('string')
+                if tmp is None : tmp = t.find('text')
+                txt = tmp.text if tmp is not None else ""
+                tmp = t.find('comment')
+                c = tmp.text if tmp is not None else ""
+                tmp = t.get('class')  # named style, group of features
+                if tmp and tmp in classes :
+                    feats = classes[tmp]
+                    lng = langs.get(tmp)
                 else :
                     feats = {}
                     lng = None
+                    
+                label = t.get('label')
+                print "label = ",label
                 tweak = Tweak(txt, feats, lang = lng, rtl = asBool(t.get('rtl')), name = t.get('label'), comment = c)
                 b = t.get('background')
                 if b :
@@ -273,15 +276,17 @@ class TweakList(QtGui.QWidget) :
                 if w :
                     tweak.setWidth(int(w))
                 twglyphs = []
-                for gl in t.iterfind('glyphs') :
-                    for gf in gl.iterfind('glyph') :
-                        gname = gf.get('name')
-                        gclass = gf.get('class')
-                        req = gf.get('status')
-                        shiftx = gf.get('shiftx')
-                        shifty = gf.get('shifty')
-                        twglyph = TweakGlyph(gname, gclass, req, shiftx, shifty)
-                        twglyphs.append(twglyph)
+                if t.find('glyphs') :
+                    for gl in t.iterfind('glyphs') :
+                        if gl.find('glyph') :
+                            for gf in gl.iterfind('glyph') :
+                                gname = gf.get('name')
+                                gclass = gf.get('class')
+                                req = gf.get('status')
+                                shiftx = gf.get('shiftx')
+                                shifty = gf.get('shifty')
+                                twglyph = TweakGlyph(gname, gclass, req, shiftx, shifty)
+                                twglyphs.append(twglyph)
                 tweak.setGlyphs(twglyphs)
                  
                 self.appendTweak(tweak, listwidget)
@@ -310,8 +315,6 @@ class TweakList(QtGui.QWidget) :
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
-        
-    
 
     def editTweak(self, index) :
         i = self.list.currentIndex()
@@ -390,7 +393,7 @@ class TweakList(QtGui.QWidget) :
             self.combo.setToolTip(self.comments[index])
 
     def addGroupClicked(self) :
-        (name, ok) = QtGui.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
+        (name, ok) = QtGui.QInputDialog.getText(self, 'Tweak Group', 'Tweak Group Name')
         if ok :
             index = self.combo.currentIndex() + 1
             self.addGroup(name, index)
@@ -407,7 +410,7 @@ class TweakList(QtGui.QWidget) :
 
     def addClicked(self, t = None) :
         i = self.list.currentIndex()
-        if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
+        if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
         res = self.editTweak(len(self.tweaks[i]) - 1)
         if not t.name or not res :
@@ -415,7 +418,7 @@ class TweakList(QtGui.QWidget) :
             self.list.widget(i).takeItem(len(self.tweaks))
 
     def saveClicked(self) :
-        tname = configval(self.app.config, 'main', 'testsfile')
+        tname = configval(self.app.config, 'build', 'tweakxmlfile')
         if tname : self.writeXML(tname)
 
     def delClicked(self) :
@@ -445,12 +448,10 @@ class TweakList(QtGui.QWidget) :
     def loadTweak(self, item) :
         j = self.list.currentIndex()
         i = self.list.currentWidget().currentRow()
-        print self.tweaks[i][j].name ###
-        #self.app.setRun(self.tweaks[j][i])
+        self.app.setRun(self.tweaks[j][i])  # do we want this?
         self.showTweak(item)
 
     def showTweak(self, item) :
-        print "show tweak ..."
         j = self.list.currentIndex()
         i = self.list.currentWidget().currentRow()
         self.view.updateDisplay(self.tweaks[j][i])
@@ -527,23 +528,27 @@ class TweakView(QtGui.QWidget) :
         # Ignore runView.tview - text view that shows the glyph names.
         
     def updateDisplay(self, tweak) :
-        print "TweakView::updateDisplay", tweak ###
+        #print "TweakView::updateDisplay" ###
         jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
-        #print jsonResult ###
         
         if jsonResult != False :
             self.json = jsonResult
         else :
             print "No Graphite result" ###
+            self.json = None
 
         self.run = Run()
-        self.run.addslots(self.json[-1]['output'])
+        if self.json :
+            self.run.addslots(self.json[-1]['output'])
         self.runView.loadrun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
-                self.runView.slotSelected.connect(self.app.slotSelected)
+                # Don't switch to the Slot tab, but just update the contents.
+                self.runView.slotSelected.connect(self.app.tab_slot.changeData)
                 self.runView.glyphSelected.connect(self.app.glyphAttrib.changeData)
                 self.runloaded = True
             except :
                 print "Selection connection failed"
+
+        self.app.tab_results.setCurrentWidget(self.app.tab_tweakview)

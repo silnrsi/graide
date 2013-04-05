@@ -142,11 +142,11 @@ class MainWindow(QtGui.QMainWindow) :
                 self.tab_font.resizeColumnsToContents()
             else :
                 self.tab_classes.classUpdated.disconnect(self.font.classUpdated)
-                i = self.tabResults.currentIndex()
+                i = self.tab_results.currentIndex()
                 self.tab_font = FontView(self.font)
                 self.tab_font.changeGlyph.connect(self.glyphSelected)
-                self.tabResults.insertTab(0, self.tab_font, "Font")
-                self.tabResults.setCurrentIndex(i)
+                self.tab_results.insertTab(0, self.tab_font, "Font")
+                self.tab_results.setCurrentIndex(i)
                 self.tab_classes.classSelected.connect(self.font.classSelected)
             self.tab_classes.loadFont(self.font)
         if hasattr(self, 'runView') :
@@ -256,8 +256,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.ui_left(self.tab_info)
         self.ui_fileEdits(self.vsplitter)
 
-        self.tabResults = QtGui.QTabWidget(self.vsplitter)
-        self.ui_bottom(self.tabResults)
+        self.tab_results = QtGui.QTabWidget(self.vsplitter)
+        self.ui_bottom(self.tab_results)
 
         if self.config.has_section('window') :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
@@ -397,7 +397,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_bottom(self, parent) :
         # bottom pane
-        self.setwidgetstretch(self.tabResults, 100, 45)
+        self.setwidgetstretch(self.tab_results, 100, 45)
         parent.setTabPosition(QtGui.QTabWidget.South)
         self.cfg_widget = QtGui.QWidget()
         self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
@@ -422,11 +422,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.classSelected.connect(self.tab_font.classSelected)
         else :
             self.tab_font = None
-        self.tabResults.addTab(self.tab_font, "Font")
+        self.tab_results.addTab(self.tab_font, "Font")
 
         # Errors tab
         self.tab_errors = Errors()
-        self.tabResults.addTab(self.tab_errors, "Errors")
+        self.tab_results.addTab(self.tab_errors, "Errors")
         self.tab_errors.errorSelected.connect(self.tabEdit.selectLine)
 
         # Passes tab
@@ -434,7 +434,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_passes.rowActivated.connect(self.rulesSelected)
-        self.tabResults.addTab(self.tab_passes, "Passes")
+        self.tab_results.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json['output'])
             self.runView.loadrun(self.run, self.font)
@@ -452,17 +452,17 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_rules.slotSelected.connect(self.slotSelected)
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
-        self.tabResults.addTab(self.tab_rules, "Rules")
+        self.tab_results.addTab(self.tab_rules, "Rules")
 
         # Tweaks tab
         self.tab_tweakview = TweakView(self.font, app = self)
         if hasattr(self, 'tab_tweak') : self.tab_tweak.setView(self.tab_tweakview)
-        self.tabResults.addTab(self.tab_tweakview, "Tweak")
+        self.tab_results.addTab(self.tab_tweakview, "Tweak")
 
         # Attachment tab
         self.tab_posview = PosView(self)
         if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
-        self.tabResults.addTab(self.tab_posview, "Attach")
+        self.tab_results.addTab(self.tab_posview, "Attach")
         
         # end of ui_bottom
 
@@ -563,10 +563,12 @@ Copyright 2012 SIL International and M. Hosken""")
         
 
     def glyphSelected(self, data, model) :
+        # data = Glyph, model = FontModel
         self.glyphAttrib.changeData(data, model)
         self.tab_info.setCurrentWidget(self.tab_glyph)
 
     def slotSelected(self, data, model) :
+        # data = Slot, model = RunView
         self.tab_slot.changeData(data, model)
         if self.tab_info.currentWidget() is not self.tab_glyph :
             self.tab_info.setCurrentWidget(self.tab_slot)
@@ -577,8 +579,8 @@ Copyright 2012 SIL International and M. Hosken""")
         if passview.rules[row] is not None :
             self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
             ruleLabel = "Rules: pass %d" % row
-            self.tabResults.setTabText(3, ruleLabel)
-            self.tabResults.setCurrentWidget(self.tab_rules)
+            self.tab_results.setTabText(3, ruleLabel)
+            self.tab_results.setCurrentWidget(self.tab_rules)
         passview.selectRow(row)
 
     def rulesClosed(self, dialog) :
@@ -592,7 +594,7 @@ Copyright 2012 SIL International and M. Hosken""")
             self.selectLine(rule.srcfile, rule.srcline)
 
     def posSelected(self) :
-        self.tabResults.setCurrentWidget(self.tab_posview)
+        self.tab_results.setCurrentWidget(self.tab_posview)
 
     def selectLine(self, fname = None, srcline = -1) :
         if not fname :
@@ -621,7 +623,7 @@ Copyright 2012 SIL International and M. Hosken""")
             for l in errfile.readlines() : self.tab_errors.addItem(l.strip())
         self.tab_errors.addGdlErrors('gdlerr.txt')
         if res :
-            self.tabResults.setCurrentWidget(self.tab_errors)
+            self.tab_results.setCurrentWidget(self.tab_errors)
         self.loadAP(self.apname)
         self.feats = make_FeaturesMap(self.fontfile)
         return True
@@ -642,7 +644,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 if self.currLang not in self.feats :
                     if None not in self.feats :     # build failed, do nothing.
                         self.tab_errors.addError("Can't run test on a non-Graphite font")
-                        self.tabResults.setCurrentWidget(self.tab_errors)
+                        self.tab_results.setCurrentWidget(self.tab_errors)
                         return
                     else :
                         self.currLang = None
@@ -670,14 +672,17 @@ Copyright 2012 SIL International and M. Hosken""")
                 print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx)
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
-        self.tabResults.setCurrentWidget(self.tab_passes)
+        self.tab_results.setCurrentWidget(self.tab_passes)
 
         # end of runClicked
         
     def runGraphiteOverString(self, fontfile, inputString, size, rtl, feats, lang, expand) :
-         
-        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                lambda m:unichr(int(m.group(1) or m.group(2), 16)), inputString)     
+        
+        if inputString and inputString != "" :
+            text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
+                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), inputString)     
+        else :
+            text = None
         if not text :
             return False
             

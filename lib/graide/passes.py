@@ -43,11 +43,11 @@ class PassesView(QtGui.QTableWidget) :
 
 
     @QtCore.Slot(DataObj, ModelSuper)
-    def changeSlot(self, data, model) :
+    def changeSlot(self, data, model) : # data = Slot, model = RunView
         self.slotSelected.emit(data, model)
 
     @QtCore.Slot(DataObj, ModelSuper)
-    def changeGlyph(self, data, model) :
+    def changeGlyph(self, data, model) : # data = glyph ID, model = RunView
         self.glyphSelected.emit(data, model)
         if self.currsel and self.currsel != model :
             self.currsel.clear_selected()
