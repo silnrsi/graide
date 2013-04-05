@@ -23,7 +23,10 @@ from xml.etree import cElementTree as et
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
-from graide.posedit import PosView, PosGlyphInfoWidget ## TODO: remove PosGlyphInfoWidget
+from graide.run import Run
+from graide.runview import GlyphPixmapItem, RunView
+from graide.posedit import PosGlyphInfoWidget ## TODO: remove
+from graide.utils import ModelSuper, DataObj
 import os, re
 from cStringIO import StringIO
 
@@ -32,6 +35,26 @@ def asBool(txt) :
     if txt.lower() == 'true' : return True
     if txt.isdigit() : return int(txt) != 0
     return False
+    
+
+class TweakableGlyphPixmapItem(GlyphPixmapItem) :
+
+    def __init__(self, index, px, model = None, parent = None, scene = None) :
+        super(TweakableGlyphPixmapItem, self).__init__(index, px, model, parent, scene)
+        self.shiftx = 0
+        self.shifty = 0
+        
+    def setShifts(self, x, y) :
+        self.originalShiftx = x
+        self.originalShifty = y
+        self.shiftx = x
+        self.shifty = y
+        
+    def revert(self) :
+        self.shiftx = originalShiftx
+        self.shifty = originalShifty
+        # redraw
+        
     
 class TweakGlyph() :
     
@@ -265,8 +288,8 @@ class TweakList(QtGui.QWidget) :
 
     def addGroup(self, name, index = None, comment = "") :
         listwidget = QtGui.QListWidget()
-        listwidget.itemDoubleClicked.connect(self.runTest)
-        listwidget.itemClicked.connect(self.loadTest)
+        #listwidget.itemDoubleClicked.connect(self.runTest)
+        listwidget.itemClicked.connect(self.loadTweak)
         res = []
         if index is None :
             self.list.addWidget(listwidget)
@@ -419,18 +442,18 @@ class TweakList(QtGui.QWidget) :
             l.insertItem(i + 1, l.takeItem(i))
             l.setCurrentRow(i + 1)
 
-    def loadTest(self, item) :
-        if not self.noclick :
-            j = self.list.currentIndex()
-            i = self.list.currentWidget().currentRow()
-            self.app.setRun(self.tweaks[j][i])
-        else :
-            self.noclick = False
+    def loadTweak(self, item) :
+        j = self.list.currentIndex()
+        i = self.list.currentWidget().currentRow()
+        print self.tweaks[i][j].name ###
+        #self.app.setRun(self.tweaks[j][i])
+        self.showTweak(item)
 
-    def runTest(self, item) :
-        # event sends clicked first so no need to select
-        self.app.runClicked()
-        self.noclick = True
+    def showTweak(self, item) :
+        print "show tweak ..."
+        j = self.list.currentIndex()
+        i = self.list.currentWidget().currentRow()
+        self.view.updateDisplay(self.tweaks[j][i])
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
@@ -463,13 +486,64 @@ class Tweaker(QtGui.QWidget) :
         self.view = view  # TweakView - lower-right tab
         self.tweakList.view = view
         
+    def updatePositions(self) :
+        # TODO
+        print "Tweaker::updatePositions()" ###
+        
     def writeXML(self, xmlfile) :
         if self.tweakList :
             self.tweakList.writeXML(xmlfile)
 
 
 # The display of the moveable glyphs in the bottom right-hand pane
-class TweakView(PosView) :
+class TweakView(QtGui.QWidget) :
 
-    def __init__(self, app = None, parent = None) :
-        super(TweakView, self).__init__(parent, app)
+    # Communication with the Glyph and Slot tabs
+    slotSelected = QtCore.Signal(DataObj, ModelSuper)
+    glyphSelected = QtCore.Signal(DataObj, ModelSuper)
+
+    @QtCore.Slot(DataObj, ModelSuper)
+    def changeSlot(self, data, model) :
+        self.slotSelected.emit(data, model)
+
+    @QtCore.Slot(DataObj, ModelSuper)
+    def changeGlyph(self, data, model) :
+        self.glyphSelected.emit(data, model)
+        if self.currsel and self.currsel != model :
+            self.currsel.clear_selected()
+        self.currsel = model
+
+    def __init__(self, font, app = None, parent = None) :
+        super(TweakView, self).__init__(parent)
+                
+        self.font = font
+        self.app = app
+        self.runloaded = False
+        
+        layout = QtGui.QVBoxLayout(self)
+        self.runView = RunView(self.font)
+        self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
+        layout.addWidget(self.runView.gview)
+        # Ignore runView.tview - text view that shows the glyph names.
+        
+    def updateDisplay(self, tweak) :
+        print "TweakView::updateDisplay", tweak ###
+        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, self.font.size,
+            tweak.rtl, tweak.feats, tweak.lang, tweak.width)
+        #print jsonResult ###
+        
+        if jsonResult != False :
+            self.json = jsonResult
+        else :
+            print "No Graphite result" ###
+
+        self.run = Run()
+        self.run.addslots(self.json[-1]['output'])
+        self.runView.loadrun(self.run, self.font, resize = False)
+        if not self.runloaded :
+            try :
+                self.runView.slotSelected.connect(self.app.slotSelected)
+                self.runView.glyphSelected.connect(self.app.glyphAttrib.changeData)
+                self.runloaded = True
+            except :
+                print "Selection connection failed"

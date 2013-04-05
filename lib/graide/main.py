@@ -128,7 +128,7 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             fontsize = 40
         self.fontfile = str(fontname)
-        self.fonttime = os.stat(fontname).st_ctime
+        self.fonttime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
         self.font.loadFont(self.fontfile, fontsize)
         self.feats = make_FeaturesMap(self.fontfile)
         
@@ -324,6 +324,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
+        # Ignore runView.tview - text view that shows the glyph names.
         
         parent.addTab(self.test_splitter, "Tests")
 
@@ -331,7 +332,7 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_left(self, parent) :
         # glyph, slot, classes, positions
-        
+                
         # Glyph tab
         self.tab_glyph = QtGui.QWidget()
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
@@ -376,15 +377,15 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
         self.tab_info.addTab(self.tab_classes, "Classes")
         
-        # Positions tab
-        self.tab_posedit = PosEdit(self.font, self)
-        self.tab_info.addTab(self.tab_posedit, "Positions")
-        
         # Tweak tab
         self.tab_tweak = Tweaker(self.font, self, self.tweaksfile)
         self.tab_info.addTab(self.tab_tweak, "Tweak")
         
-        self.tab_info.currentChanged.connect(self.tab_posedit.updatePositions)
+        # Attach tab
+        self.tab_posedit = PosEdit(self.font, self)
+        self.tab_info.addTab(self.tab_posedit, "Attach")
+        
+        self.tab_info.currentChanged.connect(self.infoTabChanged)
 
         # end of ui_left
 
@@ -453,16 +454,16 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tabResults.addTab(self.tab_rules, "Rules")
 
-        # Positioning tab
-        self.tab_posview = PosView(self)
-        if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
-        self.tabResults.addTab(self.tab_posview, "Positions")
-        
         # Tweaks tab
-        self.tab_tweakview = TweakView(self)
+        self.tab_tweakview = TweakView(self.font, app = self)
         if hasattr(self, 'tab_tweak') : self.tab_tweak.setView(self.tab_tweakview)
         self.tabResults.addTab(self.tab_tweakview, "Tweak")
 
+        # Attachment tab
+        self.tab_posview = PosView(self)
+        if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
+        self.tabResults.addTab(self.tab_posview, "Attach")
+        
         # end of ui_bottom
 
     def setMenus(self) :
@@ -527,6 +528,12 @@ Copyright 2012 SIL International and M. Hosken""")
         self._saveProjectData()
         self.recentProjects.close()
         qCleanupResources()
+        
+    def infoTabChanged(self) :
+        # TODO: figure out which tab is current and update the matching bottom tab
+        # For now, do all of them.
+        self.tab_posedit.updatePositions()
+        self.tab_tweak.updatePositions()
 
     def _saveProjectData(self) :
         self.recentProjects.addProject(self.configfile)  # remember that this was a recent project
@@ -566,7 +573,7 @@ Copyright 2012 SIL International and M. Hosken""")
 
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
-        self.tab_rules.index = row - 1
+        self.tab_rules.setPassIndex(row - 1)
         if passview.rules[row] is not None :
             self.tab_rules.loadRules(self.font, passview.rules[row], passview.views[row-1].run, self.gdx)
             ruleLabel = "Rules: pass %d" % row
@@ -621,18 +628,19 @@ Copyright 2012 SIL International and M. Hosken""")
 
     # Run Graphite over a test string.
     def runClicked(self) :
-        if self.tabEdit.writeIfModified() and not self.buildClicked() : return
         
+        if self.tabEdit.writeIfModified() and not self.buildClicked() :
+            # Error in saving code or building 
+            return
+            
         if os.stat(self.fontfile).st_ctime > self.fonttime :
             self.loadFont(self.fontfile)
-        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.runEdit.toPlainText())
-        if not text : return
+        
         if not self.currFeats and self.currLang not in self.feats :
             if None not in self.feats :    # not a graphite font, try to build
                 self.buildClicked()
                 if self.currLang not in self.feats :
-                    if None not in self.feats :     # build failed do nothing.
+                    if None not in self.feats :     # build failed, do nothing.
                         self.tab_errors.addError("Can't run test on a non-Graphite font")
                         self.tabResults.setCurrentWidget(self.tab_errors)
                         return
@@ -640,16 +648,16 @@ Copyright 2012 SIL International and M. Hosken""")
                         self.currLang = None
             else :
                 self.currLang = None
-        runfile = NamedTemporaryFile(mode="w+")
-        runname = runfile.name
-        runfile.close()
-        runGraphite(self.fontfile, text, runname, size = self.font.size, rtl = self.runRtl.isChecked(),
-            feats = self.currFeats or self.feats[self.currLang].fval, lang = self.currLang, expand = self.currWidth)
-        runfile = open(runname)
-        self.json = json.load(runfile)
-        if isinstance(self.json, dict) : self.json = [self.json]
-        runfile.close()
-        os.unlink(runname)
+
+        jsonResult = self.runGraphiteOverString(self.fontfile, self.runEdit.toPlainText(),
+            self.font.size, self.runRtl.isChecked(), 
+            self.currFeats or self.feats[self.currLang].fval, self.currLang,
+            self.currWidth)
+        if jsonResult != False :
+            self.json = jsonResult
+        else :
+            print "No Graphite result" ###
+        
         self.run = Run()
         self.run.addslots(self.json[-1]['output'])
         self.runView.loadrun(self.run, self.font, resize = False)
@@ -665,6 +673,24 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tabResults.setCurrentWidget(self.tab_passes)
 
         # end of runClicked
+        
+    def runGraphiteOverString(self, fontfile, inputString, size, rtl, feats, lang, expand) :
+         
+        text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
+                lambda m:unichr(int(m.group(1) or m.group(2), 16)), inputString)     
+        if not text :
+            return False
+            
+        runfile = NamedTemporaryFile(mode="w+")
+        runfname = runfile.name
+        runfile.close()
+        runGraphite(fontfile, text, runfname, feats, rtl, lang, size, expand)
+        runfile = open(runfname)
+        jsonResult = json.load(runfile)
+        if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
+        runfile.close()
+        os.unlink(runfname)
+        return jsonResult
 
     def doWaterfall(self) :
         self.runClicked()

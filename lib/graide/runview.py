@@ -74,8 +74,10 @@ class RunView(QtCore.QObject, ModelSuper) :
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
 
-    def __init__(self, run = None, font = None, parent = None) :
+    def __init__(self, font = None, run = None, parent = None) :
         super(RunView, self).__init__()
+        
+        #print "RunView::__init__; run =" + run.__class__.__name__ + "font +" + font.__class__.__name__
                 
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
@@ -231,6 +233,7 @@ if __name__ == "__main__" :
     run = Run()
     run.addslots(rinfo)
     view = RunView(run, font).gview
+    print "Padauk RunView?" ###
     view.show()
     sys.exit(app.exec_())
 

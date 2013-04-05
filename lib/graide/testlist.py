@@ -376,12 +376,13 @@ class TestList(QtGui.QWidget) :
             i = self.list.currentWidget().currentRow()
             self.app.setRun(self.tests[j][i])
         else :
+            # this is the side-effect of a double-click: ignore it
             self.noclick = False
 
     def runTest(self, item) :
         # event sends clicked first so no need to select
         self.app.runClicked()
-        self.noclick = True
+        self.noclick = True  # because itemClick event will happen again--ignore it
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))

@@ -36,6 +36,7 @@ class PassesView(QtGui.QTableWidget) : pass
 
 class PassesView(QtGui.QTableWidget) :
 
+    # Communication with the Glyph, Slot and Rules tabs:
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
     rowActivated = QtCore.Signal(int, RunView, PassesView)
@@ -62,15 +63,18 @@ class PassesView(QtGui.QTableWidget) :
         self.horizontalHeader().hide()
         self.verticalHeader().hide()
         self.currsel = None
-        self.index = index
+        self.passindex = index  # used for Rules tab
         self.connected = False
         self.views = []
         self.selectedRow = -1
         self.rules = []
+        
+    def setPassIndex(self, index) :
+        self.passindex = index
 
     def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.views) :
-            v = RunView(run, font, self)
+            v = RunView(font, run, self)
             self.views.append(v)
             self.setCellWidget(num, 1, v.gview)
             self.setCellWidget(num, 2, v.tview)
@@ -255,7 +259,7 @@ class PassesView(QtGui.QTableWidget) :
                     
                 self.runs.append(nextRun)
                 nextRun.label="Rule: %d%s" % (cRule['id'], lext)
-                nextRun.passindex = self.index
+                nextRun.passindex = self.passindex
                 nextRun.ruleindex = int(cRule['id'])
                 # why can't we highlight the output glyphs here?
         
@@ -269,7 +273,7 @@ class PassesView(QtGui.QTableWidget) :
         self.setRowCount(len(self.runs))
         for j in range(len(self.runs)) :
             (neww, newt) = self.addrun(font, self.runs[j], self.runs[j].label, j,
-                    tooltip = gdx.passes[self.index][self.runs[j].ruleindex].pretty
+                    tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
                                     if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)
             wt = max(wt, newt)
