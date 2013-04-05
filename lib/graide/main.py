@@ -33,7 +33,6 @@ from graide.rungraphite import runGraphite
 from graide.featureselector import make_FeaturesMap, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
-from graide.tweaker import TweakList
 from graide.classes import Classes
 from graide.config import ConfigDialog
 from graide.recentprojects import RecentProjectList
@@ -42,6 +41,7 @@ from graide.errors import Errors
 from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
 from graide.posedit import PosEdit, PosView
+from graide.tweaker import Tweaker, TweakView
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
@@ -168,13 +168,13 @@ class MainWindow(QtGui.QMainWindow) :
 
     def loadTests(self, testsfile) :
         self.testsfile = testsfile
-        if self.tabTest :
-            self.tabTest.loadTests(testsfile)
+        if self.tab_tests :
+            self.tab_tests.loadTests(testsfile)
             
     def loadTweaks(self, tweaksfile) :
         self.tweaksfile = tweaksfile
-#        if self.tabTweak :
-#            self.tabTweak.loadTweaks(tweaksfile)
+        if self.tab_tweak :
+            self.tab_tweak.loadTweaks(tweaksfile)
 
     def closeEvent(self, event) :   # WHY ARE THERE TWO METHODS CALLED closeEvent????
         print "MainWindow::closeEvent1" ###
@@ -241,8 +241,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.hsplitter.setHandleWidth(4)
         self.verticalLayout.addWidget(self.hsplitter)
 
-        self.tabInfo = QtGui.QTabWidget(self.hsplitter)
-        #self.tabInfo = InfoTabs(self.hsplitter)
+        self.tab_info = QtGui.QTabWidget(self.hsplitter)
+        #self.tab_info = InfoTabs(self.hsplitter)
         self.widget = QtGui.QWidget(self.hsplitter)
         self.setwidgetstretch(self.widget, 55, 100)
         self.topLayout = QtGui.QVBoxLayout(self.widget)
@@ -252,8 +252,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.vsplitter.setHandleWidth(2)
         self.topLayout.addWidget(self.vsplitter)
 
-        self.ui_tests(self.tabInfo)
-        self.ui_left(self.tabInfo)
+        self.ui_tests(self.tab_info)
+        self.ui_left(self.tab_info)
         self.ui_fileEdits(self.vsplitter)
 
         self.tabResults = QtGui.QTabWidget(self.vsplitter)
@@ -269,8 +269,8 @@ class MainWindow(QtGui.QMainWindow) :
         # end of setupUi
 
     def ui_tests(self, parent) :
-        self.setwidgetstretch(self.tabInfo, 30, 100)
-        self.test_splitter = QtGui.QSplitter()
+        self.setwidgetstretch(self.tab_info, 30, 100)
+        self.test_splitter = QtGui.QSplitter() # left-hand vertical pane
         self.test_splitter.setOrientation(QtCore.Qt.Vertical)
         self.test_splitter.setContentsMargins(0, 0, 0, 0)
         self.test_splitter.setHandleWidth(4)
@@ -279,18 +279,24 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
         
-        # Tests tab
-        self.tabTest = TestList(self, self.testsfile, parent = self.test_widget)
-        self.test_vbox.addWidget(self.tabTest)
+        # Tests control
+        self.tab_tests = TestList(self, self.testsfile, parent = self.test_widget)
+        self.test_vbox.addWidget(self.tab_tests)
         self.test_vbox.addSpacing(2)
+        
+        # line below test lists
         self.test_line = QtGui.QFrame(self.test_widget)
         self.test_line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
         self.test_line.setLineWidth(2)
         self.test_vbox.addWidget(self.test_line)
         self.test_vbox.addSpacing(2)
+        
+        # test input pane
         self.runEdit = QtGui.QPlainTextEdit(self.test_widget)
         self.runEdit.setMaximumHeight(Layout.runEditHeight)
         self.test_vbox.addWidget(self.runEdit)
+        
+        # test control buttons
         self.test_hbox = QtGui.QHBoxLayout()
         self.test_vbox.addLayout(self.test_hbox)
         self.test_hbox.setContentsMargins(*Layout.buttonMargins)
@@ -312,10 +318,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.runAdd = QtGui.QToolButton(self.test_widget)
         self.runAdd.setDefaultAction(self.aRunAdd)
         self.test_hbox.addWidget(self.runAdd)
+        
+        # test output
         self.run = Run()
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
+        
         parent.addTab(self.test_splitter, "Tests")
 
         # end of ui_tests
@@ -356,20 +365,26 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_remove.setToolTip('Remove property from glyph')
         self.glyph_hb.addWidget(self.glyph_remove)
         self.glyph_vb.addWidget(self.glyph_bbox)
-        self.tabInfo.addTab(self.tab_glyph, "Glyph")
+        self.tab_info.addTab(self.tab_glyph, "Glyph")
         
         # Slot tab
         self.tab_slot = AttribView()
-        self.tabInfo.addTab(self.tab_slot, "Slot")
+        self.tab_info.addTab(self.tab_slot, "Slot")
+        
         # Classes tab
         self.tab_classes = Classes(self.font, self, configval(self.config, 'build', 'makegdlfile') if configval(self.config, 'main', 'ap') else None)
         self.tab_classes.classUpdated.connect(self.font.classUpdated)
-        self.tabInfo.addTab(self.tab_classes, "Classes")
+        self.tab_info.addTab(self.tab_classes, "Classes")
+        
         # Positions tab
         self.tab_posedit = PosEdit(self.font, self)
-        self.tabInfo.addTab(self.tab_posedit, "Positions")
+        self.tab_info.addTab(self.tab_posedit, "Positions")
         
-        self.tabInfo.currentChanged.connect(self.tab_posedit.updatePositions)
+        # Tweak tab
+        self.tab_tweak = Tweaker(self.font, self, self.tweaksfile)
+        self.tab_info.addTab(self.tab_tweak, "Tweak")
+        
+        self.tab_info.currentChanged.connect(self.tab_posedit.updatePositions)
 
         # end of ui_left
 
@@ -442,6 +457,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_posview = PosView(self)
         if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
         self.tabResults.addTab(self.tab_posview, "Positions")
+        
+        # Tweaks tab
+        self.tab_tweakview = TweakView(self)
+        if hasattr(self, 'tab_tweak') : self.tab_tweak.setView(self.tab_tweakview)
+        self.tabResults.addTab(self.tab_tweakview, "Tweak")
 
         # end of ui_bottom
 
@@ -452,6 +472,7 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu.addSeparator()
         filemenu.addAction(self.tabEdit.aBuild)
         filemenu.addAction('&Reset Names', self.resetNames)
+        # TODO: add an Exit option
 
         projectmenu = self.menuBar().addMenu("&Project")
         projectmenu.addAction(self.aCfg)
@@ -471,15 +492,15 @@ class MainWindow(QtGui.QMainWindow) :
         testmenu.addAction(self.aRunFeats)
         testmenu.addAction(self.aRunAdd)
         testmenu.addSeparator()
-        testmenu.addAction(self.tabTest.aGAdd)
-        testmenu.addAction(self.tabTest.aGDel)
+        testmenu.addAction(self.tab_tests.aGAdd)
+        testmenu.addAction(self.tab_tests.aGDel)
         testmenu.addSeparator()
-        testmenu.addAction(self.tabTest.aAdd)
-        testmenu.addAction(self.tabTest.aEdit)
-        testmenu.addAction(self.tabTest.aSave)
-        testmenu.addAction(self.tabTest.aDel)
-        testmenu.addAction(self.tabTest.aUpp)
-        testmenu.addAction(self.tabTest.aDown)
+        testmenu.addAction(self.tab_tests.aAdd)
+        testmenu.addAction(self.tab_tests.aEdit)
+        testmenu.addAction(self.tab_tests.aSave)
+        testmenu.addAction(self.tab_tests.aDel)
+        testmenu.addAction(self.tab_tests.aUpp)
+        testmenu.addAction(self.tab_tests.aDown)
 
         helpmenu = self.menuBar().addMenu("&Help")
         helpmenu.addAction(self.aHAbout)
@@ -520,7 +541,9 @@ Copyright 2012 SIL International and M. Hosken""")
         self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
 
         if self.testsfile :
-            self.tabTest.writeXML(self.testsfile)
+            self.tab_tests.writeXML(self.testsfile)
+        if self.tweaksfile :
+            self.tab_tweak.writeXML(self.tweaksfile)
         if self.configfile :
             try :
                 f = file(self.configfile, "w")
@@ -534,12 +557,12 @@ Copyright 2012 SIL International and M. Hosken""")
 
     def glyphSelected(self, data, model) :
         self.glyphAttrib.changeData(data, model)
-        self.tabInfo.setCurrentWidget(self.tab_glyph)
+        self.tab_info.setCurrentWidget(self.tab_glyph)
 
     def slotSelected(self, data, model) :
         self.tab_slot.changeData(data, model)
-        if self.tabInfo.currentWidget() is not self.tab_glyph :
-            self.tabInfo.setCurrentWidget(self.tab_slot)
+        if self.tab_info.currentWidget() is not self.tab_glyph :
+            self.tab_info.setCurrentWidget(self.tab_slot)
 
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
@@ -657,7 +680,7 @@ Copyright 2012 SIL International and M. Hosken""")
         text = self.runEdit.toPlainText()
         if not text : return
         test = Test(text, self.currFeats or {}, self.currLang, self.runRtl.isChecked())
-        self.tabTest.addClicked(test)
+        self.tab_tests.addClicked(test)
 
     def featuresClicked(self) :
         if self.font :

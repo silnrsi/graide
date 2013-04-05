@@ -41,7 +41,7 @@ class Test(object) :
             self.background = QtGui.QColor('white')
         self.width = width
 
-    def editDialog(self, parent) :
+    def editDialog(self, parent, isTweak = False) :
         self.parent = parent
         self.featdialog = None
         d = QtGui.QDialog()
@@ -86,9 +86,9 @@ class Test(object) :
         h.addWidget(bcancel)
         d.setLayout(v)
         if (self.name == "") :
-            d.setWindowTitle("Add new test")
+            d.setWindowTitle("Add new tweak" if isTweak else "Add new test")
         else :
-            d.setWindowTitle("Edit test")
+            d.setWindowTitle("Edit tweak" if isTweak else "Edit test")
         b.clicked.connect(self.featClicked)
         bok.clicked.connect(d.accept)
         bcancel.clicked.connect(d.reject)

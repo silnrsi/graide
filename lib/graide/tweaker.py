@@ -23,6 +23,7 @@ from xml.etree import cElementTree as et
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
+from graide.posedit import PosView, PosGlyphInfoWidget ## TODO: remove PosGlyphInfoWidget
 import os, re
 from cStringIO import StringIO
 
@@ -34,10 +35,10 @@ def asBool(txt) :
     
 class TweakGlyph() :
     
-    def __init__(self, name, gclass = None, required = "true", shiftx = 0, shifty = 0) :
+    def __init__(self, name, gclass = None, status = "required", shiftx = 0, shifty = 0) :
         self.name = name
         self.gclass = gclass
-        self.required = required
+        self.status = status
         self.shiftx = shiftx
         self.shifty = shifty
         
@@ -50,7 +51,7 @@ class Tweak(Test) :
         self.glyphs = glyphs
         
         
-    def setGlyphs(glyphs) :
+    def setGlyphs(self, glyphs) :
         self.glyphs = glyphs
 
 
@@ -79,8 +80,8 @@ class Tweak(Test) :
                 gf.set('name', twglyph.name)
                 if twglyph.gclass and twglyph.gclass != "" :
                     gf.set('class', twglyph.gclass)
-                if twglyph.required and twglyph.required != "true" :
-                    gf.set('required', twglyph.required)
+                if twglyph.status and twglyph.status != "required" :
+                    gf.set('status', twglyph.status)
                 gf.set('shiftx', twglyph.shiftx)
                 gf.set('shifty', twglyph.shifty)
                 
@@ -92,14 +93,15 @@ class Tweak(Test) :
             
         return e
 
-
+# The control that handles the list of tweaked strings
 class TweakList(QtGui.QWidget) :
 
-    def __init__(self, app, fname = None, parent = None) :
-        super(TweakList, self).__init__(parent)
+    def __init__(self, app, font, xmlfilename = None, parent = None) :
+        super(TweakList, self).__init__(parent) # parent = Tweaker
+
         self.noclick = False
         self.app = app
-        self.tests = []
+        self.tweaks = []
         self.fsets = {"\n" : None}
         self.comments = []
         self.fcount = 0
@@ -158,7 +160,7 @@ class TweakList(QtGui.QWidget) :
         self.hbbox.addWidget(self.bDel)
         self.setLayout(self.vbox)
 
-        self.loadTweaks(fname)
+        self.loadTweaks(xmlfilename)
 
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
@@ -252,7 +254,7 @@ class TweakList(QtGui.QWidget) :
                     for gf in gl.iterfind('glyph') :
                         gname = gf.get('name')
                         gclass = gf.get('class')
-                        req = gf.get('required')
+                        req = gf.get('status')
                         shiftx = gf.get('shiftx')
                         shifty = gf.get('shifty')
                         twglyph = TweakGlyph(gname, gclass, req, shiftx, shifty)
@@ -276,21 +278,23 @@ class TweakList(QtGui.QWidget) :
             self.combo.insertItem(index, name)
             self.tweaks.insert(index, res)
             self.comments.insert(index, comment)
-        return l
+        return listwidget
 
     def appendTweak(self, t, listwidget = None) :
         if not listwidget : listwidget = self.list.currentWidget()
-        self.tweaks[self.list.indexOf(l)].append(t)
+        self.tweaks[self.list.indexOf(listwidget)].append(t)
         w = QtGui.QListWidgetItem(t.name or "",listwidget)
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
+        
+    
 
     def editTweak(self, index) :
         i = self.list.currentIndex()
         t = self.tweaks[i][index]
         bgndSave = t.background
-        if t.editDialog(self.app) :
+        if t.editDialog(self.app, True) :
             listwidget = self.list.widget(i)
             listwidget.item(index).setText(t.name)
             listwidget.item(index).setToolTip(t.comment)
@@ -301,7 +305,7 @@ class TweakList(QtGui.QWidget) :
             t.background = bgndSave
 
     def writeXML(self, fname) :
-        e = et.Element('positiontweaks', {'version' : '1.0'})
+        e = et.Element('tweak_ftml', {'version' : '1.0'})
         if self.header is not None :
             h = self.header
             if h.tag == 'header' : h.tag = 'head'
@@ -373,19 +377,19 @@ class TweakList(QtGui.QWidget) :
         index = self.combo.currentIndex()
         self.list.removeWidget(self.list.widget(index))
         self.combo.removeItem(index)
-        self.tests.pop(index)
+        self.tweaks.pop(index)
 
     def editClicked(self) :
-        self.editTest(self.list.currentWidget().currentRow())
+        self.editTweak(self.list.currentWidget().currentRow())
 
     def addClicked(self, t = None) :
         i = self.list.currentIndex()
         if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
-        res = self.editTest(len(self.tests[i]) - 1)
+        res = self.editTweak(len(self.tweaks[i]) - 1)
         if not t.name or not res :
-            self.tests[i].pop()
-            self.list.widget(i).takeItem(len(self.tests))
+            self.tweaks[i].pop()
+            self.list.widget(i).takeItem(len(self.tweaks))
 
     def saveClicked(self) :
         tname = configval(self.app.config, 'main', 'testsfile')
@@ -394,7 +398,7 @@ class TweakList(QtGui.QWidget) :
     def delClicked(self) :
         j = self.list.currentIndex()
         i = self.list.widget(j).currentRow()
-        self.tests[j].pop(i)
+        self.tweaks[j].pop(i)
         self.list.widget(j).takeItem(i)
 
     def upClicked(self) :
@@ -402,7 +406,7 @@ class TweakList(QtGui.QWidget) :
         j = self.list.currentIndex()
         i = l.currentRow()
         if i > 0 :
-            self.tests[j].insert(i - 1, self.tests[j].pop(i))
+            self.tweaks[j].insert(i - 1, self.tweaks[j].pop(i))
             l.insertItem(i - 1, l.takeItem(i))
             l.setCurrentRow(i - 1)
 
@@ -411,7 +415,7 @@ class TweakList(QtGui.QWidget) :
         j = self.list.currentIndex()
         i = l.currentRow()
         if i < l.count() - 1 :
-            self.tweaks[j].insert(i + 1, self.tests[j].pop(i))
+            self.tweaks[j].insert(i + 1, self.tweaks[j].pop(i))
             l.insertItem(i + 1, l.takeItem(i))
             l.setCurrentRow(i + 1)
 
@@ -419,7 +423,7 @@ class TweakList(QtGui.QWidget) :
         if not self.noclick :
             j = self.list.currentIndex()
             i = self.list.currentWidget().currentRow()
-            self.app.setRun(self.tests[j][i])
+            self.app.setRun(self.tweaks[j][i])
         else :
             self.noclick = False
 
@@ -435,4 +439,37 @@ class TweakList(QtGui.QWidget) :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount
         return self.fsets[k]
+        
 
+# Main class to manage tweaking
+class Tweaker(QtGui.QWidget) :
+
+    def __init__(self, font, parent = None, xmlfile = None) :
+        super(Tweaker, self).__init__(parent)
+        self.app = parent
+        self.font = font
+        self.view = None
+        self.layout = QtGui.QVBoxLayout(self)
+        self.initializeLayout(xmlfile)
+        
+    def initializeLayout(self, xmlfile) :
+        self.tweakList = TweakList(self.app, self.font, xmlfile, self)
+        #self.tweakList.itemClicked.connect(self.itemClicked)
+        self.layout.addWidget(self.tweakList)
+        self.infoWidget = PosGlyphInfoWidget("Selected", self.app, True, self)
+        self.layout.addWidget(self.infoWidget)
+
+    def setView(self, view) :
+        self.view = view  # TweakView - lower-right tab
+        self.tweakList.view = view
+        
+    def writeXML(self, xmlfile) :
+        if self.tweakList :
+            self.tweakList.writeXML(xmlfile)
+
+
+# The display of the moveable glyphs in the bottom right-hand pane
+class TweakView(PosView) :
+
+    def __init__(self, app = None, parent = None) :
+        super(TweakView, self).__init__(parent, app)

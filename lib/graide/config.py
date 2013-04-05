@@ -151,7 +151,8 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_twkgrid.addWidget(self.build_twkgdl, 5, 1, 1, columnSpan = 2) # cols 1-2
         self.build_twkpass = PassSpin(self.build_twkctrls)
         tweakpass = configval(config, 'build', 'tweakpass')
-        self.build_twkpass.setValue(int(tweakpass))
+        if tweakpass :
+            self.build_twkpass.setValue(int(tweakpass))
         self.build_twkgrid.addWidget(QtGui.QLabel('Tweaking positioning pass:'), 6, 0, 1, columnSpan = 2) # cols 1-2
         self.build_twkgrid.addWidget(self.build_twkpass, 6, 1)
         if not self.build_tweak.text() :

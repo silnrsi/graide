@@ -54,6 +54,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
             painter.fillRect(r, self.highlightColours[self.highlightType])
         super(GlyphPixmapItem, self).paint(painter, option, widget)
 
+# Apparently not used
 class RunTextView(QtGui.QPlainTextEdit) :
 
     def __init__(self, creator, parent = None) :
@@ -66,6 +67,8 @@ class RunTextView(QtGui.QPlainTextEdit) :
             return self.creator.tMousePress(event)
         return False
 
+# Used for both the output pane in the bottom left corner of the window
+# and for the Passes and Rules tabs.
 class RunView(QtCore.QObject, ModelSuper) :
 
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
