@@ -107,7 +107,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             font.createClasses()
             font.pointClasses()
             font.ligClasses()
-            v = int(config.get('build', 'pospass'))
+            v = int(config.get('build', 'attpass'))
             f = file(gdlfile, "w")
             font.outGDL(f)
             if v > 0 : font.outPosRules(f, v)
@@ -148,7 +148,7 @@ replacements = {
     'f' : ['main', 'font'],
     'g' : ['build', 'makegdlfile'],
     'i' : ['build', 'gdlfile'],
-    'p' : ['build', 'pospass']
+    'p' : ['build', 'attpass']
 }
 
 def expandMakeCmd(config, txt) :
