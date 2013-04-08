@@ -32,7 +32,7 @@ class Font(gdlFont) :
         self.pixrect = QtCore.QRect()
         self.isread = False
         self.highlighted = None
-        self.posglyphSize = 200
+        self.attglyphSize = 200
 
     def isRead(self) : return self.isread
 
@@ -46,6 +46,8 @@ class Font(gdlFont) :
         face = freetype.Face(fontfile)
         self.upem = face.units_per_EM
         self.numGlyphs = face.num_glyphs
+        
+        # Generate GlyphItems for all the glyphs in the font.
         for i in range(self.numGlyphs) :
             g = GlyphItem(face, i, size)
             self.gnames[g.name] = i
@@ -55,6 +57,7 @@ class Font(gdlFont) :
                 grect.moveBottom(grect.height() - g.top)
                 self.pixrect = self.pixrect | grect
             if g.top > self.top : self.top = g.top
+                
         for (i, g) in enumerate(self.glyphs) :
             if i < len(self.glyphItems) and g :
                 g.item = self.glyphItems[i]

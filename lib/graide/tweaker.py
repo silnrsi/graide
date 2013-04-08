@@ -20,6 +20,7 @@
 
 from PySide import QtCore, QtGui
 from xml.etree import cElementTree as et
+from graide.font import Font
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
@@ -37,35 +38,28 @@ def asBool(txt) :
     return False
     
 
-class TweakableGlyphPixmapItem(GlyphPixmapItem) :
-
-    def __init__(self, index, px, model = None, parent = None, scene = None) :
-        super(TweakableGlyphPixmapItem, self).__init__(index, px, model, parent, scene)
-        self.shiftx = 0
-        self.shifty = 0
-        
-    def setShifts(self, x, y) :
-        self.originalShiftx = x
-        self.originalShifty = y
-        self.shiftx = x
-        self.shifty = y
-        
-    def revert(self) :
-        self.shiftx = originalShiftx
-        self.shifty = originalShifty
-        # redraw
-        
-    
 class TweakGlyph() :
     
-    def __init__(self, name, gclass = None, status = "required", shiftx = 0, shifty = 0) :
+    def __init__(self, gid, name, gclass = None, status = "required", shiftx = 0, shifty = 0,
+            shiftx_pending = 0, shifty_pending = 0) :
+        self.gid = gid
         self.name = name
         self.gclass = gclass
         self.status = status
         self.shiftx = shiftx
         self.shifty = shifty
+        self.shiftx_pending = shiftx_pending
+        self.shifty_pending = shifty_pending
         
+    def update(self, gid, name) :
+        self.gid = gid
+        self.name = name
+        # TODO: if gclass is set and gid is not in gclass, this is a very different glyph than previously,
+        # so clear all the shifts and the status.
+        # Or maybe if gid != new ID, clear everything.
         
+
+# A single string containing potentially tweaked glyphs.
 class Tweak(Test) : 
     
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white', \
@@ -100,13 +94,16 @@ class Tweak(Test) :
             gl = et.SubElement(e, 'glyphs')
             for twglyph in self.glyphs  :
                 gf = et.SubElement(gl, 'glyph')
+                gf.set('gid', str(twglyph.gid))
                 gf.set('name', twglyph.name)
                 if twglyph.gclass and twglyph.gclass != "" :
                     gf.set('class', twglyph.gclass)
                 if twglyph.status and twglyph.status != "required" :
                     gf.set('status', twglyph.status)
-                gf.set('shiftx', twglyph.shiftx)
-                gf.set('shifty', twglyph.shifty)
+                gf.set('shiftx', str(twglyph.shiftx))
+                gf.set('shifty', str(twglyph.shifty))
+                gf.set('shiftx-pending', str(twglyph.shiftx_pending))
+                gf.set('shifty-pending', str(twglyph.shifty_pending))
                 
         except :
             msg = "ERROR: tweak could not be saved: " + self.name
@@ -115,6 +112,28 @@ class Tweak(Test) :
             errorDialog.exec_()
             
         return e
+        
+    def glyphShiftX(self, index) :
+        return self.glyphs[index].shiftx
+        
+    def glyphShiftY(self, index) :
+        return self.glyphs[index].shifty
+
+    def glyphShiftXPending(self, index) :
+        return self.glyphs[index].shiftx_pending
+        
+    def glyphShiftYPending(self, index) :
+        return self.glyphs[index].shifty_pending
+    
+    # The Tweak has been run or rerun though Graphite. Update the list of glyphs to match the output.
+    def updateGlyph(self, index, gid, gname) :
+        if len(self.glyphs) <= index :
+            newGlyph = TweakGlyph(gid, gname)
+            self.glyphs.append(newGlyph)
+        else :
+            self.glyphs[index].update(gid, gname)
+        
+        
 
 # The control that handles the list of tweaked strings
 class TweakList(QtGui.QWidget) :
@@ -255,6 +274,7 @@ class TweakList(QtGui.QWidget) :
                 tmp = t.find('string')
                 if tmp is None : tmp = t.find('text')
                 txt = tmp.text if tmp is not None else ""
+                
                 tmp = t.find('comment')
                 c = tmp.text if tmp is not None else ""
                 tmp = t.get('class')  # named style, group of features
@@ -266,7 +286,6 @@ class TweakList(QtGui.QWidget) :
                     lng = None
                     
                 label = t.get('label')
-                print "label = ",label
                 tweak = Tweak(txt, feats, lang = lng, rtl = asBool(t.get('rtl')), name = t.get('label'), comment = c)
                 b = t.get('background')
                 if b :
@@ -275,18 +294,22 @@ class TweakList(QtGui.QWidget) :
                 w = t.get('expand')  # ???
                 if w :
                     tweak.setWidth(int(w))
-                twglyphs = []
-                if t.find('glyphs') :
-                    for gl in t.iterfind('glyphs') :
-                        if gl.find('glyph') :
-                            for gf in gl.iterfind('glyph') :
-                                gname = gf.get('name')
-                                gclass = gf.get('class')
-                                req = gf.get('status')
-                                shiftx = gf.get('shiftx')
-                                shifty = gf.get('shifty')
-                                twglyph = TweakGlyph(gname, gclass, req, shiftx, shifty)
-                                twglyphs.append(twglyph)
+                twglyphs = []                    
+                for gl in t.iterfind('glyphs') :
+                    for gf in gl.iterfind('glyph') :
+                        if gf.find('gid') :
+                            gid = int(gf.get('gid'))
+                        else :
+                            gid = 0
+                        gname = gf.get('name')
+                        gclass = gf.get('class')
+                        req = gf.get('status')
+                        shiftx = int(gf.get('shiftx'))
+                        shifty = int(gf.get('shifty'))
+                        shiftx_pending = int(gf.get('shiftx-pending'))
+                        shifty_pending = int(gf.get('shifty-pending'))
+                        twglyph = TweakGlyph(gid, gname, gclass, req, shiftx, shifty, shiftx_pending, shifty_pending)
+                        twglyphs.append(twglyph)
                 tweak.setGlyphs(twglyphs)
                  
                 self.appendTweak(tweak, listwidget)
@@ -331,7 +354,7 @@ class TweakList(QtGui.QWidget) :
             t.background = bgndSave
 
     def writeXML(self, fname) :
-        e = et.Element('tweak_ftml', {'version' : '1.0'})
+        e = et.Element('tweak-ftml', {'version' : '1.0'})
         if self.header is not None :
             h = self.header
             if h.tag == 'header' : h.tag = 'head'
@@ -446,15 +469,11 @@ class TweakList(QtGui.QWidget) :
             l.setCurrentRow(i + 1)
 
     def loadTweak(self, item) :
-        j = self.list.currentIndex()
-        i = self.list.currentWidget().currentRow()
-        self.app.setRun(self.tweaks[j][i])  # do we want this?
+        self.app.setRun(self.currentTweak())  # do we want this?
         self.showTweak(item)
 
     def showTweak(self, item) :
-        j = self.list.currentIndex()
-        i = self.list.currentWidget().currentRow()
-        self.view.updateDisplay(self.tweaks[j][i])
+        self.view.updateDisplay(self.currentTweak())
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
@@ -463,6 +482,12 @@ class TweakList(QtGui.QWidget) :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount
         return self.fsets[k]
+
+    # Return the Tweak object that is currently selected.
+    def currentTweak(self):
+        j = self.list.currentIndex() # always zero
+        i = self.list.currentWidget().currentRow()
+        return self.tweaks[j][i]
         
 
 # Main class to manage tweaking
@@ -494,7 +519,73 @@ class Tweaker(QtGui.QWidget) :
     def writeXML(self, xmlfile) :
         if self.tweakList :
             self.tweakList.writeXML(xmlfile)
+            
+    def currentTweak(self):
+        return self.tweakList.currentTweak()
+        
+        
+#--- TweakView classes ---
 
+# A single displayed glyph of in a TweakedRunView
+class TweakableGlyphPixmapItem(GlyphPixmapItem) :
+
+    def __init__(self, index, px, model = None, parent = None, scene = None) :
+        super(TweakableGlyphPixmapItem, self).__init__(index, px, model, parent, scene)
+        self.shiftx = 0
+        self.shifty = 0
+        self.shiftx_pending = 0
+        self.shifty_pending = 0
+        
+#        if index == 1 : self.shifty = 100
+#        if index == 3 : self.shifty = -200
+        
+    def setShifts(self, x, y) :
+        self.shiftx = x
+        self.shifty = y
+        
+    def doShiftx(self, dx) :
+        shift.shiftx_pending = self.shiftx_pending + dx
+        
+    def doShifty(self, dy) :
+        shift.shifty_pending = self.shifty_pending + dy
+        
+    def revert(self) :
+        self.shiftx_pending = 0
+        self.shifty_pending = 0
+        # redraw
+
+
+class TweakableRunView(RunView) :
+    
+    def __init__(self, font = None, run = None, parent = None) :
+        super(TweakableRunView, self).__init__(font, run, None)
+        self.parentView = parent
+        self._font = font # store it in case there is no run and the superclass ignores it
+        
+    def createPixmap(self, slot, glyph, index, res, factor, model = None, parent = None, scene = None) :
+        currentTweak = self.parentView.tweaker.currentTweak()
+        
+        px = TweakableGlyphPixmapItem(index, glyph.item.pixmap, model, parent, scene)
+        # Don't include shiftx and shifty, because they are already incorporated into the GDL rules
+        # and so are accounted for in the slot's origins.        
+        xoffset = slot.origin[0] + currentTweak.glyphShiftXPending(index)
+        yoffset = slot.origin[1] + currentTweak.glyphShiftYPending(index)
+        ppos = (xoffset * factor + glyph.item.left, -yoffset * factor - glyph.item.top)
+        px.setOffset(*ppos)
+        self._pixmaps.append(px)
+        if slot : slot.pixmap(px)
+        sz = glyph.item.pixmap.size()
+        r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
+        res = res.united(r)
+        return res
+        
+    def updateData(self, run) :
+        currentTweak = self.parentView.tweaker.currentTweak()
+        for i, slot in enumerate(run) :
+            glyph = self.parentView.app.font[slot.gid]
+            gname = glyph.GDLName() or glyph.psname
+            currentTweak.updateGlyph(i, slot.gid, gname)
+            
 
 # The display of the moveable glyphs in the bottom right-hand pane
 class TweakView(QtGui.QWidget) :
@@ -514,22 +605,39 @@ class TweakView(QtGui.QWidget) :
             self.currsel.clear_selected()
         self.currsel = model
 
-    def __init__(self, font, app = None, parent = None) :
+    def __init__(self, fontname, size, app = None, parent = None) :
         super(TweakView, self).__init__(parent)
-                
-        self.font = font
+
         self.app = app
         self.runloaded = False
+        self.tweaker = None # set later
         
+        self.fontname = fontname
+        self.setFont(size)
+
         layout = QtGui.QVBoxLayout(self)
-        self.runView = RunView(self.font)
-        self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
+        self.runView = TweakableRunView(self.font, parent = self)
+        self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
         layout.addWidget(self.runView.gview)
         # Ignore runView.tview - text view that shows the glyph names.
         
+    def changeFontSize(self, size) :
+        self.setFont(size)
+        
+    def setFont(self, size) :
+        fontfile = str(self.fontname)
+        self.font = Font()
+        self.font.loadFont(fontfile, size)
+        self.font.loadEmptyGlyphs()        
+        
+    def setTweaker(self, tweaker) :
+        # The Tweaker has all the data in it, which is needed to display the glyphs at their
+        # adjusted offsets.
+        self.tweaker = tweaker
+        
     def updateDisplay(self, tweak) :
         #print "TweakView::updateDisplay" ###
-        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, self.font.size,
+        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, 10, #self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
         
         if jsonResult != False :

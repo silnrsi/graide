@@ -53,7 +53,8 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
         elif self.highlighted and self.highlightType in self.highlightColours :
             painter.fillRect(r, self.highlightColours[self.highlightType])
         super(GlyphPixmapItem, self).paint(painter, option, widget)
-
+      
+      
 # Apparently not used
 class RunTextView(QtGui.QPlainTextEdit) :
 
@@ -76,9 +77,7 @@ class RunView(QtCore.QObject, ModelSuper) :
 
     def __init__(self, font = None, run = None, parent = None) :
         super(RunView, self).__init__()
-        
-        #print "RunView::__init__; run =" + run.__class__.__name__ + "font +" + font.__class__.__name__
-                
+        self.parent = parent
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         if font : self.gview.resize(self.gview.size().width(), font.pixrect.height())
@@ -109,17 +108,13 @@ class RunView(QtCore.QObject, ModelSuper) :
         sels = []
         self.tview.setExtraSelections([])
         self.tview.setPlainText("")
+        
+        self.updateData(run)
+        
         for i, s in enumerate(run) :
             g = font[s.gid]
             if g and g.item and g.item.pixmap :
-                px = GlyphPixmapItem(i, g.item.pixmap, model = self, scene = self._scene)
-                ppos = (s.origin[0] * factor + g.item.left, -s.origin[1] * factor - g.item.top)
-                px.setOffset(*ppos)
-                self._pixmaps.append(px)
-                if s : s.pixmap(px)
-                sz = g.item.pixmap.size()
-                r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
-                res = res.united(r)
+                res = self.createPixmap(s, g, i, res, factor, model = self, scene = self._scene)
             else :
                 self._pixmaps.append(None)
             if g :
@@ -138,6 +133,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
                             QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 2 - self._gindices[-2])
                     sels.append(hselect)
+                    
         if len(sels) :
             self.tview.setExtraSelections(sels)
         self.boundingRect = res
@@ -146,6 +142,21 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.gview.setFixedSize(res.left() + res.width() + 2, res.height() - res.top() + 2)
             self.gview.resize(res.left() + res.width() + 2, res.height() - res.top() + 2)
             self.gview.updateScene([])
+            
+    # Overridden for TweakableRunView.
+    def createPixmap(self, slot, glyph, index, res, factor, model = None, parent = None, scene = None) :
+        px = GlyphPixmapItem(index, glyph.item.pixmap, model, parent, scene)
+        ppos = (slot.origin[0] * factor + glyph.item.left, -slot.origin[1] * factor - glyph.item.top)
+        px.setOffset(*ppos)
+        self._pixmaps.append(px)
+        if slot : slot.pixmap(px)
+        sz = glyph.item.pixmap.size()
+        r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
+        res = res.united(r)
+        return res
+        
+    def updateData(self, run) :
+        pass # overridden by TweakableRunView
 
 
     def glyph_clicked(self, gitem, index) :

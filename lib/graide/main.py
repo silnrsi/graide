@@ -108,9 +108,14 @@ class MainWindow(QtGui.QMainWindow) :
             self.tweaksfile = config.get('build', 'tweakxmlfile')
         else :
             self.tweaksfile = None
+            
+        if config.has_option('ui', 'tweakglyphsize') :
+            self.tweaksize = configintval(config, 'ui', 'tweakglyphsize')
+        else :
+            self.tweaksize = 80
 
-        if config.has_option('ui', 'posglyphsize') :
-            self.setposglyphsize(configintval(config, 'ui', 'posglyphsize'))
+        if config.has_option('ui', 'attglyphsize') :
+            self.setAttGlyphSize(configintval(config, 'ui', 'attglyphsize'))
 
         self.setActions()
         self.setupUi()
@@ -455,8 +460,10 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_results.addTab(self.tab_rules, "Rules")
 
         # Tweaks tab
-        self.tab_tweakview = TweakView(self.font, app = self)
-        if hasattr(self, 'tab_tweak') : self.tab_tweak.setView(self.tab_tweakview)
+        self.tab_tweakview = TweakView(self.fontfile, self.tweaksize, app = self)
+        if hasattr(self, 'tab_tweak') :
+            self.tab_tweak.setView(self.tab_tweakview)
+            self.tab_tweakview.setTweaker(self.tab_tweak)
         self.tab_results.addTab(self.tab_tweakview, "Tweak")
 
         # Attachment tab
@@ -862,9 +869,12 @@ Copyright 2012 SIL International and M. Hosken""")
         m = DebugMenu(self)
         m.exec_(event.globalPos())
 
-    def setposglyphsize(self, size) :
-        if self.font : self.font.posglyphSize = size
+    def setTweakGlyphSize(self, size) :
+        self.tab_tweakview.changeFontSize(size)    
 
+    def setAttGlyphSize(self, size) :
+        if self.font : self.font.attglyphSize = size
+            
     # TODO: use QSignalMapper instead of four openRecentProject methods:
     def openRecentProject1(self) :
         self.openRecentProject(1)
