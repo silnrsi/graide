@@ -134,7 +134,13 @@ class Glyph(gdlGlyph, DataObj, QtCore.QObject) :
         elif value == "" :
             (x, y) = (0, 0)
         else :
-            (x, y) = map(int, re.split(r",\s*", value[1:-1]))
+            try :
+                (x, y) = map(int, re.split(r",\s*", value[1:-1]))
+            except :
+                msg = "Please use the format (x, y)."
+                errorDialog = QtGui.QMessageBox()
+                errorDialog.setText(msg)
+                errorDialog.exec_()
         self.setAnchor(key, x, y)
 
     def getjustify(self, level, name) :

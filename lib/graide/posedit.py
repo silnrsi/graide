@@ -39,7 +39,7 @@ class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
         self.position = (0, 0)
         self.glyph = None
         self.dialog = None
-        self.scale = font.posglyphSize * 1. / font.upem
+        self.scale = font.attGlyphSize * 1. / font.upem
 
     def setDialog(self, d) :
         self.dialog = d   # PosGlyphInfoWidget - the control at the bottom of the pane
@@ -72,7 +72,7 @@ class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
         if (scene is None and not self.px) : return
         if self.glyph :
             if not self.glyph.item : return
-            (px, left, top) = self.glyph.item.pixmapAt(self.font.posglyphSize)
+            (px, left, top) = self.glyph.item.pixmapAt(self.font.attGlyphSize)
             if self.px is not None :
                 self.px.setPixmap(px)
             else :
@@ -198,7 +198,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
         except TypeError : pass
         self.moveState = True
         self.scene().view.updateable(False)
-        radius = self.item.font.posglyphSize / 20
+        radius = self.item.font.attGlyphSize / 20
         self.apItem = self.scene().addEllipse(-radius / 2, -radius / 2, radius, radius,
                 brush = Layout.posdotShiftColour if self.shiftState else Layout.posdotColour)
         self.apItem.setPos(self.sceneAP[0], self.sceneAP[1])
@@ -253,10 +253,10 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         self.setLineWidth(1)
         self.layout = QtGui.QGridLayout(self)
         self.layout.addWidget(QtGui.QLabel(title), 0, 0, 1, 2)
-        self.reset = QtGui.QPushButton("Revert")
-        self.reset.setEnabled(False)
-        self.reset.clicked.connect(self.doReset)
-        self.layout.addWidget(self.reset, 0, 3)
+        self.revert = QtGui.QPushButton("Revert")
+        self.revert.setEnabled(False)
+        self.revert.clicked.connect(self.doRevert)
+        self.layout.addWidget(self.revert, 0, 3)
         self.glyph = QtGui.QComboBox(self)
         self.layout.addWidget(QtGui.QLabel("Glyph"), 1, 0, 1, 2)
         self.layout.addWidget(self.glyph, 1, 3, 1, 2)
@@ -313,7 +313,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
                 self.x.setValue(pos[0])
                 self.y.setValue(pos[1])
                 self.orig = pos
-                self.reset.setEnabled(False)
+                self.revert.setEnabled(False)
                 if self.isBase :
                     self.apItem.setText(2, ap)
                 else :
@@ -324,7 +324,7 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
         #print "PosGlyphInfoWidget::changePos" ###
         #print "item = " + str(self.item) ###
         self.item.setAnchor(self.aps.currentText(), self.x.value(), self.y.value())
-        self.reset.setEnabled(True)
+        self.revert.setEnabled(True)
 
     def setGlyph(self, font, gname, apname, item, apItem) :
         #print "PosGlyphInfoWidget::setGlyph(gname = " + gname + ")" ###
@@ -347,10 +347,10 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
             self.aps.addItems(['(None)'] + aplist)
             self.aps.setCurrentIndex(1 + aplist.index(apname))
 
-    def doReset(self) :
+    def doRevert(self) :
         self.x.setValue(self.orig[0])
         self.y.setValue(self.orig[1])
-        self.reset.setEnabled(False)
+        self.revert.setEnabled(False)
 
     def setAPPos(self, x, y) :
         self.x.setValue(x)

@@ -873,7 +873,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tab_tweakview.changeFontSize(size)    
 
     def setAttGlyphSize(self, size) :
-        if self.font : self.font.attglyphSize = size
+        if self.font : self.font.attGlyphSize = size
             
     # TODO: use QSignalMapper instead of four openRecentProject methods:
     def openRecentProject1(self) :

@@ -32,7 +32,7 @@ class Font(gdlFont) :
         self.pixrect = QtCore.QRect()
         self.isread = False
         self.highlighted = None
-        self.attglyphSize = 200
+        self.attGlyphSize = 200
 
     def isRead(self) : return self.isread
 
