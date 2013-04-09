@@ -67,10 +67,11 @@ class Tweak(Test) :
         super(Tweak, self).__init__(text, feats, lang, rtl, name, comment, width, bgnd)
         self.glyphs = glyphs
         
-        
     def setGlyphs(self, glyphs) :
         self.glyphs = glyphs
-
+        
+    def glyphs(self) :
+        return self.glyphs
 
     # Add this tweak to the XML output tree.
     def addXML(self, parent) :
@@ -471,9 +472,11 @@ class TweakList(QtGui.QWidget) :
     def loadTweak(self, item) :
         self.app.setRun(self.currentTweak())  # do we want this?
         self.showTweak(item)
+        # do this after the glyphs have been displayed:
+        self.parent().tweakChanged(item)
 
     def showTweak(self, item) :
-        self.view.updateDisplay(self.currentTweak())
+        self.view.updateDisplay(self.currentTweak(), 0)
 
     def findClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
@@ -490,6 +493,191 @@ class TweakList(QtGui.QWidget) :
         return self.tweaks[j][i]
         
 
+# Tthe controls at the bottom of the pane that allow adjustment of the glyph tweaks.
+class TweakInfoWidget(QtGui.QFrame) :
+
+    def __init__(self, app, parent = None) :
+        super(TweakInfoWidget, self).__init__(parent) # parent = Tweaker
+        self.app = app
+
+        self.item = None
+        self.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
+        self.setLineWidth(1)
+        self.layout = QtGui.QGridLayout(self)
+        
+        self.layout.addWidget(QtGui.QLabel("Slot"), 0, 0)
+        self.slotCtrl = QtGui.QComboBox(self)
+        self.slotCtrl.currentIndexChanged[unicode].connect(self.slotChanged)
+        self.slotCtrl.editTextChanged.connect(self.slotChanged)
+        self.layout.addWidget(self.slotCtrl, 0, 1, 1, 3)
+        self.revert = QtGui.QPushButton("Revert")
+        self.revert.setEnabled(False)
+        self.revert.clicked.connect(self.doRevert)
+        self.layout.addWidget(self.revert, 0, 4)
+        
+        #self.layout.addWidget(QtGui.QLabel("<no glyph>"), 1, 0, 1, 4)
+        
+        self.x = QtGui.QSpinBox(self)
+        self.x.setRange(-32768, 32767)
+        self.x.valueChanged[int].connect(self.changePos)
+        self.layout.addWidget(QtGui.QLabel("X"), 1, 0)
+        self.layout.addWidget(self.x, 1, 1)
+        self.y = QtGui.QSpinBox(self)
+        self.y.setRange(-32768, 32767)
+        self.y.valueChanged[int].connect(self.changePos)
+        self.layout.addWidget(QtGui.QLabel("Y"), 1, 3)
+        self.layout.addWidget(self.y, 1, 4)
+        
+        frame = QtGui.QFrame()
+        #frame.setFrameStyle(QtGui.QFrame.WinPanel | QtGui.QFrame.Sunken)
+        frame.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Plain)
+        innerGrid = QtGui.QGridLayout(frame)
+
+        ####self.buttonGroup = QtGui.QButtonGroup(self) - could need if we add any different buttons
+        self.statusReq = QtGui.QRadioButton("Required")
+        self.statusOpt = QtGui.QRadioButton("Optional")
+        self.statusIgnore = QtGui.QRadioButton("Ignore")
+        innerGrid.addWidget(self.statusReq, 0, 0, 1, 2)
+        innerGrid.addWidget(self.statusOpt, 1, 0, 1, 2)
+        innerGrid.addWidget(self.statusIgnore, 2, 0, 1, 2)
+        
+        self.gclassCtrl = QtGui.QComboBox(self)
+        self.gclassCtrl.setEditable(True)
+        innerGrid.addWidget(QtGui.QLabel("Class"), 0, 3, 1, 2)
+        innerGrid.addWidget(self.gclassCtrl, 1, 3, 1, 2)
+        ###self.glyph.currentIndexChanged[unicode].connect(self.glyphChanged)
+        ###self.glyph.editTextChanged.connect(self.glyphChanged)
+        
+        self.layout.addWidget(frame, 2, 0, 3, 5)
+        
+        self.slotSelected = -1
+        self.tweakSelected = None
+        self.glyphSelected = None
+        
+    def setControlsForItem(self, item) :
+        self.tweakSelected = self.parent().currentTweak()
+        glyphs = self.tweakSelected.glyphs
+        # Populate the slot-selector control
+        self.slotCtrl.clear()
+        i = 1
+        for glyph in glyphs :
+            label = str(i) + ":  " + glyph.name
+            self.slotCtrl.addItem(label)
+            i = i + 1
+        
+        self.selectSlot(0)
+    
+    # Show the given slot in the controls
+    def selectSlot(self, slotIndex) :  # 0-based
+        self.slotCtrl.setCurrentIndex(slotIndex)
+        self.revert.setEnabled(False)
+        # Set the controls to show the current values for the first glyph
+        self.setControlsForGlyph(0)
+        
+    def setControlsForGlyph(self, slotIndex) :
+        self.glyphSelected = self.tweakSelected.glyphs[slotIndex]
+        shiftx = self.glyphSelected.shiftx
+        shifty = self.glyphSelected.shifty
+        shiftx_pending = self.glyphSelected.shiftx_pending
+        shifty_pending = self.glyphSelected.shifty_pending
+        gclass = self.glyphSelected.gclass
+        status = self.glyphSelected.status
+        #print "setControlsForGlyph",slotIndex,self.glyphSelected.name,gclass  ###
+
+        self.x.setValue(shiftx + shiftx_pending)
+        self.y.setValue(shifty + shifty_pending)
+        #if gclass :
+        #    self.gclassCtrl.setItemText(gclass)
+        #else :
+        #    self.gclassCtrl.setItemText("None")
+        if status == "ignore" :
+            self.statusIgnore.setChecked(True)
+        elif status == "optional" :
+            self.statusOpt.setChecked(True)
+        else :
+            self.statusReq.setChecked(True)
+    
+    # The slot control was changed. Update the selection in the TweakView.
+    def slotChanged(self) :
+        slotCtrlText = self.slotCtrl.currentText()
+        if slotCtrlText == "" or slotCtrlText == "None" :
+            slotIndex = -1
+        else :
+            slotIndex = 0
+            for char in slotCtrlText :
+                if char == ":" or char == " " : break
+                slotIndex = slotIndex * 10 + int(char)
+            slotIndex -= 1  # 0-based
+        self.parent().view.highlightSlot(slotIndex)  # parent = Tweaker
+
+    def posChanged(self, text) :
+        """The glyph or AP has changed."""
+        if text == "" : return
+        gname = self.glyph.currentText()
+        self.item.setText(0, gname) # tree control item
+        if self.item.glyph is not None :
+            ap = self.aps.currentText()
+            pos = self.item.glyph.anchors.get(ap, None)
+            self.gname = gname
+            self.apname = ap
+            if pos is not None :
+                self.x.setValue(pos[0])
+                self.y.setValue(pos[1])
+                self.orig = pos
+                self.revert.setEnabled(False)
+                if self.isBase :
+                    self.apItem.setText(2, ap)
+                else :
+                    self.item.setText(1, ap)
+
+    # TODO: rework
+    def changePos(self, val) :
+        """The X/Y values in the dialog were changed directly."""
+        print "PosGlyphInfoWidget::changePos" ###
+        #print "item = " + str(self.item) ###
+        #self.item.setAnchor(self.aps.currentText(), self.x.value(), self.y.value())
+        self.revert.setEnabled(True)
+
+    # TODO: delete or rework
+    def setGlyph(self, font, gname, apname, item, apItem) :
+        #print "PosGlyphInfoWidget::setGlyph(gname = " + gname + ")" ###
+        #print "item = " + str(item) ###
+        #print "apItem = " + str(apItem) ###
+        self.font = font
+        self.item = item
+        
+        self.item.setDialog(self)
+        self.apItem = apItem    # for a stationary glyph, the item corresponding to the mobile glyph
+        if gname in font.gdls :
+            self.gname = gname
+            self.apname = apname
+            glist = sorted(filter(lambda x : apname in font.gdls[x].anchors, font.gdls.keys()))
+            aplist = sorted(font.gdls[gname].anchors.keys())
+            self.glyph.clear()
+            self.glyph.addItems(['(None)'] + glist)
+            self.glyph.setCurrentIndex(1 + glist.index(gname))
+            self.aps.clear()
+            self.aps.addItems(['(None)'] + aplist)
+            self.aps.setCurrentIndex(1 + aplist.index(apname))
+
+    def doRevert(self) :
+        #self.x.setValue(self.orig[0])
+        #self.y.setValue(self.orig[1])
+        self.revert.setEnabled(False)
+            
+    def clearItem(self) :
+        self.item = None
+    
+#    def clear(self) : # currently not used
+#        self.glyph.clear()
+#        self.glyph.addItems(['(None)'])
+#        self.glyph.setCurrentIndex(0)
+#        self.aps.clear()
+#        self.aps.addItems(['(None)'])
+#        self.aps.setCurrentIndex(0)
+
+
+
 # Main class to manage tweaking
 class Tweaker(QtGui.QWidget) :
 
@@ -505,7 +693,7 @@ class Tweaker(QtGui.QWidget) :
         self.tweakList = TweakList(self.app, self.font, xmlfile, self)
         #self.tweakList.itemClicked.connect(self.itemClicked)
         self.layout.addWidget(self.tweakList)
-        self.infoWidget = PosGlyphInfoWidget("Selected", self.app, True, self)
+        self.infoWidget = TweakInfoWidget(self.app, self)
         self.layout.addWidget(self.infoWidget)
 
     def setView(self, view) :
@@ -516,15 +704,23 @@ class Tweaker(QtGui.QWidget) :
         # TODO
         print "Tweaker::updatePositions()" ###
         
+    def tweakChanged(self, item) :
+        self.infoWidget.setControlsForItem(item)
+        self.view.highlightSlot(0)
+        
     def writeXML(self, xmlfile) :
         if self.tweakList :
             self.tweakList.writeXML(xmlfile)
             
-    def currentTweak(self):
+    def currentTweak(self) :
         return self.tweakList.currentTweak()
+    
+    # The slot was changed in the TweakView. Update yourself.
+    def slotChanged(self, index) :
+        self.infoWidget.selectSlot(index)
         
-        
-#--- TweakView classes ---
+
+#------ TweakView classes ------
 
 # A single displayed glyph of in a TweakedRunView
 class TweakableGlyphPixmapItem(GlyphPixmapItem) :
@@ -586,7 +782,19 @@ class TweakableRunView(RunView) :
             gname = glyph.GDLName() or glyph.psname
             currentTweak.updateGlyph(i, slot.gid, gname)
             
-
+    def glyphClicked(self, gitem, index) :
+        if index == self.currselection :
+            # Reclicking the same glyph has no effect
+            pass
+        else :
+            super(TweakableRunView, self).glyphClicked(gitem, index)
+            # Also inform the Tweaker so it can update the controls
+            self.parentView.tweaker.slotChanged(index)
+            
+    def keyPressEvent(self, event) :
+        super(TweakableRunView, self).keyPressEvent(event)
+        self.parentView.tweaker.slotChanged(self.currselection)
+        
 # The display of the moveable glyphs in the bottom right-hand pane
 class TweakView(QtGui.QWidget) :
 
@@ -597,6 +805,7 @@ class TweakView(QtGui.QWidget) :
     @QtCore.Slot(DataObj, ModelSuper)
     def changeSlot(self, data, model) :
         self.slotSelected.emit(data, model)
+        #self.tweaker.changeSlot(...)
 
     @QtCore.Slot(DataObj, ModelSuper)
     def changeGlyph(self, data, model) :
@@ -621,6 +830,8 @@ class TweakView(QtGui.QWidget) :
         layout.addWidget(self.runView.gview)
         # Ignore runView.tview - text view that shows the glyph names.
         
+        self.currSlotIndex = -1
+        
     def changeFontSize(self, size) :
         self.setFont(size)
         
@@ -635,8 +846,7 @@ class TweakView(QtGui.QWidget) :
         # adjusted offsets.
         self.tweaker = tweaker
         
-    def updateDisplay(self, tweak) :
-        #print "TweakView::updateDisplay" ###
+    def updateDisplay(self, tweak, slotIndex = 0) :
         jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, 10, #self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
         
@@ -659,4 +869,11 @@ class TweakView(QtGui.QWidget) :
             except :
                 print "Selection connection failed"
 
+        # Bring the Tweak tab to the front
         self.app.tab_results.setCurrentWidget(self.app.tab_tweakview)
+        
+#        self.highlightSlot(slotIndex) # currently done in Tweaker::tweakChanged
+    
+    def highlightSlot(self, slotIndex) :
+        self.currSlotIndex = slotIndex
+        self.runView.glyphClicked(None, slotIndex)

@@ -36,9 +36,10 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
     def mousePressEvent(self, mouseEvent) :
         if self.model :
-            self.model.glyph_clicked(self, self.index)
+            self.model.glyphClicked(self, self.index)
 
     def select(self, state) :
+        #print "GlyphPixmapItem::select",state ###
         self.selected = state
         self.update()
 
@@ -49,9 +50,13 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
     def paint(self, painter, option, widget) :
         r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
         if self.selected :
+        #    print "glyph is selected", self.index, "option=", option ###
             painter.fillRect(r, option.palette.highlight())
         elif self.highlighted and self.highlightType in self.highlightColours :
+        #    print "glyph is highlighted", self.index ###
             painter.fillRect(r, self.highlightColours[self.highlightType])
+        #else : ###
+        #    print "plain glyph", self.index ###
         super(GlyphPixmapItem, self).paint(painter, option, widget)
       
       
@@ -120,7 +125,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             if g :
                 t = g.GDLName() or g.psname
                 self.tview.moveCursor(QtGui.QTextCursor.End)
-                self.tview.insertPlainText(t + "  ")
+                self.tview.insertPlainText(t + "  ") # 2 spaces between glyph names
                 self._gindices.append(self._gindices[-1] + len(t) + 2)
                 if s.highlighted :
                     hselect = QtGui.QTextEdit.ExtraSelection()
@@ -133,7 +138,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
                             QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 2 - self._gindices[-2])
                     sels.append(hselect)
-                    
+        
         if len(sels) :
             self.tview.setExtraSelections(sels)
         self.boundingRect = res
@@ -159,14 +164,15 @@ class RunView(QtCore.QObject, ModelSuper) :
         pass # overridden by TweakableRunView
 
 
-    def glyph_clicked(self, gitem, index) :
+    def glyphClicked(self, gitem, index) :
         s = self.tview.extraSelections()
         if self.currselection >= 0 :
             if self._pixmaps[self.currselection] : self._pixmaps[self.currselection].select(False)
             s.pop()
-        if self.currselection != index :
+        if index >= 0 and self.currselection != index :
             self.currselection = index
             if self._pixmaps[index] : self._pixmaps[index].select(True)
+            # Highlight the name of the selected glyph.
             tselect = QtGui.QTextEdit.ExtraSelection()
             tselect.format = self._fSelect
             tselect.cursor = QtGui.QTextCursor(self.tview.document())
@@ -180,12 +186,14 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.currselection = -1
         self.tview.setExtraSelections(s)
 
-    def keyPressEvent(self, scene, event) :
+    def keyPressEvent(self, event) :
+        # TODO: factor this method along with glyphClicked
         if self.currselection < 0 : return
         s = self.tview.extraSelections()
-        if self._pixmaps[self.currselection] :
-            self._pixmaps[self.currselection].select(False)
-            s.pop()
+        if self._pixmaps[self.currselection] : self._pixmaps[self.currselection].select(False)
+        s.pop()
+        
+        # Figure out the new selection.
         if event.key() == QtCore.Qt.Key_Right :
             self.currselection += 1
             if self.currselection >= len(self._pixmaps) :
@@ -196,13 +204,17 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self.currselection = 0
         if self._pixmaps[self.currselection] :
             self._pixmaps[self.currselection].select(True)
+            
+        # Highlight the name of the selected glyph.
         tselect = QtGui.QTextEdit.ExtraSelection()
         tselect.format = self._fSelect
         tselect.cursor = QtGui.QTextCursor(self.tview.document())
         tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[self.currselection])
         tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, QtGui.QTextCursor.KeepAnchor,
-                self._gindices[self.currselection + 1] - 1 - self._gindices[index])
+                self._gindices[self.currselection + 1] - 1 - self._gindices[self.currselection])
         s.append(tselect)
+        self.tview.setExtraSelections(s)
+        
         self.slotSelected.emit(self.run[self.currselection], self)
         self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self)
 
@@ -218,7 +230,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         c = self.tview.cursorForPosition(event.pos()).position()
         for (i, g) in enumerate(self._gindices) :
             if c < g :
-                self.glyph_clicked(None, i - 1)
+                self.glyphClicked(None, i - 1)
                 return True
         return False
 
