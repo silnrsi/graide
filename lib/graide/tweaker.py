@@ -69,7 +69,6 @@ class TweakGlyph() :
         self.status = status
         
     def setGlyphClass(self, classname) :
-        print "TweakGlyph::setGlyphClass",self.name," - ",classname
         self.gclass = classname
     
     # New GDL rules have been generated, so pending adjustments are now accepted.
@@ -145,7 +144,8 @@ class Tweak(Test) :
     def glyphShiftYPending(self, index) :
         return self.glyphs[index].shifty_pending
     
-    # The Tweak has been run or rerun though Graphite. Update the list of glyphs to match the output.
+    # The Tweak has been run or rerun though Graphite.
+    # Update the the given glyph in the list to match the output.
     def updateGlyph(self, index, gid, gname) :
         if len(self.glyphs) <= index :
             newGlyph = TweakGlyph(gid, gname)
@@ -392,7 +392,7 @@ class TweakList(QtGui.QWidget) :
             g.set('label', self.combo.itemText(i))
             for t in self.tweaks[i] :
                 te = t.addXML(g)
-                c = self.findClass(t)
+                c = self.findStyleClass(t)
                 if c :
                     te.set('class', c)
                     used.add(c)
@@ -488,6 +488,15 @@ class TweakList(QtGui.QWidget) :
             l.insertItem(i + 1, l.takeItem(i))
             l.setCurrentRow(i + 1)
 
+    def findStyleClass(self, t) :
+        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
+        k += "\n" + (t.lang or "")
+        if k not in self.fsets :
+            self.fcount += 1
+            self.fsets[k] = "fset%d" % self.fcount
+        return self.fsets[k]
+
+    # A Tweak was clicked on in the list.
     def loadTweak(self, item) :
         print "TweakList::loadTweak" ###
         self.app.setRun(self.currentTweak())  # do we want this?
@@ -498,14 +507,6 @@ class TweakList(QtGui.QWidget) :
     def showTweak(self, item) :
         print "TweakList::showTweak" ###
         self.view.updateDisplay(self.currentTweak(), 0)
-
-    def findClass(self, t) :
-        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
-        k += "\n" + (t.lang or "")
-        if k not in self.fsets :
-            self.fcount += 1
-            self.fsets[k] = "fset%d" % self.fcount
-        return self.fsets[k]
 
     # Return the Tweak object that is currently selected.
     def currentTweak(self):
@@ -535,8 +536,6 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.revert.clicked.connect(self.doRevert)
         self.layout.addWidget(self.revert, 0, 4)
         
-        #self.layout.addWidget(QtGui.QLabel("<no glyph>"), 1, 0, 1, 4)
-        
         self.x = QtGui.QSpinBox(self)
         self.x.setRange(-32768, 32767)
         self.x.valueChanged[int].connect(self.posCtrlChanged)
@@ -550,13 +549,16 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         frame = QtGui.QFrame()
         #frame.setFrameStyle(QtGui.QFrame.WinPanel | QtGui.QFrame.Sunken)
-        frame.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Plain)
+        frame.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
         innerGrid = QtGui.QGridLayout(frame)
 
         ####self.buttonGroup = QtGui.QButtonGroup(self) - could need if we add any different buttons
         self.statusReq = QtGui.QRadioButton("Required")
+        self.statusReq.toggled.connect(self.statusButtonsChanged)
         self.statusOpt = QtGui.QRadioButton("Optional")
+        self.statusOpt.toggled.connect(self.statusButtonsChanged)
         self.statusIgnore = QtGui.QRadioButton("Ignore")
+        self.statusIgnore.toggled.connect(self.statusButtonsChanged)
         innerGrid.addWidget(self.statusReq, 0, 0, 1, 2)
         innerGrid.addWidget(self.statusOpt, 1, 0, 1, 2)
         innerGrid.addWidget(self.statusIgnore, 2, 0, 1, 2)
@@ -581,7 +583,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         # set to False when we want to change the controls under program control:
         self.updateMode = True
         
-        # Set to False when we initialize the controls for a Tweak, so we don't
+        # Set to False when we initialize the controls for a Tweak, because we don't
         # want to update the data with what is in them.
         self.dataMode = True
         
@@ -590,8 +592,8 @@ class TweakInfoWidget(QtGui.QFrame) :
         print "TweakInfoWidget::setControlsForTweakItem",item
         self.tweakSelected = self.parent().currentTweak()
         glyphs = self.tweakSelected.glyphs
-        # Populate the slot-selector control
         
+        # Populate the slot-selector control; the labels look like '<index>:  <glyph-name>'
         self.dataMode = False
         self.slotCtrl.clear()
         self.gclassCtrl.clear()
@@ -649,6 +651,12 @@ class TweakInfoWidget(QtGui.QFrame) :
                 gclassIndex = i
             else : print "added",gcLp ###
             i += 1
+        if gclassIndex == 0 and gclass != "" and gclass != "None" :
+            # Not one of the expected values - add it to the end of the list.
+            print "adding '" + gclass + "'" ####
+            self.gclassCtrl.addItem(gclass)
+            gclassIndex = i
+            i += 1
                 
         self.gclassCtrl.setCurrentIndex(gclassIndex)
         
@@ -676,7 +684,7 @@ class TweakInfoWidget(QtGui.QFrame) :
             print "---return" ###
             return
             
-        # Get the index from the string that looks like "<index>:  <glyph name>"
+        # Get the index from the string that looks like "<index>:  <glyph-name>"
         slotCtrlText = self.slotCtrl.currentText()
         if slotCtrlText == "" or slotCtrlText == "None" :
             slotIndex = -1
@@ -687,7 +695,6 @@ class TweakInfoWidget(QtGui.QFrame) :
                 slotIndex = slotIndex * 10 + int(char)
             slotIndex -= 1  # 0-based
         tweakView = self.tweakView()
-        ###print tweakView.__class__  ###
         self.tweakView().highlightSlot(slotIndex)
 
     # The X or Y control was changed.
@@ -729,12 +736,26 @@ class TweakInfoWidget(QtGui.QFrame) :
             else :
                 self.glyphSelected.setGlyphClass(newClass)
                 
-            #if self.updateMode :
-            #    # Inform the TweakView if necessary
+            #if self.updateMode :  # Inform the TweakView if necessary
             #    pass
                 
     def statusButtonsChanged(self) :
         print "TweakInfoWidget::statusButtonsChanged" ###
+        if not self.dataMode :
+            print "---return" ###
+            return
+            
+        if self.slotSelected >= 0 :
+            if self.statusOpt.isChecked() :
+                self.glyphSelected.setStatus("optional")
+            elif self.statusIgnore.isChecked() :
+                self.glyphSelected.setStatus("ignore")
+            else :
+                self.glyphSelected.setStatus("required")
+                
+            #if self.updateMode :  # Inform the TweakView if necessary
+            #    pass
+
             
     def incrementX(self, dx) :
         x = self.x.value()
@@ -786,10 +807,6 @@ class Tweaker(QtGui.QWidget) :
         self.view = view  # TweakView - lower-right tab
         self.tweakList.view = view
         
-    def updatePositions(self) :
-        # TODO
-        print "Tweaker::updatePositions()" ###
-        
     def tweakChanged(self, item) :
         self.infoWidget.setControlsForTweakItem(item)
         self.view.highlightSlot(0)
@@ -824,9 +841,6 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         self.shifty = 0
         self.shiftx_pending = 0
         self.shifty_pending = 0
-        
-#        if index == 1 : self.shifty = 100
-#        if index == 3 : self.shifty = -200
         
     def setShifts(self, x, y) :
         self.shiftx = x
@@ -897,13 +911,13 @@ class TweakableRunView(RunView) :
                 print "shift-up pressed" ###
                 self.tweaker().incrementY(20)
             elif event.key() == QtCore.Qt.Key_Down :
-                print "shift-down pressed" ####
+                print "shift-down pressed" ###
                 self.tweaker().incrementY(-20)
             elif event.key() == QtCore.Qt.Key_Right :
                 print "shift-right pressed" ###
                 self.tweaker().incrementX(20)
             elif event.key() == QtCore.Qt.Key_Left :
-                print "shift-left pressed" ####
+                print "shift-left pressed" ###
                 self.tweaker().incrementX(-20)
                 
         
