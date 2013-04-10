@@ -39,7 +39,6 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
             self.model.glyphClicked(self, self.index)
 
     def select(self, state) :
-        #print "GlyphPixmapItem::select",state ###
         self.selected = state
         self.update()
 
@@ -50,13 +49,9 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
     def paint(self, painter, option, widget) :
         r = QtCore.QRect(QtCore.QPoint(self.offset().x(), self.offset().y()), self.pixmap().size())
         if self.selected :
-        #    print "glyph is selected", self.index, "option=", option ###
             painter.fillRect(r, option.palette.highlight())
         elif self.highlighted and self.highlightType in self.highlightColours :
-        #    print "glyph is highlighted", self.index ###
             painter.fillRect(r, self.highlightColours[self.highlightType])
-        #else : ###
-        #    print "plain glyph", self.index ###
         super(GlyphPixmapItem, self).paint(painter, option, widget)
       
       
@@ -204,13 +199,14 @@ class RunView(QtCore.QObject, ModelSuper) :
         if newSel >= 0 and self.currselection != newSel :
             self.currselection = newSel
             if self._pixmaps[newSel] : self._pixmaps[newSel].select(True)
-            # Highlight the name of the selected glyph.
+                
+            # Highlight the name of the selected glyph in the text view.
             tselect = QtGui.QTextEdit.ExtraSelection()
             tselect.format = self._fSelect
             tselect.cursor = QtGui.QTextCursor(self.tview.document())
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[newSel])
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter,
-                    QtGui.QTextCursor.KeepAnchor, self._gindices[newSel + 1] - 1 - self._gindices[newSel])
+                    QtGui.QTextCursor.KeepAnchor, self._gindices[newSel + 1] - self._gindices[newSel] - 2 )
             s.append(tselect)
             self.slotSelected.emit(self.run[self.currselection], self)
             self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self)

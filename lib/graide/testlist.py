@@ -274,7 +274,7 @@ class TestList(QtGui.QWidget) :
             g.set('label', self.combo.itemText(i))
             for t in self.tests[i] :
                 te = t.addXML(g)
-                c = self.findClass(t)
+                c = self.findStyleClass(t)
                 if c :
                     te.set('class', c)
                     used.add(c)
@@ -384,7 +384,7 @@ class TestList(QtGui.QWidget) :
         self.app.runClicked()
         self.noclick = True  # because itemClick event will happen again--ignore it
 
-    def findClass(self, t) :
+    def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
         k += "\n" + (t.lang or "")
         if k not in self.fsets :
