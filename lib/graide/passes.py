@@ -50,7 +50,7 @@ class PassesView(QtGui.QTableWidget) :
     def changeGlyph(self, data, model) : # data = glyph ID, model = RunView
         self.glyphSelected.emit(data, model)
         if self.currsel and self.currsel != model :
-            self.currsel.clear_selected()
+            self.currsel.clearSelected()
         self.currsel = model
 
     @QtCore.Slot(int)

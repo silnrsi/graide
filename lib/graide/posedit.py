@@ -86,7 +86,7 @@ class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
     def setAnchor(self, name, x, y) :
         #print "PosGlyphTreeItem::setAnchor", name, x, y ###
         #print "px = ",str(self.px) ###
-        if self.glyph and self.glyph.setAnchor(name, x, y) :
+        if self.glyph and self.glyph.setAnchor(name, x, y) :    # actually change the data!
             #print "redrawing..." ###
             self.posGlyphChanged.emit() # make glyphs redraw
         #else : 
