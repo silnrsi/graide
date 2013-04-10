@@ -18,15 +18,15 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from graide import freetype
-from graide.glyph import Glyph, GlyphItem
+from graide.glyph import GraideGlyph, GlyphItem
 from PySide import QtCore
 from graide.makegdl.font import Font as gdlFont
 import re
 
-class Font(gdlFont) :
+class GraideFont(gdlFont) :
 
     def __init__(self) :
-        super(Font, self).__init__()
+        super(GraideFont, self).__init__()
         self.glyphItems = []
         self.classes = {}
         self.pixrect = QtCore.QRect()
@@ -81,7 +81,7 @@ class Font(gdlFont) :
                 index = self.gnames[name]
         elif name and name in self.gnames :
             index = self.gnames[name]
-        g = super(Font, self).addGlyph(index, name, gdlname, Glyph)
+        g = super(GraideFont, self).addGlyph(index, name, gdlname, GraideGlyph)
         if g.gid < len(self.glyphItems) :
             g.item = self.glyphItems[g.gid]
         return g

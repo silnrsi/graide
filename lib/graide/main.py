@@ -19,7 +19,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide.font import Font
+from graide.font import GraideFont
 from graide.run import Run
 from graide.attribview import AttribView
 from graide.fontview import FontView
@@ -62,7 +62,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.currFeats = None
         self.currLang = None
         self.currWidth = 100
-        self.font = Font()
+        self.font = GraideFont()
         self.apname = None
         self.appTitle = "Graide v0.5"
         

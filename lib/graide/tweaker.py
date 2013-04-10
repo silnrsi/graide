@@ -20,7 +20,7 @@
 
 from PySide import QtCore, QtGui
 from xml.etree import cElementTree as et
-from graide.font import Font
+from graide.font import GraideFont
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
@@ -914,7 +914,7 @@ class TweakView(QtGui.QWidget) :
         
     def setFont(self, size) :
         fontfile = str(self.fontname)
-        self.font = Font()
+        self.font = GraideFont()
         self.font.loadFont(fontfile, size)
         self.font.loadEmptyGlyphs()        
         

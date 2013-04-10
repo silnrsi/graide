@@ -59,12 +59,12 @@ class GlyphItem(object) :
             self.pixmaps[height] = ftGlyph(self.face, self.gid)
         return self.pixmaps[height]
 
-class Glyph(gdlGlyph, DataObj, QtCore.QObject) :
+class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
 
     anchorChanged = QtCore.Signal(str, int, int)
 
     def __init__(self, name, gid = 0, item = None) :
-        super(Glyph, self).__init__(name, gid)
+        super(GraideGlyph, self).__init__(name, gid)
         QtCore.QObject.__init__(self)
         self.item = item
         self.isHigh = False
