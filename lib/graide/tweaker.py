@@ -38,6 +38,7 @@ def asBool(txt) :
     return False
     
 
+# A single glyph in a tweakable string.
 class TweakGlyph() :
     
     def __init__(self, gid, name, gclass = None, status = "required", shiftx = 0, shifty = 0,
@@ -46,7 +47,7 @@ class TweakGlyph() :
         self.name = name
         self.gclass = gclass
         self.status = status
-        self.shiftx = shiftx
+        self.shiftx = shiftx    # already built into GDL rules
         self.shifty = shifty
         self.shiftx_pending = shiftx_pending
         self.shifty_pending = shifty_pending
@@ -57,6 +58,23 @@ class TweakGlyph() :
         # TODO: if gclass is set and gid is not in gclass, this is a very different glyph than previously,
         # so clear all the shifts and the status.
         # Or maybe if gid != new ID, clear everything.
+        
+    def setShiftXpending(self, x) :
+        self.shiftx_pending = x
+        
+    def setShiftYpending(self, y ) :
+        self.shifty_pending = y
+        
+    def setStatus(self, status) :
+        self.status = status
+        
+    def setGlyphClass(self, classname) :
+        self.gclass = classname
+    
+    # New GDL rules have been generated, so pending adjustments are now accepted.
+    def acceptPending(self) :
+        self.shiftx = self.shiftx + self.shiftx_pending
+        self.shifty = self.shifty + self.shifty_pending
         
 
 # A single string containing potentially tweaked glyphs.
@@ -133,7 +151,7 @@ class Tweak(Test) :
             self.glyphs.append(newGlyph)
         else :
             self.glyphs[index].update(gid, gname)
-        
+
         
 
 # The control that handles the list of tweaked strings
@@ -493,7 +511,7 @@ class TweakList(QtGui.QWidget) :
         return self.tweaks[j][i]
         
 
-# Tthe controls at the bottom of the pane that allow adjustment of the glyph tweaks.
+# The controls at the bottom of the pane that allow adjustment of the glyph tweaks
 class TweakInfoWidget(QtGui.QFrame) :
 
     def __init__(self, app, parent = None) :
@@ -507,11 +525,10 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         self.layout.addWidget(QtGui.QLabel("Slot"), 0, 0)
         self.slotCtrl = QtGui.QComboBox(self)
-        self.slotCtrl.currentIndexChanged[unicode].connect(self.slotChanged)
-        self.slotCtrl.editTextChanged.connect(self.slotChanged)
+        self.slotCtrl.currentIndexChanged[unicode].connect(self.slotCtrlChanged)
+        self.slotCtrl.editTextChanged.connect(self.slotCtrlChanged)
         self.layout.addWidget(self.slotCtrl, 0, 1, 1, 3)
         self.revert = QtGui.QPushButton("Revert")
-        self.revert.setEnabled(False)
         self.revert.clicked.connect(self.doRevert)
         self.layout.addWidget(self.revert, 0, 4)
         
@@ -519,12 +536,12 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         self.x = QtGui.QSpinBox(self)
         self.x.setRange(-32768, 32767)
-        self.x.valueChanged[int].connect(self.changePos)
+        self.x.valueChanged[int].connect(self.posCtrlChanged)
         self.layout.addWidget(QtGui.QLabel("X"), 1, 0)
         self.layout.addWidget(self.x, 1, 1)
         self.y = QtGui.QSpinBox(self)
         self.y.setRange(-32768, 32767)
-        self.y.valueChanged[int].connect(self.changePos)
+        self.y.valueChanged[int].connect(self.posCtrlChanged)
         self.layout.addWidget(QtGui.QLabel("Y"), 1, 3)
         self.layout.addWidget(self.y, 1, 4)
         
@@ -550,9 +567,17 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         self.layout.addWidget(frame, 2, 0, 3, 5)
         
+        self.orig = None   # for reverting
+        self.revert.setEnabled(False)
+        
+        self.tweakSelected = None   # Tweak object
+        self.glyphSelected = None   # TweakGlyph
         self.slotSelected = -1
-        self.tweakSelected = None
-        self.glyphSelected = None
+        
+        # True means we want the TweakView to respond to the user's manipulation of the controls;
+        # set to False when we want to change the controls under program control:
+        self.updateMode = True
+        
         
     def setControlsForItem(self, item) :
         self.tweakSelected = self.parent().currentTweak()
@@ -569,13 +594,18 @@ class TweakInfoWidget(QtGui.QFrame) :
     
     # Show the given slot in the controls
     def selectSlot(self, slotIndex) :  # 0-based
-        self.slotCtrl.setCurrentIndex(slotIndex)
-        self.revert.setEnabled(False)
-        # Set the controls to show the current values for the first glyph
-        self.setControlsForGlyph(0)
+        if self.slotSelected != slotIndex :
+            print "TweakInfoWidget::selectSlot", slotIndex  ###
+            self.slotCtrl.setCurrentIndex(slotIndex)
+            self.slotSelected = slotIndex
+            self.glyphSelected = self.tweakSelected.glyphs[slotIndex]
+            self.revert.setEnabled(False)
+
+            # Set the controls to show the current values for the first glyph
+            self.setControlsForGlyph(slotIndex)
         
     def setControlsForGlyph(self, slotIndex) :
-        self.glyphSelected = self.tweakSelected.glyphs[slotIndex]
+        print "TweakInfoWidget::setControlsForGlyph", slotIndex  ###
         shiftx = self.glyphSelected.shiftx
         shifty = self.glyphSelected.shifty
         shiftx_pending = self.glyphSelected.shiftx_pending
@@ -584,6 +614,8 @@ class TweakInfoWidget(QtGui.QFrame) :
         status = self.glyphSelected.status
         #print "setControlsForGlyph",slotIndex,self.glyphSelected.name,gclass  ###
 
+        self.updateMode = False  # don't touch the TweakView for now
+        
         self.x.setValue(shiftx + shiftx_pending)
         self.y.setValue(shifty + shifty_pending)
         #if gclass :
@@ -596,9 +628,22 @@ class TweakInfoWidget(QtGui.QFrame) :
             self.statusOpt.setChecked(True)
         else :
             self.statusReq.setChecked(True)
+        
+        self.updateMode = True
+        
+        print "saving original values" ###
+        # Save the original values so we can revert.
+        self.orig = {'x-total': shiftx + shiftx_pending, 'y-total': shifty + shifty_pending,
+                'x-pending': shiftx_pending, 'y-pending': shifty_pending,
+                'gclass': gclass, 'status': status}
+                
+    def tweakView(self) :
+        return self.parent().view  # parent = Tweaker
     
     # The slot control was changed. Update the selection in the TweakView.
-    def slotChanged(self) :
+    def slotCtrlChanged(self) :
+        print "TweakInfoWidget::slotCtrlChanged" ###
+        # Get the index from the string that looks like "<index>:  <glyph name>"
         slotCtrlText = self.slotCtrl.currentText()
         if slotCtrlText == "" or slotCtrlText == "None" :
             slotIndex = -1
@@ -608,65 +653,49 @@ class TweakInfoWidget(QtGui.QFrame) :
                 if char == ":" or char == " " : break
                 slotIndex = slotIndex * 10 + int(char)
             slotIndex -= 1  # 0-based
-        self.parent().view.highlightSlot(slotIndex)  # parent = Tweaker
+        tweakView = self.tweakView()
+        ###print tweakView.__class__  ###
+        self.tweakView().highlightSlot(slotIndex)
 
-    def posChanged(self, text) :
-        """The glyph or AP has changed."""
-        if text == "" : return
-        gname = self.glyph.currentText()
-        self.item.setText(0, gname) # tree control item
-        if self.item.glyph is not None :
-            ap = self.aps.currentText()
-            pos = self.item.glyph.anchors.get(ap, None)
-            self.gname = gname
-            self.apname = ap
-            if pos is not None :
-                self.x.setValue(pos[0])
-                self.y.setValue(pos[1])
-                self.orig = pos
-                self.revert.setEnabled(False)
-                if self.isBase :
-                    self.apItem.setText(2, ap)
-                else :
-                    self.item.setText(1, ap)
-
-    # TODO: rework
-    def changePos(self, val) :
-        """The X/Y values in the dialog were changed directly."""
-        print "PosGlyphInfoWidget::changePos" ###
-        #print "item = " + str(self.item) ###
-        #self.item.setAnchor(self.aps.currentText(), self.x.value(), self.y.value())
-        self.revert.setEnabled(True)
-
-    # TODO: delete or rework
-    def setGlyph(self, font, gname, apname, item, apItem) :
-        #print "PosGlyphInfoWidget::setGlyph(gname = " + gname + ")" ###
-        #print "item = " + str(item) ###
-        #print "apItem = " + str(apItem) ###
-        self.font = font
-        self.item = item
-        
-        self.item.setDialog(self)
-        self.apItem = apItem    # for a stationary glyph, the item corresponding to the mobile glyph
-        if gname in font.gdls :
-            self.gname = gname
-            self.apname = apname
-            glist = sorted(filter(lambda x : apname in font.gdls[x].anchors, font.gdls.keys()))
-            aplist = sorted(font.gdls[gname].anchors.keys())
-            self.glyph.clear()
-            self.glyph.addItems(['(None)'] + glist)
-            self.glyph.setCurrentIndex(1 + glist.index(gname))
-            self.aps.clear()
-            self.aps.addItems(['(None)'] + aplist)
-            self.aps.setCurrentIndex(1 + aplist.index(apname))
+    # The X or Y control was changed.
+    def posCtrlChanged(self) :
+        print "TweakInfoWidget::posCtrlChanged" ###
+        print "slot = ",self.slotSelected  ###
+        if self.slotSelected >= 0 :
+            #self.glyphSelected = self.tweakSelected.glyphs[self.slotSelected]
+            newX = self.x.value()
+            newY = self.y.value()
+            print newX, newY  ###
+            newXpending = newX - self.glyphSelected.shiftx
+            newYpending = newY - self.glyphSelected.shifty
+            # Update the data.
+            self.glyphSelected.setShiftXpending(newXpending)
+            self.glyphSelected.setShiftYpending(newYpending)
+            
+            if self.updateMode :
+                # Inform the TweakView
+                self.tweakView().updateDisplay(self.tweakSelected, self.slotSelected)
+                self.tweakView().highlightSlot(self.slotSelected)
+                self.revert.setEnabled(True)
+            # otherwise we are just getting these controls in sync
+            
+    def incrementX(self, dx) :
+        x = self.x.value()
+        x += dx
+        self.x.setValue(x)
+            
+    def incrementY(self, dy) :
+        y = self.y.value()
+        y += dy
+        self.y.setValue(y)
 
     def doRevert(self) :
-        #self.x.setValue(self.orig[0])
-        #self.y.setValue(self.orig[1])
+        self.x.setValue(self.orig['x-total'])
+        self.y.setValue(self.orig['y-total'])
+        self.glyphSelected.setShiftXpending(self.orig['x-pending'])
+        self.glyphSelected.setShiftYpending(self.orig['y-pending'])
+        # Do we also revert the status and glyph class?
         self.revert.setEnabled(False)
-            
-    def clearItem(self) :
-        self.item = None
     
 #    def clear(self) : # currently not used
 #        self.glyph.clear()
@@ -718,6 +747,13 @@ class Tweaker(QtGui.QWidget) :
     # The slot was changed in the TweakView. Update yourself.
     def slotChanged(self, index) :
         self.infoWidget.selectSlot(index)
+        
+    def incrementX(self, dx) :
+        self.infoWidget.incrementX(dx)
+        
+    def incrementY(self, dy) :
+        self.infoWidget.incrementY(dy)
+        
         
 
 #------ TweakView classes ------
@@ -775,6 +811,9 @@ class TweakableRunView(RunView) :
         res = res.united(r)
         return res
         
+    def tweaker(self) :
+        return self.parentView.tweaker
+        
     def updateData(self, run) :
         currentTweak = self.parentView.tweaker.currentTweak()
         for i, slot in enumerate(run) :
@@ -785,16 +824,56 @@ class TweakableRunView(RunView) :
     def glyphClicked(self, gitem, index) :
         if index == self.currselection :
             # Reclicking the same glyph has no effect
-            pass
+            #pass
+            print "reclicked slot",index ###
         else :
             super(TweakableRunView, self).glyphClicked(gitem, index)
             # Also inform the Tweaker so it can update the controls
-            self.parentView.tweaker.slotChanged(index)
+            self.tweaker().slotChanged(index)
             
     def keyPressEvent(self, event) :
-        super(TweakableRunView, self).keyPressEvent(event)
-        self.parentView.tweaker.slotChanged(self.currselection)
         
+        shiftPressed = event.modifiers() & QtCore.Qt.ShiftModifier
+        
+        # The super method handles right- and left-arrows.
+        # Now handle up- and down-arrows.
+        if event.key() == QtCore.Qt.Key_Up :
+            if shiftPressed :
+                print "shift-up pressed" ###
+                self.tweaker().incrementY(20)
+            else :
+                print "up key pressed" ###
+        elif event.key() == QtCore.Qt.Key_Down :
+            if shiftPressed :
+                print "shift-down pressed" ####
+                self.tweaker().incrementY(-20)
+            else :
+                print "down key pressed" ###
+        elif event.key() == QtCore.Qt.Key_Right :
+            if shiftPressed :
+                print "shift-right pressed", self.currselection ####
+                self.tweaker().incrementX(20)
+            else :
+                print "right key pressed" ###
+                newSel = self.currselection + 1
+                if newSel >= len(self._pixmaps) : newSel = len(self._pixmaps) - 1
+                if newSel != self.currselection :
+                    self.changeSelection(newSel)
+                    self.tweaker().slotChanged(self.currselection)
+        elif event.key() == QtCore.Qt.Key_Left :
+            if shiftPressed :
+                print "shift-left pressed" ####
+                self.tweaker().incrementX(-20)
+            else :
+                print "left key pressed" ###
+                newSel = self.currselection - 1
+                if newSel < 0 : newSel = 0
+                if newSel != self.currselection :
+                    self.changeSelection(newSel)
+                    self.tweaker().slotChanged(self.currselection)
+                
+            
+                  
 # The display of the moveable glyphs in the bottom right-hand pane
 class TweakView(QtGui.QWidget) :
 
@@ -811,7 +890,7 @@ class TweakView(QtGui.QWidget) :
     def changeGlyph(self, data, model) :
         self.glyphSelected.emit(data, model)
         if self.currsel and self.currsel != model :
-            self.currsel.clear_selected()
+            self.currsel.clearSelected()
         self.currsel = model
 
     def __init__(self, fontname, size, app = None, parent = None) :

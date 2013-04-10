@@ -165,60 +165,55 @@ class RunView(QtCore.QObject, ModelSuper) :
 
 
     def glyphClicked(self, gitem, index) :
+        if index != self.currselection :
+            self.changeSelection(index)
+
+    def keyPressEvent(self, event) :
+        if self.currselection < 0 : return
+
+        newSel = -1
+        
+        # Figure out the new selection.
+        if event.key() == QtCore.Qt.Key_Right :
+            newSel = self.currselection + 1
+            if newSel >= len(self._pixmaps) :
+                newSel = len(self._pixmaps) - 1
+        elif event.key() == QtCore.Qt.Key_Left :
+            newSel = self.currselection - 1
+            if newSel < 0 :
+                newSel = 0
+        
+        if newSel >= 0 and newSel != self.currselection :
+            self.changeSelection(newSel)
+        
+    def changeSelection(self, newSel) :
+        print "RunView::changeSelection",newSel ###
         s = self.tview.extraSelections()
+        
         if self.currselection >= 0 :
-            if self._pixmaps[self.currselection] : self._pixmaps[self.currselection].select(False)
+            if self._pixmaps[self.currselection] :
+                self._pixmaps[self.currselection].select(False)
             s.pop()
-        if index >= 0 and self.currselection != index :
-            self.currselection = index
-            if self._pixmaps[index] : self._pixmaps[index].select(True)
+        if newSel >= 0 and self.currselection != newSel :
+            self.currselection = newSel
+            if self._pixmaps[newSel] : self._pixmaps[newSel].select(True)
             # Highlight the name of the selected glyph.
             tselect = QtGui.QTextEdit.ExtraSelection()
             tselect.format = self._fSelect
             tselect.cursor = QtGui.QTextCursor(self.tview.document())
-            tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[index])
+            tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[newSel])
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter,
-                    QtGui.QTextCursor.KeepAnchor, self._gindices[index + 1] - 1 - self._gindices[index])
+                    QtGui.QTextCursor.KeepAnchor, self._gindices[newSel + 1] - 1 - self._gindices[newSel])
             s.append(tselect)
             self.slotSelected.emit(self.run[self.currselection], self)
             self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self)
         else :
             self.currselection = -1
-        self.tview.setExtraSelections(s)
-
-    def keyPressEvent(self, event) :
-        # TODO: factor this method along with glyphClicked
-        if self.currselection < 0 : return
-        s = self.tview.extraSelections()
-        if self._pixmaps[self.currselection] : self._pixmaps[self.currselection].select(False)
-        s.pop()
-        
-        # Figure out the new selection.
-        if event.key() == QtCore.Qt.Key_Right :
-            self.currselection += 1
-            if self.currselection >= len(self._pixmaps) :
-                self.currselection = len(self._pixmaps) - 1
-        elif event.key() == QtCore.Qt.Key_Left :
-            self.currselection -= 1
-            if self.currselection < 0 :
-                self.currselection = 0
-        if self._pixmaps[self.currselection] :
-            self._pixmaps[self.currselection].select(True)
             
-        # Highlight the name of the selected glyph.
-        tselect = QtGui.QTextEdit.ExtraSelection()
-        tselect.format = self._fSelect
-        tselect.cursor = QtGui.QTextCursor(self.tview.document())
-        tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[self.currselection])
-        tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, QtGui.QTextCursor.KeepAnchor,
-                self._gindices[self.currselection + 1] - 1 - self._gindices[self.currselection])
-        s.append(tselect)
         self.tview.setExtraSelections(s)
         
-        self.slotSelected.emit(self.run[self.currselection], self)
-        self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self)
 
-    def clear_selected(self) :
+    def clearSelected(self) :
         if self.currselection >= 0 :
             self._pixmaps[self.currselection].select(False)
             s = self.tview.extraSelections()
