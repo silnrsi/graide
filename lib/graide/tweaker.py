@@ -69,6 +69,7 @@ class TweakGlyph() :
         self.status = status
         
     def setGlyphClass(self, classname) :
+        print "TweakGlyph::setGlyphClass",self.name," - ",classname
         self.gclass = classname
     
     # New GDL rules have been generated, so pending adjustments are now accepted.
@@ -488,12 +489,14 @@ class TweakList(QtGui.QWidget) :
             l.setCurrentRow(i + 1)
 
     def loadTweak(self, item) :
+        print "TweakList::loadTweak" ###
         self.app.setRun(self.currentTweak())  # do we want this?
         self.showTweak(item)
         # do this after the glyphs have been displayed:
         self.parent().tweakChanged(item)
 
     def showTweak(self, item) :
+        print "TweakList::showTweak" ###
         self.view.updateDisplay(self.currentTweak(), 0)
 
     def findClass(self, t) :
@@ -562,8 +565,8 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.gclassCtrl.setEditable(True)
         innerGrid.addWidget(QtGui.QLabel("Class"), 0, 3, 1, 2)
         innerGrid.addWidget(self.gclassCtrl, 1, 3, 1, 2)
-        ###self.glyph.currentIndexChanged[unicode].connect(self.glyphChanged)
-        ###self.glyph.editTextChanged.connect(self.glyphChanged)
+        self.gclassCtrl.currentIndexChanged[unicode].connect(self.classCtrlChanged)
+        self.gclassCtrl.editTextChanged.connect(self.classCtrlChanged)
         
         self.layout.addWidget(frame, 2, 0, 3, 5)
         
@@ -578,19 +581,30 @@ class TweakInfoWidget(QtGui.QFrame) :
         # set to False when we want to change the controls under program control:
         self.updateMode = True
         
+        # Set to False when we initialize the controls for a Tweak, so we don't
+        # want to update the data with what is in them.
+        self.dataMode = True
         
-    def setControlsForItem(self, item) :
+        
+    def setControlsForTweakItem(self, item) :
+        print "TweakInfoWidget::setControlsForTweakItem",item
         self.tweakSelected = self.parent().currentTweak()
         glyphs = self.tweakSelected.glyphs
         # Populate the slot-selector control
+        
+        self.dataMode = False
         self.slotCtrl.clear()
+        self.gclassCtrl.clear()
         i = 1
         for glyph in glyphs :
             label = str(i) + ":  " + glyph.name
             self.slotCtrl.addItem(label)
             i = i + 1
         
+        self.slotSelected = -1 # the slot really is changing!
+        self.glyphSelected = None
         self.selectSlot(0)
+        self.dataMode = True
     
     # Show the given slot in the controls
     def selectSlot(self, slotIndex) :  # 0-based
@@ -606,11 +620,13 @@ class TweakInfoWidget(QtGui.QFrame) :
         
     def setControlsForGlyph(self, slotIndex) :
         print "TweakInfoWidget::setControlsForGlyph", slotIndex  ###
+        gid = self.glyphSelected.gid
         shiftx = self.glyphSelected.shiftx
         shifty = self.glyphSelected.shifty
         shiftx_pending = self.glyphSelected.shiftx_pending
         shifty_pending = self.glyphSelected.shifty_pending
         gclass = self.glyphSelected.gclass
+        print "gclass=",gclass ###
         status = self.glyphSelected.status
         #print "setControlsForGlyph",slotIndex,self.glyphSelected.name,gclass  ###
 
@@ -618,10 +634,24 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         self.x.setValue(shiftx + shiftx_pending)
         self.y.setValue(shifty + shifty_pending)
-        #if gclass :
-        #    self.gclassCtrl.setItemText(gclass)
-        #else :
-        #    self.gclassCtrl.setItemText("None")
+        
+        # Populate the class control with the classes this glyph is a member of.
+        glyph = self.parent().font[gid]
+        self.glyphClasses = glyph.classes
+        self.gclassCtrl.clear()
+        self.gclassCtrl.addItem("None")
+        gclassIndex = 0 # None
+        i = 1
+        for gcLp in self.glyphClasses :
+            self.gclassCtrl.addItem(gcLp)
+            if gcLp == gclass :
+                print "matched",gcLp,"index =",i ###
+                gclassIndex = i
+            else : print "added",gcLp ###
+            i += 1
+                
+        self.gclassCtrl.setCurrentIndex(gclassIndex)
+        
         if status == "ignore" :
             self.statusIgnore.setChecked(True)
         elif status == "optional" :
@@ -631,7 +661,6 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         self.updateMode = True
         
-        print "saving original values" ###
         # Save the original values so we can revert.
         self.orig = {'x-total': shiftx + shiftx_pending, 'y-total': shifty + shifty_pending,
                 'x-pending': shiftx_pending, 'y-pending': shifty_pending,
@@ -643,6 +672,10 @@ class TweakInfoWidget(QtGui.QFrame) :
     # The slot control was changed. Update the selection in the TweakView.
     def slotCtrlChanged(self) :
         print "TweakInfoWidget::slotCtrlChanged" ###
+        if not self.dataMode :
+            print "---return" ###
+            return
+            
         # Get the index from the string that looks like "<index>:  <glyph name>"
         slotCtrlText = self.slotCtrl.currentText()
         if slotCtrlText == "" or slotCtrlText == "None" :
@@ -660,12 +693,14 @@ class TweakInfoWidget(QtGui.QFrame) :
     # The X or Y control was changed.
     def posCtrlChanged(self) :
         print "TweakInfoWidget::posCtrlChanged" ###
+        if not self.dataMode :
+            print "---return" ###
+            return
+
         print "slot = ",self.slotSelected  ###
         if self.slotSelected >= 0 :
-            #self.glyphSelected = self.tweakSelected.glyphs[self.slotSelected]
             newX = self.x.value()
             newY = self.y.value()
-            print newX, newY  ###
             newXpending = newX - self.glyphSelected.shiftx
             newYpending = newY - self.glyphSelected.shifty
             # Update the data.
@@ -678,6 +713,28 @@ class TweakInfoWidget(QtGui.QFrame) :
                 self.tweakView().highlightSlot(self.slotSelected)
                 self.revert.setEnabled(True)
             # otherwise we are just getting these controls in sync
+            
+    # The class control was changed.
+    def classCtrlChanged(self) :
+        print "TweakInfoWidget::classCtrlChanged" ###
+        if not self.dataMode :
+            print "---return" ###
+            return
+
+        if self.slotSelected >= 0 :
+            newClass = self.gclassCtrl.currentText()
+            print "new class =",newClass ###
+            if newClass == "None" :
+                self.glyphSelected.setGlyphClass("")
+            else :
+                self.glyphSelected.setGlyphClass(newClass)
+                
+            #if self.updateMode :
+            #    # Inform the TweakView if necessary
+            #    pass
+                
+    def statusButtonsChanged(self) :
+        print "TweakInfoWidget::statusButtonsChanged" ###
             
     def incrementX(self, dx) :
         x = self.x.value()
@@ -734,7 +791,7 @@ class Tweaker(QtGui.QWidget) :
         print "Tweaker::updatePositions()" ###
         
     def tweakChanged(self, item) :
-        self.infoWidget.setControlsForItem(item)
+        self.infoWidget.setControlsForTweakItem(item)
         self.view.highlightSlot(0)
         
     def writeXML(self, xmlfile) :
@@ -924,6 +981,7 @@ class TweakView(QtGui.QWidget) :
         self.tweaker = tweaker
         
     def updateDisplay(self, tweak, slotIndex = 0) :
+        print "TweakView::updateDisplay" ###
         jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, 10, #self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
         
