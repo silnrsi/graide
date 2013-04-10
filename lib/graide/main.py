@@ -325,7 +325,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.addWidget(self.runAdd)
         
         # test output
-        self.run = Run()
+        self.run = Run(self.runRtl.isChecked())
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
@@ -667,7 +667,7 @@ Copyright 2012 SIL International and M. Hosken""")
         else :
             print "No Graphite result" ###
         
-        self.run = Run()
+        self.run = Run(self.runRtl.isChecked())
         self.run.addslots(self.json[-1]['output'])
         self.runView.loadrun(self.run, self.font, resize = False)
         if not self.runloaded :
@@ -677,7 +677,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 self.runloaded = True
             except :
                 print "Selection connection failed"
-        self.tab_passes.loadResults(self.font, self.json, self.gdx)
+        self.tab_passes.loadResults(self.font, self.json, self.gdx, self.runRtl.isChecked())
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
 

@@ -834,38 +834,36 @@ class TweakableRunView(RunView) :
     def keyPressEvent(self, event) :
         
         shiftPressed = event.modifiers() & QtCore.Qt.ShiftModifier
-        
-        # The super method handles right- and left-arrows.
-        # Now handle up- and down-arrows.
-        if event.key() == QtCore.Qt.Key_Up :
-            if shiftPressed :
+        if shiftPressed :
+            # Tweak glyph positions.
+            if event.key() == QtCore.Qt.Key_Up :
                 print "shift-up pressed" ###
                 self.tweaker().incrementY(20)
-            else :
-                print "up key pressed" ###
-        elif event.key() == QtCore.Qt.Key_Down :
-            if shiftPressed :
+            elif event.key() == QtCore.Qt.Key_Down :
                 print "shift-down pressed" ####
                 self.tweaker().incrementY(-20)
-            else :
-                print "down key pressed" ###
-        elif event.key() == QtCore.Qt.Key_Right :
-            if shiftPressed :
-                print "shift-right pressed", self.currselection ####
+            elif event.key() == QtCore.Qt.Key_Right :
+                print "shift-right pressed" ###
                 self.tweaker().incrementX(20)
+            elif event.key() == QtCore.Qt.Key_Left :
+                print "shift-left pressed" ####
+                self.tweaker().incrementX(-20)
+                
+        
+        elif event.key() == QtCore.Qt.Key_Left or event.key() == QtCore.Qt.Key_Right :
+            # Move slot selection.
+            if self.run.rtl :
+                forward = True if event.key() == QtCore.Qt.Key_Left else False
             else :
-                print "right key pressed" ###
+                forward = True if event.key() == QtCore.Qt.Key_Right else False
+                
+            if forward :
                 newSel = self.currselection + 1
                 if newSel >= len(self._pixmaps) : newSel = len(self._pixmaps) - 1
                 if newSel != self.currselection :
                     self.changeSelection(newSel)
-                    self.tweaker().slotChanged(self.currselection)
-        elif event.key() == QtCore.Qt.Key_Left :
-            if shiftPressed :
-                print "shift-left pressed" ####
-                self.tweaker().incrementX(-20)
+                    self.tweaker().slotChanged(self.currselection)                
             else :
-                print "left key pressed" ###
                 newSel = self.currselection - 1
                 if newSel < 0 : newSel = 0
                 if newSel != self.currselection :
@@ -935,7 +933,7 @@ class TweakView(QtGui.QWidget) :
             print "No Graphite result" ###
             self.json = None
 
-        self.run = Run()
+        self.run = Run(tweak.rtl)
         if self.json :
             self.run.addslots(self.json[-1]['output'])
         self.runView.loadrun(self.run, self.font, resize = False)

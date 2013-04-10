@@ -169,22 +169,29 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.changeSelection(index)
 
     def keyPressEvent(self, event) :
-        if self.currselection < 0 : return
+        if self.currselection < 0 : return  # no selection to move
 
         newSel = -1
         
-        # Figure out the new selection.
-        if event.key() == QtCore.Qt.Key_Right :
-            newSel = self.currselection + 1
-            if newSel >= len(self._pixmaps) :
-                newSel = len(self._pixmaps) - 1
-        elif event.key() == QtCore.Qt.Key_Left :
-            newSel = self.currselection - 1
-            if newSel < 0 :
-                newSel = 0
+        if event.key() == QtCore.Qt.Key_Left or event.key() == QtCore.Qt.Key_Right :
+            # Figure out the new selection.
+            if self.run.rtl :
+                forward = True if event.key() == QtCore.Qt.Key_Left else False
+            else :
+                forward = True if event.key() == QtCore.Qt.Key_Right else False
+            
+            if forward :
+                newSel = self.currselection + 1
+                if newSel >= len(self._pixmaps) :
+                    newSel = len(self._pixmaps) - 1
+            else :
+                newSel = self.currselection - 1
+                if newSel < 0 :
+                    newSel = 0
         
-        if newSel >= 0 and newSel != self.currselection :
-            self.changeSelection(newSel)
+            if newSel >= 0 and newSel != self.currselection :
+                self.changeSelection(newSel)
+                
         
     def changeSelection(self, newSel) :
         print "RunView::changeSelection",newSel ###
@@ -248,7 +255,7 @@ if __name__ == "__main__" :
     font.loadFont(os.path.join(tpath, "fonts/Padauk/Padauk.ttf"))
     font.makebitmaps(40)
     rinfo = jinfo['passes'][0]['slots']
-    run = Run()
+    run = Run(False)
     run.addslots(rinfo)
     view = RunView(run, font).gview
     print "Padauk RunView?" ###

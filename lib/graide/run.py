@@ -24,8 +24,8 @@ from graide.slot import Slot
 
 class Run(list) :
 
-    def __init__(self) :
-        pass
+    def __init__(self, rtl = False) :
+        self.rtl = rtl
 
     def addslots(self, runinfo) :
         for slotinfo in runinfo :
@@ -34,7 +34,7 @@ class Run(list) :
             slot.index = len(self) - 1
 
     def copy(self) :
-        res = Run()
+        res = Run(self.rtl)
         for slot in self :
             res.append(slot.copy())
         return res

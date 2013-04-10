@@ -107,7 +107,7 @@ class PassesView(QtGui.QTableWidget) :
             self.cellDoubleClicked.connect(self.doCellDoubleClicked)
             self.connected = True
 
-    def loadResults(self, font, jsonall, gdx = None) :
+    def loadResults(self, font, jsonall, gdx = None, rtl = False) :
         self.rules = []
         self.selectRow(-1)
         self.currsel = None
@@ -154,7 +154,7 @@ class PassesView(QtGui.QTableWidget) :
         for j in range(num) :
             # Process the output of pass J which = input to pass J+1, rules run by pass J+1.
             # Note that rules[J] are the rules run by pass J+1!
-            run = Run()
+            run = Run(rtl)
             highlight = False
             if j < num - 1 :
                 run.addslots(json['passes'][j]['slots'])  # output of pass J
@@ -194,7 +194,7 @@ class PassesView(QtGui.QTableWidget) :
                 json['passes'] = []
             num += 1
             for j in range(num) :
-                run = Run()
+                run = Run(rtl)
                 highlight = False
                 if j < len(json['passes']) :
                     passid = int(json['passes'][j]['id']) - 1
