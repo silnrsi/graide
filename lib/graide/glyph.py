@@ -105,7 +105,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         return self.properties[key]
 
     def setAnchor(self, name, x, y, t = None) :
-        send = super(Glyph, self).setAnchor(name, x, y, t)
+        send = super(GraideGlyph, self).setAnchor(name, x, y, t)
         if send :
             self.anchorChanged.emit(name, x, y)
         return send
