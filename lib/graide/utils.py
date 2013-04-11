@@ -20,6 +20,7 @@
 import os, subprocess, re, sys
 from tempfile import mktemp
 from shutil import copyfile
+from xml.etree import cElementTree as XmlTree
 
 mainapp = None
 pendingErrors = []
@@ -90,20 +91,26 @@ def findgrcompiler() :
                 break
     return grcompiler
 
+# Return 0 if successful.
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')
+        
         if config.has_option('main', 'ap') :    # AP XML file
+            # Generate the AP GDL file.
             apFilename = config.get('main', 'ap')
             font.saveAP(apFilename, gdlfile)
             if app : app.updateFileEdit(apFilename)
+                
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
+            # Call the make command to perform makegdl.
             makecmd = expandMakeCmd(config, cmd)
             print makecmd
             subprocess.call(makecmd, shell = True)
         else :
+            # Use the default built-in process.
             font.createClasses()
             font.pointClasses()
             font.ligClasses()
@@ -117,6 +124,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             if app : app.updateFileEdit(gdlfile)
     else :
         gdlfile = configval(config, 'build', 'gdlfile')
+        
     if not gdlfile or not os.path.exists(gdlfile) :
         f = file('gdlerr.txt' ,'w')
         if not gdlfile :
@@ -125,6 +133,12 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
         f.close()
         return True
+        
+    tweakWarning = generateTweakerGDL(config, app)
+    if tweakWarning != "" :
+        app.tab_errors.addWarning(tweakWarning)
+        app.tab_errors.setBringToFront(True)
+        
     tempname = mktemp()
     if config.has_option('build', 'usettftable') :
         subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempname))
@@ -141,6 +155,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)
+    
     return res
 
 replacements = {
@@ -195,3 +210,65 @@ def as_entities(txt) :
     else :
         return ""
 
+def generateTweakerGDL(config, app) :
+    if not config.has_option('build', 'tweakxmlfile') :
+        return ""
+        
+    tweakxmlfile = config.get('build', 'tweakxmlfile')
+    if not config.has_option('build', 'tweakgdlfile') or config.get('build', 'tweakgdlfile') == "":
+        return "Warning: no GDL tweak file specified; tweaks ignored."
+
+    tweakgdlfile = config.get('build', 'tweakgdlfile')
+    print "tweakgdlfile =",tweakgdlfile ###
+    gdlfile = config.get('build', 'gdlfile')
+    fontname = config.get('main', 'font')
+    
+    tweakData = app.tab_tweak.parseFile(tweakxmlfile)
+    
+    passindex = configval(config, 'build', 'tweakpass')
+    f = file(tweakgdlfile, 'w')
+    f.write("/*\n    Tweaker GDL file for font " + fontname + " to include in " + gdlfile + "\n*/\n\n")
+
+    if passindex :
+        f.write("pass(" + passindex + ")\n\n")
+    
+    for (groupLabel, tweaks) in tweakData.items() :
+        f.write("\n//---  " + groupLabel + "  ---\n\n")
+        
+        for tweak in tweaks :
+            f.write("// " + tweak.name + "\n")
+            i = 0
+            for twglyph in tweak.glyphs :
+                if twglyph.status != "ignore" :
+                    if i > 0 :
+                        if len(tweak.glyphs) > 2 :
+                            f.write("\n    ")
+                        else :
+                            f.write("  ")
+                    if twglyph.gclass and twglyph.gclass != "" :
+                        f.write(twglyph.gclass)
+                    else:
+                        f.write(twglyph.name);
+                    if twglyph.status == "optional" :
+                        f.write("?")
+                    shiftx = twglyph.shiftx + twglyph.shiftx_pending
+                    shifty = twglyph.shifty + twglyph.shifty_pending
+                    if shiftx != 0 or shifty != 0 :
+                        f.write(" { ")
+                        if shiftx != 0 : f.write("shift.x = " + str(shiftx) + "m; ")
+                        if shifty != 0 : f.write("shift.y = " + str(shifty) + "m; ")
+                        f.write("}")
+                i += 1
+            f.write(" ;\n\n")
+    
+    if passindex :
+        f.write("\nendpass  // " + passindex + "\n\n")
+
+    f.close()
+    
+    print "Tweak GDL generated - accepting pending tweaks."
+    
+    # Accept all pending shifts, since they are now part of the Graphite rules.
+    app.tab_tweak.acceptPending(tweakxmlfile)
+    
+    return ""  # success

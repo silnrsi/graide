@@ -28,20 +28,17 @@ class Errors(QtGui.QListWidget) :
     def __init__(self, parent = None) :
         super(Errors, self).__init__(parent)
         self.itemDoubleClicked.connect(self.selectItem)
+        self.bringToFront = False
+        
+    def clear(self) :
+        super(Errors, self).clear()
+        self.bringToFront = False
 
     def addItem(self, txt, srcfile = None, line = 0) :
         w = QtGui.QListWidgetItem(txt, self)
         w.srcfile = srcfile
         w.line = line
         return w
-
-    def addError(self, txt, srcfile = None, line = 0) :
-        w = self.addItem(txt, srcfile, line)
-        w.setBackground(Layout.errorColour)
-
-    def addWarning(self, txt, srcfile = None, line = 0) :
-        w = self.addItem(txt, srcfile, line)
-        w.setBackground(Layout.warnColour)
 
     def addGdlErrors(self, fname) :
         if not os.path.exists(fname) : return
@@ -66,7 +63,18 @@ class Errors(QtGui.QListWidget) :
                 self.addItem(l.strip())
         f.close()
 
+    def addError(self, txt, srcfile = None, line = 0) :
+        w = self.addItem(txt, srcfile, line)
+        w.setBackground(Layout.errorColour)
+        self.setBringToFront(True)
+
+    def addWarning(self, txt, srcfile = None, line = 0) :
+        w = self.addItem(txt, srcfile, line)
+        w.setBackground(Layout.warnColour)
+
     def selectItem(self, item) :
         if item.srcfile and len(item.srcfile) :
             self.errorSelected.emit(item.srcfile, item.line)
-
+            
+    def setBringToFront(self, f) :
+        self.bringToFront = f

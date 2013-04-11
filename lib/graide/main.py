@@ -622,17 +622,27 @@ Copyright 2012 SIL International and M. Hosken""")
 
     def buildClicked(self) :
         self.tabEdit.writeIfModified()
-        self.tab_errors.clear()
+        
+        if self.tweaksfile :
+            self.tab_tweak.writeXML(self.tweaksfile)
+            
+        self.tab_errors.clear()        
         errfile = TemporaryFile(mode="w+")
+        
         res = buildGraphite(self.config, self, self.font, self.fontfile, errfile)
+        
         if res :
+            # Compliation failure
             errfile.seek(0)
             for l in errfile.readlines() : self.tab_errors.addItem(l.strip())
         self.tab_errors.addGdlErrors('gdlerr.txt')
-        if res :
+        
+        if res or self.tab_errors.bringToFront :
             self.tab_results.setCurrentWidget(self.tab_errors)
+
         self.loadAP(self.apname)
         self.feats = make_FeaturesMap(self.fontfile)
+
         return True
 
     # Run Graphite over a test string.

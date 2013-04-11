@@ -19,7 +19,7 @@
 
 
 from PySide import QtCore, QtGui
-from xml.etree import cElementTree as et
+from xml.etree import cElementTree as XmlTree
 from graide.font import GraideFont
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
@@ -71,10 +71,12 @@ class TweakGlyph() :
     def setGlyphClass(self, classname) :
         self.gclass = classname
     
-    # New GDL rules have been generated, so pending adjustments are now accepted.
+    # New GDL rules have been generated, so record pending adjustments as accepted.
     def acceptPending(self) :
         self.shiftx = self.shiftx + self.shiftx_pending
         self.shifty = self.shifty + self.shifty_pending
+        self.shiftx_pending = 0
+        self.shifty_pending = 0
         
 
 # A single string containing potentially tweaked glyphs.
@@ -94,11 +96,11 @@ class Tweak(Test) :
     # Add this tweak to the XML output tree.
     def addXML(self, parent) :
         try :
-            e = et.SubElement(parent, 'tweak')
+            e = XmlTree.SubElement(parent, 'tweak')
             if self.comment :
-                c = et.SubElement(e, 'comment')
+                c = XmlTree.SubElement(e, 'comment')
                 c.text = self.comment
-            t = et.SubElement(e, 'string')
+            t = XmlTree.SubElement(e, 'string')
             if self.text :
                 t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
                     lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
@@ -110,9 +112,9 @@ class Tweak(Test) :
             if self.rtl : e.set('rtl', 'True')
             if self.width != 100 : e.set('expand', str(self.width))
                 
-            gl = et.SubElement(e, 'glyphs')
+            gl = XmlTree.SubElement(e, 'glyphs')
             for twglyph in self.glyphs  :
-                gf = et.SubElement(gl, 'glyph')
+                gf = XmlTree.SubElement(gl, 'glyph')
                 gf.set('gid', str(twglyph.gid))
                 gf.set('name', twglyph.name)
                 if twglyph.gclass and twglyph.gclass != "" :
@@ -152,6 +154,11 @@ class Tweak(Test) :
             self.glyphs.append(newGlyph)
         else :
             self.glyphs[index].update(gid, gname)
+            
+    # New GDL rules have been generated, so pending adjustments are now accepted.
+    def acceptPending(self) :
+        for g in self.glyphs :
+            g.acceptPending()
 
         
 
@@ -163,7 +170,7 @@ class TweakList(QtGui.QWidget) :
 
         self.noclick = False
         self.app = app
-        self.tweaks = []
+        self.tweakGroups = []
         self.fsets = {"\n" : None}
         self.comments = []
         self.fcount = 0
@@ -254,20 +261,32 @@ class TweakList(QtGui.QWidget) :
         self.addGroup('main')  # initial empty group
 
     def loadTweaks(self, fname):
-        self.tweaks = []
+        self.tweakGroups = []
         self.combo.clear()
         for i in range(self.list.count() - 1, -1, -1) :
             self.list.removeWidget(self.list.widget(i))
         if not fname or not os.path.exists(fname) : 
             self.initTweaks()
             return
+            
+        tweakStuff = self.parseTweaks(fname)
+        for (groupLabel, tweaks) in tweakStuff.items() :
+            listwidget = self.addGroup(groupLabel)
+            for tweak in tweaks :
+                self.appendTweak(tweak, listwidget)
+
+
+    def parseTweaks(self, fname) :
         try :
-            e = et.parse(fname)
+            e = XmlTree.parse(fname)
         except Exception as err:
             reportError("TweaksFile %s: %s" % (fname, str(err)))
             return
+
+        result = {}
+            
         classes = {}
-        langs = {}
+        langs = {} 
         self.header = e.find('.//head') 
         if self.header is None : self.header = e.find('.//header')
         for s in e.iterfind('.//style') :
@@ -286,8 +305,11 @@ class TweakList(QtGui.QWidget) :
             if m :
                 i = int(m.group(1))
                 if i > self.fcount : self.fcount = i
+                    
         for g in e.iterfind('tweakgroup') :
-            listwidget = self.addGroup(g.get('label'))
+            groupLabel = g.get('label')
+            groupList = []
+
             tmp = g.find('comment')
             self.comments.append(tmp.text if tmp else '')
             for t in g.iterfind('tweak') :
@@ -331,9 +353,13 @@ class TweakList(QtGui.QWidget) :
                         twglyph = TweakGlyph(gid, gname, gclass, req, shiftx, shifty, shiftx_pending, shifty_pending)
                         twglyphs.append(twglyph)
                 tweak.setGlyphs(twglyphs)
-                 
-                self.appendTweak(tweak, listwidget)
-
+                
+                groupList.append(tweak)
+            result[groupLabel] = groupList
+            
+        return result
+            
+            
     def addGroup(self, name, index = None, comment = "") :
         listwidget = QtGui.QListWidget()
         #listwidget.itemDoubleClicked.connect(self.runTest)
@@ -342,55 +368,55 @@ class TweakList(QtGui.QWidget) :
         if index is None :
             self.list.addWidget(listwidget)
             self.combo.addItem(name)
-            self.tweaks.append(res)
+            self.tweakGroups.append(res)
             self.comments.append(comment)
         else :
             self.list.insertWidget(index, listwidget)
             self.combo.insertItem(index, name)
-            self.tweaks.insert(index, res)
+            self.tweakGroups.insert(index, res)
             self.comments.insert(index, comment)
         return listwidget
 
-    def appendTweak(self, t, listwidget = None) :
+    def appendTweak(self, tweak, listwidget = None) :
         if not listwidget : listwidget = self.list.currentWidget()
-        self.tweaks[self.list.indexOf(listwidget)].append(t)
-        w = QtGui.QListWidgetItem(t.name or "",listwidget)
-        if t.comment :
+        self.tweakGroups[self.list.indexOf(listwidget)].append(tweak)
+        w = QtGui.QListWidgetItem(tweak.name or "",listwidget)
+        if tweak.comment :
             w.setToolTip(t.comment)
-        w.setBackground(QtGui.QBrush(t.background))
+        w.setBackground(QtGui.QBrush(tweak.background))
 
-    def editTweak(self, index) :
-        i = self.list.currentIndex()
-        t = self.tweaks[i][index]
+    def editTweak(self, tIndex) :
+        gIndex = self.list.currentIndex()
+        t = self.tweakGroups[gIndex][tIndex]
         bgndSave = t.background
         if t.editDialog(self.app, True) :
-            listwidget = self.list.widget(i)
-            listwidget.item(index).setText(t.name)
-            listwidget.item(index).setToolTip(t.comment)
-            listwidget.item(index).setBackground(QtGui.QBrush(t.background))
+            listwidget = self.list.widget(gIndex)
+            listwidget.item(tIndex).setText(t.name)
+            listwidget.item(tIndex).setToolTip(t.comment)
+            listwidget.item(tIndex).setBackground(QtGui.QBrush(t.background))
             return True
         else :
             # Undo any change to background.
             t.background = bgndSave
 
     def writeXML(self, fname) :
-        e = et.Element('tweak-ftml', {'version' : '1.0'})
+        e = XmlTree.Element('tweak-ftml', {'version' : '1.0'})
         if self.header is not None :
             h = self.header
             if h.tag == 'header' : h.tag = 'head'
             e.append(h)
         else :
-            h = et.SubElement(e, 'head')
+            h = XmlTree.SubElement(e, 'head')
         fs = h.find('fontsrc')
         if fs is None:
             fs = h.makeelement('fontsrc', {})
             ETinsert(h, fs)
         fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
         used = set()
-        for i in range(len(self.tweaks)) :
-            g = et.SubElement(e, 'tweakgroup')
+        for i in range(len(self.tweakGroups)) :
+            g = XmlTree.SubElement(e, 'tweakgroup')
             g.set('label', self.combo.itemText(i))
-            for t in self.tweaks[i] :
+            for t in self.tweakGroups[i] :
                 te = t.addXML(g)
                 c = self.findStyleClass(t)
                 if c :
@@ -413,7 +439,7 @@ class TweakList(QtGui.QWidget) :
             for v in sorted(invfsets.keys()) :
                 k = invfsets[v]
                 if not v : continue
-                st = et.SubElement(s, 'style')
+                st = XmlTree.SubElement(s, 'style')
                 st.set('name', v)
                 (k, sep, l) = k.rpartition("\n")
                 if k : st.set('feats', k)
@@ -424,7 +450,7 @@ class TweakList(QtGui.QWidget) :
         sio = StringIO()
         sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
         sio.write('<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
-        et.ElementTree(ETcanon(e)).write(sio, encoding="utf-8")
+        XmlTree.ElementTree(ETcanon(e)).write(sio, encoding="utf-8")
         f.write(sio.getvalue().replace(' />', '/>'))
         sio.close()
         f.close()
@@ -446,47 +472,47 @@ class TweakList(QtGui.QWidget) :
         index = self.combo.currentIndex()
         self.list.removeWidget(self.list.widget(index))
         self.combo.removeItem(index)
-        self.tweaks.pop(index)
+        self.tweakGroups.pop(index)
 
     def editClicked(self) :
         self.editTweak(self.list.currentWidget().currentRow())
 
     def addClicked(self, t = None) :
-        i = self.list.currentIndex()
+        gIndex = self.list.currentIndex()
         if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
-        res = self.editTweak(len(self.tweaks[i]) - 1)
+        res = self.editTweak(len(self.tweakGroups[gIndex]) - 1)
         if not t.name or not res :
-            self.tweaks[i].pop()
-            self.list.widget(i).takeItem(len(self.tweaks))
+            self.tweakGroups[gIndex].pop()
+            self.list.widget(gIndex).takeItem(len(self.tweakGroups))
 
     def saveClicked(self) :
         tname = configval(self.app.config, 'build', 'tweakxmlfile')
         if tname : self.writeXML(tname)
 
     def delClicked(self) :
-        j = self.list.currentIndex()
-        i = self.list.widget(j).currentRow()
-        self.tweaks[j].pop(i)
-        self.list.widget(j).takeItem(i)
+        gIndex = self.list.currentIndex()
+        tIndex = self.list.widget(gIndex).currentRow()
+        self.tweakGroups[gIndex].pop(tIndex)
+        self.list.widget(gIndex).takeItem(tIndex)
 
     def upClicked(self) :
         l = self.list.currentWidget()
-        j = self.list.currentIndex()
-        i = l.currentRow()
-        if i > 0 :
-            self.tweaks[j].insert(i - 1, self.tweaks[j].pop(i))
-            l.insertItem(i - 1, l.takeItem(i))
-            l.setCurrentRow(i - 1)
+        gIndex = self.list.currentIndex()
+        tIndex = l.currentRow()
+        if tIndex > 0 :
+            self.tweakGroups[gIndex].insert(tIndex - 1, self.tweakGroups[gIndex].pop(tIndex))
+            l.insertItem(tIndex - 1, l.takeItem(tIndex))
+            l.setCurrentRow(tIndex - 1)
 
     def downClicked(self) :
         l = self.list.currentWidget()
-        j = self.list.currentIndex()
-        i = l.currentRow()
-        if i < l.count() - 1 :
-            self.tweaks[j].insert(i + 1, self.tweaks[j].pop(i))
-            l.insertItem(i + 1, l.takeItem(i))
-            l.setCurrentRow(i + 1)
+        gIndex = self.list.currentIndex()
+        tIndex = l.currentRow()
+        if tIndex < l.count() - 1 :
+            self.tweakGroups[gIndex].insert(tIndex + 1, self.tweakGroups[gIndex].pop(tIndex))
+            l.insertItem(tIndex + 1, l.takeItem(tIndex))
+            l.setCurrentRow(tIndex + 1)
 
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
@@ -510,9 +536,15 @@ class TweakList(QtGui.QWidget) :
 
     # Return the Tweak object that is currently selected.
     def currentTweak(self):
-        j = self.list.currentIndex() # always zero
-        i = self.list.currentWidget().currentRow()
-        return self.tweaks[j][i]
+        gIndex = self.list.currentIndex()
+        tIndex = self.list.currentWidget().currentRow()
+        return self.tweakGroups[gIndex][tIndex]
+
+    # New GDL rules have been generated, so pending adjustments are now accepted.
+    def acceptPending(self) :
+        for g in self.tweakGroups :
+            for t in g :
+                t.acceptPending()
         
 
 # The controls at the bottom of the pane that allow adjustment of the glyph tweaks
@@ -651,7 +683,7 @@ class TweakInfoWidget(QtGui.QFrame) :
                 gclassIndex = i
             else : print "added",gcLp ###
             i += 1
-        if gclassIndex == 0 and gclass != "" and gclass != "None" :
+        if gclassIndex == 0 and gclass and gclass != "" and gclass != "None" :
             # Not one of the expected values - add it to the end of the list.
             print "adding '" + gclass + "'" ####
             self.gclassCtrl.addItem(gclass)
@@ -774,7 +806,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.glyphSelected.setShiftYpending(self.orig['y-pending'])
         # Do we also revert the status and glyph class?
         self.revert.setEnabled(False)
-    
+        
 #    def clear(self) : # currently not used
 #        self.glyph.clear()
 #        self.glyph.addItems(['(None)'])
@@ -828,7 +860,19 @@ class Tweaker(QtGui.QWidget) :
     def incrementY(self, dy) :
         self.infoWidget.incrementY(dy)
         
-        
+    # Called from main application when we switch tabs.
+    def updatePositions(self) :
+        # TODO: implement
+        pass
+
+    def parseFile(self, filename) :
+        return self.tweakList.parseTweaks(filename)
+    
+    # New GDL rules have been generated, so pending adjustments are now accepted.
+    def acceptPending(self, tweakxmlfile) :
+        self.tweakList.acceptPending()
+        self.writeXML(tweakxmlfile)
+      
 
 #------ TweakView classes ------
 
