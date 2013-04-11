@@ -38,7 +38,7 @@ class TestList(QtGui.QWidget) :
         super(TestList, self).__init__(parent)
         self.noclick = False
         self.app = app
-        self.tests = []
+        self.testGroups = []
         self.fsets = {"\n" : None}
         self.comments = []
         self.fcount = 0
@@ -129,7 +129,7 @@ class TestList(QtGui.QWidget) :
         self.addGroup('main')
 
     def loadTests(self, fname):
-        self.tests = []
+        self.testGroups = []
         self.combo.clear()
         for i in range(self.list.count() - 1, -1, -1) :
             self.list.removeWidget(self.list.widget(i))
@@ -220,36 +220,36 @@ class TestList(QtGui.QWidget) :
         l = QtGui.QListWidget()
         l.itemDoubleClicked.connect(self.runTest)
         l.itemClicked.connect(self.loadTest)
-        res = []
+        groupList = []  # initially empty
         if index is None :
             self.list.addWidget(l)
             self.combo.addItem(name)
-            self.tests.append(res)
+            self.testGroups.append(groupList)
             self.comments.append(comment)
         else :
             self.list.insertWidget(index, l)
             self.combo.insertItem(index, name)
-            self.tests.insert(index, res)
+            self.testGroups.insert(index, groupList)
             self.comments.insert(index, comment)
         return l
 
     def appendTest(self, t, l = None) :
         if not l : l = self.list.currentWidget()
-        self.tests[self.list.indexOf(l)].append(t)
+        self.testGroups[self.list.indexOf(l)].append(t)
         w = QtGui.QListWidgetItem(t.name or "", l)
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
 
-    def editTest(self, index) :
-        i = self.list.currentIndex()
-        t = self.tests[i][index]
+    def editTest(self, testindex) :
+        groupindex = self.list.currentIndex()
+        t = self.testGroups[groupindex][testindex]
         bgndSave = t.background
         if t.editDialog(self.app) :
-            l = self.list.widget(i)
-            l.item(index).setText(t.name)
-            l.item(index).setToolTip(t.comment)
-            l.item(index).setBackground(QtGui.QBrush(t.background))
+            l = self.list.widget(groupindex)
+            l.item(testindex).setText(t.name)
+            l.item(testindex).setToolTip(t.comment)
+            l.item(testindex).setBackground(QtGui.QBrush(t.background))
             return True
         else :
             # Undo any change to background.
@@ -269,10 +269,10 @@ class TestList(QtGui.QWidget) :
             ETinsert(h, fs)
         fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
         used = set()
-        for i in range(len(self.tests)) :
+        for i in range(len(self.testGroups)) :
             g = et.SubElement(e, 'testgroup')
             g.set('label', self.combo.itemText(i))
-            for t in self.tests[i] :
+            for t in self.testGroups[i] :
                 te = t.addXML(g)
                 c = self.findStyleClass(t)
                 if c :
@@ -328,53 +328,53 @@ class TestList(QtGui.QWidget) :
         index = self.combo.currentIndex()
         self.list.removeWidget(self.list.widget(index))
         self.combo.removeItem(index)
-        self.tests.pop(index)
+        self.testGroups.pop(index)
 
     def editClicked(self) :
         self.editTest(self.list.currentWidget().currentRow())
 
     def addClicked(self, t = None) :
-        i = self.list.currentIndex()
+        groupindex = self.list.currentIndex()
         if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTest(t)
-        res = self.editTest(len(self.tests[i]) - 1)
+        res = self.editTest(len(self.testGroups[groupindex]) - 1)
         if not t.name or not res :
-            self.tests[i].pop()
-            self.list.widget(i).takeItem(len(self.tests))
+            self.testGroups[groupindex].pop()
+            self.list.widget(groupindex).takeItem(len(self.testGroups))
 
     def saveClicked(self) :
         tname = configval(self.app.config, 'main', 'testsfile')
         if tname : self.writeXML(tname)
 
     def delClicked(self) :
-        j = self.list.currentIndex()
-        i = self.list.widget(j).currentRow()
-        self.tests[j].pop(i)
-        self.list.widget(j).takeItem(i)
+        groupindex = self.list.currentIndex()
+        testindex = self.list.widget(groupindex).currentRow()
+        self.testGroups[groupindex].pop(testindex)
+        self.list.widget(groupindex).takeItem(testindex)
 
     def upClicked(self) :
         l = self.list.currentWidget()
-        j = self.list.currentIndex()
-        i = l.currentRow()
-        if i > 0 :
-            self.tests[j].insert(i - 1, self.tests[j].pop(i))
-            l.insertItem(i - 1, l.takeItem(i))
-            l.setCurrentRow(i - 1)
+        groupindex = self.list.currentIndex()
+        testindex = l.currentRow()
+        if testindex > 0 :
+            self.testGroups[groupindex].insert(testindex - 1, self.testGroups[groupindex].pop(testindex))
+            l.insertItem(testindex - 1, l.takeItem(testindex))
+            l.setCurrentRow(testindex - 1)
 
     def downClicked(self) :
         l = self.list.currentWidget()
-        j = self.list.currentIndex()
-        i = l.currentRow()
-        if i < l.count() - 1 :
-            self.tests[j].insert(i + 1, self.tests[j].pop(i))
-            l.insertItem(i + 1, l.takeItem(i))
-            l.setCurrentRow(i + 1)
+        groupindex = self.list.currentIndex()
+        testindex = l.currentRow()
+        if testindex < l.count() - 1 :
+            self.testGroups[groupindex].insert(testindex + 1, self.testGroups[groupindex].pop(testindex))
+            l.insertItem(testindex + 1, l.takeItem(testindex))
+            l.setCurrentRow(testindex + 1)
 
     def loadTest(self, item) :
         if not self.noclick :
-            j = self.list.currentIndex()
-            i = self.list.currentWidget().currentRow()
-            self.app.setRun(self.tests[j][i])
+            groupindex = self.list.currentIndex()
+            testindex = self.list.currentWidget().currentRow()
+            self.app.setRun(self.testGroups[groupindex][testindex])
         else :
             # this is the side-effect of a double-click: ignore it
             self.noclick = False
