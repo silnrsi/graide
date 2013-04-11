@@ -396,9 +396,9 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_fileEdits(self, parent) :
         # file edit view
-        self.tabEdit = FileTabs(self.config, self, parent)
-        self.setwidgetstretch(self.tabEdit, 100, 50)
-        self.tabEdit.setTabsClosable(True)
+        self.tab_edit = FileTabs(self.config, self, parent)
+        self.setwidgetstretch(self.tab_edit, 100, 50)
+        self.tab_edit.setTabsClosable(True)
 
     def ui_bottom(self, parent) :
         # bottom pane
@@ -432,7 +432,7 @@ class MainWindow(QtGui.QMainWindow) :
         # Errors tab
         self.tab_errors = Errors()
         self.tab_results.addTab(self.tab_errors, "Errors")
-        self.tab_errors.errorSelected.connect(self.tabEdit.selectLine)
+        self.tab_errors.errorSelected.connect(self.tab_edit.selectLine)
 
         # Passes tab
         self.tab_passes = PassesView()
@@ -475,10 +475,10 @@ class MainWindow(QtGui.QMainWindow) :
 
     def setMenus(self) :
         filemenu = self.menuBar().addMenu("&File")
-        filemenu.addAction(self.tabEdit.aAdd)
-        filemenu.addAction(self.tabEdit.aSave)
+        filemenu.addAction(self.tab_edit.aAdd)
+        filemenu.addAction(self.tab_edit.aSave)
         filemenu.addSeparator()
-        filemenu.addAction(self.tabEdit.aBuild)
+        filemenu.addAction(self.tab_edit.aBuild)
         filemenu.addAction('&Reset Names', self.resetNames)
         # TODO: add an Exit option
 
@@ -565,7 +565,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 f.close()
             except :
                 pass
-        self.tabEdit.writeIfModified()
+        self.tab_edit.writeIfModified()
         self.saveAP()
         
 
@@ -606,7 +606,7 @@ Copyright 2012 SIL International and M. Hosken""")
     def selectLine(self, fname = None, srcline = -1) :
         if not fname :
             fname = configval(self.config, 'build', 'gdlfile')
-        self.tabEdit.selectLine(fname, srcline)
+        self.tab_edit.selectLine(fname, srcline)
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
@@ -621,7 +621,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.runView.clear()
 
     def buildClicked(self) :
-        self.tabEdit.writeIfModified()
+        self.tab_edit.writeIfModified()
         
         if self.tweaksfile :
             self.tab_tweak.writeXML(self.tweaksfile)
@@ -648,7 +648,7 @@ Copyright 2012 SIL International and M. Hosken""")
     # Run Graphite over a test string.
     def runClicked(self) :
         
-        if self.tabEdit.writeIfModified() and not self.buildClicked() :
+        if self.tab_edit.writeIfModified() and not self.buildClicked() :
             # Error in saving code or building 
             return
             
@@ -741,7 +741,7 @@ Copyright 2012 SIL International and M. Hosken""")
 
     # called from utils
     def updateFileEdit(self, fname) :
-        self.tabEdit.updateFileEdit(fname)
+        self.tab_edit.updateFileEdit(fname)
 
     def propDialog(self, name) :
         d = QtGui.QDialog(self)
@@ -807,7 +807,7 @@ Copyright 2012 SIL International and M. Hosken""")
     def _configOpenExisting(self, fname) :
         self._saveProjectData()
         
-        self.tabEdit.closeAllTabs()
+        self.tab_edit.closeAllTabs()
 
         (dname, fname) = os.path.split(fname)
         if dname :
@@ -834,7 +834,7 @@ Copyright 2012 SIL International and M. Hosken""")
 
         if self.config.has_option('build', 'gdlfile') :
             #self.selectLine(self.config.get('build', 'gdlfile'), -1)
-            self.tabEdit.updateFromConfigSettings(self.config)
+            self.tab_edit.updateFromConfigSettings(self.config)
             
 
     # When opening project, open the list of previously open files.
@@ -844,11 +844,11 @@ Copyright 2012 SIL International and M. Hosken""")
             openFiles = openFileString.split(';')
             for f in openFiles :
                 if (f) :
-                    self.tabEdit.selectLine(f, -1)
+                    self.tab_edit.selectLine(f, -1)
         # Open the main file.
         mainfile = configval(self.config, 'build', 'gdlfile')
         if mainfile :
-            self.tabEdit.selectLine(mainfile, -1)
+            self.tab_edit.selectLine(mainfile, -1)
             
     # Create a new project.
     def configNewClicked(self) :

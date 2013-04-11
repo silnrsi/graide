@@ -163,7 +163,7 @@ class Classes(QtGui.QWidget) :
     
     # Scroll to the selected class and highlight it.
     def findSelectedClass(self) :
-    	className = self.app.tabEdit.selectedText
+    	className = self.app.tab_edit.selectedText
     	d = QtGui.QDialog(self)
     	rowMatched = -1
     	for row in range(0, self.classCount) :

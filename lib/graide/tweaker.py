@@ -578,6 +578,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.y.valueChanged[int].connect(self.posCtrlChanged)
         self.layout.addWidget(QtGui.QLabel("Y"), 1, 3)
         self.layout.addWidget(self.y, 1, 4)
+        self.posButtonsEnabled = True
         
         frame = QtGui.QFrame()
         #frame.setFrameStyle(QtGui.QFrame.WinPanel | QtGui.QFrame.Sunken)
@@ -666,8 +667,11 @@ class TweakInfoWidget(QtGui.QFrame) :
 
         self.updateMode = False  # don't touch the TweakView for now
         
-        self.x.setValue(shiftx + shiftx_pending)
-        self.y.setValue(shifty + shifty_pending)
+        shiftx_total = shiftx + shiftx_pending
+        shifty_total = shifty + shifty_pending
+        
+        self.x.setValue(shiftx_total)
+        self.y.setValue(shifty_total)
         
         # Populate the class control with the classes this glyph is a member of.
         glyph = self.parent().font[gid]
@@ -691,13 +695,21 @@ class TweakInfoWidget(QtGui.QFrame) :
             i += 1
                 
         self.gclassCtrl.setCurrentIndex(gclassIndex)
-        
-        if status == "ignore" :
-            self.statusIgnore.setChecked(True)
-        elif status == "optional" :
-            self.statusOpt.setChecked(True)
-        else :
+                   
+        if shiftx_total != 0 or shifty_total != 0 :
             self.statusReq.setChecked(True)
+            self.enablePosButtons(True)
+            self.enableStatusButtons(False)
+        else :
+            self.enableStatusButtons(True)
+            if status == "ignore" :
+                self.statusIgnore.setChecked(True)
+                self.enablePosButtons(False)
+            elif status == "optional" :
+                self.statusOpt.setChecked(True)
+                self.enablePosButtons(False)
+            else :
+                self.statusReq.setChecked(True)
         
         self.updateMode = True
         
@@ -746,12 +758,15 @@ class TweakInfoWidget(QtGui.QFrame) :
             self.glyphSelected.setShiftXpending(newXpending)
             self.glyphSelected.setShiftYpending(newYpending)
             
+            self.enableStatusButtons(newX == 0 and newY == 0)
+
             if self.updateMode :
                 # Inform the TweakView
                 self.tweakView().updateDisplay(self.tweakSelected, self.slotSelected)
                 self.tweakView().highlightSlot(self.slotSelected)
                 self.revert.setEnabled(True)
             # otherwise we are just getting these controls in sync
+            
             
     # The class control was changed.
     def classCtrlChanged(self) :
@@ -780,14 +795,26 @@ class TweakInfoWidget(QtGui.QFrame) :
         if self.slotSelected >= 0 :
             if self.statusOpt.isChecked() :
                 self.glyphSelected.setStatus("optional")
+                self.enablePosButtons(False)
             elif self.statusIgnore.isChecked() :
                 self.glyphSelected.setStatus("ignore")
+                self.enablePosButtons(False)
             else :
                 self.glyphSelected.setStatus("required")
+                self.enablePosButtons(True)
                 
             #if self.updateMode :  # Inform the TweakView if necessary
             #    pass
-
+            
+    def enablePosButtons(self, on = True) :
+        self.x.setEnabled(on)
+        self.y.setEnabled(on)
+        self.posButtonsEnabled = on
+    
+    def enableStatusButtons(self, on = True) :
+        self.statusReq.setEnabled(on)
+        self.statusOpt.setEnabled(on)
+        self.statusIgnore.setEnabled(on)
             
     def incrementX(self, dx) :
         x = self.x.value()
@@ -872,6 +899,9 @@ class Tweaker(QtGui.QWidget) :
     def acceptPending(self, tweakxmlfile) :
         self.tweakList.acceptPending()
         self.writeXML(tweakxmlfile)
+        
+    def posButtonsEnabled(self) :
+        return self.infoWidget.posButtonsEnabled
       
 
 #------ TweakView classes ------
@@ -949,9 +979,12 @@ class TweakableRunView(RunView) :
     def keyPressEvent(self, event) :
         
         shiftPressed = event.modifiers() & QtCore.Qt.ShiftModifier
-        if shiftPressed :
+        if shiftPressed:
             # Tweak glyph positions.
-            if event.key() == QtCore.Qt.Key_Up :
+            if not self.tweaker().posButtonsEnabled() :
+                # Ignore shifts.
+                pass
+            elif event.key() == QtCore.Qt.Key_Up :
                 print "shift-up pressed" ###
                 self.tweaker().incrementY(20)
             elif event.key() == QtCore.Qt.Key_Down :
@@ -963,7 +996,6 @@ class TweakableRunView(RunView) :
             elif event.key() == QtCore.Qt.Key_Left :
                 print "shift-left pressed" ###
                 self.tweaker().incrementX(-20)
-                
         
         elif event.key() == QtCore.Qt.Key_Left or event.key() == QtCore.Qt.Key_Right :
             # Move slot selection.

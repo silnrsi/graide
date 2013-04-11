@@ -110,7 +110,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             print makecmd
             subprocess.call(makecmd, shell = True)
         else :
-            # Use the default built-in process.
+            # Use the default makegdl process.
             font.createClasses()
             font.pointClasses()
             font.ligClasses()
@@ -219,7 +219,6 @@ def generateTweakerGDL(config, app) :
         return "Warning: no GDL tweak file specified; tweaks ignored."
 
     tweakgdlfile = config.get('build', 'tweakgdlfile')
-    print "tweakgdlfile =",tweakgdlfile ###
     gdlfile = config.get('build', 'gdlfile')
     fontname = config.get('main', 'font')
     
@@ -265,6 +264,8 @@ def generateTweakerGDL(config, app) :
         f.write("\nendpass  // " + passindex + "\n\n")
 
     f.close()
+    
+    if app : app.updateFileEdit(tweakgdlfile)
     
     print "Tweak GDL generated - accepting pending tweaks."
     

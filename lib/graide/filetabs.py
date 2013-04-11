@@ -268,9 +268,15 @@ class FileTabs(QtGui.QTabWidget) :
     def updateFileEdit(self, fname) :
         for i in range(self.count()) :
             f = self.widget(i)
-            if f.fname == fname :
+            if self._stripDotSlash(f.fname) == self._stripDotSlash(fname) :
                 f.reload()
                 break
+
+    # Kludge to make "./file.ext" equivalent to "file.ext"
+    def _stripDotSlash(self, filename) :
+        if filename[0:2] == "./" or filename[0:2] == ".\\" :
+            filename = filename[2:len(filename)]
+        return filename
 
     def switchFile(self, widget) :
         if (self.widget(0) == 0 ) :   # no tabs
@@ -326,4 +332,6 @@ class FileTabs(QtGui.QTabWidget) :
         if not self.app.config.has_section('window') :
             self.app.config.add_section('window')
         self.app.config.set('window', 'openfiles', openFileString)
+        
+
 		
