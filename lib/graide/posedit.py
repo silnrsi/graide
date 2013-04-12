@@ -188,6 +188,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
         apData = self.item.getActiveAPs()
         if apData == False :
             self.origAPs = None
+            super(PosPixmapItem, self).mousePressEvent(event)
             return  # this is not the kind of thing to move, eg, a base character
             
         (self.sceneAP, self.origPos, self.origAPs) = apData
@@ -208,6 +209,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
     def mouseReleaseEvent(self, event) :
         if self.origAPs == None :
             # this is not a movable glyph
+            super(PosPixmapItem, self).mouseReleaseEvent(event)
             return
         self.moveState = False
         self.scene().view.updateable(True)
@@ -220,6 +222,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
     def mouseMoveEvent(self, event) :
         if self.origAPs == None :
             # this is not a movable glyph
+            super(PosPixmapItem, self).mouseMoveEvent(event)
             return
         spos = event.scenePos()
         bpos = event.buttonDownScenePos(QtCore.Qt.LeftButton)

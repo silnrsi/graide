@@ -81,7 +81,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         if font : self.gview.resize(self.gview.size().width(), font.pixrect.height())
-        self._scene = QtGui.QGraphicsScene(self.gview)
+        self._scene = QtGui.QGraphicsScene(self.gview) # the scene contains the pixmaps
         self._scene.keyPressEvent = self.keyPressEvent
         self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
@@ -103,7 +103,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         self._scene.clear()
         self._pixmaps = []
         self._gindices = [0]
-        factor = font.size * 1. / font.upem
+        scale = font.size * 1. / font.upem
         res = QtCore.QRect()
         sels = []
         self.tview.setExtraSelections([])
@@ -114,7 +114,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         for i, s in enumerate(run) :
             g = font[s.gid]
             if g and g.item and g.item.pixmap :
-                res = self.createPixmap(s, g, i, res, factor, model = self, scene = self._scene)
+                res = self.createPixmap(s, g, i, res, scale, model = self, scene = self._scene)
             else :
                 self._pixmaps.append(None)
             if g :
@@ -144,9 +144,9 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.gview.updateScene([])
             
     # Overridden for TweakableRunView.
-    def createPixmap(self, slot, glyph, index, res, factor, model = None, parent = None, scene = None) :
+    def createPixmap(self, slot, glyph, index, res, scale, model = None, parent = None, scene = None) :
         px = GlyphPixmapItem(index, glyph.item.pixmap, model, parent, scene)
-        ppos = (slot.origin[0] * factor + glyph.item.left, -slot.origin[1] * factor - glyph.item.top)
+        ppos = (slot.origin[0] * scale + glyph.item.left, -slot.origin[1] * scale - glyph.item.top)
         px.setOffset(*ppos)
         self._pixmaps.append(px)
         if slot : slot.pixmap(px)
