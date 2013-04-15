@@ -86,6 +86,7 @@ class Tweak(Test) :
             glyphs = []) : 
         super(Tweak, self).__init__(text, feats, lang, rtl, name, comment, width, bgnd)
         self.glyphs = glyphs
+        # self.feats is a dictionary: feature IDs -> values
         
     def setGlyphs(self, glyphs) :
         self.glyphs = glyphs
@@ -289,25 +290,27 @@ class TweakList(QtGui.QWidget) :
 
         result = {}
             
-        classes = {}
+        styles = {}
         langs = {} 
         self.header = e.find('.//head') 
         if self.header is None : self.header = e.find('.//header')
         for s in e.iterfind('.//style') :
-            k = s.get('name')
-            v = s.get('feats') or ""
-            l = s.get('lang') or ""
-            fset = v + "\n" + l
-            if fset not in self.fsets : self.fsets[fset] = k
-            classes[k] = {}
-            if l : langs[k] = l
-            for ft in v.split(" ") :
+            styleName = s.get('name')
+            featDescrip = s.get('feats') or ""
+            langCode = s.get('lang') or ""
+            fset = featDescrip + "\n" + langCode
+            if fset not in self.fsets :
+                self.fsets[fset] = styleName
+            styles[styleName] = {}
+            if langCode :
+                langs[styleName] = langCode
+            for ft in featDescrip.split(" ") :
                 if '=' in ft :
-                    (k1, v1) = ft.split('=')
-                    classes[k][k1] = int(v1)
-            m = re.match(r'fset([0-9]+)', k)
+                    (fname, value) = ft.split('=')
+                    styles[styleName][fname] = int(value)
+            m = re.match(r'fset([0-9]+)', styleName)
             if m :
-                i = int(m.group(1))
+                i = int(m.group(1)) ## number of the fset, eg 'fset2' -> 2
                 if i > self.fcount : self.fcount = i
                     
         for g in e.iterfind('tweakgroup') :
@@ -324,8 +327,8 @@ class TweakList(QtGui.QWidget) :
                 tmp = t.find('comment')
                 c = tmp.text if tmp is not None else ""
                 tmp = t.get('class')  # named style, group of features
-                if tmp and tmp in classes :
-                    feats = classes[tmp]
+                if tmp and tmp in styles :
+                    feats = styles[tmp]
                     lng = langs.get(tmp)
                 else :
                     feats = {}
@@ -624,7 +627,6 @@ class TweakInfoWidget(QtGui.QFrame) :
         
         
     def setControlsForTweakItem(self, item) :
-        print "TweakInfoWidget::setControlsForTweakItem",item
         self.tweakSelected = self.parent().currentTweak()
         glyphs = self.tweakSelected.glyphs
         
@@ -948,7 +950,6 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         self.diffPx = (posPx - posPxStart).toTuple()
         xNew = self.shiftStart[0] + (self.diffPx[0] / self.scale)
         yNew = self.shiftStart[1] - (self.diffPx[1] / self.scale)  # subtract because y coordinate system is opposite
-        print "set positions to",xNew,yNew
         self.runView.tweaker().setX(xNew)
         self.runView.tweaker().setY(yNew)
         super(TweakableGlyphPixmapItem, self).mouseMoveEvent(event)

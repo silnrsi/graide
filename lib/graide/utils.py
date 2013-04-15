@@ -229,13 +229,23 @@ def generateTweakerGDL(config, app) :
     f.write("/*\n    Tweaker GDL file for font " + fontname + " to include in " + gdlfile + "\n*/\n\n")
 
     if passindex :
-        f.write("pass(" + passindex + ")\n\n")
+        f.write("table(positioning)\n\npass(" + passindex + ")\n\n")
     
     for (groupLabel, tweaks) in tweakData.items() :
         f.write("\n//---  " + groupLabel + "  ---\n\n")
         
         for tweak in tweaks :
             f.write("// " + tweak.name + "\n")
+            if (tweak.feats and tweak.feats != "") or (tweak.lang and tweak.lang != "") :
+                f.write("if (")
+                andText = ""
+                if (tweak.lang and tweak.lang != "") :
+                    f.write("lang"," == ", '"',tweak.lang,'"')
+                    andText = " && "
+                for (fid, value) in tweak.feats.items() :
+                    f.write(andText + fid + " == " + str(value))
+                    andText = " && "
+                f.write(")\n")
             i = 0
             for twglyph in tweak.glyphs :
                 if twglyph.status != "ignore" :
@@ -258,10 +268,13 @@ def generateTweakerGDL(config, app) :
                         if shifty != 0 : f.write("shift.y = " + str(shifty) + "m; ")
                         f.write("}")
                 i += 1
-            f.write(" ;\n\n")
+            f.write(" ;")
+            if tweak.feats and tweak.feats != "" :
+                f.write("\nendif;")
+            f.write("\n\n")
     
     if passindex :
-        f.write("\nendpass  // " + passindex + "\n\n")
+        f.write("\nendpass  // " + passindex + "\n\nendtable; // positioning\n\n")
 
     f.close()
     

@@ -189,7 +189,6 @@ class RunView(QtCore.QObject, ModelSuper) :
                 
         
     def changeSelection(self, newSel) :
-        print "RunView::changeSelection",newSel ###
         s = self.tview.extraSelections()
         
         if self.currselection >= 0 :
