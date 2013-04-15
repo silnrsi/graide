@@ -185,6 +185,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(self.ui_editorfont, 0, 1)
         
         self.ui_size = QtGui.QSpinBox(self.ui)
+        self.ui_size.setMaximumWidth(60)
         self.ui_size.setRange(1, 36)
         if config.has_option('ui', 'textsize') :
             self.ui_size.setValue(configintval(config, 'ui', 'textsize'))
@@ -195,6 +196,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(self.ui_size, 1, 1)
         
         self.ui_tabstop = QtGui.QSpinBox(self.ui)
+        self.ui_tabstop.setMaximumWidth(60)
         self.ui_tabstop.setRange(1, 100)
         if config.has_option('ui', 'tabstop') :
             self.ui_tabstop.setValue(configintval(config, 'ui', 'tabstop'))
@@ -205,6 +207,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(self.ui_tabstop, 2, 1)
         
         self.ui_gsize = QtGui.QSpinBox(self.ui)
+        self.ui_gsize.setMaximumWidth(60)
         self.ui_gsize.setRange(1, 288)
         if config.has_option('main', 'size') :
             self.ui_gsize.setValue(configintval(config, 'main', 'size'))
@@ -215,6 +218,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(self.ui_gsize, 3, 1)
         
         self.ui_twsize = QtGui.QSpinBox(self.ui)
+        self.ui_twsize.setMaximumWidth(60)
         self.ui_twsize.setRange(1, 1088)
         if config.has_option('ui', 'tweakglyphsize') :
             self.ui_twsize.setValue(configintval(config, 'ui', 'tweakglyphsize'))
@@ -225,6 +229,7 @@ class ConfigDialog(QtGui.QDialog) :
         self.ui_vb.addWidget(self.ui_twsize, 4, 1)
         
         self.ui_apsize = QtGui.QSpinBox(self.ui)
+        self.ui_apsize.setMaximumWidth(60)
         self.ui_apsize.setRange(1, 1088)
         if config.has_option('ui', 'attglyphsize') :
             self.ui_apsize.setValue(configintval(config, 'ui', 'attglyphsize'))
@@ -236,7 +241,7 @@ class ConfigDialog(QtGui.QDialog) :
         
         self.ui_sizes = QtGui.QLineEdit(self.ui)
         self.ui_sizes.setText(configval(config, 'ui', 'waterfall'))
-        self.ui_sizes.setToolTip('Point sizes for waterfall display, space separated')
+        self.ui_sizes.setToolTip('Point sizes for waterfall display, comma-separated; eg: 10, 12, 16, 20, 48')
         self.ui_vb.addWidget(QtGui.QLabel('Waterfall sizes'), 6, 0)
         self.ui_vb.addWidget(self.ui_sizes, 6, 1)
         

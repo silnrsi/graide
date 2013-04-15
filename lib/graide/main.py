@@ -717,7 +717,7 @@ Copyright 2012 SIL International and M. Hosken""")
     def doWaterfall(self) :
         self.runClicked()
         if self.config.has_option('ui', 'waterfall') :
-            sizes = map(int, config.get('ui', 'waterfall').split(' '))
+            sizes = map(int, self.config.get('ui', 'waterfall').split(','))
         else :
             sizes = None
         if self.run :
