@@ -31,7 +31,7 @@ class FeatureRefs(object) :
         self.order = []
         self.forders = {}
         if grface and grface.face :
-            langid = 0x0409
+            langid = 0x0409 # English
             length = 0
             grval = grface.get_featureval(strtolong(lang))
             for f in grface.featureRefs :
@@ -68,17 +68,17 @@ class FeatureRefs(object) :
 
 def make_FeaturesMap(font) :
     grface = gr.Face(font)
-    res = {}
-    res[None] = FeatureRefs(grface)
-    if not grface.face : return res
+    result = {}
+    result[None] = FeatureRefs(grface)
+    if not grface.face : return result
     for l in grface.featureLangs :
         lang = gr.tag_to_str(l)
-        res[lang] = FeatureRefs(grface, lang)
-    return res
+        result[lang] = FeatureRefs(grface, lang)
+    return result
 
 class FeatureDialog(QtGui.QDialog) :
 
-    def __init__(self, parent = None) :
+    def __init__(self, parent = None) : # parent = main window
         super(FeatureDialog, self).__init__(parent)
         self.setWindowTitle("Set Features")
         self.vbox = QtGui.QVBoxLayout(self)

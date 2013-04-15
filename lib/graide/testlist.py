@@ -144,26 +144,28 @@ class TestList(QtGui.QWidget) :
         if e.getroot().tag == 'tests' :
             self.loadOldTests(e)
             return
-        classes = {}
+            
+        styles = {}
         langs = {}
         self.header = e.find('.//head') 
         if self.header is None : self.header = e.find('.//header')
         for s in e.iterfind('.//style') :
-            k = s.get('name')
-            v = s.get('feats') or ""
-            l = s.get('lang') or ""
-            fset = v + "\n" + l
-            if fset not in self.fsets : self.fsets[fset] = k
-            classes[k] = {}
-            if l : langs[k] = l
-            for ft in v.split(" ") :
+            styleName = s.get('name')
+            featDescrip = s.get('feats') or ""
+            langCode = s.get('lang') or ""
+            fset = featDescrip + "\n" + langCode
+            if fset not in self.fsets : self.fsets[fset] = styleName
+            styles[styleName] = {}
+            if langCode : langs[styleName] = langCode
+            for ft in featDescrip.split(" ") :
                 if '=' in ft :
-                    (k1, v1) = ft.split('=')
-                    classes[k][k1] = int(v1)
-            m = re.match(r'fset([0-9]+)', k)
+                    (fname, value) = ft.split('=')
+                    styles[styleName][fname] = int(value)
+            m = re.match(r'fset([0-9]+)', styleName)
             if m :
-                i = int(m.group(1))
+                i = int(m.group(1)) ## number of the fset, eg 'fset2' -> 2
                 if i > self.fcount : self.fcount = i
+                    
         for g in e.iterfind('testgroup') :
             listwidget = self.addGroup(g.get('label'))
             y = g.find('comment')
@@ -175,8 +177,8 @@ class TestList(QtGui.QWidget) :
                 y = t.find('comment')
                 c = y.text if y is not None else ""
                 y = t.get('class')
-                if y and y in classes :
-                    feats = classes[y]
+                if y and y in styles :
+                    feats = styles[y]
                     lng = langs.get(y)
                 else :
                     feats = {}

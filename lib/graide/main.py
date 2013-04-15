@@ -135,7 +135,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.fontfile = str(fontname)
         self.fonttime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
         self.font.loadFont(self.fontfile, fontsize)
-        self.feats = make_FeaturesMap(self.fontfile)
+        self.feats = make_FeaturesMap(self.fontfile) # map languages to features
         
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'

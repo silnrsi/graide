@@ -28,7 +28,7 @@ import re
 class Test(object) :
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white') :
         self.text = text
-        self.feats = dict(feats)
+        self.feats = dict(feats)    # feature IDs -> values
         self.name = name or text
         self.rtl = rtl
         self.lang = lang
@@ -109,13 +109,19 @@ class Test(object) :
         return res
 
     def featClicked(self) :
-        d = FeatureDialog(self.parent)
-        f = self.parent.feats[self.lang].copy()
-        f.apply(self.feats)
-        d.set_feats(f, lang = self.lang)
-        self.featdialog = d
-        if not d.exec_() :
-            self.featdialog = None
+        newD = False
+        if not self.featdialog :
+            d = FeatureDialog(self.parent)  # parent = main window
+            # Initialize the dialog with the features associated with the language.
+            f = self.parent.feats[self.lang].copy()
+            f.apply(self.feats)
+            d.set_feats(f, lang = self.lang)
+            self.featdialog = d
+            newD = True
+        d = self.featdialog
+        if not d.exec_() :  # Cancel
+            if newD : self.featdialog = None
+
 
     def setWidth(self, w) :
         self.width = w

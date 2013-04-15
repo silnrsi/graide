@@ -219,6 +219,10 @@ def generateTweakerGDL(config, app) :
         return "Warning: no GDL tweak file specified; tweaks ignored."
 
     tweakgdlfile = config.get('build', 'tweakgdlfile')
+    if config.has_option('build', 'tweakconstraint') :
+        tweakConstraint = config.get('build', 'tweakconstraint')
+    else:
+        tweakConstraint = ""
     gdlfile = config.get('build', 'gdlfile')
     fontname = config.get('main', 'font')
     
@@ -229,23 +233,35 @@ def generateTweakerGDL(config, app) :
     f.write("/*\n    Tweaker GDL file for font " + fontname + " to include in " + gdlfile + "\n*/\n\n")
 
     if passindex :
-        f.write("table(positioning)\n\npass(" + passindex + ")\n\n")
+        f.write("table(positioning)\n\n")
+        if tweakConstraint != "" :
+            # Output pass constraint
+            if tweakConstraint[0:2] != "if" :
+                f.write("if " + "( " + tweakConstraint + " )")
+            else :
+                f.write(tweakConstraint)
+            f.write("\n\n")        
+        f.write("pass(" + passindex + ")\n\n")
     
     for (groupLabel, tweaks) in tweakData.items() :
         f.write("\n//---  " + groupLabel + "  ---\n\n")
         
         for tweak in tweaks :
             f.write("// " + tweak.name + "\n")
-            if (tweak.feats and tweak.feats != "") or (tweak.lang and tweak.lang != "") :
-                f.write("if (")
-                andText = ""
-                if (tweak.lang and tweak.lang != "") :
-                    f.write("lang"," == ", '"',tweak.lang,'"')
-                    andText = " && "
-                for (fid, value) in tweak.feats.items() :
-                    f.write(andText + fid + " == " + str(value))
-                    andText = " && "
-                f.write(")\n")
+
+            # Don't output the feature tests for now. If we reinstate this code, we need to get the
+            # the GDL feature name out of the GDX file.
+#            if (tweak.feats and tweak.feats != "") or (tweak.lang and tweak.lang != "") :
+#                f.write("if (")
+#                andText = ""
+#                if (tweak.lang and tweak.lang != "") :
+#                    f.write("lang"," == ", '"',tweak.lang,'"')
+#                    andText = " && "
+#                for (fid, value) in tweak.feats.items() :
+#                    f.write(andText + fid + " == " + str(value))
+#                    andText = " && "
+#                f.write(")\n")
+
             i = 0
             for twglyph in tweak.glyphs :
                 if twglyph.status != "ignore" :
@@ -269,12 +285,16 @@ def generateTweakerGDL(config, app) :
                         f.write("}")
                 i += 1
             f.write(" ;")
-            if tweak.feats and tweak.feats != "" :
-                f.write("\nendif;")
+            
+#            if tweak.feats and tweak.feats != "" :
+#                f.write("\nendif;")
             f.write("\n\n")
     
     if passindex :
-        f.write("\nendpass  // " + passindex + "\n\nendtable; // positioning\n\n")
+        f.write("\nendpass;  // " + passindex)
+        if tweakConstraint != "" : 
+            f.write("\n\nendif;  // pass constraint")
+        f.write("\n\nendtable;  // positioning\n\n")
 
     f.close()
     
