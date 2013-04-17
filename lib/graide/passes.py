@@ -171,7 +171,7 @@ class PassesView(QtGui.QTableWidget) :
                 pname = "Pass: %d" % j
                 if gdx :
                     pname += " - " + gdx.passtypes[j-1]  # j-1 because Init is not in the passtypes array
-                if len(json['passes'][j-1]['rules']) :
+                if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
                     highlight = True
                     self.rules.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
                 else :
