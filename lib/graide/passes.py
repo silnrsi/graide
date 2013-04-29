@@ -111,7 +111,10 @@ class PassesView(QtGui.QTableWidget) :
         self.rules = []
         self.selectRow(-1)
         self.currsel = None
-        json = jsonall[0]
+        if jsonall :
+            json = jsonall[0]
+        else :
+            json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
         count = num
         

@@ -676,17 +676,19 @@ Copyright 2012 SIL International and M. Hosken""")
             self.json = jsonResult
         else :
             print "No Graphite result" ###
+            self.json = [ {'passes' : [], 'output' : [] } ]
         
         self.run = Run(self.runRtl.isChecked())
-        self.run.addslots(self.json[-1]['output'])
-        self.runView.loadrun(self.run, self.font, resize = False)
-        if not self.runloaded :
-            try :
-                self.runView.slotSelected.connect(self.slotSelected)
-                self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
-                self.runloaded = True
-            except :
-                print "Selection connection failed"
+        if self.run :
+            self.run.addslots(self.json[-1]['output'])
+            self.runView.loadrun(self.run, self.font, resize = False)
+            if not self.runloaded :
+                try :
+                    self.runView.slotSelected.connect(self.slotSelected)
+                    self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
+                    self.runloaded = True
+                except :
+                    print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx, self.runRtl.isChecked())
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)

@@ -236,6 +236,7 @@ class TweakList(QtGui.QWidget) :
 
         self.loadTweaks(xmlfilename)
 
+
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
         self.aGAdd.setToolTip('Add tweak group below this group')
@@ -543,7 +544,10 @@ class TweakList(QtGui.QWidget) :
     def currentTweak(self):
         gIndex = self.list.currentIndex()
         tIndex = self.list.currentWidget().currentRow()
-        return self.tweakGroups[gIndex][tIndex]
+        if gIndex == -1 or tIndex == -1 :
+            return None
+        else :
+            return self.tweakGroups[gIndex][tIndex]
 
     # New GDL rules have been generated, so pending adjustments are now accepted.
     def acceptPending(self) :
@@ -628,7 +632,10 @@ class TweakInfoWidget(QtGui.QFrame) :
         
     def setControlsForTweakItem(self, item) :
         self.tweakSelected = self.parent().currentTweak()
-        glyphs = self.tweakSelected.glyphs
+        if self.tweakSelected :
+            glyphs = self.tweakSelected.glyphs
+        else :
+            glyphs = []
         
         # Populate the slot-selector control; the labels look like '<index>:  <glyph-name>'
         self.dataMode = False
@@ -833,6 +840,19 @@ class TweakInfoWidget(QtGui.QFrame) :
 #        self.aps.addItems(['(None)'])
 #        self.aps.setCurrentIndex(0)
 
+    # The idea here is to pass appropriate key presses on to the TweakView. I couldn't get it to work.
+#    def keyReleaseEvent(self, event) :
+#        print "TweakInfoWidget::keyReleaseEvent" ###
+#        if event.key() == QtCore.Qt.Key_Right or event.key() == QtCore.Qt.Key_Left :
+#            print "pass the key press on to the TweakView"  ###
+#            self.tweakView().snagKeyPress(event)
+#        elif (event.modifiers() & QtCore.Qt.ShiftModifier) and \
+#                (event.key() == QtCore.Qt.Key_Right or event.key() == QtCore.Qt.Key_Left or \
+#                    event.key() == QtCore.Qt.Key_Down or event.key() == QtCore.Qt.Key_Up) :
+#            print "pass the shifted key press on to the TweakView"  ###
+#            self.tweakView().snagKeyPress(event)
+#        else :
+#            super(TweakInfoWidget,self).keyReleaseEvent(event)
 
 
 # Main class to manage tweaking
@@ -1061,7 +1081,14 @@ class TweakableRunView(RunView) :
                 if newSel != self.currselection :
                     self.changeSelection(newSel)
                     self.tweaker().slotChanged(self.currselection)
-                
+                    
+#    def snagFocus(self) :
+#        print "TweakableRunView::snagFocus"  ###
+#        self._scene.setFocus()  # this doesn't seem to actually work
+#        if self._scene.hasFocus() :  ###
+#            print "TweakableRunView has focus"
+#        else :
+#            print "TweakableRunView does not have focus"
             
                   
 # The display of the moveable glyphs in the bottom right-hand pane
@@ -1120,9 +1147,8 @@ class TweakView(QtGui.QWidget) :
         self.updateable = state
         
     def updateDisplay(self, tweak, slotIndex = 0, highlight = False) :
-        
         if not self.updateable :
-            # In the middle of a mouse move - don't delete anything.
+            # In the middle of a mouse move - don't regenerate (ie, delete) anything.
             return
             
         jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, 10, #self.font.size,
@@ -1157,3 +1183,8 @@ class TweakView(QtGui.QWidget) :
     def highlightSlot(self, slotIndex) :
         self.currSlotIndex = slotIndex
         self.runView.glyphClicked(None, slotIndex)
+        
+#    def snagKeyPress(self, event) :
+#        self.runView.keyPressEvent(event)
+#        self.runView.snagFocus()
+        
