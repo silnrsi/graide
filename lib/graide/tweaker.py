@@ -1120,11 +1120,12 @@ class TweakView(QtGui.QWidget) :
         self.fontname = fontname
         self.setFont(size)
 
-        layout = QtGui.QVBoxLayout(self)
-        self.runView = TweakableRunView(self.font, run = None, parent = self)
-        self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
-        layout.addWidget(self.runView.gview)
-        # Ignore runView.tview - text view that shows the glyph names.
+        if self.fontname and self.fontname != "":
+            layout = QtGui.QVBoxLayout(self)
+            self.runView = TweakableRunView(self.font, run = None, parent = self)
+            self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
+            layout.addWidget(self.runView.gview)
+            # Ignore runView.tview - text view that shows the glyph names.
         
         self.currSlotIndex = -1
         self.updateable = True
@@ -1133,10 +1134,11 @@ class TweakView(QtGui.QWidget) :
         self.setFont(size)
         
     def setFont(self, size) :
-        fontfile = str(self.fontname)
-        self.font = GraideFont()
-        self.font.loadFont(fontfile, size)
-        self.font.loadEmptyGlyphs()        
+        if self.fontname and self.fontname != "":
+            fontfile = str(self.fontname)
+            self.font = GraideFont()
+            self.font.loadFont(fontfile, size)
+            self.font.loadEmptyGlyphs()        
         
     def setTweaker(self, tweaker) :
         # The Tweaker has all the data in it, which is needed to display the glyphs at their

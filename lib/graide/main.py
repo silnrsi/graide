@@ -63,6 +63,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.currLang = None
         self.currWidth = 100
         self.font = GraideFont()
+        self.fontfile = None
         self.apname = None
         self.appTitle = "Graide v0.5"
         
@@ -460,7 +461,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_results.addTab(self.tab_rules, "Rules")
 
         # Tweaks tab
-        self.tab_tweakview = TweakView(self.fontfile, self.tweaksize, app = self)
+        ffile = self.fontfile if self.fontfile else ""
+        self.tab_tweakview = TweakView(ffile, self.tweaksize, app = self)
         if hasattr(self, 'tab_tweak') :
             self.tab_tweak.setView(self.tab_tweakview)
             self.tab_tweakview.setTweaker(self.tab_tweak)

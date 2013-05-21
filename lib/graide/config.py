@@ -136,7 +136,8 @@ class ConfigDialog(QtGui.QDialog) :
         self.build_apgrid.addWidget(self.build_gdlinc, 2, 2, 1, columnSpan = 2) # cols 2-3
         self.build_att = PassSpin(self.build_apctrls)
         attpass = configval(config, 'build', 'attpass')
-        self.build_att.setValue(int(attpass))
+        if attpass :
+            self.build_att.setValue(int(attpass))
         self.build_apgrid.addWidget(QtGui.QLabel('Attachment positioning pass:'), 3, 0, 1, columnSpan = 2) # cols 0-1
         self.build_apgrid.addWidget(self.build_att, 3, 2)
         if not self.build_apxml.text() :
