@@ -58,7 +58,11 @@ def runGraphite(font, text, debugname, feats = {}, rtl = 0, lang = None, size = 
         debugfile = open(debugname, "w+")
         fd = c(debugfile.fileno(), "w+")
         gr2.graphite_start_logging(fd, 0xFF)
-    seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text.encode('utf_8'), len(text), rtl)
+        
+    ###print "text=",text  ####
+    text_utf8 = text.encode('utf_8')  ####
+    ###print "utf8=",text_utf8  ####
+    seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text_utf8, len(text), rtl)
     width = gr2.gr_seg_advance_X(seg)
     if expand != 100 :
         width = width * expand / 100

@@ -251,14 +251,19 @@ class PassesView(QtGui.QTableWidget) :
                     (beg, end) = nextRun.replace(runinfo['output']['slots'],
                     		runinfo['output']['range']['start'], runinfo['output']['range']['end'])
                     lext = ""
+                    i = beg
                     for slot in self.runs[-1][beg:end] :	# in the previous run, highlight the matched input glyphs
-                        slot.highlight('input')
+                        if begprev <= i and i < endprev :
+                            slot.highlight('inAndOut')     # both input and output
+                        else :
+                            slot.highlight('input')
+                        i = i + 1
                     if 'postshift' in runinfo['output'] :
                         for slot in self.runs[-1][end:] :
                             slot.origin = (slot.origin[0] + runinfo['output']['postshift'][0], slot.origin[1] 
                                                           + runinfo['output']['postshift'][1])
                     begprev = beg  # remember where to highlight the output glyphs in the next iteration
-                    endprev = end
+                    endprev = begprev + len(runinfo['output']['slots'])
                     
                 self.runs.append(nextRun)
                 nextRun.label="Rule: %d%s" % (cRule['id'], lext)
