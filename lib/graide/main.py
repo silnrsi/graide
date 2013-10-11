@@ -46,6 +46,7 @@ from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
+import codecs  ### debug
 
 class MainWindow(QtGui.QMainWindow) :
 
@@ -681,16 +682,16 @@ Copyright 2012 SIL International and M. Hosken""")
             self.json = [ {'passes' : [], 'output' : [] } ]
         
         self.run = Run(self.runRtl.isChecked())
-        if self.run :
-            self.run.addslots(self.json[-1]['output'])
-            self.runView.loadrun(self.run, self.font, resize = False)
-            if not self.runloaded :
-                try :
-                    self.runView.slotSelected.connect(self.slotSelected)
-                    self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
-                    self.runloaded = True
-                except :
-                    print "Selection connection failed"
+        ###if self.run :
+        self.run.addslots(self.json[-1]['output'])
+        self.runView.loadrun(self.run, self.font, resize = False)
+        if not self.runloaded :
+            try :
+                self.runView.slotSelected.connect(self.slotSelected)
+                self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
+                self.runloaded = True
+            except :
+                print "Selection connection failed"
         self.tab_passes.loadResults(self.font, self.json, self.gdx, self.runRtl.isChecked())
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
@@ -710,11 +711,14 @@ Copyright 2012 SIL International and M. Hosken""")
         runfile = NamedTemporaryFile(mode="w+")
         runfname = runfile.name
         runfile.close()
+        
+        ###print "text=", text ###
         runGraphite(fontfile, text, runfname, feats, rtl, lang, size, expand)
         runfile = open(runfname)
         jsonResult = json.load(runfile)
         if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
         runfile.close()
+        #print "temp file name =",runfname ###
         os.unlink(runfname)
         return jsonResult
 
