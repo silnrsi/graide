@@ -1,4 +1,4 @@
-#    Copyright 2012, SIL International
+#    Copyright 2013, SIL International
 #    All rights reserved.
 #
 #    This library is free software; you can redistribute it and/or modify
@@ -1153,7 +1153,7 @@ class TweakView(QtGui.QWidget) :
             # In the middle of a mouse move - don't regenerate (ie, delete) anything.
             return
             
-        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, tweak.text, 10, #self.font.size,
+        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, None, tweak.text, 10, #self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
         
         if jsonResult != False :

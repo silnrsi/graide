@@ -29,7 +29,7 @@ from graide.gdx import Gdx
 from graide.filetabs import FileTabs
 from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler, as_entities
 from graide.layout import Layout
-from graide.rungraphite import runGraphite
+from graide.rungraphite import runGraphite, makeFontAndFace, runGraphiteWithFontFace
 from graide.featureselector import make_FeaturesMap, FeatureDialog
 from graide.testlist import TestList
 from graide.test import Test
@@ -42,6 +42,7 @@ from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
 from graide.posedit import PosEdit, PosView
 from graide.tweaker import Tweaker, TweakView
+from graide.findmatch import GlyphPatternMatcher
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
@@ -64,6 +65,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.currLang = None
         self.currWidth = 100
         self.font = GraideFont()
+        self.fontFaces = {}
         self.fontfile = None
         self.apname = None
         self.appTitle = "Graide v0.5"
@@ -85,6 +87,8 @@ class MainWindow(QtGui.QMainWindow) :
         appicon.addFile(':/images/graide logo.svg')
         self.setWindowIcon(appicon)
         if Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
+            
+        print "Finding compiler..." #===
 
         findgrcompiler()
         for s in ('main', 'build', 'ui') :
@@ -92,6 +96,7 @@ class MainWindow(QtGui.QMainWindow) :
                 config.add_section(s)
 
         if config.has_option('main', 'font') :
+            print "Loading font..." #===
             self.loadFont(config.get('main', 'font'))
 
         if jsonfile :
@@ -119,10 +124,13 @@ class MainWindow(QtGui.QMainWindow) :
         if config.has_option('ui', 'attglyphsize') :
             self.setAttGlyphSize(configintval(config, 'ui', 'attglyphsize'))
 
+        print "Initializing program..." #===
         self.setActions()
         self.setupUi()
         self.setMenus()
         registerErrorLog(self)
+        
+        print "Opening files..." #===
 
         self._openFileList()
 
@@ -671,7 +679,7 @@ Copyright 2012 SIL International and M. Hosken""")
             else :
                 self.currLang = None
 
-        jsonResult = self.runGraphiteOverString(self.fontfile, self.runEdit.toPlainText(),
+        jsonResult = self.runGraphiteOverString(self.fontfile, None, self.runEdit.toPlainText(),
             self.font.size, self.runRtl.isChecked(), 
             self.currFeats or self.feats[self.currLang].fval, self.currLang,
             self.currWidth)
@@ -680,6 +688,12 @@ Copyright 2012 SIL International and M. Hosken""")
         else :
             print "No Graphite result" ###
             self.json = [ {'passes' : [], 'output' : [] } ]
+                
+        ### Temp
+        #patternMatcher = GlyphPatternMatcher(self)
+        #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 2)
+        #patternMatcher.search(self.fontfile, self.config.get('main', 'testsfile'))
+        #####################
         
         self.run = Run(self.runRtl.isChecked())
         ###if self.run :
@@ -698,7 +712,7 @@ Copyright 2012 SIL International and M. Hosken""")
 
         # end of runClicked
         
-    def runGraphiteOverString(self, fontfile, inputString, size, rtl, feats, lang, expand) :
+    def runGraphiteOverString(self, fontfile, faceAndFont, inputString, size, rtl, feats, lang, expand) :
         
         if inputString and inputString != "" :
             text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
@@ -712,8 +726,23 @@ Copyright 2012 SIL International and M. Hosken""")
         runfname = runfile.name
         runfile.close()
         
+        #print self.fontFaces
+        
+        if faceAndFont != None :
+            self.fontFaces[size] = faceAndFont
+            
+        if not size in self.fontFaces :
+            faceAndFont = makeFontAndFace(fontfile, size)
+            # Cache these so we don't have to keep recreating them
+            self.fontFaces[size] = faceAndFont
+        
         ###print "text=", text ###
-        runGraphite(fontfile, text, runfname, feats, rtl, lang, size, expand)
+        
+        #if faceAndFont == None :
+        #    runGraphite(fontfile, text, runfname, feats, rtl, lang, size, expand)
+        #else :
+        runGraphiteWithFontFace(self.fontFaces[size], text, runfname, feats, rtl, lang, size, expand)
+        
         runfile = open(runfname)
         jsonResult = json.load(runfile)
         if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
@@ -910,6 +939,8 @@ Copyright 2012 SIL International and M. Hosken""")
         else :
             self._configOpenExisting(fullname)
             
+# end of MainWindow class
+
 
 if __name__ == "__main__" :
     from argparse import ArgumentParser
