@@ -138,6 +138,8 @@ class MainWindow(QtGui.QMainWindow) :
 
 
     def loadFont(self, fontname) :
+        self.fontFaces = {}
+        
         if self.config.has_option('main', 'size') :
             fontsize = self.config.getint('main', 'size')
         else :
@@ -182,9 +184,10 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsfile) :
+        print "MainWindow::loadTests"
         self.testsfile = testsfile
         if self.tab_tests :
-            self.tab_tests.loadTests(testsfile)
+            self.tab_tests.addFile(testsfile, None, False)
             
     def loadTweaks(self, tweaksfile) :
         self.tweaksfile = tweaksfile
@@ -566,7 +569,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
 
         if self.testsfile :
-            self.tab_tests.writeXML(self.testsfile)
+            self.tab_tests.saveTests()
         if self.tweaksfile :
             self.tab_tweak.writeXML(self.tweaksfile)
         if self.configfile :
@@ -632,6 +635,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.runView.clear()
 
     def buildClicked(self) :
+        print "buildClicked"
         self.tab_edit.writeIfModified()
         
         if self.tweaksfile :
@@ -639,6 +643,8 @@ Copyright 2012 SIL International and M. Hosken""")
             
         self.tab_errors.clear()        
         errfile = TemporaryFile(mode="w+")
+        
+        self.fontFaces = {}
         
         res = buildGraphite(self.config, self, self.font, self.fontfile, errfile)
         
@@ -659,9 +665,11 @@ Copyright 2012 SIL International and M. Hosken""")
     # Run Graphite over a test string.
     def runClicked(self) :
         
-        if self.tab_edit.writeIfModified() and not self.buildClicked() :
-            # Error in saving code or building 
-            return
+        # Don't automatically build the font - the user might be part way through
+        # making changes and not ready to build.
+        #if self.tab_edit.writeIfModified() and not self.buildClicked() :
+        #    # Error in saving code or building 
+        #    return
             
         if os.stat(self.fontfile).st_ctime > self.fonttime :
             self.loadFont(self.fontfile)

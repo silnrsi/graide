@@ -255,13 +255,13 @@ class TweakList(QtGui.QWidget) :
         self.aDown.triggered.connect(self.downClicked)
         self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tweaks", app)
         self.aSave.setToolTip('Save tweak list')
-        self.aSave.triggered.connect(self.saveClicked)
+        self.aSave.triggered.connect(self.saveTestsClicked)
         self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Tweak ...", app)
         self.aAdd.setToolTip('Add new tweak')
-        self.aAdd.triggered.connect(self.addClicked)
+        self.aAdd.triggered.connect(self.addTestClicked)
         self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Tweak", app)
         self.aDel.setToolTip('Delete tweak')
-        self.aDel.triggered.connect(self.delClicked)
+        self.aDel.triggered.connect(self.delTestClicked)
 
     def initTweaks(self) :
         self.addGroup('main')  # initial empty group
@@ -485,7 +485,7 @@ class TweakList(QtGui.QWidget) :
     def editClicked(self) :
         self.editTweak(self.list.currentWidget().currentRow())
 
-    def addClicked(self, t = None) :
+    def addTestClicked(self, t = None) :
         gIndex = self.list.currentIndex()
         if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
@@ -494,15 +494,15 @@ class TweakList(QtGui.QWidget) :
             self.tweakGroups[gIndex].pop()
             self.list.widget(gIndex).takeItem(len(self.tweakGroups))
 
-    def saveClicked(self) :
-        tname = configval(self.app.config, 'build', 'tweakxmlfile')
-        if tname : self.writeXML(tname)
-
-    def delClicked(self) :
+    def delTestClicked(self) :
         gIndex = self.list.currentIndex()
         tIndex = self.list.widget(gIndex).currentRow()
         self.tweakGroups[gIndex].pop(tIndex)
         self.list.widget(gIndex).takeItem(tIndex)
+
+    def saveTestsClicked(self) :
+        tname = configval(self.app.config, 'build', 'tweakxmlfile')
+        if tname : self.writeXML(tname)
 
     def upClicked(self) :
         l = self.list.currentWidget()
