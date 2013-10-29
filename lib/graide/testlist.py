@@ -169,10 +169,11 @@ class TestList(QtGui.QWidget) :
         self.gcombo.clear()
         for i in range(self.liststack.count()-1, -1, -1) :
             self.liststack.removeWidget(self.liststack.widget(i))
-        if not fname or not os.path.exists(fname) : 
-            print "Can't find tests file " + fname
+        if not fname or not os.path.exists(fname) :
+            # Create a new set of tests - these will be stored in a new file.
             self.initTests(fname)
             return
+            
         try :
             e = et.parse(fname)
         except Exception as err:
@@ -389,8 +390,16 @@ class TestList(QtGui.QWidget) :
         self.changeFile(index)
 
     def addFileClicked(self) :
-        (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='XML files (*.xml)')
-        if fname :
+        # This dialog allows specifying a file that does not exist.
+        qdialog = QtGui.QFileDialog()
+        qdialog.setFileMode(QtGui.QFileDialog.AnyFile)
+        qdialog.setViewMode(QtGui.QFileDialog.Detail)
+        qdialog.setNameFilter('XML files (*.xml)')
+        if qdialog.exec_() :
+            selected = qdialog.selectedFiles()
+            fname = selected[0]
+            if fname[-4:] != ".xml" :
+                fname += ".xml"
             index = self.fcombo.currentIndex() + 1
             self.addFile(fname, index)
             self.fcombo.setCurrentIndex(self.fcombo.currentIndex() + 1)
