@@ -1,10 +1,11 @@
 #!/usr/bin/make -f
 
 % :
-	#dh $@ --with=python2 --buildsystem=python_distutils
 	dh $@
 
 override_dh_auto_clean :
 	dh_auto_clean
 	rm -fr build
 
+override_dh_install :
+	dh_install --sourcedir=debian/graphite-graide
