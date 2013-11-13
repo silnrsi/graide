@@ -130,7 +130,8 @@ class TestList(QtGui.QWidget) :
         self.hbbox.addWidget(self.bDel)
         self.setLayout(self.vbox)
 
-        self.addFile(fname, None, False)
+        if fname :
+            self.addFile(fname, None, False)
 
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
