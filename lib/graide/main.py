@@ -42,16 +42,18 @@ from graide.waterfall import WaterfallDialog
 from graide.pyresources import qInitResources, qCleanupResources
 from graide.posedit import PosEdit, PosView
 from graide.tweaker import Tweaker, TweakView
-from graide.findmatch import GlyphPatternMatcher
+from graide.findmatch import GlyphPatternMatcher, MatchList, Matcher
 from PySide import QtCore, QtGui
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
 import codecs  ### debug
 
+
 class MainWindow(QtGui.QMainWindow) :
 
     def __init__(self, config, configfile, jsonfile) :
+        
         super(MainWindow, self).__init__()
         self.rules = None
         self.runfile = None
@@ -70,6 +72,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.apname = None
         self.appTitle = "Graide v0.5"
         
+        self.debugCnt = 0  # debug
+
         windowTitle = ''
         if (self.configfile != None) :
             basename = os.path.basename(self.configfile)
@@ -133,9 +137,14 @@ class MainWindow(QtGui.QMainWindow) :
         print "Opening files..." #===
 
         self._openFileList()
-
+        
         # end of __init__
 
+
+    def incDebug(self) :
+        self.debugCnt = self.debugCnt + 1
+        return self.debugCnt
+        
 
     def loadFont(self, fontname) :
         self.fontFaces = {}
@@ -254,18 +263,18 @@ class MainWindow(QtGui.QMainWindow) :
         self.resize(*Layout.initWinSize)
         self.centralwidget = QtGui.QWidget(self)
         self.verticalLayout = QtGui.QHBoxLayout(self.centralwidget)
-        self.hsplitter = QtGui.QSplitter(self.centralwidget)
+        self.hsplitter = QtGui.QSplitter(self.centralwidget) #splitter between left tabbed pane and two right panes
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
         self.verticalLayout.addWidget(self.hsplitter)
 
-        self.tab_info = QtGui.QTabWidget(self.hsplitter)
+        self.tab_info = QtGui.QTabWidget(self.hsplitter)  # left pane
         #self.tab_info = InfoTabs(self.hsplitter)
         self.widget = QtGui.QWidget(self.hsplitter)
         self.setwidgetstretch(self.widget, 55, 100)
-        self.topLayout = QtGui.QVBoxLayout(self.widget)
+        self.topLayout = QtGui.QVBoxLayout(self.widget)  # right two panes
         self.topLayout.setContentsMargins(*Layout.buttonMargins)
-        self.vsplitter = QtGui.QSplitter(self.widget)
+        self.vsplitter = QtGui.QSplitter(self.widget) # splitter between code pane and lower pane
         self.vsplitter.setOrientation(QtCore.Qt.Vertical)
         self.vsplitter.setHandleWidth(2)
         self.topLayout.addWidget(self.vsplitter)
@@ -286,14 +295,14 @@ class MainWindow(QtGui.QMainWindow) :
 
         # end of setupUi
 
-    def ui_tests(self, parent) :
+    def ui_tests(self, parent) : # parent = tab_info
         self.setwidgetstretch(self.tab_info, 30, 100)
-        self.test_splitter = QtGui.QSplitter() # left-hand vertical pane
+        self.test_splitter = QtGui.QSplitter() # left-hand vertical pane; allows sizing of results view
         self.test_splitter.setOrientation(QtCore.Qt.Vertical)
         self.test_splitter.setContentsMargins(0, 0, 0, 0)
         self.test_splitter.setHandleWidth(4)
         self.test_widget = QtGui.QWidget(self.test_splitter)
-        self.test_vbox = QtGui.QVBoxLayout(self.test_widget)
+        self.test_vbox = QtGui.QVBoxLayout(self.test_widget) # TestList + input control
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
         
@@ -346,7 +355,7 @@ class MainWindow(QtGui.QMainWindow) :
         
         parent.addTab(self.test_splitter, "Tests")
 
-        # end of ui_tests
+    # end of ui_tests
 
     def ui_left(self, parent) :
         # glyph, slot, classes, positions
@@ -403,9 +412,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_posedit = PosEdit(self.font, self)
         self.tab_info.addTab(self.tab_posedit, "Attach")
         
+        # Match tab
+        self.tab_match = Matcher(self.fontfile, self.font, self, self.testsfile)
+        self.tab_info.addTab(self.tab_match, "Match")
+        
         self.tab_info.currentChanged.connect(self.infoTabChanged)
 
-        # end of ui_left
+    # end of ui_left
 
     def ui_fileEdits(self, parent) :
         # file edit view
@@ -485,7 +498,7 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
         self.tab_results.addTab(self.tab_posview, "Attach")
         
-        # end of ui_bottom
+    # end of ui_bottom
 
     def setMenus(self) :
         filemenu = self.menuBar().addMenu("&File")
@@ -527,7 +540,7 @@ class MainWindow(QtGui.QMainWindow) :
         helpmenu = self.menuBar().addMenu("&Help")
         helpmenu.addAction(self.aHAbout)
 
-        # end of setMenus
+    # end of setMenus
 
     def helpAbout(self) :
         QtGui.QMessageBox.about(self, "Graide", """GRAphite Integrated Development Environment
@@ -581,7 +594,8 @@ Copyright 2012 SIL International and M. Hosken""")
                 pass
         self.tab_edit.writeIfModified()
         self.saveAP()
-        
+    
+    # end of _saveProjectData    
 
     def glyphSelected(self, data, model) :
         # data = Glyph, model = FontModel
@@ -661,6 +675,8 @@ Copyright 2012 SIL International and M. Hosken""")
         self.feats = make_FeaturesMap(self.fontfile)
 
         return True
+        
+    # end of buildClicked
 
     # Run Graphite over a test string.
     def runClicked(self) :
@@ -699,7 +715,7 @@ Copyright 2012 SIL International and M. Hosken""")
                 
         ### Temp
         #patternMatcher = GlyphPatternMatcher(self)
-        #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 2)
+        #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 3)
         #patternMatcher.search(self.fontfile, self.config.get('main', 'testsfile'))
         #####################
         
@@ -718,7 +734,7 @@ Copyright 2012 SIL International and M. Hosken""")
         self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
 
-        # end of runClicked
+    # end of runClicked
         
     def runGraphiteOverString(self, fontfile, faceAndFont, inputString, size, rtl, feats, lang, expand) :
         
@@ -758,7 +774,9 @@ Copyright 2012 SIL International and M. Hosken""")
         #print "temp file name =",runfname ###
         os.unlink(runfname)
         return jsonResult
-
+    
+    # end of runGraphiteOverString
+    
     def doWaterfall(self) :
         self.runClicked()
         if self.config.has_option('ui', 'waterfall') :
@@ -807,6 +825,8 @@ Copyright 2012 SIL International and M. Hosken""")
             return (n.text(), v.text())
         else :
             return (None, None)
+            
+    # end of propDialog
 
     def glyphAddPoint(self) :
         (n, v) = self.propDialog('Point')
@@ -880,7 +900,8 @@ Copyright 2012 SIL International and M. Hosken""")
         if self.config.has_option('build', 'gdlfile') :
             #self.selectLine(self.config.get('build', 'gdlfile'), -1)
             self.tab_edit.updateFromConfigSettings(self.config)
-            
+    
+    # end of _configOpenExisting        
 
     # When opening project, open the list of previously open files.
     def _openFileList(self) :        
@@ -912,7 +933,9 @@ Copyright 2012 SIL International and M. Hosken""")
         self.recentProjects.addProject(self.configfile)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
-        self.runConfigDialog()      
+        self.runConfigDialog()    
+        
+    # end of configNewClicked  
 
     def resetNames(self) :
         if self.font :

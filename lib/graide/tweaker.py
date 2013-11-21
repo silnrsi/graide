@@ -554,7 +554,8 @@ class TweakList(QtGui.QWidget) :
         for g in self.tweakGroups :
             for t in g :
                 t.acceptPending()
-        
+                
+# end of class TweakList       
 
 # The controls at the bottom of the pane that allow adjustment of the glyph tweaks
 class TweakInfoWidget(QtGui.QFrame) :
@@ -854,11 +855,12 @@ class TweakInfoWidget(QtGui.QFrame) :
 #        else :
 #            super(TweakInfoWidget,self).keyReleaseEvent(event)
 
+# end of class TweakInfoWidget
 
 # Main class to manage tweaking
 class Tweaker(QtGui.QWidget) :
 
-    def __init__(self, font, parent = None, xmlfile = None) :
+    def __init__(self, font, parent = None, xmlfile = None) :   # parent = app
         super(Tweaker, self).__init__(parent)
         self.app = parent
         self.font = font
@@ -922,6 +924,7 @@ class Tweaker(QtGui.QWidget) :
     def posButtonsEnabled(self) :
         return self.infoWidget.posButtonsEnabled
       
+# end of class Tweaker
 
 #------ TweakView classes ------
 
@@ -986,7 +989,9 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         # We have been keeping the display static - now update it.
         self.runView.tweaker().updatePositions(highlight = True)
         
-        
+# end of class TweakableGlyphPixmapItem
+
+
 class TweakableRunView(RunView) :
     
     def __init__(self, font = None, run = None, parent = None) :
@@ -1090,7 +1095,9 @@ class TweakableRunView(RunView) :
 #        else :
 #            print "TweakableRunView does not have focus"
             
-                  
+# end of class TweakableRunView
+
+               
 # The display of the moveable glyphs in the bottom right-hand pane
 class TweakView(QtGui.QWidget) :
 
@@ -1189,4 +1196,5 @@ class TweakView(QtGui.QWidget) :
 #    def snagKeyPress(self, event) :
 #        self.runView.keyPressEvent(event)
 #        self.runView.snagFocus()
-        
+
+#end of class TweakView

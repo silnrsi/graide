@@ -131,6 +131,8 @@ class TestList(QtGui.QWidget) :
         self.setLayout(self.vbox)
 
         self.addFile(fname, None, False)
+        
+    # end of __init__
 
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
@@ -157,6 +159,8 @@ class TestList(QtGui.QWidget) :
         self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
         self.aDel.setToolTip('Delete test')
         self.aDel.triggered.connect(self.delTestClicked)
+        
+    # end of setActions
 
     def initTests(self, fname) :
          self.addGroup('main')
@@ -259,6 +263,8 @@ class TestList(QtGui.QWidget) :
                 if res.isValid() : te.background = res
             self.appendTest(te, l)
             
+    # end of loadOldTests
+            
     def addFile(self, fname, index = None, savePrevious = True) :
         #print "addFile(" + fname + "," + str(savePrevious) + ")"
         basename = os.path.basename(fname)
@@ -327,7 +333,7 @@ class TestList(QtGui.QWidget) :
             t.background = bgndSave
 
     def writeXML(self, fname) :
-        #print "writeXML(" + fname + ")"
+        #print "TestList::writeXML(" + fname + ")"
         
         e = et.Element('ftml', {'version' : '1.0'})
         if self.header is not None :
@@ -383,6 +389,8 @@ class TestList(QtGui.QWidget) :
         f.write(sio.getvalue().replace(' />', '/>'))
         sio.close()
         f.close()
+        
+    # end of writeXML
         
     @QtCore.Slot(int)
     def changeFileCombo(self, index) :
@@ -507,3 +515,5 @@ class TestList(QtGui.QWidget) :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount
         return self.fsets[k]
+
+# end of class TestList
