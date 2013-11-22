@@ -25,7 +25,7 @@ from rungraphite import makeFontAndFace
 
 from PySide import QtCore, QtGui
 from graide.test import Test
-from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
+from graide.utils import configval, configintval, reportError, as_entities, relpath, ETcanon, ETinsert
 from graide.run import Run
 from graide.runview import RunView
 from graide.layout import Layout
@@ -111,7 +111,7 @@ class GlyphPatternMatcher() :
     # end of setUpPattern
         
     # Search for all matches of the stored pattern in the target file, which is an XML test file.
-    def search(self, fontFile, targetFile) :
+    def search(self, fontFileName, targetFile) :
         
         matchResults = []
         
@@ -131,7 +131,7 @@ class GlyphPatternMatcher() :
             print "could not search " + targetFile ####
             return matchResults
             
-        faceAndFont = makeFontAndFace(fontFile, 12)
+        faceAndFont = makeFontAndFace(fontFileName, 12)
 
         cnt = 0;
         for g in e.iterfind('testgroup') :
@@ -150,7 +150,7 @@ class GlyphPatternMatcher() :
                 
                 ###print testLabel
                 
-                jsonOutput = self.app.runGraphiteOverString(fontFile, faceAndFont, testString, 12, testRtl, {}, {}, 100)
+                jsonOutput = self.app.runGraphiteOverString(fontFileName, faceAndFont, testString, 12, testRtl, {}, {}, 100)
                 if jsonOutput != False :
                     glyphOutput = self._dataFromGlyphs(jsonOutput)
                     match = cpat.search(glyphOutput)
@@ -202,8 +202,10 @@ class MatchList(QtGui.QWidget) :
 
     def __init__(self, app, font, fname = None, parent = None) : # parent = Matcher
         super(MatchList, self).__init__(parent)
+        
         self.noclick = False
         self.app = app
+        self.matcher = parent  # redundant :-/ -- why doesn't parent() return something that knows it's a Matcher?
         self.font = font
         self.testFiles = []     # list of filenames, include paths
         self.currentFile = fname
@@ -435,7 +437,6 @@ class MatchList(QtGui.QWidget) :
         # Delete all the existing UI for the current test file.
         if not l : l = self.liststack.currentWidget()
         groupIndex = self.liststack.indexOf(l)
-        print self.testGroups[groupIndex]
         while len(self.testGroups[groupIndex]) > 0 :
             self.testGroups[groupIndex].pop(0)
             self.liststack.widget(groupIndex).takeItem(0)
@@ -479,7 +480,7 @@ class MatchList(QtGui.QWidget) :
         if fs is None:
             fs = h.makeelement('fontsrc', {})
             ETinsert(h, fs)
-        fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
+        fs.text = 'url(' + relpath(self.app.fontFileName, fname) + ')'
         used = set()
         for i in range(len(self.testGroups)) :
             g = et.SubElement(e, 'testgroup')
@@ -614,16 +615,16 @@ class MatchList(QtGui.QWidget) :
 
     def loadTest(self, item) :
         if not self.noclick :
-            groupIndex = self.liststack.currentIndex()
+            groupIndex = self.liststack.currentIndex()   # should always be 0 currently
             testIndex = self.liststack.currentWidget().currentRow()
-            self.app.setRun(self.testGroups[groupIndex][testIndex])
+            self.matcher.setRun(self.testGroups[groupIndex][testIndex])
         else :
             # this is the side-effect of a double-click: ignore it
             self.noclick = False
 
     def runTest(self, item) :
         # event sends clicked first so no need to select
-        self.app.runClicked()
+        self.matcher.runClicked()
         self.noclick = True  # because itemClick event will happen again--ignore it
 
     def findStyleClass(self, t) :
@@ -640,13 +641,21 @@ class MatchList(QtGui.QWidget) :
 
 class Matcher(QtGui.QTabWidget) :
     
-    def __init__(self, fontFile, font, parent = None, xmlFile = None) :   # parent = app
+    def __init__(self, fontFileName, font, parent = None, xmlFile = None) :   # parent = app
         super(Matcher, self).__init__(parent)
-        self.fontFile = fontFile
+        self.fontFileName = fontFileName
         self.font = font
         self.app = parent
         self.xmlFile = xmlFile
         self.layout = QtGui.QVBoxLayout(self)
+        
+        # Default test settings
+        self.currFeats = {}
+        self.currLang = ""
+        self.currWidth = 100
+        
+        self.runLoaded = False
+
         self.setActions(self.app)
         self.initializeLayout(xmlFile)
         
@@ -654,6 +663,10 @@ class Matcher(QtGui.QTabWidget) :
         self.aSearchGo = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
         self.aSearchGo.setToolTip("Search for pattern in specified test file")
         self.aSearchGo.triggered.connect(self.searchClicked)
+
+        self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
+        self.aRunGo.setToolTip("Run text string")
+        self.aRunGo.triggered.connect(self.runClicked)
         
     # end of setActions
         
@@ -704,27 +717,42 @@ class Matcher(QtGui.QTabWidget) :
         hbox.setContentsMargins(*Layout.buttonMargins)
         hbox.setSpacing(Layout.buttonSpacing)
         runGo = QtGui.QToolButton(self.widget)
-        #runGo.setDefaultAction(aRunGo)
+        runGo.setDefaultAction(self.aRunGo)
         hbox.addWidget(runGo)
         hbox.addStretch()
-        runRtl = QtGui.QCheckBox("RTL", self.widget)
-        runRtl.setChecked(True if configintval(self.app.config, 'main', 'defaultrtl') else False)
-        runRtl.setToolTip("Process text right to left")
-        hbox.addWidget(runRtl)
-        runFeats = QtGui.QToolButton(self.widget)
-        #runFeats.setDefaultAction(aRunFeats)
-        hbox.addWidget(runFeats)
-        runAdd = QtGui.QToolButton(self.widget)
-        #runAdd.setDefaultAction(aRunAdd)
-        hbox.addWidget(runAdd)
+        self.runRtl = QtGui.QCheckBox("RTL", self.widget)
+        self.runRtl.setChecked(True if configintval(self.app.config, 'main', 'defaultrtl') else False)
+        self.runRtl.setToolTip("Process text right to left")
+        hbox.addWidget(self.runRtl)
+        self.runFeats = QtGui.QToolButton(self.widget)
+        #self.runFeats.setDefaultAction(self.aRunFeats)
+        hbox.addWidget(self.runFeats)
+        #runAdd = QtGui.QToolButton(self.widget)
+        #runAdd.setDefaultAction(self.aRunAdd)
+        #hbox.addWidget(runAdd)
     
         # test output
-        self.run = Run(runRtl.isChecked())
+        self.run = Run(self.runRtl.isChecked())
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         vsplitter.addWidget(self.runView.gview)
         
     # end of initializeLayout
+    
+    def setRun(self, test) :
+
+        self.runRtl.setChecked(True if test.rtl else False)
+        if configintval(self.app.config, 'ui', 'entities') :
+            t = as_entities(test.text)
+        else :
+            t = test.text
+        self.runEdit.setPlainText(t)
+        self.currFeats = dict(test.feats)
+        self.currLang = test.lang
+        self.currWidth = test.width
+        self.runView.clear()
+
+    # end of setRun
     
     def searchClicked(self) :
         pattern = self.patternEdit.toPlainText()
@@ -736,12 +764,11 @@ class Matcher(QtGui.QTabWidget) :
             
             patternMatcher = GlyphPatternMatcher(self.app, self)
             patternMatcher.setUpPattern(pattern, self.font)
-            matchResults = patternMatcher.search(self.fontFile, self.app.config.get('main', 'testsfile'))
+            matchResults = patternMatcher.search(self.fontFileName, self.app.config.get('main', 'testsfile'))
             
             ##print matchResults
             
             for data in matchResults :
-                print data[0]
                 matchKey = data[0]
                 matchText = data[1]
                 matchRtl = data[2]
@@ -753,6 +780,29 @@ class Matcher(QtGui.QTabWidget) :
                 self.matchList.appendTest(te)
         
     # end of searchClicked
+    
+    def runClicked(self) :
+
+        jsonResult = self.app.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
+            self.font.size, self.runRtl.isChecked(), 
+            #self.currFeats or self.app.feats[self.currLang].fval,
+            self.currFeats,
+            self.currLang, self.currWidth)
+        if jsonResult != False :
+            self.json = jsonResult
+        else :
+            print "No Graphite result" ###
+            self.json = [ {'passes' : [], 'output' : [] } ]
+                
+        ### Temp
+        #patternMatcher = GlyphPatternMatcher(self)
+        #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 3)
+        #patternMatcher.search(self.fontFileName, self.config.get('main', 'testsfile'))
+        #####################
+        
+        self.run = self.app.loadRunViewAndPasses(self, self.json)
+        
+    # end of runClicked
        
     
 # end of class Matcher

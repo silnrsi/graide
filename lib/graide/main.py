@@ -57,7 +57,7 @@ class MainWindow(QtGui.QMainWindow) :
         super(MainWindow, self).__init__()
         self.rules = None
         self.runfile = None
-        self.runloaded = False
+        self.runLoaded = False
         self.fDialog = None
         self.config = config
         self.configfile = configfile
@@ -68,7 +68,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.currWidth = 100
         self.font = GraideFont()
         self.fontFaces = {}
-        self.fontfile = None
+        self.fontFileName = None
         self.apname = None
         self.appTitle = "Graide v0.5"
         
@@ -153,13 +153,13 @@ class MainWindow(QtGui.QMainWindow) :
             fontsize = self.config.getint('main', 'size')
         else :
             fontsize = 40
-        self.fontfile = str(fontname)
+        self.fontFileName = str(fontname)
         self.fonttime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
-        self.font.loadFont(self.fontfile, fontsize)
-        self.feats = make_FeaturesMap(self.fontfile) # map languages to features
+        self.font.loadFont(self.fontFileName, fontsize)
+        self.feats = make_FeaturesMap(self.fontFileName) # map languages to features
         
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
-        self.gdxfile = os.path.splitext(self.fontfile)[0] + '.gdx'
+        self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
         
         self.loadAP(configval(self.config, 'main', 'ap'))
         if hasattr(self, 'tab_font') :
@@ -213,12 +213,15 @@ class MainWindow(QtGui.QMainWindow) :
         self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
         self.aRunGo.setToolTip("Run text string after rebuild")
         self.aRunGo.triggered.connect(self.runClicked)
+        
         self.aWater = QtGui.QAction(QtGui.QIcon.fromTheme("document-preview", QtGui.QIcon(":/images/document-preview.png")), "&Waterfall ...", self)
         self.aWater.setToolTip('Display run as a waterfall')
         self.aWater.triggered.connect(self.doWaterfall)
+        
         self.aRunFeats = QtGui.QAction(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")), "Set &Features ...", self)
         self.aRunFeats.triggered.connect(self.featuresClicked)
         self.aRunFeats.setToolTip("Edit features of test run")
+        
         self.aRunAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Test from &Run ...", self)
         self.aRunAdd.setToolTip("Add run to tests list under a new name")
         self.aRunAdd.triggered.connect(self.runAddClicked)
@@ -230,9 +233,11 @@ class MainWindow(QtGui.QMainWindow) :
         self.aCfg = QtGui.QAction(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")), "&Configure Project ...", self)
         self.aCfg.setToolTip("Configure project")
         self.aCfg.triggered.connect(self.runConfigDialog)
+        
         self.aCfgOpen = QtGui.QAction(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")), "&Open Project ...", self)
         self.aCfgOpen.setToolTip("Open existing project")
         self.aCfgOpen.triggered.connect(self.configOpenClicked)
+        
         self.aCfgNew = QtGui.QAction(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")), "&New Project ...", self)
         self.aCfgNew.setToolTip("Create new project")
         self.aCfgNew.triggered.connect(self.configNewClicked)
@@ -413,7 +418,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_info.addTab(self.tab_posedit, "Attach")
         
         # Match tab
-        self.tab_match = Matcher(self.fontfile, self.font, self, self.testsfile)
+        self.tab_match = Matcher(self.fontFileName, self.font, self, self.testsfile)
         self.tab_info.addTab(self.tab_match, "Match")
         
         self.tab_info.currentChanged.connect(self.infoTabChanged)
@@ -475,7 +480,7 @@ class MainWindow(QtGui.QMainWindow) :
             istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
-            self.runloaded = True
+            self.runLoaded = True
         self.setCentralWidget(self.centralwidget)
 
         # Rules tab
@@ -486,7 +491,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_results.addTab(self.tab_rules, "Rules")
 
         # Tweaks tab
-        ffile = self.fontfile if self.fontfile else ""
+        ffile = self.fontFileName if self.fontFileName else ""
         self.tab_tweakview = TweakView(ffile, self.tweaksize, app = self)
         if hasattr(self, 'tab_tweak') :
             self.tab_tweak.setView(self.tab_tweakview)
@@ -660,7 +665,7 @@ Copyright 2012 SIL International and M. Hosken""")
         
         self.fontFaces = {}
         
-        res = buildGraphite(self.config, self, self.font, self.fontfile, errfile)
+        res = buildGraphite(self.config, self, self.font, self.fontFileName, errfile)
         
         if res :
             # Compliation failure
@@ -672,7 +677,7 @@ Copyright 2012 SIL International and M. Hosken""")
             self.tab_results.setCurrentWidget(self.tab_errors)
 
         self.loadAP(self.apname)
-        self.feats = make_FeaturesMap(self.fontfile)
+        self.feats = make_FeaturesMap(self.fontFileName)
 
         return True
         
@@ -687,8 +692,8 @@ Copyright 2012 SIL International and M. Hosken""")
         #    # Error in saving code or building 
         #    return
             
-        if os.stat(self.fontfile).st_ctime > self.fonttime :
-            self.loadFont(self.fontfile)
+        if os.stat(self.fontFileName).st_ctime > self.fonttime :
+            self.loadFont(self.fontFileName)
         
         if not self.currFeats and self.currLang not in self.feats :
             if None not in self.feats :    # not a graphite font, try to build
@@ -703,7 +708,7 @@ Copyright 2012 SIL International and M. Hosken""")
             else :
                 self.currLang = None
 
-        jsonResult = self.runGraphiteOverString(self.fontfile, None, self.runEdit.toPlainText(),
+        jsonResult = self.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
             self.font.size, self.runRtl.isChecked(), 
             self.currFeats or self.feats[self.currLang].fval, self.currLang,
             self.currWidth)
@@ -716,27 +721,36 @@ Copyright 2012 SIL International and M. Hosken""")
         ### Temp
         #patternMatcher = GlyphPatternMatcher(self)
         #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 3)
-        #patternMatcher.search(self.fontfile, self.config.get('main', 'testsfile'))
+        #patternMatcher.search(self.fontFileName, self.config.get('main', 'testsfile'))
         #####################
         
-        self.run = Run(self.runRtl.isChecked())
+        self.run = self.loadRunViewAndPasses(self, self.json)
+        
+    # end of runClicked
+
+    def loadRunViewAndPasses(self, widget, json) :
+        # widget might be self (the main window) or it might be the Matcher
+        rtl = widget.runRtl.isChecked()
+        runResult = Run(rtl)
         ###if self.run :
-        self.run.addslots(self.json[-1]['output'])
-        self.runView.loadrun(self.run, self.font, resize = False)
-        if not self.runloaded :
+        runResult.addslots(json[-1]['output'])
+        widget.runView.loadrun(runResult, self.font, resize = False)
+        if not widget.runLoaded :
             try :
-                self.runView.slotSelected.connect(self.slotSelected)
-                self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
-                self.runloaded = True
+                widget.runView.slotSelected.connect(self.slotSelected)
+                widget.runView.glyphSelected.connect(self.glyphAttrib.changeData)
+                widget.runLoaded = True
             except :
                 print "Selection connection failed"
-        self.tab_passes.loadResults(self.font, self.json, self.gdx, self.runRtl.isChecked())
-        self.tab_passes.setTopToolTip(self.runEdit.toPlainText())
+        self.tab_passes.loadResults(self.font, json, self.gdx, rtl)
+        self.tab_passes.setTopToolTip(widget.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
-
-    # end of runClicked
         
-    def runGraphiteOverString(self, fontfile, faceAndFont, inputString, size, rtl, feats, lang, expand) :
+        return runResult
+
+    # end of loadRunViewAndPasses
+        
+    def runGraphiteOverString(self, fontFileName, faceAndFont, inputString, size, rtl, feats, lang, expand) :
         
         if inputString and inputString != "" :
             text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
@@ -756,14 +770,14 @@ Copyright 2012 SIL International and M. Hosken""")
             self.fontFaces[size] = faceAndFont
             
         if not size in self.fontFaces :
-            faceAndFont = makeFontAndFace(fontfile, size)
+            faceAndFont = makeFontAndFace(fontFileName, size)
             # Cache these so we don't have to keep recreating them
             self.fontFaces[size] = faceAndFont
         
         ###print "text=", text ###
         
         #if faceAndFont == None :
-        #    runGraphite(fontfile, text, runfname, feats, rtl, lang, size, expand)
+        #    runGraphite(fontFileName, text, runfname, feats, rtl, lang, size, expand)
         #else :
         runGraphiteWithFontFace(self.fontFaces[size], text, runfname, feats, rtl, lang, size, expand)
         

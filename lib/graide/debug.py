@@ -37,7 +37,7 @@ class DebugMenu(QtGui.QMenu) :
         self.addAction('Save Run as JSON').triggered.connect(self.runSave)
 
     def reloadFont(self) :
-        self.app.loadFont(self.app.fontfile)
+        self.app.loadFont(self.app.fontFileName)
 
     def runSave(self) :
         f = file('_graide.json', 'w')

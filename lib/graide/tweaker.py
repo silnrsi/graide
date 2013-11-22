@@ -419,7 +419,7 @@ class TweakList(QtGui.QWidget) :
         if fs is None:
             fs = h.makeelement('fontsrc', {})
             ETinsert(h, fs)
-        fs.text = 'url(' + relpath(self.app.fontfile, fname) + ')'
+        fs.text = 'url(' + relpath(self.app.fontFileName, fname) + ')'
         used = set()
         for i in range(len(self.tweakGroups)) :
             g = XmlTree.SubElement(e, 'tweakgroup')
