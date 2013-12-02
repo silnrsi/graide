@@ -76,24 +76,31 @@ class GlyphPatternMatcher() :
         for item in glyphItems :
             if item[0:2] == "g_" :
                 item = item[2:]
+            
+            lastLetter = item[-1:]
+            if lastLetter == "?" or lastLetter == "*" or lastLetter == "+" :
+                itemMod = lastLetter
+                item = item[0:-1]
+            else :
+                itemMod = ""
                     
             if item == "ANY" :
-                regexpPattern += self._singleGlyphPattern()
+                itemPattern = self._singleGlyphPattern()
                 
             elif item in font.classes :
                 print item + " is class"
                 classData = font.classes[item]
-                regexpPattern += "("
+                itemPattern = "("
                 sep = ""
                 for classGlyph in classData.elements :
-                   regexpPattern += sep + "_" + str(classGlyph)
+                   itemPattern += sep + "<" + str(classGlyph) + ">"
                    sep = "|"
-                regexpPattern += ")"
+                itemPattern += ")"
                 
             elif item in font.gnames :
                 print item + " is glyph"
-                regexpPattern += "_" + str(font.gnames[item])
-                
+                itemPattern = "<" + str(font.gnames[item]) + ">"
+                    
             else :
                 print item + " not found"
                 self.pattern = ""
@@ -105,6 +112,15 @@ class GlyphPatternMatcher() :
                 errorDialog.exec_()
 
                 return
+            
+            if itemMod != "" :
+                if itemPattern[0:1] != "(" :
+                    itemPattern = "(" + itemPattern + ")" + "?"
+                else :
+                    itemPattern = itemPattern + "?"
+
+            regexpPattern += itemPattern
+        # end of for item loop
                 
         self.pattern = regexpPattern
         
@@ -153,6 +169,7 @@ class GlyphPatternMatcher() :
                 jsonOutput = self.app.runGraphiteOverString(fontFileName, faceAndFont, testString, 12, testRtl, {}, {}, 100)
                 if jsonOutput != False :
                     glyphOutput = self._dataFromGlyphs(jsonOutput)
+                    ##print "glyphOutput=" + glyphOutput
                     match = cpat.search(glyphOutput)
                 else :
                     match = False
@@ -165,10 +182,10 @@ class GlyphPatternMatcher() :
                 ###    print testLabel + " did not match"
                 
                 cnt = cnt + 1
-                #if cnt > 25 : break;
+                #if cnt >= 1 : break;
             # end of for t loop
             
-            #if cnt > 25 : break;
+            #if cnt >= 1 : break;
         # end of for g loop
         
         return matchResults
@@ -177,7 +194,7 @@ class GlyphPatternMatcher() :
         
         
     def _singleGlyphPattern(self) :
-        return "_[0-9]+"
+        return "<[0-9]+>"
             
     # Generate a data string corresponding to the glyph output
     # that can be matched against the reg-exp.
@@ -185,7 +202,7 @@ class GlyphPatternMatcher() :
         jsonOutput = json[0]["output"]
         result = ""
         for g in jsonOutput :
-            result += "_" + str(g["gid"])
+            result += "<" + str(g["gid"]) + ">"
         return result
     
 # end of GlyphPatternMatcher class
@@ -638,6 +655,22 @@ class MatchList(QtGui.QWidget) :
 # end of class MatchList
 
 
+# A plain text control that snags the Return key
+class TextEditReturn(QtGui.QPlainTextEdit) :
+    
+    def __init__(self, parent, matcher) :
+        super(TextEditReturn, self).__init__(parent)
+        self.matcher = matcher
+    
+    def keyPressEvent(self, event) :
+        
+        if event.key() == QtCore.Qt.Key_Return :
+            self.matcher.searchClicked()
+        else :
+            super(TextEditReturn, self).keyPressEvent(event)
+    
+# end of class TextEditReturn
+
 
 class Matcher(QtGui.QTabWidget) :
     
@@ -682,7 +715,7 @@ class Matcher(QtGui.QTabWidget) :
         vbox.setContentsMargins(*Layout.buttonMargins)
         vbox.setSpacing(Layout.buttonSpacing)
         
-        self.patternEdit = QtGui.QPlainTextEdit(self.widget)
+        self.patternEdit = TextEditReturn(self.widget, self)
         self.patternEdit.setMaximumHeight(Layout.runEditHeight)
         vbox.addWidget(self.patternEdit)
         
