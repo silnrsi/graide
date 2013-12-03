@@ -1,0 +1,5 @@
+graphite-graide (0.5.1-1~palaso1) precise; urgency=low
+
+  * Initial development release
+
+ -- Martin Hosken <martin_hosken@sil.org>  Thu, 31 Oct 2013 18:35:24 +0700
