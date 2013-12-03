@@ -214,13 +214,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.aRunGo.setToolTip("Run text string after rebuild")
         self.aRunGo.triggered.connect(self.runClicked)
         
-        self.aWater = QtGui.QAction(QtGui.QIcon.fromTheme("document-preview", QtGui.QIcon(":/images/document-preview.png")), "&Waterfall ...", self)
+        self.aWater = QtGui.QAction(QtGui.QIcon.fromTheme("waterfall", QtGui.QIcon(":/images/waterfall.png")), "&Waterfall ...", self)
         self.aWater.setToolTip('Display run as a waterfall')
         self.aWater.triggered.connect(self.doWaterfall)
         
-        self.aRunCopy = QtGui.QAction(QtGui.QIcon.fromTheme('edit-copy', QtGui.QIcon(":/images/edit-copy.png")), "Copy output ...", self)
-        self.aRunCopy.setToolTip("Copy test output as pattern in Match tab")
-        self.aRunCopy.triggered.connect(self.copyOutput)
+        self.aRunMatch = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
+        self.aRunMatch.setToolTip("Use test output as pattern to match")
+        self.aRunMatch.triggered.connect(self.matchOutput)
         
         self.aRunFeats = QtGui.QAction(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")), "Set &Features ...", self)
         self.aRunFeats.triggered.connect(self.featuresClicked)
@@ -343,9 +343,9 @@ class MainWindow(QtGui.QMainWindow) :
         self.runWater = QtGui.QToolButton(self.test_widget)
         self.runWater.setDefaultAction(self.aWater)
         self.test_hbox.addWidget(self.runWater)
-        self.runCopy = QtGui.QToolButton(self.test_widget)
-        self.runCopy.setDefaultAction(self.aRunCopy)
-        #self.test_hbox.addWidget(self.runCopy)
+        self.runMatch = QtGui.QToolButton(self.test_widget)
+        self.runMatch.setDefaultAction(self.aRunMatch)
+        self.test_hbox.addWidget(self.runMatch)
         self.test_hbox.addStretch()
         self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
         self.runRtl.setChecked(True if configintval(self.config, 'main', 'defaultrtl') else False)
@@ -809,11 +809,11 @@ Copyright 2012 SIL International and M. Hosken""")
             w.exec_()
 
 
-    def copyOutput(self) :
-        print "copying output...not implemented"
+    def matchOutput(self) :
         rtl = self.runRtl.isChecked()
-        self. _finalOutput(self.font, self.json, self.gdx, rtl)
-        
+        glyphList = self. _finalOutput(self.font, self.json, self.gdx, rtl)
+        self.tab_match.pasteAsPattern(glyphList)
+        self.tab_info.setCurrentWidget(self.tab_match)
 
 
     def _finalOutput(self, font, jsonall, gdx = None, rtl = False) :
@@ -822,33 +822,6 @@ Copyright 2012 SIL International and M. Hosken""")
         else :
             json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
-        count = num
-        
-        # JSON format:
-        #   'passes': [
-        #      0:
-        #        'id' : 1
-        #        'slots' : <initial data>
-        #        'rules' : <rules run by pass 1>
-        #      1:
-        #        'id' : 2
-        #        'slots' : <output of pass 1>
-        #        'rules' : <rules run by pass 2>
-        #      ...
-        #      N-1:
-        #        'id' : N
-        #        'slots' : <output of pass N-1>
-        #        'rules' : <rules run by pass N>
-        #   ]
-        #   'output': <output of pass N>
-        
-        # Also note that pass IDs in JSON do not match pass indices in GDX when there is
-        # a bidi pass. In JSON, the pass ID of a bidi pass in json is -1, with the
-        # first positioning pass index = last subs pass + 1. (More accurately, -1 indicates
-        # the INPUT to the bidi pass.) In GDX, pass indices include the bidi pass, so first
-        # positioning pass index = last subs pass + 2.
-        #
-        # Best thing to do is to more or less ignore the JSON IDs, since they are not reliable.
             
         glyphList = []
         run = Run(rtl)
@@ -858,63 +831,10 @@ Copyright 2012 SIL International and M. Hosken""")
             if g :
                 t = g.GDLName() or g.psname
                 glyphList.append(t)
-                print t
+        return glyphList
         
     # end of _finalOutput()
-
-
-    def copyOutput(self) :
-        print "copying output...not implemented"
-        rtl = self.runRtl.isChecked()
-        self. _finalOutput(self.font, self.json, self.gdx, rtl)
-        
-
-
-    def _finalOutput(self, font, jsonall, gdx = None, rtl = False) :
-        if jsonall :
-            json = jsonall[0]
-        else :
-            json = {'passes' : [], 'output' : [] }  # empty output
-        num = len(json['passes']) + 1  # 0 = Init
-        count = num
-        
-        # JSON format:
-        #   'passes': [
-        #      0:
-        #        'id' : 1
-        #        'slots' : <initial data>
-        #        'rules' : <rules run by pass 1>
-        #      1:
-        #        'id' : 2
-        #        'slots' : <output of pass 1>
-        #        'rules' : <rules run by pass 2>
-        #      ...
-        #      N-1:
-        #        'id' : N
-        #        'slots' : <output of pass N-1>
-        #        'rules' : <rules run by pass N>
-        #   ]
-        #   'output': <output of pass N>
-        
-        # Also note that pass IDs in JSON do not match pass indices in GDX when there is
-        # a bidi pass. In JSON, the pass ID of a bidi pass in json is -1, with the
-        # first positioning pass index = last subs pass + 1. (More accurately, -1 indicates
-        # the INPUT to the bidi pass.) In GDX, pass indices include the bidi pass, so first
-        # positioning pass index = last subs pass + 2.
-        #
-        # Best thing to do is to more or less ignore the JSON IDs, since they are not reliable.
-            
-        glyphList = []
-        run = Run(rtl)
-        run.addslots(json['output'])   # final output
-        for i, s in enumerate(run) :
-            g = font[s.gid]
-            if g :
-                t = g.GDLName() or g.psname
-                glyphList.append(t)
-                print t
-        
-    # end of _finalOutput()
+    
 
     def runAddClicked(self) :
         text = self.runEdit.toPlainText()

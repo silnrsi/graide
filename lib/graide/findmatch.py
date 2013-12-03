@@ -39,6 +39,22 @@ def asBool(txt) :
     return False
 
 
+# A plain text control that snags the Return key
+class TextEditReturn(QtGui.QPlainTextEdit) :
+    
+    def __init__(self, parent, matcher) :
+        super(TextEditReturn, self).__init__(parent)
+        self.matcher = matcher
+    
+    def keyPressEvent(self, event) :
+        if event.key() == QtCore.Qt.Key_Return :
+            self.matcher.searchClicked()
+        else :
+            super(TextEditReturn, self).keyPressEvent(event)
+    
+# end of class TextEditReturn
+
+
 class GlyphPatternMatcher() :
     
     def __init__(self, app, matcher) :
@@ -95,7 +111,6 @@ class GlyphPatternMatcher() :
                 itemPattern = self._singleGlyphPattern()
                 
             elif item in font.classes :
-                print item + " is class"
                 classData = font.classes[item]
                 itemPattern = "("
                 sep = ""
@@ -105,13 +120,10 @@ class GlyphPatternMatcher() :
                 itemPattern += ")"
                 
             elif item in font.gnames :
-                print item + " is glyph"
                 itemPattern = "<" + str(font.gnames[item]) + ">"
                     
             else :
-                print item + " not found"
-                self.pattern = ""
-                
+                self.pattern = ""               
                 msg = "ERROR: '" + item + "' is not a valid class or glyph name."
                 #reportError(msg)
                 errorDialog = QtGui.QMessageBox()
@@ -168,7 +180,6 @@ class GlyphPatternMatcher() :
         canceled = False
         for g in e.iterfind('testgroup') :
             groupLabel = g.get('label')
-            #print "GROUP: " + groupLabel
             for t in g.iterfind('test') :
                 testLabel = t.get('label')
                 r = t.get('rtl')
@@ -180,20 +191,15 @@ class GlyphPatternMatcher() :
                 featDescrip = t.get('feats') or ""
                 langCode = t.get('lang') or ""
                 
-                ###print testLabel
-                
                 jsonOutput = self.app.runGraphiteOverString(fontFileName, faceAndFont, testString, 12, testRtl, {}, {}, 100)
                 if jsonOutput != False :
                     glyphOutput = self._dataFromGlyphs(jsonOutput)
-                    ##print "glyphOutput=" + glyphOutput
                     match = cpat.search(glyphOutput)
                 else :
                     match = False
                     
                 if match :
                     key = "[" + groupLabel + "] " + testLabel
-                    
-                    #print testLabel + " MATCHED"
                     
                     if matchList == None :
                         # Return a list of the results.
@@ -465,7 +471,6 @@ class MatchList(QtGui.QWidget) :
             self.appendTest(te, l)
             
     def addFile(self, fname, index = None, savePrevious = True) :
-        #print "addFile(" + fname + "," + str(savePrevious) + ")"
         basename = os.path.basename(fname)
         if index == None :
             index = len(self.testFiles)
@@ -713,22 +718,6 @@ class MatchList(QtGui.QWidget) :
 # end of class MatchList
 
 
-# A plain text control that snags the Return key
-class TextEditReturn(QtGui.QPlainTextEdit) :
-    
-    def __init__(self, parent, matcher) :
-        super(TextEditReturn, self).__init__(parent)
-        self.matcher = matcher
-    
-    def keyPressEvent(self, event) :
-        if event.key() == QtCore.Qt.Key_Return :
-            self.matcher.searchClicked()
-        else :
-            super(TextEditReturn, self).keyPressEvent(event)
-    
-# end of class TextEditReturn
-
-
 class Matcher(QtGui.QTabWidget) :
     
     def __init__(self, fontFileName, font, parent = None, xmlFile = None) :   # parent = app
@@ -855,7 +844,6 @@ class Matcher(QtGui.QTabWidget) :
     
     def searchClicked(self) :
         pattern = self.patternEdit.toPlainText()
-        print "Searching for: '" + pattern + "'"
         
         if pattern != "" :
             # Populate the MatchList with the results.
@@ -871,7 +859,7 @@ class Matcher(QtGui.QTabWidget) :
                 print "Search canceled"
             elif matchResults == True :
                 # Results have already been put in the control
-                print "Search completed"
+                pass # do nothing
             else :
                 for data in matchResults :
                     matchKey = data[0]
@@ -899,15 +887,18 @@ class Matcher(QtGui.QTabWidget) :
             print "No Graphite result" ###
             self.json = [ {'passes' : [], 'output' : [] } ]
                 
-        ### Temp
-        #patternMatcher = GlyphPatternMatcher(self)
-        #patternMatcher.tempCreateRegExp(self.font, self.json, 0, 3)
-        #patternMatcher.search(self.fontFileName, self.config.get('main', 'testsfile'))
-        #####################
-        
         self.run = self.app.loadRunViewAndPasses(self, self.json)
         
     # end of runClicked
+    
+    
+    def pasteAsPattern(self, glyphList) :
+        string = ""
+        sep = ""
+        for glyph in glyphList :
+            string += sep + glyph
+            sep = " "
+        self.patternEdit.setPlainText(string)
     
        
     
