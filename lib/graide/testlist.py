@@ -260,7 +260,7 @@ class TestList(QtGui.QWidget) :
             self.appendTest(te, l)
             
     def addFile(self, fname, index = None, savePrevious = True) :
-        #print "addFile(" + fname + "," + str(savePrevious) + ")"
+        print "addFile(" + fname + "," + str(savePrevious) + ")"
         basename = os.path.basename(fname)
         if index == None :
             index = len(self.testFiles)
