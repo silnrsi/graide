@@ -45,7 +45,9 @@ class FileEntry(QtGui.QWidget) :
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self,
                 dir=os.path.dirname(self.le.text()), filter=self.pattern,
                 options=QtGui.QFileDialog.DontConfirmOverwrite)
-        self.le.setText(os.path.relpath(fname) if fname else "")
+        if fname :
+            self.le.setText(os.path.relpath(fname))
+        #else Cancel was hit
 
     def text(self) :
         return self.le.text()

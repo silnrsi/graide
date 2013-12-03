@@ -32,6 +32,13 @@ from graide.layout import Layout
 from cStringIO import StringIO
 
 
+def asBool(txt) :
+    if not txt : return False
+    if txt.lower() == 'true' : return True
+    if txt.isdigit() : return int(txt) != 0
+    return False
+
+
 class GlyphPatternMatcher() :
     
     def __init__(self, app, matcher) :
@@ -125,9 +132,11 @@ class GlyphPatternMatcher() :
         self.pattern = regexpPattern
         
     # end of setUpPattern
-        
+    
+    
     # Search for all matches of the stored pattern in the target file, which is an XML test file.
-    def search(self, fontFileName, targetFile) :
+    # If matchList is passed, the results will be put directly in there; otherwise a list will be returned.
+    def search(self, fontFileName, targetFile, matchList = None) :
         
         matchResults = []
         
@@ -138,6 +147,8 @@ class GlyphPatternMatcher() :
         print "Searching " + targetFile + " for '" + self.pattern + "'..."
         
         cpat = re.compile(self.pattern)  # compiled pattern
+            
+        totalTests = self._countTests(targetFile)
         
         # Read and parse the target file.
         try :
@@ -148,8 +159,13 @@ class GlyphPatternMatcher() :
             return matchResults
             
         faceAndFont = makeFontAndFace(fontFileName, 12)
+        
+        progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
+        progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
-        cnt = 0;
+        cntTested = 0;
+        cntMatched = 0;
+        canceled = False
         for g in e.iterfind('testgroup') :
             groupLabel = g.get('label')
             #print "GROUP: " + groupLabel
@@ -176,22 +192,59 @@ class GlyphPatternMatcher() :
                     
                 if match :
                     key = "[" + groupLabel + "] " + testLabel
-                    matchResults.append((key, testString, testRtl, testComment, featDescrip, langCode))
-                    print testLabel + " MATCHED"
+                    
+                    #print testLabel + " MATCHED"
+                    
+                    if matchList == None :
+                        # Return a list of the results.
+                        matchResults.append((key, testString, testRtl, testComment, featDescrip, langCode))
+                    else :
+                        # Put a match right into the control.
+                        te = Test(text = testString, feats = featDescrip, lang = langCode, rtl = testRtl, name = key, comment = testComment)
+                        matchList.appendTest(te)
+                        matchResults = True
+                        cntMatched = cntMatched + 1
+                        progressDialog.setLabelText("Searching..." + str(cntMatched) + " matches")
                 ###else :
                 ###    print testLabel + " did not match"
                 
-                cnt = cnt + 1
-                #if cnt >= 1 : break;
+                if progressDialog.wasCanceled() :
+                    canceled = True;
+                    
+                cntTested = cntTested + 1
+                #if cntTested >= 1 : canceled = True
+                
+                progressDialog.setValue(cntTested)
+                
+                if canceled : break
             # end of for t loop
             
-            #if cnt >= 1 : break;
+            if canceled : break;
         # end of for g loop
         
-        return matchResults
+        progressDialog.setValue(totalTests)
+        
+        if canceled :
+            return False
+        else :
+            return matchResults
 
     # end of search
-        
+    
+    
+    # For progress indicator dialog:
+    def _countTests(self, targetFile) :
+        try :
+            e = et.parse(targetFile)
+        except Exception as err :
+            return 0
+
+        cnt = 0;
+        for g in e.iterfind('testgroup') :
+            for t in g.iterfind('test') :
+                cnt = cnt + 1
+        return cnt
+    
         
     def _singleGlyphPattern(self) :
         return "<[0-9]+>"
@@ -208,12 +261,6 @@ class GlyphPatternMatcher() :
 # end of GlyphPatternMatcher class
 
 
-def asBool(txt) :
-    if not txt : return False
-    if txt.lower() == 'true' : return True
-    if txt.isdigit() : return int(txt) != 0
-    return False
-
 # List of matched results
 class MatchList(QtGui.QWidget) :
 
@@ -224,13 +271,15 @@ class MatchList(QtGui.QWidget) :
         self.app = app
         self.matcher = parent  # redundant :-/ -- why doesn't parent() return something that knows it's a Matcher?
         self.font = font
-        self.testFiles = []     # list of filenames, include paths
+        self.testFiles = []     # list of filenames, including paths
         self.currentFile = fname
         self.testGroups = [[]]    # data structure of groups and tests; for now there will be only one group
         self.fsets = {"\n" : None}
         self.comments = []
         self.fcount = 0
         self.header = None
+        
+        self.resultsFile = None
 
         self.setActions(app)
         self.vbox = QtGui.QVBoxLayout()
@@ -246,16 +295,16 @@ class MatchList(QtGui.QWidget) :
         self.fcombo.setToolTip('Choose test file')
         self.fhbox.addWidget(self.fcombo)
         self.fhbox.addSpacing(10)
-        self.fabutton = QtGui.QToolButton(self.cbox1)
-        self.fabutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
-        self.fabutton.setToolTip('Add test file')
-        self.fabutton.clicked.connect(self.addFileClicked)
-        self.fhbox.addWidget(self.fabutton)
-        self.frbutton = QtGui.QToolButton(self.cbox1)
-        self.frbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
-        self.frbutton.setToolTip('Remove test file from list')
-        self.frbutton.clicked.connect(self.delFileClicked)
-        self.fhbox.addWidget(self.frbutton)
+        self.fcbutton = QtGui.QToolButton(self.cbox1)
+        self.fcbutton.setIcon(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")))
+        self.fcbutton.setToolTip('Change test file')
+        self.fcbutton.clicked.connect(self.changeFileClicked)
+        self.fhbox.addWidget(self.fcbutton)
+        #self.frbutton = QtGui.QToolButton(self.cbox1)
+        #self.frbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
+        #self.frbutton.setToolTip('Remove test file from list')
+        #self.frbutton.clicked.connect(self.delFileClicked)
+        #self.fhbox.addWidget(self.frbutton)
         self.vbox.addWidget(self.cbox1)
         
         self.liststack = QtGui.QStackedWidget(self)  # stack of lists of test items - for now there will be only one
@@ -307,7 +356,7 @@ class MatchList(QtGui.QWidget) :
         self.aDown.triggered.connect(self.downClicked)
         self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tests", app)
         self.aSave.setToolTip('Save result list')
-        self.aSave.triggered.connect(self.saveTestsClicked)
+        self.aSave.triggered.connect(self.saveResultsClicked)
         self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Test ...", app)
         self.aAdd.setToolTip('Add new result')
         self.aAdd.triggered.connect(self.addTestClicked)
@@ -501,7 +550,8 @@ class MatchList(QtGui.QWidget) :
         used = set()
         for i in range(len(self.testGroups)) :
             g = et.SubElement(e, 'testgroup')
-            g.set('label', self.gcombo.itemText(i))
+            #g.set('label', self.gcombo.itemText(i))
+            g.set('label', "main")
             for t in self.testGroups[i] :
                 te = t.addXML(g)
                 c = self.findStyleClass(t)
@@ -546,10 +596,10 @@ class MatchList(QtGui.QWidget) :
         #print "changeFileCombo(" + str(index) + ")"
         self.changeFile(index)
 
-    def addFileClicked(self) :
-        # This dialog allows specifying a file that does not exist.
+    def changeFileClicked(self) :
+        # This dialog only allows specifying a file that exists.
         qdialog = QtGui.QFileDialog()
-        qdialog.setFileMode(QtGui.QFileDialog.AnyFile)
+        qdialog.setFileMode(QtGui.QFileDialog.ExistingFile)
         qdialog.setViewMode(QtGui.QFileDialog.Detail)
         qdialog.setNameFilter('XML files (*.xml)')
         if qdialog.exec_() :
@@ -602,15 +652,23 @@ class MatchList(QtGui.QWidget) :
         self.testGroups[groupindex].pop(testindex)
         self.liststack.widget(groupindex).takeItem(testindex)
 
-    def saveTestsClicked(self) :
-        self.saveTests()
+    def saveResultsClicked(self) :
+        self.saveResults()
         
-    def saveTests(self) :
-        print "saveTests - not yet implemented"
-        #tname = configval(self.app.config, 'main', 'testsfile')
-        #if tname : self.writeXML(tname)
-        #if self.currentFile :
-        #    self.writeXML(self.currentFile)
+    def saveResults(self) :
+        if self.resultsFile :
+            suggestFname = self.resultsFile
+        else :
+            suggestFname = self.testFiles[0]
+            # Built-in dialog doesn't really do anything useful with the actual file name:
+            #if suggestFname[-4] == "." :
+            #    suggestFname = self.testFiles[0][0:-4]
+            #suggestFname += "_match.xml"
+        
+        (fname, filt) = QtGui.QFileDialog.getSaveFileName(self,
+                dir=os.path.dirname(suggestFname), filter='Tests Lists (*.xml)')
+        if fname :
+            self.writeXML(fname)
 
     def upClicked(self) :
         l = self.liststack.currentWidget()
@@ -663,7 +721,6 @@ class TextEditReturn(QtGui.QPlainTextEdit) :
         self.matcher = matcher
     
     def keyPressEvent(self, event) :
-        
         if event.key() == QtCore.Qt.Key_Return :
             self.matcher.searchClicked()
         else :
@@ -688,9 +745,14 @@ class Matcher(QtGui.QTabWidget) :
         self.currWidth = 100
         
         self.runLoaded = False
+        
+        self.unsavedMods = False
 
         self.setActions(self.app)
         self.initializeLayout(xmlFile)
+        
+    # end of __init__
+        
         
     def setActions(self, app) :
         self.aSearchGo = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
@@ -702,7 +764,8 @@ class Matcher(QtGui.QTabWidget) :
         self.aRunGo.triggered.connect(self.runClicked)
         
     # end of setActions
-        
+    
+    
     def initializeLayout(self, xmlFile) :
         vsplitter = QtGui.QSplitter()  # allows sizing of results view
         vsplitter.setOrientation(QtCore.Qt.Vertical)
@@ -715,12 +778,10 @@ class Matcher(QtGui.QTabWidget) :
         vbox.setContentsMargins(*Layout.buttonMargins)
         vbox.setSpacing(Layout.buttonSpacing)
         
-        self.patternEdit = TextEditReturn(self.widget, self)
-        self.patternEdit.setMaximumHeight(Layout.runEditHeight)
-        vbox.addWidget(self.patternEdit)
-        
         hbox = QtGui.QHBoxLayout()  # just in case we want to add more buttons here
         vbox.addLayout(hbox)
+        plabel = QtGui.QLabel("Search pattern:")
+        hbox.addWidget(plabel)        
         hbox.addStretch()
         hbox.setContentsMargins(*Layout.buttonMargins)
         hbox.setSpacing(Layout.buttonSpacing)
@@ -728,6 +789,11 @@ class Matcher(QtGui.QTabWidget) :
         searchGo.setDefaultAction(self.aSearchGo)
         hbox.addWidget(searchGo)
     
+        self.patternEdit = TextEditReturn(self.widget, self)
+        self.patternEdit.setMaximumHeight(Layout.runEditHeight)
+        vbox.addWidget(self.patternEdit)
+        vbox.addSpacing(5)
+        
         self.matchList = MatchList(self.app, self.font, xmlFile, self)
         #self.matchList.itemClicked.connect(self.itemClicked)
         vbox.addWidget(self.matchList)
@@ -797,20 +863,26 @@ class Matcher(QtGui.QTabWidget) :
             
             patternMatcher = GlyphPatternMatcher(self.app, self)
             patternMatcher.setUpPattern(pattern, self.font)
-            matchResults = patternMatcher.search(self.fontFileName, self.app.config.get('main', 'testsfile'))
+            matchResults = patternMatcher.search(self.fontFileName, self.app.config.get('main', 'testsfile'), self.matchList)
             
             ##print matchResults
             
-            for data in matchResults :
-                matchKey = data[0]
-                matchText = data[1]
-                matchRtl = data[2]
-                matchComment = data[3]
-                matchFeats = data[4]
-                matchLang = data[5]
-                
-                te = Test(text = matchText, feats = matchFeats, lang = matchLang, rtl = matchRtl, name = matchKey, comment = matchComment)
-                self.matchList.appendTest(te)
+            if matchResults == False :
+                print "Search canceled"
+            elif matchResults == True :
+                # Results have already been put in the control
+                print "Search completed"
+            else :
+                for data in matchResults :
+                    matchKey = data[0]
+                    matchText = data[1]
+                    matchRtl = data[2]
+                    matchComment = data[3]
+                    matchFeats = data[4]
+                    matchLang = data[5]
+                    
+                    te = Test(text = matchText, feats = matchFeats, lang = matchLang, rtl = matchRtl, name = matchKey, comment = matchComment)
+                    self.matchList.appendTest(te)
         
     # end of searchClicked
     
@@ -836,6 +908,7 @@ class Matcher(QtGui.QTabWidget) :
         self.run = self.app.loadRunViewAndPasses(self, self.json)
         
     # end of runClicked
+    
        
     
 # end of class Matcher
