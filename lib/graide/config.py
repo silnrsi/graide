@@ -21,6 +21,7 @@ from PySide import QtCore, QtGui
 from graide.utils import configval, configintval
 import os
 
+
 class FileEntry(QtGui.QWidget) :
 
     textChanged = QtCore.Signal(str)
@@ -58,6 +59,8 @@ class FileEntry(QtGui.QWidget) :
     def txtChanged(self, txt) :
         self.textChanged.emit(txt)
         
+#end of class FileEntry
+
 
 class PassSpin(QtGui.QSpinBox) :
 
@@ -67,6 +70,8 @@ class PassSpin(QtGui.QSpinBox) :
         self.setSpecialValueText('None')
         self.setValue(-1)
         self.setMaximumWidth(50)
+
+# end of class PassSpin
 
 
 class ConfigDialog(QtGui.QDialog) :
@@ -368,4 +373,4 @@ class ConfigDialog(QtGui.QDialog) :
             config.set(section, option, "1" if widget.isChecked() else "0")
             if fn : fn(widget.isChecked())
 
-
+# end of class ConfigDialog

@@ -55,6 +55,7 @@ class MainWindow(QtGui.QMainWindow) :
     def __init__(self, config, configfile, jsonfile) :
         
         super(MainWindow, self).__init__()
+        
         self.rules = None
         self.runfile = None
         self.runLoaded = False
@@ -519,7 +520,7 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu.addSeparator()
         filemenu.addAction(self.tab_edit.aBuild)
         filemenu.addAction('&Reset Names', self.resetNames)
-        # TODO: add an Exit option
+        filemenu.addAction('Exit', self.doExit)
 
         projectmenu = self.menuBar().addMenu("&Project")
         projectmenu.addAction(self.aCfg)
@@ -569,6 +570,9 @@ Copyright 2012 SIL International and M. Hosken""")
         size = self.size()
         widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
+        
+    def doExit(self) :
+        sys.exit()
 
     def closeEvent(self, event) :
         self._saveProjectData()
@@ -1032,7 +1036,7 @@ if __name__ == "__main__" :
     p.add_argument("-a","--ap",help="AP XML database file for font")
     p.add_argument("-r","--results",help="graphite JSON debug output")
     args = p.parse_args()
-
+    
     if args.font :
         mainWindow = MainWindow(args.font, args.ap, args.results, 40)
         mainWindow.show()
