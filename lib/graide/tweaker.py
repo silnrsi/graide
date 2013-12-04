@@ -1160,7 +1160,7 @@ class TweakView(QtGui.QWidget) :
             # In the middle of a mouse move - don't regenerate (ie, delete) anything.
             return
             
-        jsonResult = self.app.runGraphiteOverString(self.app.fontfile, None, tweak.text, 10, #self.font.size,
+        jsonResult = self.app.runGraphiteOverString(self.app.fontFileName, None, tweak.text, 10, #self.font.size,
             tweak.rtl, tweak.feats, tweak.lang, tweak.width)
         
         if jsonResult != False :
