@@ -82,13 +82,13 @@ class ConfigDialog(QtGui.QDialog) :
         
         self.setWindowTitle("Configure project")
 
-        self.vb = QtGui.QVBoxLayout(self)
+        vboxLayout = QtGui.QVBoxLayout(self)
         self.tb = QtGui.QToolBox(self)
-        self.vb.addWidget(self.tb)
+        vboxLayout.addWidget(self.tb)
         self.ok = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
         self.ok.accepted.connect(self.accept)
         self.ok.rejected.connect(self.reject)
-        self.vb.addWidget(self.ok)
+        vboxLayout.addWidget(self.ok)
 
         # General section
         self.general = QtGui.QWidget(self.tb)

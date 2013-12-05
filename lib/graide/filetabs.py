@@ -64,6 +64,8 @@ class FindDialog(QtGui.QDialog) :
         self.text.setFocus(QtCore.Qt.MouseFocusReason)
         return True
 
+# end of class FileDialog
+
 
 class EditFile(QtGui.QPlainTextEdit) :
 
@@ -166,6 +168,8 @@ class EditFile(QtGui.QPlainTextEdit) :
         super(EditFile,self).mouseDoubleClickEvent(event)
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
+
+# end of class EditFile
 
 
 # The window containing all the code files.
@@ -304,14 +308,15 @@ class FileTabs(QtGui.QTabWidget) :
             self.widget(i).updateTabstop(tabstop)
 
     def updateFromConfigSettings(self, config) :
-        editorfont = config.get('ui', 'editorfont') if config.has_option('ui', 'editorfont') else "monospace"
-        fontsize = config.get('ui', 'textsize') if config.has_option('ui', 'textsize') else "10"
-        fontsize = int(fontsize)
-        self.updateFont(editorfont, fontsize)
+        if config.has_option('build', 'gdlfile') :
+            editorfont = config.get('ui', 'editorfont') if config.has_option('ui', 'editorfont') else "monospace"
+            fontsize = config.get('ui', 'textsize') if config.has_option('ui', 'textsize') else "10"
+            fontsize = int(fontsize)
+            self.updateFont(editorfont, fontsize)
         
-        tabstop = config.get('ui', 'tabstop') if config.has_option('ui', 'tabstop') else 10
-        tabstop = int(tabstop)
-        self.updateTabstop(tabstop)
+            tabstop = config.get('ui', 'tabstop') if config.has_option('ui', 'tabstop') else 10
+            tabstop = int(tabstop)
+            self.updateTabstop(tabstop)
 
     def addOpenFile(self, filename) :
         if filename != '' :
@@ -333,5 +338,4 @@ class FileTabs(QtGui.QTabWidget) :
             self.app.config.add_section('window')
         self.app.config.set('window', 'openfiles', openFileString)
         
-
-		
+#end of class FileTabs

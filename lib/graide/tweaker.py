@@ -52,6 +52,7 @@ class TweakGlyph() :
         self.shiftx_pending = shiftx_pending
         self.shifty_pending = shifty_pending
         
+
     def update(self, gid, name) :
         self.gid = gid
         self.name = name
@@ -59,6 +60,7 @@ class TweakGlyph() :
         # so clear all the shifts and the status.
         # Or maybe if gid != new ID, clear everything.
         
+
     def setShiftXpending(self, x) :
         self.shiftx_pending = x
         
@@ -71,6 +73,7 @@ class TweakGlyph() :
     def setGlyphClass(self, classname) :
         self.gclass = classname
     
+
     # New GDL rules have been generated, so record pending adjustments as accepted.
     def acceptPending(self) :
         self.shiftx = self.shiftx + self.shiftx_pending
@@ -78,6 +81,8 @@ class TweakGlyph() :
         self.shiftx_pending = 0
         self.shifty_pending = 0
         
+# end of class TweakGlyph
+
 
 # A single string containing potentially tweaked glyphs.
 class Tweak(Test) : 
@@ -88,11 +93,14 @@ class Tweak(Test) :
         self.glyphs = glyphs
         # self.feats is a dictionary: feature IDs -> values
         
+
     def setGlyphs(self, glyphs) :
         self.glyphs = glyphs
         
+
     def glyphs(self) :
         return self.glyphs
+
 
     # Add this tweak to the XML output tree.
     def addXML(self, parent) :
@@ -135,6 +143,9 @@ class Tweak(Test) :
             
         return e
         
+    # end of addXML
+    
+    
     def glyphShifts(self, index) :
         return (self.glyphs[index].shiftx, self.glyphs[index].shifty,
             self.glyphs[index].shiftx_pending, self.glyphs[index].shifty_pending)
@@ -151,6 +162,7 @@ class Tweak(Test) :
     def glyphShiftYPending(self, index) :
         return self.glyphs[index].shifty_pending
     
+
     # The Tweak has been run or rerun though Graphite.
     # Update the the given glyph in the list to match the output.
     def updateGlyph(self, index, gid, gname) :
@@ -160,11 +172,13 @@ class Tweak(Test) :
         else :
             self.glyphs[index].update(gid, gname)
             
+
     # New GDL rules have been generated, so pending adjustments are now accepted.
     def acceptPending(self) :
         for g in self.glyphs :
             g.acceptPending()
 
+# end of class Tweak
         
 
 # The control that handles the list of tweaked strings
@@ -236,7 +250,9 @@ class TweakList(QtGui.QWidget) :
 
         self.loadTweaks(xmlfilename)
 
-
+    # end of __init__
+    
+    
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
         self.aGAdd.setToolTip('Add tweak group below this group')
@@ -263,9 +279,13 @@ class TweakList(QtGui.QWidget) :
         self.aDel.setToolTip('Delete tweak')
         self.aDel.triggered.connect(self.delTestClicked)
 
+    # end of setActions
+    
+    
     def initTweaks(self) :
         self.addGroup('main')  # initial empty group
 
+    
     def loadTweaks(self, fname):
         self.tweakGroups = []
         self.combo.clear()
@@ -367,6 +387,8 @@ class TweakList(QtGui.QWidget) :
             
         return result
             
+    # end of parseTweaks
+    
             
     def addGroup(self, name, index = None, comment = "") :
         listwidget = QtGui.QListWidget()
@@ -385,6 +407,7 @@ class TweakList(QtGui.QWidget) :
             self.comments.insert(index, comment)
         return listwidget
 
+    
     def appendTweak(self, tweak, listwidget = None) :
         if not listwidget : listwidget = self.list.currentWidget()
         self.tweakGroups[self.list.indexOf(listwidget)].append(tweak)
@@ -393,6 +416,7 @@ class TweakList(QtGui.QWidget) :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(tweak.background))
 
+    
     def editTweak(self, tIndex) :
         gIndex = self.list.currentIndex()
         t = self.tweakGroups[gIndex][tIndex]
@@ -407,6 +431,7 @@ class TweakList(QtGui.QWidget) :
             # Undo any change to background.
             t.background = bgndSave
 
+    
     def writeXML(self, fname) :
         e = XmlTree.Element('tweak-ftml', {'version' : '1.0'})
         if self.header is not None :
@@ -463,12 +488,16 @@ class TweakList(QtGui.QWidget) :
         sio.close()
         f.close()
 
+    # end of writeXML
+    
+    
     @QtCore.Slot(int)
     def changeGroup(self, index) :
         self.list.setCurrentIndex(index)
         if index < len(self.comments) :
             self.combo.setToolTip(self.comments[index])
 
+    
     def addGroupClicked(self) :
         (name, ok) = QtGui.QInputDialog.getText(self, 'Tweak Group', 'Tweak Group Name')
         if ok :
@@ -476,15 +505,18 @@ class TweakList(QtGui.QWidget) :
             self.addGroup(name, index)
             self.combo.setCurrentIndex(self.combo.currentIndex() + 1)
 
+    
     def delGroupClicked(self) :
         index = self.combo.currentIndex()
         self.list.removeWidget(self.list.widget(index))
         self.combo.removeItem(index)
         self.tweakGroups.pop(index)
 
+    
     def editClicked(self) :
         self.editTweak(self.list.currentWidget().currentRow())
 
+    
     def addTestClicked(self, t = None) :
         gIndex = self.list.currentIndex()
         if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
@@ -494,16 +526,19 @@ class TweakList(QtGui.QWidget) :
             self.tweakGroups[gIndex].pop()
             self.list.widget(gIndex).takeItem(len(self.tweakGroups))
 
+    
     def delTestClicked(self) :
         gIndex = self.list.currentIndex()
         tIndex = self.list.widget(gIndex).currentRow()
         self.tweakGroups[gIndex].pop(tIndex)
         self.list.widget(gIndex).takeItem(tIndex)
 
+    
     def saveTestsClicked(self) :
         tname = configval(self.app.config, 'build', 'tweakxmlfile')
         if tname : self.writeXML(tname)
 
+    
     def upClicked(self) :
         l = self.list.currentWidget()
         gIndex = self.list.currentIndex()
@@ -513,6 +548,7 @@ class TweakList(QtGui.QWidget) :
             l.insertItem(tIndex - 1, l.takeItem(tIndex))
             l.setCurrentRow(tIndex - 1)
 
+    
     def downClicked(self) :
         l = self.list.currentWidget()
         gIndex = self.list.currentIndex()
@@ -522,6 +558,7 @@ class TweakList(QtGui.QWidget) :
             l.insertItem(tIndex + 1, l.takeItem(tIndex))
             l.setCurrentRow(tIndex + 1)
 
+    
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
         k += "\n" + (t.lang or "")
@@ -530,6 +567,7 @@ class TweakList(QtGui.QWidget) :
             self.fsets[k] = "fset%d" % self.fcount
         return self.fsets[k]
 
+    
     # A Tweak was clicked on in the list.
     def loadTweak(self, item) :
         self.app.setRun(self.currentTweak())  # do we want this?
@@ -537,9 +575,11 @@ class TweakList(QtGui.QWidget) :
         # do this after the glyphs have been displayed:
         self.parent().tweakChanged(item)
 
+    
     def showTweak(self, item) :
         self.view.updateDisplay(self.currentTweak(), 0)
 
+    
     # Return the Tweak object that is currently selected.
     def currentTweak(self):
         gIndex = self.list.currentIndex()
@@ -549,6 +589,7 @@ class TweakList(QtGui.QWidget) :
         else :
             return self.tweakGroups[gIndex][tIndex]
 
+    
     # New GDL rules have been generated, so pending adjustments are now accepted.
     def acceptPending(self) :
         for g in self.tweakGroups :
@@ -556,6 +597,7 @@ class TweakList(QtGui.QWidget) :
                 t.acceptPending()
                 
 # end of class TweakList       
+
 
 # The controls at the bottom of the pane that allow adjustment of the glyph tweaks
 class TweakInfoWidget(QtGui.QFrame) :
@@ -630,7 +672,9 @@ class TweakInfoWidget(QtGui.QFrame) :
         # want to update the data with what is in them.
         self.dataMode = True
         
-        
+    # end of __init__
+    
+       
     def setControlsForTweakItem(self, item) :
         self.tweakSelected = self.parent().currentTweak()
         if self.tweakSelected :
@@ -653,6 +697,9 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.selectSlot(0)
         self.dataMode = True
     
+    # end of setControlsForTweakItems
+    
+    
     # Show the given slot in the controls
     def selectSlot(self, slotIndex) :  # 0-based
         if self.slotSelected != slotIndex :
@@ -664,6 +711,7 @@ class TweakInfoWidget(QtGui.QFrame) :
             # Set the controls to show the current values for the first glyph
             self.setControlsForGlyph(slotIndex)
         
+    
     def setControlsForGlyph(self, slotIndex) :
         gid = self.glyphSelected.gid
         shiftx = self.glyphSelected.shiftx
@@ -723,8 +771,12 @@ class TweakInfoWidget(QtGui.QFrame) :
                 'x-pending': shiftx_pending, 'y-pending': shifty_pending,
                 'gclass': gclass, 'status': status}
                 
+    # end of setControlsForGlyph
+    
+    
     def tweakView(self) :
         return self.parent().view  # parent = Tweaker
+    
     
     # The slot control was changed. Update the selection in the TweakView.
     def slotCtrlChanged(self) :
@@ -744,6 +796,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         tweakView = self.tweakView()
         self.tweakView().highlightSlot(slotIndex)
 
+    
     # The X or Y control was changed.
     def posCtrlChanged(self) :
         if not self.dataMode :
@@ -766,6 +819,8 @@ class TweakInfoWidget(QtGui.QFrame) :
                 self.tweakView().highlightSlot(self.slotSelected)
                 self.revert.setEnabled(True)
             # otherwise we are just getting these controls in sync
+    
+    # end of posCtrlChanged
             
             
     # The class control was changed.
@@ -783,6 +838,7 @@ class TweakInfoWidget(QtGui.QFrame) :
             #if self.updateMode :  # Inform the TweakView if necessary
             #    pass
                 
+    
     def statusButtonsChanged(self) :
         if not self.dataMode :
             return
@@ -801,16 +857,19 @@ class TweakInfoWidget(QtGui.QFrame) :
             #if self.updateMode :  # Inform the TweakView if necessary
             #    pass
             
+    
     def enablePosButtons(self, on = True) :
         self.x.setEnabled(on)
         self.y.setEnabled(on)
         self.posButtonsEnabled = on
+    
     
     def enableStatusButtons(self, on = True) :
         self.statusReq.setEnabled(on)
         self.statusOpt.setEnabled(on)
         self.statusIgnore.setEnabled(on)
         
+    
     def setX(self, x) :
         self.x.setValue(x)
         
@@ -825,6 +884,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         y = self.y.value() + dy
         self.y.setValue(y)
 
+    
     def doRevert(self) :
         self.x.setValue(self.orig['x-total'])
         self.y.setValue(self.orig['y-total'])
@@ -833,6 +893,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         # Do we also revert the status and glyph class?
         self.revert.setEnabled(False)
         
+
 #    def clear(self) : # currently not used
 #        self.glyph.clear()
 #        self.glyph.addItems(['(None)'])
@@ -840,6 +901,7 @@ class TweakInfoWidget(QtGui.QFrame) :
 #        self.aps.clear()
 #        self.aps.addItems(['(None)'])
 #        self.aps.setCurrentIndex(0)
+
 
     # The idea here is to pass appropriate key presses on to the TweakView. I couldn't get it to work.
 #    def keyReleaseEvent(self, event) :
@@ -857,6 +919,7 @@ class TweakInfoWidget(QtGui.QFrame) :
 
 # end of class TweakInfoWidget
 
+
 # Main class to manage tweaking
 class Tweaker(QtGui.QWidget) :
 
@@ -867,6 +930,7 @@ class Tweaker(QtGui.QWidget) :
         self.view = None
         self.layout = QtGui.QVBoxLayout(self)
         self.initializeLayout(xmlfile)
+
         
     def initializeLayout(self, xmlfile) :
         self.tweakList = TweakList(self.app, self.font, xmlfile, self)
@@ -875,25 +939,31 @@ class Tweaker(QtGui.QWidget) :
         self.infoWidget = TweakInfoWidget(self.app, self)
         self.layout.addWidget(self.infoWidget)
 
+
     def setView(self, view) :
         self.view = view  # TweakView - lower-right tab
         self.tweakList.view = view
         
+
     def tweakChanged(self, item) :
         self.infoWidget.setControlsForTweakItem(item)
         self.view.highlightSlot(0)
         
+
     def writeXML(self, xmlfile) :
         if self.tweakList :
             self.tweakList.writeXML(xmlfile)
             
+
     def currentTweak(self) :
         return self.tweakList.currentTweak()
     
+
     # The slot was changed in the TweakView. Update yourself.
     def slotChanged(self, index) :
         self.infoWidget.selectSlot(index)
         
+
     def setX(self, x) :
         self.infoWidget.setX(x)
         
@@ -906,6 +976,7 @@ class Tweaker(QtGui.QWidget) :
     def incrementY(self, dy) :
         self.infoWidget.incrementY(dy)
         
+
     # Called from main application when we switch tabs, also when we finish dragging a glyph.
     def updatePositions(self, highlight = False) :
         tweak = self.currentTweak()
@@ -913,16 +984,23 @@ class Tweaker(QtGui.QWidget) :
         if tweak :
             self.view.updateDisplay(tweak, slot, highlight)
 
+
     def parseFile(self, filename) :
         return self.tweakList.parseTweaks(filename)
     
+
     # New GDL rules have been generated, so pending adjustments are now accepted.
     def acceptPending(self, tweakxmlfile) :
         self.tweakList.acceptPending()
         self.writeXML(tweakxmlfile)
         
+
     def posButtonsEnabled(self) :
         return self.infoWidget.posButtonsEnabled
+        
+        
+    def loadTweaks(self, tweaksfile) :
+        self.tweakList.loadTweaks(tweaksfile)
       
 # end of class Tweaker
 
@@ -950,11 +1028,13 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         self.shiftx_pending = shiftData[2]
         self.shifty_pending = shiftData[3]
         
+
 #    def revert(self) :
 #        self.shiftx_pending = 0
 #        self.shifty_pending = 0
         # redraw
         
+
     def mousePressEvent(self, event) :
         self.diffPx = (0, 0)  # pixels
         # Remember the position at the mouse press--moving will be relative to this.
@@ -967,6 +1047,7 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         self.runView.setUpdateable(False)
         super(TweakableGlyphPixmapItem, self).mousePressEvent(event)
         
+
     def mouseMoveEvent(self, event) :
         posPx = event.scenePos()
         posPxStart = event.buttonDownScenePos(QtCore.Qt.LeftButton)
@@ -980,6 +1061,7 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         # Since we can't regenerate the display (since the pixmap we are dragging will get 
         # deleted), just change its location.
         self.setPos(self.posStartPx[0] + self.diffPx[0], self.posStartPx[1] + self.diffPx[1])
+
 
     def mouseReleaseEvent(self, event) :
         self.moveState = False
@@ -1002,10 +1084,12 @@ class TweakableRunView(RunView) :
         self._font = font # store it in case there is no run and the superclass ignores it
         self._updateable = True
         
+
     def setUpdateable(self, state) :
         self._updateable = state
         self.parentView.setUpdateable(state)
         
+
     def createPixmap(self, slot, glyph, index, res, scale,
             model = None,   # RunView
             parent = None,
@@ -1031,9 +1115,14 @@ class TweakableRunView(RunView) :
         res = res.united(r)
         return res
         
+    # end of createPixmap
+    
+        
+    
     def tweaker(self) :
         return self.parentView.tweaker
         
+    
     def updateData(self, run) :
         currentTweak = self.parentView.tweaker.currentTweak()
         for i, slot in enumerate(run) :
@@ -1041,6 +1130,7 @@ class TweakableRunView(RunView) :
             gname = glyph.GDLName() or glyph.psname
             currentTweak.updateGlyph(i, slot.gid, gname)
             
+    
     def glyphClicked(self, gitem, index) :
         if index == self.currselection :
             # Reclicking the same glyph has no effect
@@ -1050,6 +1140,7 @@ class TweakableRunView(RunView) :
             # Also inform the Tweaker so it can update the controls
             self.tweaker().slotChanged(index)
             
+    
     def keyPressEvent(self, event) :
         
         shiftPressed = event.modifiers() & QtCore.Qt.ShiftModifier
@@ -1086,6 +1177,9 @@ class TweakableRunView(RunView) :
                 if newSel != self.currselection :
                     self.changeSelection(newSel)
                     self.tweaker().slotChanged(self.currselection)
+    
+    # end of keyPressEvent
+    
                     
 #    def snagFocus(self) :
 #        print "TweakableRunView::snagFocus"  ###
@@ -1105,10 +1199,12 @@ class TweakView(QtGui.QWidget) :
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper)
 
+
     @QtCore.Slot(DataObj, ModelSuper)
     def changeSlot(self, data, model) :
         self.slotSelected.emit(data, model)
         #self.tweaker.changeSlot(...)
+
 
     @QtCore.Slot(DataObj, ModelSuper)
     def changeGlyph(self, data, model) :
@@ -1116,6 +1212,7 @@ class TweakView(QtGui.QWidget) :
         if self.currsel and self.currsel != model :
             self.currsel.clearSelected()
         self.currsel = model
+
 
     def __init__(self, fontname, size, app = None, parent = None) :
         super(TweakView, self).__init__(parent)
@@ -1137,9 +1234,11 @@ class TweakView(QtGui.QWidget) :
         self.currSlotIndex = -1
         self.updateable = True
         
+
     def changeFontSize(self, size) :
         self.setFont(size)
         
+
     def setFont(self, size) :
         if self.fontname and self.fontname != "":
             fontfile = str(self.fontname)
@@ -1147,14 +1246,17 @@ class TweakView(QtGui.QWidget) :
             self.font.loadFont(fontfile, size)
             self.font.loadEmptyGlyphs()        
         
+
     def setTweaker(self, tweaker) :
         # The Tweaker has all the data in it, which is needed to display the glyphs at their
         # adjusted offsets.
         self.tweaker = tweaker
         
+
     def setUpdateable(self, state) :
         self.updateable = state
         
+
     def updateDisplay(self, tweak, slotIndex = 0, highlight = False) :
         if not self.updateable :
             # In the middle of a mouse move - don't regenerate (ie, delete) anything.
@@ -1189,10 +1291,14 @@ class TweakView(QtGui.QWidget) :
             self.highlightSlot(slotIndex)
         # otherwise done in Tweaker::tweakChanged
     
+    # end of updateDisplay
+    
+    
     def highlightSlot(self, slotIndex) :
         self.currSlotIndex = slotIndex
         self.runView.glyphClicked(None, slotIndex)
-        
+
+
 #    def snagKeyPress(self, event) :
 #        self.runView.keyPressEvent(event)
 #        self.runView.snagFocus()

@@ -61,6 +61,7 @@ class GlyphPatternMatcher() :
         self.app = app
         self.matcher = matcher
         self.pattern = ""
+
     
     # Create a reg-exp from the list of glyphs in the pattern JSON.
     # TEMPORARY FOR DEBUGGING
@@ -91,6 +92,7 @@ class GlyphPatternMatcher() :
         self.pattern = pattern
 
     # end of tempCreateRegExp
+
     
     def setUpPattern(self, glyphPattern, font) :
         regexpPattern = ""
@@ -159,7 +161,7 @@ class GlyphPatternMatcher() :
         print "Searching " + targetFile + " for '" + self.pattern + "'..."
         
         cpat = re.compile(self.pattern)  # compiled pattern
-            
+        
         totalTests = self._countTests(targetFile)
         
         # Read and parse the target file.
@@ -171,7 +173,7 @@ class GlyphPatternMatcher() :
             return matchResults
             
         faceAndFont = makeFontAndFace(fontFileName, 12)
-        
+                
         progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
         progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
@@ -302,9 +304,9 @@ class MatchList(QtGui.QWidget) :
         self.fhbox.addWidget(self.fcombo)
         self.fhbox.addSpacing(10)
         self.fcbutton = QtGui.QToolButton(self.cbox1)
-        self.fcbutton.setIcon(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")))
+        self.fcbutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.fcbutton.setToolTip('Change test file')
-        self.fcbutton.clicked.connect(self.changeFileClicked)
+        self.fcbutton.clicked.connect(self.addFileClicked)
         self.fhbox.addWidget(self.fcbutton)
         #self.frbutton = QtGui.QToolButton(self.cbox1)
         #self.frbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
@@ -469,18 +471,21 @@ class MatchList(QtGui.QWidget) :
                 res = QtGui.QColor(b)
                 if res.isValid() : te.background = res
             self.appendTest(te, l)
-            
+
+
     def addFile(self, fname, index = None, savePrevious = True) :
-        basename = os.path.basename(fname)
-        if index == None :
-            index = len(self.testFiles)
-            self.testFiles.append(fname)
-            self.fcombo.addItem(basename)
-        else :
-            self.testFiles.insert(index, fname)
-            self.fcombo.insertItem(index, basename)
-        # TODO add file to configuration list
-        self.changeFile(index)
+        if fname != None and fname != "" :
+            basename = os.path.basename(fname)
+            if index == None :
+                index = len(self.testFiles)
+                self.testFiles.append(fname)
+                self.fcombo.addItem(basename)
+            else :
+                self.testFiles.insert(index, fname)
+                self.fcombo.insertItem(index, basename)
+            # TODO add file to configuration list
+            self.changeFile(index)
+
         
     def changeFile(self, index) :
         #print "changeFile(" + str(index) + ")"
@@ -497,6 +502,7 @@ class MatchList(QtGui.QWidget) :
         ####self.loadTests(self.testFiles[index])
         self.currentFile = self.testFiles[index]
         
+
     def createOneGroup(self, name, index = None, comment = "") :
         listWidget = QtGui.QListWidget() # create a test list widget for this group
         listWidget.itemDoubleClicked.connect(self.runTest)
@@ -504,6 +510,7 @@ class MatchList(QtGui.QWidget) :
         self.liststack.addWidget(listWidget)        
         return listWidget
         
+
     def clearTests(self, l = None) :
         # Delete all the existing UI for the current test file.
         if not l : l = self.liststack.currentWidget()
@@ -511,6 +518,7 @@ class MatchList(QtGui.QWidget) :
         while len(self.testGroups[groupIndex]) > 0 :
             self.testGroups[groupIndex].pop(0)
             self.liststack.widget(groupIndex).takeItem(0)
+
 
     def appendTest(self, t, l = None) :
         if not l : l = self.liststack.currentWidget()
@@ -520,6 +528,7 @@ class MatchList(QtGui.QWidget) :
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
+
 
     def editTest(self, testindex) :
         groupindex = self.liststack.currentIndex() # for now, should be 0
@@ -534,6 +543,7 @@ class MatchList(QtGui.QWidget) :
         else :
             # Undo any change to background.
             t.background = bgndSave
+
 
     def writeXML(self, fname) :
         #print "writeXML(" + fname + ")"
@@ -596,12 +606,16 @@ class MatchList(QtGui.QWidget) :
         sio.close()
         f.close()
         
+    # end of writeXML
+    
+        
     @QtCore.Slot(int)
     def changeFileCombo(self, index) :
         #print "changeFileCombo(" + str(index) + ")"
         self.changeFile(index)
 
-    def changeFileClicked(self) :
+
+    def addFileClicked(self) :
         # This dialog only allows specifying a file that exists.
         qdialog = QtGui.QFileDialog()
         qdialog.setFileMode(QtGui.QFileDialog.ExistingFile)
@@ -616,6 +630,8 @@ class MatchList(QtGui.QWidget) :
             self.addFile(fname, index)
             self.fcombo.setCurrentIndex(self.fcombo.currentIndex() + 1)
         
+
+    # Currently there is no UI to call this. I don't see why it is needed.
     def delFileClicked(self) :
         if len(self.testFiles) <= 1 :
             return  # don't delete the last one
@@ -632,6 +648,7 @@ class MatchList(QtGui.QWidget) :
         index = min(index, len(self.testFiles) - 1)
         self.changeFile(index)
         
+
     @QtCore.Slot(int)
     def changeGroupCombo(self, index) :
         #print "changeGroupCombo(" + str(index) + ")"
@@ -639,8 +656,10 @@ class MatchList(QtGui.QWidget) :
         if index < len(self.comments) :
             self.gcombo.setToolTip(self.comments[index])
 
+
     def editClicked(self) :
         self.editTest(self.liststack.currentWidget().currentRow())
+
 
     def addTestClicked(self, t = None) :
         groupIndex = self.liststack.currentIndex()
@@ -651,15 +670,18 @@ class MatchList(QtGui.QWidget) :
             self.testGroups[groupIndex].pop()
             self.liststack.widget(groupIndex).takeItem(len(self.testGroups))
 
+
     def delTestClicked(self) :
         groupindex = self.liststack.currentIndex()
         testindex = self.liststack.widget(groupindex).currentRow()
         self.testGroups[groupindex].pop(testindex)
         self.liststack.widget(groupindex).takeItem(testindex)
 
+
     def saveResultsClicked(self) :
         self.saveResults()
         
+
     def saveResults(self) :
         if self.resultsFile :
             suggestFname = self.resultsFile
@@ -675,6 +697,7 @@ class MatchList(QtGui.QWidget) :
         if fname :
             self.writeXML(fname)
 
+
     def upClicked(self) :
         l = self.liststack.currentWidget()
         groupindex = self.liststack.currentIndex()
@@ -683,6 +706,7 @@ class MatchList(QtGui.QWidget) :
             self.testGroups[groupindex].insert(testindex - 1, self.testGroups[groupindex].pop(testindex))
             l.insertItem(testindex - 1, l.takeItem(testindex))
             l.setCurrentRow(testindex - 1)
+
 
     def downClicked(self) :
         l = self.liststack.currentWidget()
@@ -693,6 +717,7 @@ class MatchList(QtGui.QWidget) :
             l.insertItem(testindex + 1, l.takeItem(testindex))
             l.setCurrentRow(testindex + 1)
 
+
     def loadTest(self, item) :
         if not self.noclick :
             groupIndex = self.liststack.currentIndex()   # should always be 0 currently
@@ -702,10 +727,12 @@ class MatchList(QtGui.QWidget) :
             # this is the side-effect of a double-click: ignore it
             self.noclick = False
 
+
     def runTest(self, item) :
         # event sends clicked first so no need to select
         self.matcher.runClicked()
         self.noclick = True  # because itemClick event will happen again--ignore it
+
 
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
@@ -827,6 +854,7 @@ class Matcher(QtGui.QTabWidget) :
         
     # end of initializeLayout
     
+
     def setRun(self, test) :
 
         self.runRtl.setChecked(True if test.rtl else False)
@@ -842,6 +870,7 @@ class Matcher(QtGui.QTabWidget) :
 
     # end of setRun
     
+
     def searchClicked(self) :
         pattern = self.patternEdit.toPlainText()
         
@@ -874,6 +903,7 @@ class Matcher(QtGui.QTabWidget) :
         
     # end of searchClicked
     
+
     def runClicked(self) :
 
         jsonResult = self.app.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
@@ -900,6 +930,13 @@ class Matcher(QtGui.QTabWidget) :
             sep = " "
         self.patternEdit.setPlainText(string)
     
+    
+    def updateFromConfigSettings(self, fontFileName, config) :
+        self.fontFileName = fontFileName
+        if config.has_option('main', 'testsfile') :
+            self.matchList.addFile(config.get('main', 'testsfile'))
+            
+        
        
     
 # end of class Matcher

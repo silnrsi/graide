@@ -35,6 +35,7 @@ from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
 from graide.config import ConfigDialog
+from graide.startdialog import StartDialog
 from graide.recentprojects import RecentProjectList
 from graide.debug import ContextToolButton, DebugMenu
 from graide.errors import Errors
@@ -140,6 +141,30 @@ class MainWindow(QtGui.QMainWindow) :
         self._openFileList()
         
         # end of __init__
+        
+        
+    def show(self) :
+        super(MainWindow, self).show()
+        
+        if self.configfile is None or self.configfile == "" :
+            result = self.runStartupDialog()
+            if result == False :
+                self.doExit()
+            elif result == "!!create-new-project!!" :
+                self.configNewProject()
+            else :
+                # Open the specified config file
+                print "result=",result
+                self._configOpenExisting(result)
+
+
+    def runStartupDialog(self) :
+        d = StartDialog(self.config, self.recentProjects)
+        if d.exec_() :
+            result = d.returnResults()
+            return result
+        else :
+            return False
 
 
     def incDebug(self) :
@@ -194,7 +219,6 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsfile) :
-        print "MainWindow::loadTests"
         self.testsfile = testsfile
         if self.tab_tests :
             self.tab_tests.addFile(testsfile, None, False)
@@ -209,6 +233,7 @@ class MainWindow(QtGui.QMainWindow) :
         if self.rules :
             self.rules.close()
         event.accept()
+
 
     def setActions(self) :
         self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
@@ -266,7 +291,7 @@ class MainWindow(QtGui.QMainWindow) :
                 self.aRecProjs.append((basename, fullname, projAction))
                 cnt = cnt + 1
                 
-        # end of setActions
+    # end of setActions
 
     def setupUi(self) :
         qInitResources()
@@ -303,7 +328,7 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             self.hsplitter.setSizes((Layout.initHSplitWidth, Layout.initWinSize[0] - Layout.initHSplitWidth))
 
-        # end of setupUi
+    # end of setupUi
 
     def ui_tests(self, parent) : # parent = tab_info
         self.setwidgetstretch(self.tab_info, 30, 100)
@@ -521,6 +546,8 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu.addAction(self.tab_edit.aBuild)
         filemenu.addAction('&Reset Names', self.resetNames)
         filemenu.addAction('Exit', self.doExit)
+        ################3
+        filemenu.addAction('Start-up...', self.runStartupDialog)
 
         projectmenu = self.menuBar().addMenu("&Project")
         projectmenu.addAction(self.aCfg)
@@ -560,7 +587,7 @@ class MainWindow(QtGui.QMainWindow) :
 
 An environment for the creation and debugging of Graphite fonts.
 
-Copyright 2012 SIL International and M. Hosken""")
+Copyright 2012-2013 SIL International and M. Hosken""")
 
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -571,13 +598,23 @@ Copyright 2012 SIL International and M. Hosken""")
         widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
         
+        
     def doExit(self) :
+        self.closeApp()
         sys.exit()
 
     def closeEvent(self, event) :
+        print "MainWindow::closeEvent"
+        self.closeApp()
+        event.accept()
+        
+    def closeApp(self) :
+        if self.rules :
+            self.rules.close()
         self._saveProjectData()
         self.recentProjects.close()
         qCleanupResources()
+      
         
     def infoTabChanged(self) :
         # TODO: figure out which tab is current and update the matching bottom tab
@@ -950,11 +987,12 @@ Copyright 2012 SIL International and M. Hosken""")
 
         self._openFileList()
 
-        if self.config.has_option('build', 'gdlfile') :
-            #self.selectLine(self.config.get('build', 'gdlfile'), -1)
-            self.tab_edit.updateFromConfigSettings(self.config)
+        #self.selectLine(self.config.get('build', 'gdlfile'), -1)
+        self.tab_edit.updateFromConfigSettings(self.config)
+        self.tab_match.updateFromConfigSettings(self.fontFileName, self.config)
     
     # end of _configOpenExisting        
+
 
     # When opening project, open the list of previously open files.
     def _openFileList(self) :        
@@ -968,7 +1006,8 @@ Copyright 2012 SIL International and M. Hosken""")
         mainfile = configval(self.config, 'build', 'gdlfile')
         if mainfile :
             self.tab_edit.selectLine(mainfile, -1)
-            
+
+
     # Create a new project.
     def configNewClicked(self) :
         if self.configfile :
@@ -990,11 +1029,13 @@ Copyright 2012 SIL International and M. Hosken""")
         
     # end of configNewClicked  
 
+
     def resetNames(self) :
         if self.font :
             self.font.loadEmptyGlyphs()
             self.tab_classes.loadFont(self.font)
             if self.tab_font : self.tab_font.update()
+
 
     def debugClicked(self, event) :
         m = DebugMenu(self)
@@ -1003,9 +1044,11 @@ Copyright 2012 SIL International and M. Hosken""")
     def setTweakGlyphSize(self, size) :
         self.tab_tweakview.changeFontSize(size)    
 
+
     def setAttGlyphSize(self, size) :
         if self.font : self.font.attGlyphSize = size
-            
+
+
     # TODO: use QSignalMapper instead of four openRecentProject methods:
     def openRecentProject1(self) :
         self.openRecentProject(1)
@@ -1016,12 +1059,14 @@ Copyright 2012 SIL International and M. Hosken""")
     def openRecentProject4(self) :
         self.openRecentProject(4)
 
+
     def openRecentProject(self, i) :
         (basename, fullname, action) = self.aRecProjs[i-1]
         if not os.path.exists(fullname) :
             print "ERROR: project " + fullname + " does not exist"
         else :
             self._configOpenExisting(fullname)
+            
             
 # end of MainWindow class
 
