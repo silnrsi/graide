@@ -105,6 +105,12 @@ class GraideFont(gdlFont) :
         self.highlighted = nClass
 
     def emunits(self) : return self.upem
+        
+    def glyphWithGDLName(self, gdlName) :
+        for i in range(self.numGlyphs) :
+            if self[i].GDLName() == gdlName :
+                return i
+        return -1
 
     # Return a likely pair of glyphs to initialize the Positions tab tree control.
 #    def stationaryMobilePair(self) :

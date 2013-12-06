@@ -61,7 +61,6 @@ class GlyphPatternMatcher() :
         self.app = app
         self.matcher = matcher
         self.pattern = ""
-
     
     # Create a reg-exp from the list of glyphs in the pattern JSON.
     # TEMPORARY FOR DEBUGGING
@@ -97,10 +96,8 @@ class GlyphPatternMatcher() :
     def setUpPattern(self, glyphPattern, font) :
         regexpPattern = ""
         glyphItems = glyphPattern.split(' ')
-        
+               
         for item in glyphItems :
-            if item[0:2] == "g_" :
-                item = item[2:]
             
             lastLetter = item[-1:]
             if lastLetter == "?" or lastLetter == "*" or lastLetter == "+" :
@@ -109,9 +106,14 @@ class GlyphPatternMatcher() :
             else :
                 itemMod = ""
                     
+            glyphNum = font.glyphWithGDLName(item)
+                    
             if item == "ANY" :
                 itemPattern = self._singleGlyphPattern()
                 
+            elif glyphNum >= 0 :
+                itemPattern = "<" + str(glyphNum) + ">"
+                    
             elif item in font.classes :
                 classData = font.classes[item]
                 itemPattern = "("
@@ -121,9 +123,6 @@ class GlyphPatternMatcher() :
                    sep = "|"
                 itemPattern += ")"
                 
-            elif item in font.gnames :
-                itemPattern = "<" + str(font.gnames[item]) + ">"
-                    
             else :
                 self.pattern = ""               
                 msg = "ERROR: '" + item + "' is not a valid class or glyph name."
