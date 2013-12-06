@@ -163,6 +163,7 @@ class GlyphPatternMatcher() :
         cpat = re.compile(self.pattern)  # compiled pattern
         
         totalTests = self._countTests(targetFile)
+        showProgress = (totalTests > 25)
         
         # Read and parse the target file.
         try :
@@ -173,9 +174,10 @@ class GlyphPatternMatcher() :
             return matchResults
             
         faceAndFont = makeFontAndFace(fontFileName, 12)
-                
-        progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
-        progressDialog.setWindowModality(QtCore.Qt.WindowModal)
+        
+        if showProgress :
+            progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
+            progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
         cntTested = 0;
         cntMatched = 0;
@@ -212,17 +214,18 @@ class GlyphPatternMatcher() :
                         matchList.appendTest(te)
                         matchResults = True
                         cntMatched = cntMatched + 1
-                        progressDialog.setLabelText("Searching..." + str(cntMatched) + " matches")
+                        if showProgress :
+                            progressDialog.setLabelText("Searching..." + str(cntMatched) + " matches")
                 ###else :
                 ###    print testLabel + " did not match"
                 
-                if progressDialog.wasCanceled() :
-                    canceled = True;
-                    
                 cntTested = cntTested + 1
                 #if cntTested >= 1 : canceled = True
                 
-                progressDialog.setValue(cntTested)
+                if showProgress :
+                    if progressDialog.wasCanceled() :
+                        canceled = True;
+                    progressDialog.setValue(cntTested)
                 
                 if canceled : break
             # end of for t loop
@@ -230,7 +233,8 @@ class GlyphPatternMatcher() :
             if canceled : break;
         # end of for g loop
         
-        progressDialog.setValue(totalTests)
+        if showProgress :
+            progressDialog.setValue(totalTests)
         
         if canceled :
             return False
@@ -501,6 +505,11 @@ class MatchList(QtGui.QWidget) :
         # Load the new test file.
         ####self.loadTests(self.testFiles[index])
         self.currentFile = self.testFiles[index]
+        
+        
+    def selectedFile(self) :
+        i = self.fcombo.currentIndex()
+        return self.testFiles[i]
         
 
     def createOneGroup(self, name, index = None, comment = "") :
@@ -880,7 +889,8 @@ class Matcher(QtGui.QTabWidget) :
             
             patternMatcher = GlyphPatternMatcher(self.app, self)
             patternMatcher.setUpPattern(pattern, self.font)
-            matchResults = patternMatcher.search(self.fontFileName, self.app.config.get('main', 'testsfile'), self.matchList)
+            targetFile = self.matchList.selectedFile()
+            matchResults = patternMatcher.search(self.fontFileName, targetFile, self.matchList)
             
             ##print matchResults
             
