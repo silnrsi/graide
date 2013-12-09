@@ -1010,6 +1010,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     # Create a new project.
     def configNewClicked(self) :
+        self.configNewProject()
+        
+    def configNewProject(self) :
         if self.configfile :
             # record current config, if any, as a recent project
             self.recentProjects.addProject(self.configfile)
