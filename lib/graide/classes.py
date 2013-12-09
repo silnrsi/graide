@@ -22,6 +22,60 @@ from PySide import QtCore, QtGui
 from graide.utils import configintval
 from graide.layout import Layout
 
+class ClassMemberDialog(QtGui.QDialog) :
+    
+    def __init__(self, parent, className, memberList) :
+        super(ClassMemberDialog,self).__init__(parent)
+        
+        # Hide the help icon, all it does it take up space.
+        #icon = self.windowIcon(); -- just in case icon gets lost
+        flags = self.windowFlags();
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
+        flags = flags & (~helpFlag);
+        self.setWindowFlags(flags);
+        #self.setWindowIcon(icon);
+
+        self.setWindowTitle(className)
+        listWidget = QtGui.QListWidget(self)
+        listWidget.clicked.connect(self.doReturn)
+        itemHeight = 18
+        cnt = 0
+        for member in memberList:
+            if member == "" or member == " " :
+                continue
+                
+            item = QtGui.QListWidgetItem(member)
+            item.setSizeHint(QtCore.QSize(200, itemHeight))
+            listWidget.addItem(item)
+            cnt = cnt + 1
+            
+        listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        if cnt <= 25 :
+            displayCnt = 4 if cnt < 5 else cnt
+            listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            # It's okay if the list and dialog widths don't match, since there's no scroll bar.
+            # Make the list widget wide enough that they can expand the dialog and see wide names.
+            listWidget.setFixedWidth(300)
+            self.setMinimumWidth(200)
+        else :
+            displayCnt = 25
+            listWidget.setFixedWidth(300)  # make it wide enough to handle long names
+            self.setMinimumWidth(300)
+            #listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        
+        listWidget.setFixedHeight(displayCnt * itemHeight + 10)
+        self.setMinimumHeight(displayCnt * itemHeight + 10)
+        
+    # end of __init_
+        
+                    
+    def doReturn(self) :
+        self.done(0)  # close
+    
+# end of class ClassMemberDialog
+
+
+# Classes tab widget
 class Classes(QtGui.QWidget) :
 
     classUpdated = QtCore.Signal(str, str)
@@ -75,10 +129,14 @@ class Classes(QtGui.QWidget) :
             self.loadFont(font)
             
         self.selClassName = ''
+        
+    # end of __init__
+    
 
     def resizeEvent(self, event) :
         self.tab.setColumnWidth(1, self.size().width() - self.tab.columnWidth(0) - 2)
 
+    
     # Populate the Classes tab with the defined classes.
     def loadFont(self, font) :
         self.font = font
@@ -104,19 +162,35 @@ class Classes(QtGui.QWidget) :
             if c.fname : t += c.fname
             l.setToolTip(t)
             if (c.generated or not c.editable) and c.fname :
-                m.setFlags(QtCore.Qt.NoItemFlags)
+                m.setFlags(QtCore.Qt.NoItemFlags | QtCore.Qt.ItemIsEnabled)
             else :
                 m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
             m.loc = (c.fname, c.lineno, c.editable)
             self.tab.setItem(i, 0, l)
             self.tab.setItem(i, 1, m)
 
+    # end of loadFont
+    
+    
     def doubleClicked(self, row, col) :
-        self.findSourceForClass(row)
+        if col == 0 :
+            self.findSourceForClass(row)
+        elif col == 1 :
+            self.popupClassMembers(row)
 
+    
     def clicked(self, row, cell) :
         self.classSelected.emit(self.tab.item(row, 0).text())
         
+    
+    def popupClassMembers(self, row) :
+        className = self.tab.item(row, 0).text()
+        memberText = self.tab.item(row, 1).text()
+        memberList = memberText.split(" ")
+        dialog = ClassMemberDialog(self, className, memberList)
+        dialog.exec_()
+        
+    
     # Highlight the source code where the given class is defined in the code pane.
     def findSourceForClass(self, row) :
         c = self.tab.item(row, 1)
@@ -139,9 +213,13 @@ class Classes(QtGui.QWidget) :
             self.app.selectLine(*c.loc[:2])
             return True    	
 
+    #end of findSourceForClass
+    
+    
     def clearHighlights(self) :
         self.classSelected.emit(None)
 
+    
     def addClass(self) :
         (name, ok) = QtGui.QInputDialog.getText(self, 'Add Class', 'Class Name:')
         if name and ok :
@@ -155,11 +233,13 @@ class Classes(QtGui.QWidget) :
             self.tab.setItem(r, 0, l)
             self.tab.setItem(r, 1, v)
 
+    
     def delCurrent(self) :
         r = self.tab.currentRow()
         name = self.tab.item(r, 0).text()
         self.classUpdated.emit(name, None)
         self.tab.removeRow(r)
+    
     
     # Scroll to the selected class and highlight it.
     def findSelectedClass(self) :
@@ -185,3 +265,6 @@ class Classes(QtGui.QWidget) :
     	        
     	self.selClassName = className
 
+    # end of findSelectedClass
+    
+# end of class Classes (tab widget)
