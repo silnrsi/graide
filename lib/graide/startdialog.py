@@ -66,11 +66,12 @@ class StartDialog(QtGui.QDialog) :
         
         gridLayout.setColumnMinimumWidth(0, 150)
         
-        self.ok = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
-        self.ok.accepted.connect(self.accept)
-        self.ok.rejected.connect(self.reject)
+        self.okExit = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
+        self.okExit.addButton("Exit", QtGui.QDialogButtonBox.RejectRole)
+        self.okExit.accepted.connect(self.accept)
+        self.okExit.rejected.connect(self.reject)
         vLayout.addSpacing(25)
-        vLayout.addWidget(self.ok)
+        vLayout.addWidget(self.okExit)
         
         self.radioRecent.setChecked(True)
 
