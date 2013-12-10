@@ -273,7 +273,7 @@ class ConfigDialog(QtGui.QDialog) :
             count = 0
             nname = fname
             while os.path.exists(nname) :
-                nname = fname[:-4] + "_makegdl"
+                nname = fname[:-4] + "_autogen"
                 if count : nname += "_" + str(count)
                 count += 1
                 nname += ".gdl"

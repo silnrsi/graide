@@ -35,6 +35,7 @@ def ap_gr(txt) :
     else :
         return txt + 'S'
 
+
 class Glyph(object) :
 
     def __init__(self, name, gid = 0) :
@@ -119,6 +120,7 @@ class Glyph(object) :
         if 'classes' in self.properties and self.properties['classes'].strip() :
             tempClasses = self.properties['classes']
             self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), apgdlfile))
+            
         for k in sorted(self.anchors.keys()) :
             v = self.anchors[k]
             p = SubElement(e, 'point')
@@ -130,7 +132,10 @@ class Glyph(object) :
             l.tail = "\n    "
             if ce is not None : ce.tail = "\n    "
             ce = p
+            
         for k in sorted(self.gdl_properties.keys()) :
+            if k == "*skipPasses*" : continue  # not set in GDL
+                
             v = self.gdl_properties[k]
             if v :
                 p = SubElement(e, 'property')
@@ -138,12 +143,14 @@ class Glyph(object) :
                 p.set('value', v)
                 if ce is not None : ce.tail = "\n    "
                 ce = p
+                
         if self.gdl and (not self.name or self.gdl != self.name.GDL()) :
             p = SubElement(e, 'property')
             p.set('name', 'GDLName')
             p.set('value', self.GDLName())
             if ce is not None : ce.tail = "\n    "
             ce = p
+            
         for k in sorted(self.properties.keys()) :
             v = self.properties[k]
             if v :
@@ -152,11 +159,13 @@ class Glyph(object) :
                 p.set('value', v)
                 if ce is not None : ce.tail = "\n    "
                 ce = p
+                
         if self.comment :
             p = SubElement(e, 'note')
             p.text = self.comment
             if ce is not None : ce.tail = "\n    "
             ce = p
+            
         if 'classes' in self.properties and self.properties['classes'].strip() :
             self.properties['classes'] = tempClasses
         if ce is not None :
