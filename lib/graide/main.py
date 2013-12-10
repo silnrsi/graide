@@ -101,9 +101,24 @@ class MainWindow(QtGui.QMainWindow) :
             if not config.has_section(s) :
                 config.add_section(s)
 
-        if config.has_option('main', 'font') :
+        if self.configfile is None or self.configfile == "":
+            print "no configuration"
+            # show() function will force them to create one.
+            pass
+        elif config.has_option('main', 'font') :
             print "Loading font..." #===
+            fontfile = config.get('main', 'font')
+            print fontfile
+            while not os.path.exists(fontfile) :
+                errorDialog = QtGui.QMessageBox(fontfile + " does not exist")
+                errorDialog.exec_()
+                result = self.runStartupDialog()
+                fontfile = config.get('main', 'font')
+                
             self.loadFont(config.get('main', 'font'))
+        else :
+            # Configuration has no font - get them to set it
+            self.runConfigDialog()
 
         if jsonfile :
             f = file(jsonfile)
@@ -146,19 +161,29 @@ class MainWindow(QtGui.QMainWindow) :
     def show(self) :
         super(MainWindow, self).show()
         
-        if self.configfile is None or self.configfile == "" :
-            result = self.runStartupDialog()
-            if result == False :
+        self.runStartupDialog()
+        
+        
+    def runStartupDialog(self) :
+        result = (not self.configfile is None or self.configfile == "")
+        # While we don't have a valid project, ask for one.
+        while not result :
+            projFile = self.getStartupProject()
+            if projFile == False :
                 self.doExit()
-            elif result == "!!create-new-project!!" :
-                self.configNewProject()
+            elif projFile == "!!create-new-project!!" :
+                result = self.configNewProject()
             else :
                 # Open the specified config file
-                print "result=",result
-                self._configOpenExisting(result)
+                result = self._configOpenExisting(projFile)
+        
+        fontFile = self.config.get('main', 'font') if self.config.has_option('main', 'font') else ""
+        if fontFile is None or fontFile == "" :
+            # Configuration has no font - get them to set it
+            self.runConfigDialog()
 
 
-    def runStartupDialog(self) :
+    def getStartupProject(self) :
         d = StartDialog(self.config, self.recentProjects)
         if d.exec_() :
             result = d.returnResults()
@@ -857,6 +882,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.tab_info.setCurrentWidget(self.tab_match)
 
 
+    # Return the output of the final pass.
     def _finalOutput(self, font, jsonall, gdx = None, rtl = False) :
         if jsonall :
             json = jsonall[0]
@@ -950,6 +976,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                 f = file(self.configfile, "w")
                 self.config.write(f)
                 f.close()
+            return True
+        else :
+            return False
 
     # Open an (existing) project.
     def configOpenClicked(self) :
@@ -972,15 +1001,40 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.setWindowTitle("[" + fname + "] - " + self.appTitle)
         
         self.config = RawConfigParser()
-        self.config.read(fname)
+        try :
+            self.config.read(fname)
+        except :
+            errorDialog = QtGui.QMessageBox()
+            errorDialog.setText("ERROR: configuration file " + fname + " could not be read.")
+            errorDialog.exec_()
+            return false
 
         if self.config.has_option('main', 'font') :
-            self.loadFont(self.config.get('main', 'font'))
+            fontFileName = self.config.get('main', 'font')
+            if not os.path.exists(fontFileName) :
+                errorDialog = QtGui.QMessageBox()
+                errorDialog.setText("ERROR: font file " + fontFileName + " does not exist.")
+                errorDialog.exec_()
+                return False  # fail and try to open a different project
+            self.loadFont(fontFileName)
+            
             if self.config.has_option('main', 'ap') :
-                self.loadAP(self.config.get('main', 'ap'))
+                apFileName = self.config.get('main', 'ap')
+                if not os.path.exists(apFileName) :
+                    errorDialog = QtGui.QMessageBox()
+                    errorDialog.setText("WARNING: AP file " + apFileName + " does not exist.")
+                    errorDialog.exec_()
+                else :
+                    self.loadAP(apFileName)
             
         if self.config.has_option('main', 'testsfile') :
-            self.loadTests(self.config.get('main', 'testsfile'))
+            testsFileName = self.config.get('main', 'testsfile')
+            if not os.path.exists(testsFileName) :
+                errorDialog = QtGui.QMessageBox()
+                errorDialog.setText("WARNING: Tests file " + testsFileName + " does not exist.")
+                errorDialog.exec_()
+            else :
+                self.loadTests(testsFileName)
             
         if self.config.has_option('build', 'tweakxmlfile') :
             self.loadTweaks(self.config.get('build', 'tweakxmlfile'))
@@ -990,11 +1044,13 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         #self.selectLine(self.config.get('build', 'gdlfile'), -1)
         self.tab_edit.updateFromConfigSettings(self.config)
         self.tab_match.updateFromConfigSettings(self.fontFileName, self.config)
+        
+        return True  # success
     
     # end of _configOpenExisting        
 
 
-    # When opening project, open the list of previously open files.
+    # When opening a project, open the list of previously open files.
     def _openFileList(self) :        
         if self.config.has_option('window', 'openfiles') :
             openFileString = self.config.get('window', 'openfiles')
@@ -1028,7 +1084,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.recentProjects.addProject(self.configfile)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
-        self.runConfigDialog()    
+        result = self.runConfigDialog()
+        return result  # OK or Cancel
         
     # end of configNewClicked  
 
