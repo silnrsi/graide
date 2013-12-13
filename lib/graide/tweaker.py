@@ -196,57 +196,58 @@ class TweakList(QtGui.QWidget) :
         self.header = None
 
         self.setActions(app)
-        self.vbox = QtGui.QVBoxLayout()
-        self.vbox.setContentsMargins(*Layout.buttonMargins)
+        vLayout = QtGui.QVBoxLayout()
+        vLayout.setContentsMargins(*Layout.buttonMargins)
         self.cbox = QtGui.QWidget(self)
-        self.chbox = QtGui.QHBoxLayout()
-        self.chbox.setContentsMargins(*Layout.buttonMargins)
-        self.chbox.setSpacing(Layout.buttonSpacing)
-        self.cbox.setLayout(self.chbox)
+        chLayout = QtGui.QHBoxLayout()
+        chLayout.setContentsMargins(*Layout.buttonMargins)
+        chLayout.setSpacing(Layout.buttonSpacing)
+        self.cbox.setLayout(chLayout)
         self.combo = QtGui.QComboBox(self.cbox)
-        self.chbox.addWidget(self.combo)
-        self.chbox.addSpacing(10)
+        chLayout.addWidget(self.combo)
+        chLayout.addSpacing(10)
         self.cabutton = QtGui.QToolButton(self.cbox)
         self.cabutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.cabutton.setToolTip('Add tweak group below this group')
         self.cabutton.clicked.connect(self.addGroupClicked)
-        self.chbox.addWidget(self.cabutton)
+        chLayout.addWidget(self.cabutton)
         self.crbutton = QtGui.QToolButton(self.cbox)
         self.crbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.crbutton.setToolTip('Remove tweak group')
         self.crbutton.clicked.connect(self.delGroupClicked)
-        self.chbox.addWidget(self.crbutton)
-        self.vbox.addWidget(self.cbox)
-        self.list = QtGui.QStackedWidget(self)
-        self.vbox.addWidget(self.list)
+        chLayout.addWidget(self.crbutton)
+        vLayout.addWidget(self.cbox)
+        
+        self.liststack = QtGui.QStackedWidget(self)
+        vLayout.addWidget(self.liststack)
         self.combo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeGroup)
         self.addGroup('main')
         self.bbox = QtGui.QWidget(self)
-        self.hbbox = QtGui.QHBoxLayout()
-        self.bbox.setLayout(self.hbbox)
-        self.hbbox.setContentsMargins(*Layout.buttonMargins)
-        self.hbbox.setSpacing(Layout.buttonSpacing)
-        self.hbbox.insertStretch(0)
-        self.vbox.addWidget(self.bbox)
+        hbLayout = QtGui.QHBoxLayout()
+        self.bbox.setLayout(hbLayout)
+        hbLayout.setContentsMargins(*Layout.buttonMargins)
+        hbLayout.setSpacing(Layout.buttonSpacing)
+        hbLayout.insertStretch(0)
+        vLayout.addWidget(self.bbox)
         self.bEdit = QtGui.QToolButton(self.bbox)
         self.bEdit.setDefaultAction(self.aEdit)
-        self.hbbox.addWidget(self.bEdit)
+        hbLayout.addWidget(self.bEdit)
         self.bUpp = QtGui.QToolButton(self.bbox)
         self.bUpp.setDefaultAction(self.aUpp)
-        self.hbbox.addWidget(self.bUpp)
+        hbLayout.addWidget(self.bUpp)
         self.bDown = QtGui.QToolButton(self.bbox)
         self.bDown.setDefaultAction(self.aDown)
-        self.hbbox.addWidget(self.bDown)
+        hbLayout.addWidget(self.bDown)
         self.bSave = QtGui.QToolButton(self.bbox)
         self.bSave.setDefaultAction(self.aSave)
-        self.hbbox.addWidget(self.bSave)
+        hbLayout.addWidget(self.bSave)
         self.bAdd = QtGui.QToolButton(self.bbox)
         self.bAdd.setDefaultAction(self.aAdd)
-        self.hbbox.addWidget(self.bAdd)
+        hbLayout.addWidget(self.bAdd)
         self.bDel = QtGui.QToolButton(self.bbox)
         self.bDel.setDefaultAction(self.aDel)
-        self.hbbox.addWidget(self.bDel)
-        self.setLayout(self.vbox)
+        hbLayout.addWidget(self.bDel)
+        self.setLayout(vLayout)
 
         self.loadTweaks(xmlfilename)
 
@@ -289,8 +290,8 @@ class TweakList(QtGui.QWidget) :
     def loadTweaks(self, fname):
         self.tweakGroups = []
         self.combo.clear()
-        for i in range(self.list.count() - 1, -1, -1) :
-            self.list.removeWidget(self.list.widget(i))
+        for i in range(self.liststack.count() - 1, -1, -1) :
+            self.liststack.removeWidget(self.liststack.widget(i))
         if not fname or not os.path.exists(fname) : 
             self.initTweaks()
             return
@@ -396,12 +397,12 @@ class TweakList(QtGui.QWidget) :
         listwidget.itemClicked.connect(self.loadTweak)
         res = []
         if index is None :
-            self.list.addWidget(listwidget)
+            self.liststack.addWidget(listwidget)
             self.combo.addItem(name)
             self.tweakGroups.append(res)
             self.comments.append(comment)
         else :
-            self.list.insertWidget(index, listwidget)
+            self.liststack.insertWidget(index, listwidget)
             self.combo.insertItem(index, name)
             self.tweakGroups.insert(index, res)
             self.comments.insert(index, comment)
@@ -409,8 +410,8 @@ class TweakList(QtGui.QWidget) :
 
     
     def appendTweak(self, tweak, listwidget = None) :
-        if not listwidget : listwidget = self.list.currentWidget()
-        self.tweakGroups[self.list.indexOf(listwidget)].append(tweak)
+        if not listwidget : listwidget = self.liststack.currentWidget()
+        self.tweakGroups[self.liststack.indexOf(listwidget)].append(tweak)
         w = QtGui.QListWidgetItem(tweak.name or "",listwidget)
         if tweak.comment :
             w.setToolTip(t.comment)
@@ -418,11 +419,11 @@ class TweakList(QtGui.QWidget) :
 
     
     def editTweak(self, tIndex) :
-        gIndex = self.list.currentIndex()
+        gIndex = self.liststack.currentIndex()
         t = self.tweakGroups[gIndex][tIndex]
         bgndSave = t.background
         if t.editDialog(self.app, True) :
-            listwidget = self.list.widget(gIndex)
+            listwidget = self.liststack.widget(gIndex)
             listwidget.item(tIndex).setText(t.name)
             listwidget.item(tIndex).setToolTip(t.comment)
             listwidget.item(tIndex).setBackground(QtGui.QBrush(t.background))
@@ -493,7 +494,7 @@ class TweakList(QtGui.QWidget) :
     
     @QtCore.Slot(int)
     def changeGroup(self, index) :
-        self.list.setCurrentIndex(index)
+        self.liststack.setCurrentIndex(index)
         if index < len(self.comments) :
             self.combo.setToolTip(self.comments[index])
 
@@ -508,30 +509,30 @@ class TweakList(QtGui.QWidget) :
     
     def delGroupClicked(self) :
         index = self.combo.currentIndex()
-        self.list.removeWidget(self.list.widget(index))
+        self.liststack.removeWidget(self.liststack.widget(index))
         self.combo.removeItem(index)
         self.tweakGroups.pop(index)
 
     
     def editClicked(self) :
-        self.editTweak(self.list.currentWidget().currentRow())
+        self.editTweak(self.liststack.currentWidget().currentRow())
 
     
     def addTestClicked(self, t = None) :
-        gIndex = self.list.currentIndex()
+        gIndex = self.liststack.currentIndex()
         if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
         res = self.editTweak(len(self.tweakGroups[gIndex]) - 1)
         if not t.name or not res :
             self.tweakGroups[gIndex].pop()
-            self.list.widget(gIndex).takeItem(len(self.tweakGroups))
+            self.liststack.widget(gIndex).takeItem(len(self.tweakGroups))
 
     
     def delTestClicked(self) :
-        gIndex = self.list.currentIndex()
-        tIndex = self.list.widget(gIndex).currentRow()
+        gIndex = self.liststack.currentIndex()
+        tIndex = self.liststack.widget(gIndex).currentRow()
         self.tweakGroups[gIndex].pop(tIndex)
-        self.list.widget(gIndex).takeItem(tIndex)
+        self.liststack.widget(gIndex).takeItem(tIndex)
 
     
     def saveTestsClicked(self) :
@@ -540,8 +541,8 @@ class TweakList(QtGui.QWidget) :
 
     
     def upClicked(self) :
-        l = self.list.currentWidget()
-        gIndex = self.list.currentIndex()
+        l = self.liststack.currentWidget()
+        gIndex = self.liststack.currentIndex()
         tIndex = l.currentRow()
         if tIndex > 0 :
             self.tweakGroups[gIndex].insert(tIndex - 1, self.tweakGroups[gIndex].pop(tIndex))
@@ -550,8 +551,8 @@ class TweakList(QtGui.QWidget) :
 
     
     def downClicked(self) :
-        l = self.list.currentWidget()
-        gIndex = self.list.currentIndex()
+        l = self.liststack.currentWidget()
+        gIndex = self.liststack.currentIndex()
         tIndex = l.currentRow()
         if tIndex < l.count() - 1 :
             self.tweakGroups[gIndex].insert(tIndex + 1, self.tweakGroups[gIndex].pop(tIndex))
@@ -582,8 +583,8 @@ class TweakList(QtGui.QWidget) :
     
     # Return the Tweak object that is currently selected.
     def currentTweak(self):
-        gIndex = self.list.currentIndex()
-        tIndex = self.list.currentWidget().currentRow()
+        gIndex = self.liststack.currentIndex()
+        tIndex = self.liststack.currentWidget().currentRow()
         if gIndex == -1 or tIndex == -1 :
             return None
         else :
@@ -940,6 +941,11 @@ class Tweaker(QtGui.QWidget) :
         self.layout.addWidget(self.infoWidget)
 
 
+    def updateFromConfigSettings(self, font, fontname, config) :
+        self.font = font
+        self.view.updateFromConfigSettings(fontname, config)
+        
+
     def setView(self, view) :
         self.view = view  # TweakView - lower-right tab
         self.tweakList.view = view
@@ -1216,7 +1222,7 @@ class TweakView(QtGui.QWidget) :
 
     def __init__(self, fontname, size, app = None, parent = None) :
         super(TweakView, self).__init__(parent)
-
+        
         self.app = app
         self.runloaded = False
         self.tweaker = None # set later
@@ -1225,14 +1231,23 @@ class TweakView(QtGui.QWidget) :
         self.setFont(size)
 
         if self.fontname and self.fontname != "":
-            layout = QtGui.QVBoxLayout(self)
-            self.runView = TweakableRunView(self.font, run = None, parent = self)
-            self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
-            layout.addWidget(self.runView.gview)
-            # Ignore runView.tview - text view that shows the glyph names.
+            self._createRunView()
         
         self.currSlotIndex = -1
         self.updateable = True
+        
+    def _createRunView(self) :
+        layout = QtGui.QVBoxLayout(self)
+        self.runView = TweakableRunView(self.font, run = None, parent = self)
+        self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
+        layout.addWidget(self.runView.gview)
+        # Ignore runView.tview - text view that shows the glyph names.
+        
+        
+    def updateFromConfigSettings(self, fontname, config) :
+        self.fontname = fontname
+        self.setFont(configintval(config, 'ui', 'tweakglyphsize'))
+        self._createRunView()
         
 
     def changeFontSize(self, size) :

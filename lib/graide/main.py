@@ -102,7 +102,6 @@ class MainWindow(QtGui.QMainWindow) :
                 config.add_section(s)
 
         if self.cfgFileName is None or self.cfgFileName == "":
-            print "no configuration"
             # show() function will force them to create one.
             pass
         elif config.has_option('main', 'font') :
@@ -253,7 +252,6 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_tweak.loadTweaks(tweaksfile)
 
     def closeEvent(self, event) :   # WHY ARE THERE TWO METHODS CALLED closeEvent????
-        print "MainWindow::closeEvent1" ###
         if self.rules :
             self.rules.close()
         event.accept()
@@ -628,7 +626,6 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         sys.exit()
 
     def closeEvent(self, event) :
-        print "MainWindow::closeEvent"
         self.closeApp()
         event.accept()
         
@@ -856,7 +853,6 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         jsonResult = json.load(runfile)
         if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
         runfile.close()
-        #print "temp file name =",runfname ###
         os.unlink(runfname)
         return jsonResult
     
@@ -1041,6 +1037,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
         #self.selectLine(self.config.get('build', 'gdlfile'), -1)
         self.tab_edit.updateFromConfigSettings(self.config)
+        self.tab_tweak.updateFromConfigSettings(self.font, self.fontFileName, self.config)
         self.tab_match.updateFromConfigSettings(self.fontFileName, self.config)
         
         return True  # success
