@@ -178,5 +178,5 @@ def isMakeGDLSpecialClass(name) :
 #    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
 #    if name.startswith('clig') : return True
 #    if name.startswith('cno_') : return True
-    if re.match(r'^\*GC\d+\*$', name) : return True
+    if re.match(r'^\*GC\d+\*$', name) : return True   # auto-pseudo glyph with name = *GCXXXX*
     return False

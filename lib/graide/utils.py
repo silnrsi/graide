@@ -95,7 +95,7 @@ def findgrcompiler() :
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
     if configintval(config, 'build', 'usemakegdl') :
-        gdlfile = configval(config, 'build', 'makegdlfile')
+        gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
         
         if config.has_option('main', 'ap') :    # AP XML file
             # Generate the AP GDL file.
@@ -112,7 +112,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         else :
             # Use the default makegdl process.
             font.createClasses()
-            font.pointClasses()
+            font.calculatePointClasses()
             font.ligClasses()
             v = int(config.get('build', 'attpass'))
             f = file(gdlfile, "w")

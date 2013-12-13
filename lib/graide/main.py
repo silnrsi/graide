@@ -53,16 +53,16 @@ import codecs  ### debug
 
 class MainWindow(QtGui.QMainWindow) :
 
-    def __init__(self, config, configfile, jsonfile) :
+    def __init__(self, config, configFile, jsonFile) :
         
         super(MainWindow, self).__init__()
         
         self.rules = None
-        self.runfile = None
+        #self.runFile = None
         self.runLoaded = False
-        self.fDialog = None
+        #self.fDialog = None
         self.config = config
-        self.configfile = configfile
+        self.cfgFileName = configFile
         self.appSettings = QtCore.QSettings("SIL", "Graide")
         self.recentProjects = RecentProjectList(self.appSettings)
         self.currFeats = None
@@ -77,8 +77,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.debugCnt = 0  # debug
 
         windowTitle = ''
-        if (self.configfile != None) :
-            basename = os.path.basename(self.configfile)
+        if (self.cfgFileName != None) :
+            basename = os.path.basename(self.cfgFileName)
             windowTitle = windowTitle + "[" + basename + "] - "
         windowTitle = windowTitle + self.appTitle
         self.setWindowTitle(windowTitle)
@@ -101,27 +101,26 @@ class MainWindow(QtGui.QMainWindow) :
             if not config.has_section(s) :
                 config.add_section(s)
 
-        if self.configfile is None or self.configfile == "":
+        if self.cfgFileName is None or self.cfgFileName == "":
             print "no configuration"
             # show() function will force them to create one.
             pass
         elif config.has_option('main', 'font') :
             print "Loading font..." #===
-            fontfile = config.get('main', 'font')
-            print fontfile
-            while not os.path.exists(fontfile) :
-                errorDialog = QtGui.QMessageBox(fontfile + " does not exist")
+            fontFile = config.get('main', 'font')
+            while not os.path.exists(fontFile) :
+                errorDialog = QtGui.QMessageBox(fontFile + " does not exist")
                 errorDialog.exec_()
                 result = self.runStartupDialog()
-                fontfile = config.get('main', 'font')
+                fontFile = config.get('main', 'font')
                 
             self.loadFont(config.get('main', 'font'))
         else :
             # Configuration has no font - get them to set it
             self.runConfigDialog()
 
-        if jsonfile :
-            f = file(jsonfile)
+        if jsonFile :
+            f = file(jsonFile)
             self.json = json.load(f)
             f.close()
         else :
@@ -165,7 +164,7 @@ class MainWindow(QtGui.QMainWindow) :
         
         
     def runStartupDialog(self) :
-        result = (not self.configfile is None or self.configfile == "")
+        result = (not self.cfgFileName is None or self.cfgFileName == "")
         # While we don't have a valid project, ask for one.
         while not result :
             projFile = self.getStartupProject()
@@ -229,10 +228,10 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, 'runView') :
             self.runView.gview.setFixedHeight(self.font.pixrect.height())
 
-    def loadAP(self, apname) :
-        self.apname = apname
-        if apname and os.path.exists(apname) :
-            self.font.loadAP(apname)
+    def loadAP(self, apFileName) :
+        self.apname = apFileName
+        if apFileName and os.path.exists(apFileName) :
+            self.font.loadAP(apFileName)
         else :
             self.font.loadEmptyGlyphs()
         if os.path.exists(self.gdxfile) :
@@ -648,7 +647,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.tab_tweak.updatePositions()
 
     def _saveProjectData(self) :
-        self.recentProjects.addProject(self.configfile)  # remember that this was a recent project
+        self.recentProjects.addProject(self.cfgFileName)  # remember that this was a recent project
         self.recentProjects.saveFiles()
 
         if not self.config.has_section('window') :
@@ -663,9 +662,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.tab_tests.saveTests()
         if self.tweaksfile :
             self.tab_tweak.writeXML(self.tweaksfile)
-        if self.configfile :
+        if self.cfgFileName :
             try :
-                f = file(self.configfile, "w")
+                f = file(self.cfgFileName, "w")
                 self.config.write(f)
                 f.close()
             except :
@@ -727,7 +726,6 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.runView.clear()
 
     def buildClicked(self) :
-        print "buildClicked"
         self.tab_edit.writeIfModified()
         
         if self.tweaksfile :
@@ -966,46 +964,46 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.font.saveAP(self.apname, configval(self.config, 'build', 'gdlfile'))
 
     def runConfigDialog(self) :
-        if not self.configfile :
+        if not self.cfgFileName :
             self.configNewClicked()
             return
-        d = ConfigDialog(self.config)
-        if d.exec_() :
-            d.updateConfig(self, self.config)
-            if self.configfile :
-                f = file(self.configfile, "w")
+        dialog = ConfigDialog(self.config)
+        if dialog.exec_() :
+            dialog.updateConfig(self, self.config)
+            if self.cfgFileName :
+                f = file(self.cfgFileName, "w")
                 self.config.write(f)
                 f.close()
-            return True
+            return True  # OK
         else :
-            return False
+            return False  # Cancel
 
     # Open an (existing) project.
     def configOpenClicked(self) :
-        (fname, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
-        if not os.path.exists(fname) : return
-        if os.path.splitext(fname)[1] == "" :
-        	fname = fname + ".cfg"
-        self._configOpenExisting(fname)
+        (cfgFileName, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
+        if not os.path.exists(cfgFileName) : return
+        if os.path.splitext(cfgFileName)[1] == "" :
+        	cfgFileName = cfgFileName + ".cfg"
+        self._configOpenExisting(cfgFileName)
 
-    def _configOpenExisting(self, fname) :
+    def _configOpenExisting(self, cfgFileName) :
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()
 
-        (dname, fname) = os.path.split(fname)
-        if dname :
-            os.chdir(dname)
+        (path, cfgFileName) = os.path.split(cfgFileName)
+        if path :
+            os.chdir(path)
 
-        self.configfile = fname
-        self.setWindowTitle("[" + fname + "] - " + self.appTitle)
+        self.cfgFileName = cfgFileName
+        self.setWindowTitle("[" + cfgFileName + "] - " + self.appTitle)
         
         self.config = RawConfigParser()
         try :
-            self.config.read(fname)
+            self.config.read(cfgFileName)
         except :
             errorDialog = QtGui.QMessageBox()
-            errorDialog.setText("ERROR: configuration file " + fname + " could not be read.")
+            errorDialog.setText("ERROR: configuration file " + cfgFileName + " could not be read.")
             errorDialog.exec_()
             return false
 
@@ -1069,19 +1067,19 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.configNewProject()
         
     def configNewProject(self) :
-        if self.configfile :
+        if self.cfgFileName :
             # record current config, if any, as a recent project
-            self.recentProjects.addProject(self.configfile)
+            self.recentProjects.addProject(self.cfgFileName)
             
         (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
-        (dname, fname) = os.path.split(fname)
-        if dname :
-            os.chdir(dname)
+        (path, fname) = os.path.split(fname)
+        if path :
+            os.chdir(path)
         if os.path.splitext(fname)[1] == "" :
         	fname = fname + ".cfg"
-        self.configfile = fname
-        self.recentProjects.addProject(self.configfile)
+        self.cfgFileName = fname
+        self.recentProjects.addProject(self.cfgFileName)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
         result = self.runConfigDialog()

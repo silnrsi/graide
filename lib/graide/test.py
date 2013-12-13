@@ -43,74 +43,83 @@ class Test(object) :
 
     def editDialog(self, parent, isTweak = False) :
         self.parent = parent
-        self.featdialog = None
-        d = QtGui.QDialog()
-        v = QtGui.QGridLayout()
-        v.addWidget(QtGui.QLabel('Name:', d), 0, 0)
-        eName = QtGui.QLineEdit(self.name, d)
-        v.addWidget(eName, 0, 1)
-        v.addWidget(QtGui.QLabel('Text:', d), 1, 0)
+        self.featDialog = None
+        
+        dlg = QtGui.QDialog()
+        topWidget = QtGui.QWidget(dlg)
+        hboxLayout = QtGui.QHBoxLayout()
+        topWidget.setLayout(hboxLayout)
+        gridLayout = QtGui.QGridLayout()
+        gridLayout.addWidget(topWidget, 4, 1)
+        dlg.setLayout(gridLayout)
+        
+        gridLayout.addWidget(QtGui.QLabel('Name:', dlg), 0, 0)
+        editName = QtGui.QLineEdit(self.name, dlg)
+        gridLayout.addWidget(editName, 0, 1)
+        gridLayout.addWidget(QtGui.QLabel('Text:', dlg), 1, 0)
         if configintval(parent.config, 'ui', 'entities') :
             t = as_entities(self.text)
         else :
             t = self.text
-        eText = QtGui.QPlainTextEdit(t, d)
-        eText.setMaximumHeight(Layout.runEditHeight)
-        v.addWidget(eText, 1, 1)
-        v.addWidget(QtGui.QLabel('Comment:', d), 2, 0)
-        eComment = QtGui.QPlainTextEdit()
-        eComment.setPlainText(self.comment)
-        eComment.setMaximumHeight(Layout.runEditHeight)
-        v.addWidget(eComment, 2, 1)
-        eRTL = QtGui.QCheckBox('RTL', d)
-        eRTL.setChecked(self.rtl)
-        v.addWidget(eRTL, 3, 1)
-        bw = QtGui.QWidget(d)
-        bl = QtGui.QHBoxLayout()
-        bw.setLayout(bl)
-        c = QtGui.QToolButton(bw)
-        c.setIcon(QtGui.QIcon.fromTheme('background', QtGui.QIcon(":/images/format-fill-color.png")))
-        c.setToolTip('Set background colour')
-        c.clicked.connect(self.doColour)
-        bl.addWidget(c)
-        b = QtGui.QPushButton('Features', bw)
-        bl.addWidget(b)
-        v.addWidget(bw, 4, 1)
-        hw = QtGui.QWidget(d)
-        h = QtGui.QHBoxLayout()
-        hw.setLayout(h)
-        v.addWidget(hw, 5, 1)
-        bok = QtGui.QPushButton('OK', hw)
-        h.addWidget(bok)
-        bcancel = QtGui.QPushButton('Cancel', hw)
-        h.addWidget(bcancel)
-        d.setLayout(v)
+        editText = QtGui.QPlainTextEdit(t, dlg)
+        editText.setMaximumHeight(Layout.runEditHeight)
+        gridLayout.addWidget(editText, 1, 1)
+        gridLayout.addWidget(QtGui.QLabel('Comment:', dlg), 2, 0)
+        editComment = QtGui.QPlainTextEdit()
+        editComment.setPlainText(self.comment)
+        editComment.setMaximumHeight(Layout.runEditHeight)
+        gridLayout.addWidget(editComment, 2, 1)
+        cbRTL = QtGui.QCheckBox('RTL', dlg)
+        cbRTL.setChecked(self.rtl)
+        gridLayout.addWidget(cbRTL, 3, 1)
+
+        colourButton = QtGui.QToolButton(topWidget)
+        colourButton.setIcon(QtGui.QIcon.fromTheme('background', QtGui.QIcon(":/images/format-fill-color.png")))
+        colourButton.setToolTip('Set background colour')
+        colourButton.clicked.connect(self.doColour)
+        hboxLayout.addWidget(colourButton)
+        
+        featButton = QtGui.QPushButton('Features', topWidget)
+        hboxLayout.addWidget(featButton)
+        
+        hboxWidget = QtGui.QWidget(dlg)  # generic widget containing the OK/Cancel buttons
+        hboxButtonLo = QtGui.QHBoxLayout()
+        hboxWidget.setLayout(hboxButtonLo)
+        gridLayout.addWidget(hboxWidget, 5, 1)
+        
+        buttonOk = QtGui.QPushButton('OK', hboxWidget)
+        hboxButtonLo.addWidget(buttonOk)
+        buttonCancel = QtGui.QPushButton('Cancel', hboxWidget)
+        hboxButtonLo.addWidget(buttonCancel)
+        
         if (self.name == "") :
-            d.setWindowTitle("Add new tweak" if isTweak else "Add new test")
+            dlg.setWindowTitle("Add new tweak" if isTweak else "Add new test")
         else :
-            d.setWindowTitle("Edit tweak" if isTweak else "Edit test")
-        b.clicked.connect(self.featClicked)
-        bok.clicked.connect(d.accept)
-        bcancel.clicked.connect(d.reject)
-        res = d.exec_()
+            dlg.setWindowTitle("Edit tweak" if isTweak else "Edit test")
+            
+        featButton.clicked.connect(self.featClicked)
+        buttonOk.clicked.connect(dlg.accept)
+        buttonCancel.clicked.connect(dlg.reject)
+        
+        res = dlg.exec_()
         if res :
-            self.name = eName.text()
-            self.text = eText.toPlainText()
-            self.rtl = eRTL.isChecked()
-            self.comment = eComment.toPlainText()
-            if self.featdialog : 
-                self.lang = self.featdialog.get_lang()
+            self.name = editName.text()
+            self.text = editText.toPlainText()
+            self.rtl = cbRTL.isChecked()
+            self.comment = editComment.toPlainText()
+            if self.featDialog : 
+                self.lang = self.featDialog.get_lang()
                 if self.lang not in self.parent.feats :
                     self.lang = None
-                self.feats = self.featdialog.get_feats(self.parent.feats[self.lang])
-                self.width = self.featdialog.get_width()
-        del self.featdialog
+                self.feats = self.featDialog.get_feats(self.parent.feats[self.lang])
+                self.width = self.featDialog.get_width()
+        del self.featDialog
         del self.parent
         return res
 
     def featClicked(self) :
         newD = False
-        if not self.featdialog :
+        if not self.featDialog :
             d = FeatureDialog(self.parent)  # parent = main window
             # Initialize the dialog with the features associated with the language.
             f = self.parent.feats[self.lang].copy()
