@@ -76,8 +76,9 @@ class EditFile(QtGui.QPlainTextEdit) :
 
     highlighFormat = None
 
-    def __init__(self, fname, abspath, fileTabs, size = 14, fontspec = 'mono', tabstop = 40) :
+    def __init__(self, tabIndex, fname, abspath, fileTabs, size = 14, fontspec = 'mono', tabstop = 40) :
         super(EditFile, self).__init__()
+        self.tabIndex = tabIndex
         self.fname = fname
         self.abspath = abspath
         self.fileTabs = fileTabs
@@ -100,13 +101,22 @@ class EditFile(QtGui.QPlainTextEdit) :
             self.setPlainText("Error in opening file " + fname)
             
         self.fileTabs.addOpenFile(self.fname)
-        a = QtGui.QAction(self)
-        a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
-        a.triggered.connect(self.search)
-        self.addAction(a)
+        
+        aSave = QtGui.QAction(self)
+        aSave.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_S))
+        aSave.triggered.connect(self.writeIfModified)
+        self.addAction(aSave)
+
+        aFind = QtGui.QAction(self)
+        aFind.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
+        aFind.triggered.connect(self.search)
+        self.addAction(aFind)
         self.findDialog = FindDialog(self)
         self.findIsOpen = False
 
+    # end of __init__
+    
+    
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
         self.setExtraSelections([self.selection])
@@ -121,6 +131,7 @@ class EditFile(QtGui.QPlainTextEdit) :
             f.write(self.document().toPlainText())
             f.close()
             self.document().setModified(False)
+            self._updateLabel()
             return True
         else :
             return False
@@ -163,6 +174,10 @@ class EditFile(QtGui.QPlainTextEdit) :
             self.findDialog.show()
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
+        
+    def keyPressEvent(self, event) :
+        super(EditFile,self).keyPressEvent(event)
+        self._updateLabel()
             
     def mouseReleaseEvent(self, event) :
         super(EditFile,self).mouseReleaseEvent(event)
@@ -173,6 +188,14 @@ class EditFile(QtGui.QPlainTextEdit) :
         super(EditFile,self).mouseDoubleClickEvent(event)
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
+        
+    def _updateLabel(self) :
+        if self.document().isModified() :
+            label = self.fname + "*"
+        else :
+            label = self.fname
+        self.fileTabs.setTabText(self.tabIndex, label)
+    
 
 # end of class EditFile
 
@@ -229,13 +252,15 @@ class FileTabs(QtGui.QTabWidget) :
         self.aAdd.setToolTip('Open file in editor')
         self.aAdd.triggered.connect(self.addClicked)
 
+    # lineno = -1 means don't highlight any line
     def selectLine(self, fname, lineno) :
         for i in range(self.count()) :
             f = self.widget(i)
             if f.abspath == os.path.abspath(fname) :
                 self.highlightLine(i, lineno)
                 return
-        newFile = EditFile(fname, os.path.abspath(fname), self, size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
+        # File not found - open it up.
+        newFile = EditFile(self.count(), fname, os.path.abspath(fname), self, size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
         self.addTab(newFile, fname)
         self.highlightLine(self.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')
@@ -253,8 +278,8 @@ class FileTabs(QtGui.QTabWidget) :
 
     def writeIfModified(self) :
         res = False
-        for i in range(self.count()) :
-            res = res | self.widget(i).writeIfModified()
+        for tab in range(self.count()) :
+            res = res | self.widget(tab).writeIfModified()
         return res
 
     def closeRequest(self, index) :
