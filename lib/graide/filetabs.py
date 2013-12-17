@@ -26,22 +26,23 @@ class FindDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) :
         super(FindDialog, self).__init__(parent)
-        self.hb = QtGui.QHBoxLayout(self)
+        self.setWindowTitle("Find")
+        hboxLayout = QtGui.QHBoxLayout(self)
         self.text = QtGui.QLineEdit(self)
         self.text.returnPressed.connect(self.searchFwd)
-        self.hb.addWidget(self.text)
+        hboxLayout.addWidget(self.text)
         self.bBack = QtGui.QToolButton(self)
         self.bBack.setArrowType(QtCore.Qt.UpArrow)
         self.bBack.clicked.connect(self.searchBkwd)
-        self.hb.addWidget(self.bBack)
+        hboxLayout.addWidget(self.bBack)
         self.bFwd = QtGui.QToolButton(self)
         self.bFwd.setArrowType(QtCore.Qt.DownArrow)
         self.bFwd.clicked.connect(self.searchFwd)
-        self.hb.addWidget(self.bFwd)
+        hboxLayout.addWidget(self.bFwd)
         self.bClose = QtGui.QToolButton(self)
         self.bClose.setIcon(QtGui.QIcon.fromTheme('window-close', QtGui.QIcon(":/images/window-close.png")))
         self.bClose.clicked.connect(self.closeDialog)
-        self.hb.addWidget(self.bClose)
+        hboxLayout.addWidget(self.bClose)
 
     def searchFwd(self) :
         t = self.text.text()
@@ -52,8 +53,12 @@ class FindDialog(QtGui.QDialog) :
         t = self.text.text()
         if not t : return
         self.parent().find(t, QtGui.QTextDocument.FindBackward)
+    
+    def closeEvent(self,event) :   # clicked close control in window bar
+        self.parent().closedSearch()
+        super(FindDialog,self).closeEvent(event)
 
-    def closeDialog(self) :
+    def closeDialog(self) :        # clicked close button
         self.hide()
         self.parent().closedSearch()
 
@@ -99,8 +104,8 @@ class EditFile(QtGui.QPlainTextEdit) :
         a.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         a.triggered.connect(self.search)
         self.addAction(a)
-        self.fDialog = FindDialog(self)
-        self.fIsOpen = False
+        self.findDialog = FindDialog(self)
+        self.findIsOpen = False
 
     def highlight(self, lineno) :
         self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
@@ -141,21 +146,21 @@ class EditFile(QtGui.QPlainTextEdit) :
     def closeEvent(self, event) :
         self.fileTabs.deleteOpenFile(self.fname)
         self.writeIfModified()
-        self.fDialog.close()
+        self.findDialog.close()
 
     def search(self) :
-        self.fDialog.openDialog()
-        self.fIsOpen = True
+        self.findDialog.openDialog()
+        self.findIsOpen = True
 
     def closedSearch(self) :
-        self.fIsOpen = False
+        self.findIsOpen = False
 
     def lostFocus(self) :
-        self.fDialog.hide()
+        self.findDialog.hide()
 
     def gainedFocus(self) :
-        if self.fIsOpen :
-            self.fDialog.show()
+        if self.findIsOpen :
+            self.findDialog.show()
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
             
