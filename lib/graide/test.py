@@ -107,7 +107,7 @@ class Test(object) :
             self.text = editText.toPlainText()
             self.rtl = cbRTL.isChecked()
             self.comment = editComment.toPlainText()
-            if self.featDialog : 
+            if self.featDialog :
                 self.lang = self.featDialog.get_lang()
                 if self.lang not in self.parent.feats :
                     self.lang = None
@@ -125,11 +125,11 @@ class Test(object) :
             f = self.parent.feats[self.lang].copy()
             f.apply(self.feats)
             d.set_feats(f, lang = self.lang)
-            self.featdialog = d
+            self.featDialog = d
             newD = True
-        d = self.featdialog
+        d = self.featDialog
         if not d.exec_() :  # Cancel
-            if newD : self.featdialog = None
+            if newD : self.featDialog = None
 
 
     def setWidth(self, w) :

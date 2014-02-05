@@ -76,39 +76,48 @@ def make_FeaturesMap(font) :
         result[lang] = FeatureRefs(grface, lang)
     return result
 
+
 class FeatureDialog(QtGui.QDialog) :
 
     def __init__(self, parent = None) : # parent = main window
         super(FeatureDialog, self).__init__(parent)
         self.setWindowTitle("Set Features")
-        self.vbox = QtGui.QVBoxLayout(self)
+        vLayout = QtGui.QVBoxLayout(self)
         self.currsize = None
         self.position = None
         self.isHidden = False
         self.setSizeGripEnabled(True)
         self.setWindowFlags(QtCore.Qt.Tool)
+        
         self.table = QtGui.QTableWidget(self)
         self.table.setColumnCount(2)
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
-        self.vbox.addWidget(self.table)
-        self.lbox = QtGui.QWidget(self)
-        self.gbox = QtGui.QGridLayout(self.lbox)
-        self.vbox.addWidget(self.lbox)
-        self.gbox.addWidget(QtGui.QLabel('Language', self.lbox), 0, 0)
-        self.lang = QtGui.QLineEdit(self.lbox)
+        # table is resized later, after feature rows are added
+        vLayout.addWidget(self.table)
+        
+        extraWidget = QtGui.QWidget(self)
+        gridLayout = QtGui.QGridLayout(extraWidget)
+        vLayout.addWidget(extraWidget)
+        gridLayout.addWidget(QtGui.QLabel('Language', extraWidget), 0, 0)
+        self.lang = QtGui.QLineEdit(extraWidget)
 #        self.lang.setInputMask("<AAan")
-        self.gbox.addWidget(self.lang, 0, 1)
-        self.runWidth = QtGui.QSpinBox(self.lbox)
+        #self.lang.setMaximumWidth(100)
+        gridLayout.addWidget(self.lang, 0, 1)
+        
+        self.runWidth = QtGui.QSpinBox(extraWidget)
         self.runWidth.setRange(0, 1000)
         self.runWidth.setValue(100)
         self.runWidth.setSuffix("%")
-        self.gbox.addWidget(QtGui.QLabel('Justify', self.lbox), 1, 0)
-        self.gbox.addWidget(self.runWidth, 1, 1)
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
-        o.accepted.connect(self.accept)
-        o.rejected.connect(self.reject)
-        self.vbox.addWidget(o)
+        self.runWidth.setMaximumWidth(100)
+        gridLayout.addWidget(QtGui.QLabel('Justify', extraWidget), 1, 0)
+        gridLayout.addWidget(self.runWidth, 1, 1)
+        
+        okCancel = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        okCancel.accepted.connect(self.accept)
+        okCancel.rejected.connect(self.reject)
+        vLayout.addWidget(okCancel)
+
 
     def set_feats(self, feats, vals = None, lang = None, width = 100) :
         if not vals : vals = feats.fval
@@ -127,38 +136,55 @@ class FeatureDialog(QtGui.QDialog) :
                     c.setCurrentIndex(c.count() - 1)
             self.combos.append(c)
             self.table.setCellWidget(count, 1, c)
-            l = QtGui.QTableWidgetItem(f)
-            self.table.setItem(count, 0, l)
+            
+            label = QtGui.QTableWidgetItem(f)
+            self.table.setItem(count, 0, label)
             count += 1
         if lang : self.lang.setText(lang)
         self.runWidth.setValue(width)
-        self.resize(600, 400)
-        self.table.resizeColumnsToContents()
+        self.resize(400, 400)
+        #self.table.resizeColumnsToContents()
+
 
     def get_feats(self, base = None) :
+        print "get_feats"
         res = {}
         for c in self.combos :
             v = c.itemData(c.currentIndex())
             if base is None or base.fval[c.userTag] != v :
+                print c.userTag, v
                 res[c.userTag] = v
         return res
+
 
     def get_lang(self) :
         return self.lang.text()
 
+
     def get_width(self) :
         return self.runWidth.value()
+
 
     def resizeEvent(self, event) :
         self.currsize = self.size()
         if self.table :
-            self.table.resize(self.currsize)
-            if self.currsize.width() > 600 :
-                self.table.setColumnWidth(0, self.currsize.width() - 300)
-                self.table.setColumnWidth(1, 300)
-            else :
-                for i in range(2) :
-                    self.table.setColumnWidth(i, self.currsize.width() / 2)
+            tableSize = self.currsize - QtCore.QSize(20, 120)   # leave room at the bottom for the other controls
+            self.table.resize(tableSize)
+            tableWidth = tableSize.width()
+            tableHeight = tableSize.height()
+            # I don't understand why we have to do this. Is it for the scroll bar?
+            if tableHeight < 30 * len(self.combos) + 3 :
+                tableWidth = tableWidth - 21   # leave room for the scroll bar
+            else : 
+                tableWidth = tableWidth - 4    # fudge a bit just to make sure
+            #if tableWidth > 600 :
+            #    self.table.setColumnWidth(0, tableWidth - 300)
+            #    self.table.setColumnWidth(1, 300)
+            #else :
+            halfTableWidth = tableWidth / 2
+            self.table.setColumnWidth(0, halfTableWidth)
+            self.table.setColumnWidth(1, tableWidth - halfTableWidth) # avoid rounding errors
+
 
     def closeEvent(self, event) :
         if not self.isHidden :
