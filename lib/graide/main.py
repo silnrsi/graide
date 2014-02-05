@@ -828,9 +828,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if not text :
             return False
             
-        runfile = NamedTemporaryFile(mode="w+")
-        runfname = runfile.name
-        runfile.close()
+        tempFile = NamedTemporaryFile(mode="w+")
+        tempJsonFileName = tempFile.name
+        tempFile.close()
         
         #print self.fontFaces
         
@@ -847,13 +847,16 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         #if faceAndFont == None :
         #    runGraphite(fontFileName, text, runfname, feats, rtl, lang, size, expand)
         #else :
-        runGraphiteWithFontFace(self.fontFaces[size], text, runfname, feats, rtl, lang, size, expand)
+        runGraphiteWithFontFace(self.fontFaces[size], text, tempJsonFileName,
+            feats, rtl, lang, size, expand)
         
-        runfile = open(runfname)
-        jsonResult = json.load(runfile)
+        #print tempJsonFileName
+        
+        tempJsonFile = open(tempJsonFileName)
+        jsonResult = json.load(tempJsonFile)
         if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
-        runfile.close()
-        os.unlink(runfname)
+        tempJsonFile.close()
+        os.unlink(tempJsonFileName)
         return jsonResult
     
     # end of runGraphiteOverString
