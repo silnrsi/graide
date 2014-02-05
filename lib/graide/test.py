@@ -109,7 +109,7 @@ class Test(object) :
             self.comment = editComment.toPlainText()
             if self.featDialog :
                 self.lang = self.featDialog.get_lang()
-                if self.lang not in self.parent.feats :
+                if self.lang not in self.parent.feats : # default feats for language are owned by the MainWindow
                     self.lang = None
                 self.feats = self.featDialog.get_feats(self.parent.feats[self.lang])
                 self.width = self.featDialog.get_width()
@@ -122,9 +122,10 @@ class Test(object) :
         if not self.featDialog :
             d = FeatureDialog(self.parent)  # parent = main window
             # Initialize the dialog with the features associated with the language.
-            f = self.parent.feats[self.lang].copy()
+            fBase = self.parent.feats[self.lang]  # default feats for language are owned by the MainWindow
+            f = fBase.copy()
             f.apply(self.feats)
-            d.set_feats(f, lang = self.lang)
+            d.set_feats(f, fBase, lang = self.lang)
             self.featDialog = d
             newD = True
         d = self.featDialog

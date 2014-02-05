@@ -21,15 +21,16 @@
 from PySide import QtCore, QtGui
 import graide.graphite as gr
 from graide.rungraphite import strtolong
+from graide.layout import Layout
 
 class FeatureRefs(object) :
 
     def __init__(self, grface = None, lang = None) :
-        self.feats = {}
-        self.featids = {}
-        self.fval = {}
-        self.order = []
-        self.forders = {}
+        self.feats = {}     # Feature labels => { setting labels => setting values }
+        self.featids = {}   # Feature labels => IDs
+        self.fval = {}      # Feature IDs => current value
+        self.order = []     # List of feature labels, in display order
+        self.forders = {}   # Feature labels => { list of feature values, in order }
         if grface and grface.face :
             langid = 0x0409 # English
             length = 0
@@ -40,6 +41,7 @@ class FeatureRefs(object) :
                 name = name[:]
                 self.order.append(name)
                 n = f.num()
+                #if n == 0 : continue  # why does this happen?
                 finfo = {}
                 forder = []
                 for i in range(n) :
@@ -51,6 +53,7 @@ class FeatureRefs(object) :
                 self.featids[name] = f.tag()
                 self.fval[f.tag()] = grval.get(f)
                 self.forders[name] = forder
+
 
     def copy(self) :
         res = FeatureRefs()
@@ -90,7 +93,7 @@ class FeatureDialog(QtGui.QDialog) :
         self.setWindowFlags(QtCore.Qt.Tool)
         
         self.table = QtGui.QTableWidget(self)
-        self.table.setColumnCount(2)
+        self.table.setColumnCount(3)  # column 0 is empty for now
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
         # table is resized later, after feature rows are added
@@ -109,7 +112,7 @@ class FeatureDialog(QtGui.QDialog) :
         self.runWidth.setRange(0, 1000)
         self.runWidth.setValue(100)
         self.runWidth.setSuffix("%")
-        self.runWidth.setMaximumWidth(100)
+        self.runWidth.setMaximumWidth(70)
         gridLayout.addWidget(QtGui.QLabel('Justify', extraWidget), 1, 0)
         gridLayout.addWidget(self.runWidth, 1, 1)
         
@@ -119,42 +122,80 @@ class FeatureDialog(QtGui.QDialog) :
         vLayout.addWidget(okCancel)
 
 
-    def set_feats(self, feats, vals = None, lang = None, width = 100) :
+    def set_feats(self, feats, featsBaseForLang, vals = None, lang = None, width = 100) :
+        self.featsBaseForLang = featsBaseForLang
+        
         if not vals : vals = feats.fval
+        
+        self.initMode = True
+        
         while self.table.rowCount() :
             self.table.removeRow(0)
         self.combos = []
+        self.labels = []
         num = len(feats.order)
         self.table.setRowCount(num)
         count = 0
         for f in feats.order :
+            fid = feats.featids[f]
             c = QtGui.QComboBox()
+            c.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeSetting)
             c.userTag = feats.featids[f]
             for k in feats.forders[f] :
                 c.addItem(k, feats.feats[f][k])
                 if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
                     c.setCurrentIndex(c.count() - 1)
             self.combos.append(c)
-            self.table.setCellWidget(count, 1, c)
+            self.table.setCellWidget(count, 2, c)
             
-            label = QtGui.QTableWidgetItem(f)
-            self.table.setItem(count, 0, label)
+            #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fval[fid] else ""
+            #self.table.setItem(count, 0, QtGui.QTableWidgetItem(modText))
+            # Column 0 currently not used
+            
+            labelWidget = QtGui.QTableWidgetItem(f)
+            if fid in vals and vals[fid] != featsBaseForLang.fval[fid] :
+                labelWidget.setBackground(Layout.activePassColour) # modified from expected
+            self.table.setItem(count, 1, labelWidget)
+            self.labels.append(labelWidget)
+            
             count += 1
+            
         if lang : self.lang.setText(lang)
         self.runWidth.setValue(width)
         self.resize(400, 400)
         #self.table.resizeColumnsToContents()
+        
+        self.initMode = False
+        
+    def changeSetting(self, which) :
+        # A feature setting was changed. Update the colors of the labels that indicate whether the setting
+        # varies from the default for the language.
+        
+        if self.initMode : # initializing the controls - don't bother updating yet
+            return
+        
+        i = 0
+        for f in self.featsBaseForLang.order :
+            fid = self.featsBaseForLang.featids[f]
+            c = self.combos[i]
+            v = c.itemData(c.currentIndex())
+            d = self.featsBaseForLang.fval[fid]
+            
+            labelWidget = self.labels[i]
+            backColor = Layout.activePassColour if v != d else QtGui.QColor(255, 255, 255)
+            labelWidget.setBackground(backColor) # modified from expected
+            
+            i = i + 1
+        
 
 
     def get_feats(self, base = None) :
-        print "get_feats"
-        res = {}
+        result = {}
         for c in self.combos :
             v = c.itemData(c.currentIndex())
             if base is None or base.fval[c.userTag] != v :
-                print c.userTag, v
-                res[c.userTag] = v
-        return res
+                result[c.userTag] = v
+        return result
 
 
     def get_lang(self) :
@@ -168,22 +209,24 @@ class FeatureDialog(QtGui.QDialog) :
     def resizeEvent(self, event) :
         self.currsize = self.size()
         if self.table :
+            column0Width = 0
+            self.table.setColumnWidth(0, column0Width)
+            
             tableSize = self.currsize - QtCore.QSize(20, 120)   # leave room at the bottom for the other controls
             self.table.resize(tableSize)
-            tableWidth = tableSize.width()
+            tableWidth = tableSize.width() - column0Width
             tableHeight = tableSize.height()
-            # I don't understand why we have to do this. Is it for the scroll bar?
             if tableHeight < 30 * len(self.combos) + 3 :
                 tableWidth = tableWidth - 21   # leave room for the scroll bar
             else : 
-                tableWidth = tableWidth - 4    # fudge a bit just to make sure
+                tableWidth = tableWidth - 4    # fudge a few pixels' worth just to make sure
             #if tableWidth > 600 :
             #    self.table.setColumnWidth(0, tableWidth - 300)
             #    self.table.setColumnWidth(1, 300)
             #else :
-            halfTableWidth = tableWidth / 2
-            self.table.setColumnWidth(0, halfTableWidth)
-            self.table.setColumnWidth(1, tableWidth - halfTableWidth) # avoid rounding errors
+            threeEightsTableWidth = (tableWidth * 3) / 8;
+            self.table.setColumnWidth(1, tableWidth - threeEightsTableWidth)
+            self.table.setColumnWidth(2, threeEightsTableWidth)
 
 
     def closeEvent(self, event) :

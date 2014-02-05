@@ -26,17 +26,17 @@ class BaseLayout(object) :
     buttonSpacing = 1
     buttonMargins = (0, 0, 0, 0)
     runEditHeight = 60
-    errorColour = QtGui.QColor(255, 160, 160)
-    warnColour = QtGui.QColor(255, 255, 160)
-    activePassColour = QtGui.QColor(255, 255, 208)	  # light yellow
+    errorColour = QtGui.QColor(255, 160, 160)           # pink
+    warnColour = QtGui.QColor(255, 255, 160)            # yellow
+    activePassColour = QtGui.QColor(255, 255, 208)      # light yellow
     slotColours = {
-        'default' : QtGui.QColor(0, 0, 0, 32),        # gray, semi-transparent
-        'input' : QtGui.QColor(200, 00, 0, 32),       # pink, semi-transparent
-        'output' : QtGui.QColor(0, 200, 0, 32),       # green, semi-transparent
-        'inAndOut' : QtGui.QColor(30, 120, 80, 32),   # blue-green, semi-transparent
+        'default' : QtGui.QColor(0, 0, 0, 32),          # gray, semi-transparent
+        'input' : QtGui.QColor(200, 00, 0, 32),         # pink, semi-transparent
+        'output' : QtGui.QColor(0, 200, 0, 32),         # green, semi-transparent
+        'inAndOut' : QtGui.QColor(30, 120, 80, 32),     # blue-green, semi-transparent
     }
-    posdotColour = QtGui.QColor(0, 160, 0, 192)	      # green
-    posdotShiftColour = QtGui.QColor(0, 0, 192, 192)  # blue
+    posdotColour = QtGui.QColor(0, 160, 0, 192)         # green
+    posdotShiftColour = QtGui.QColor(0, 0, 192, 192)    # blue
     initHSplitWidth = 300
     initWinSize = (1000, 700)
     noMenuIcons = False

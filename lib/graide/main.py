@@ -909,10 +909,12 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def featuresClicked(self) :
         if self.font :
             fDialog = FeatureDialog(self)
-            fDialog.set_feats(self.feats[self.currLang], self.currFeats, lang = self.currLang, width = self.currWidth)
+            fDialog.set_feats(self.feats[self.currLang], self.feats[self.currLang],
+                vals = self.currFeats, lang = self.currLang, width = self.currWidth)
             if fDialog.exec_() :
                 self.currFeats = fDialog.get_feats()
                 self.currLang = fDialog.get_lang()
+                if self.currLang == "" : self.currLang = None
                 self.currWidth = fDialog.get_width()
 
     # called from utils

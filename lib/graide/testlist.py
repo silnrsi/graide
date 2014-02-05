@@ -203,7 +203,8 @@ class TestList(QtGui.QWidget) :
             for ft in featDescrip.split(" ") :
                 if '=' in ft :
                     (fname, value) = ft.split('=')
-                    styles[styleName][fname] = int(value)
+                    if value and value != "None" :  # under buggy circumstances value can be 'None'; test for it just in case
+                        styles[styleName][fname] = int(value)
             m = re.match(r'fset([0-9]+)', styleName)
             if m :
                 i = int(m.group(1)) ## number of the fset, eg 'fset2' -> 2
