@@ -100,23 +100,20 @@ class MainWindow(QtGui.QMainWindow) :
         for s in ('main', 'build', 'ui') :
             if not config.has_section(s) :
                 config.add_section(s)
-
+                
+        print "Loading font..." #===
         if self.cfgFileName is None or self.cfgFileName == "":
             # show() function will force them to create one.
             pass
-        elif config.has_option('main', 'font') :
-            print "Loading font..." #===
-            fontFile = config.get('main', 'font')
-            while not os.path.exists(fontFile) :
-                errorDialog = QtGui.QMessageBox(fontFile + " does not exist")
-                errorDialog.exec_()
-                result = self.runStartupDialog()
-                fontFile = config.get('main', 'font')
-                
-            self.loadFont(config.get('main', 'font'))
         else :
-            # Configuration has no font - get them to set it
-            self.runConfigDialog()
+            if config.has_option('main', 'font') :
+                fontFile = config.get('main', 'font')
+            else :
+                fontFile = ""
+            okCancel = self.runStartupDialog()  # forces them to define a font or Cancel
+            if okCancel == False :
+                self.doExit()
+            self.loadFont(config.get('main', 'font'))
 
         if jsonFile :
             f = file(jsonFile)
@@ -150,35 +147,69 @@ class MainWindow(QtGui.QMainWindow) :
         registerErrorLog(self)
         
         print "Opening files..." #===
-
+        self._ensureMainGdlFile()            
         self._openFileList()
         
-        # end of __init__
+    # end of __init__
         
         
     def show(self) :
         super(MainWindow, self).show()
         
-        self.runStartupDialog()
+        initializedConfig = self.runStartupDialog(True)  # make sure there is a valid project
+        
+        if initializedConfig :
+            self._ensureMainGdlFile()
+            self._openFileList()
         
         
-    def runStartupDialog(self) :
+    def runStartupDialog(self, delayedInit = False) :
         result = (not self.cfgFileName is None or self.cfgFileName == "")
+        initializedConfig = False
+        
         # While we don't have a valid project, ask for one.
         while not result :
+            initializedConfig = True
             projFile = self.getStartupProject()
             if projFile == False :
                 self.doExit()
             elif projFile == "!!create-new-project!!" :
                 result = self.configNewProject()
             else :
-                # Open the specified config file
-                result = self._configOpenExisting(projFile)
+                # Open the specified config file.
+                if not os.path.exists(projFile) :
+                    f = codecs.open(projFile, "w", encoding="UTF-8")
+                    f.write("")
+                    f.close()      
+                    self.cfgFileName = projFile      
+                    result = self.runConfigDialog()
+                else :
+                    result = self._configOpenExisting(projFile)
+                    
+        # Then make sure there is a valid font.
         
         fontFile = self.config.get('main', 'font') if self.config.has_option('main', 'font') else ""
-        if fontFile is None or fontFile == "" :
-            # Configuration has no font - get them to set it
-            self.runConfigDialog()
+        while fontFile is None or fontFile == "" or not os.path.exists(fontFile) :
+            if fontFile == "" or not os.path.exists(fontFile) :
+                errorDialog = QtGui.QMessageBox()
+                if fontFile is None or fontFile == "" :
+                    errorDialog.setText("Please choose a valid .TTF file.")
+                else :
+                    errorDialog.setText("Font file '" + fontFile + "' does not exist.")
+                errorDialog.exec_()
+            # Configuration has no font - get them to set it.
+            okCancel = self.runConfigDialog()
+            if not okCancel : self.doExit()
+            fontFile = self.config.get('main', 'font') if self.config.has_option('main', 'font') else ""
+        
+        if delayedInit :
+            # Caller wants to know whether to set up the file list.
+            return initializedConfig
+        else :
+            # Caller wants to know whether to exit or continue.
+            return True
+            
+    # end of runStartupDialog
 
 
     def getStartupProject(self) :
@@ -188,7 +219,14 @@ class MainWindow(QtGui.QMainWindow) :
             return result
         else :
             return False
-
+            
+            
+    def _ensureMainGdlFile(self) :
+        gdlFile = configval(self.config, 'build', 'gdlfile')
+        if gdlFile and not os.path.exists(gdlFile) :
+            f = codecs.open(gdlFile, "w", encoding="UTF-8")
+            f.write("// Enter your GDL code here //")
+            f.close()            
 
     def incDebug(self) :
         self.debugCnt = self.debugCnt + 1
@@ -196,6 +234,11 @@ class MainWindow(QtGui.QMainWindow) :
         
 
     def loadFont(self, fontname) :
+
+        if fontname == None : return
+        if fontname == "" : return
+        if not os.path.exists(fontname) : return
+            
         self.fontFaces = {}
         
         if self.config.has_option('main', 'size') :
@@ -226,6 +269,8 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.loadFont(self.font)
         if hasattr(self, 'runView') :
             self.runView.gview.setFixedHeight(self.font.pixrect.height())
+            
+    # end of loadFont
 
     def loadAP(self, apFileName) :
         self.apname = apFileName
@@ -243,8 +288,9 @@ class MainWindow(QtGui.QMainWindow) :
 
     def loadTests(self, testsfile) :
         self.testsfile = testsfile
-        if self.tab_tests :
+        if hasattr(self, "tab_tests") and self.tab_tests :
             self.tab_tests.addFile(testsfile, None, False)
+        # otherwise MainWindow is not set up yet
             
     def loadTweaks(self, tweaksfile) :
         self.tweaksfile = tweaksfile
@@ -620,6 +666,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
         
+    def isInitialized(self) :
+        # Indicate whether the app has gone a reasonable way through the initialization process.
+        return hasattr(self, "tab_edit")
         
     def doExit(self) :
         self.closeApp()
@@ -632,13 +681,13 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def closeApp(self) :
         if self.rules :
             self.rules.close()
-        self._saveProjectData()
+        if self.isInitialized() :
+            self._saveProjectData()
         self.recentProjects.close()
         qCleanupResources()
       
-        
     def infoTabChanged(self) :
-        # TODO: figure out which tab is current and update the matching bottom tab
+        # TODO: figure out which tab is current and update the matching bottom tab.
         # For now, do all of them.
         self.tab_posedit.updatePositions()
         self.tab_tweak.updatePositions()
@@ -708,7 +757,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def selectLine(self, fname = None, srcline = -1) :
         if not fname :
             fname = configval(self.config, 'build', 'gdlfile')
-        self.tab_edit.selectLine(fname, srcline)
+        if self.isInitialized() :
+            self.tab_edit.selectLine(fname, srcline)
+        # otherwise MainWindow is not set up yet
 
     def setRun(self, test) :
         self.runRtl.setChecked(True if test.rtl else False)
@@ -975,6 +1026,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                 f = file(self.cfgFileName, "w")
                 self.config.write(f)
                 f.close()
+            mainFileTemp = configval(self.config, "build", "gdlfile")
             return True  # OK
         else :
             return False  # Cancel
@@ -1038,6 +1090,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if self.config.has_option('build', 'tweakxmlfile') :
             self.loadTweaks(self.config.get('build', 'tweakxmlfile'))
 
+        self._ensureMainGdlFile()
         self._openFileList()
 
         #self.selectLine(self.config.get('build', 'gdlfile'), -1)
@@ -1051,7 +1104,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
 
     # When opening a project, open the list of previously open files.
-    def _openFileList(self) :        
+    def _openFileList(self) :
         if self.config.has_option('window', 'openfiles') :
             openFileString = self.config.get('window', 'openfiles')
             openFiles = openFileString.split(';')
@@ -1084,6 +1137,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.recentProjects.addProject(self.cfgFileName)
         self.config = RawConfigParser()
         for s in ('main', 'build', 'ui') : self.config.add_section(s)
+            
         result = self.runConfigDialog()
         return result  # OK or Cancel
         

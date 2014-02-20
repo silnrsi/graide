@@ -329,25 +329,27 @@ class ConfigDialog(QtGui.QDialog) :
             txt = self.build_twktest.text()
             if txt :
                 config.set('build', 'tweakconstraint', txt)
+                
+        appInit = app and app.isInitialized()
    
         if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
             config.set('ui', 'textsize', str(self.ui_size.value()))
-            if app : app.tab_edit.setSize(self.ui_size.value())
+            if appInit : app.tab_edit.setSize(self.ui_size.value())
         self.updateChanged(self.ui_editorfont, config, 'ui', 'editorfont', "", \
-        				(app.tab_edit.updateFont(self.ui_editorfont.text(), self.ui_size.value()) if app else None))
+        				(app.tab_edit.updateFont(self.ui_editorfont.text(), self.ui_size.value()) if appInit else None))
         if self.ui_tabstop.value() != configintval(config, 'ui', 'tabstop') :
             config.set('ui', 'tabstop', str(self.ui_tabstop.value()))
-            if app : app.tab_edit.updateTabstop(self.ui_tabstop.value())
+            if appInit : app.tab_edit.updateTabstop(self.ui_tabstop.value())
         
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
-            if app : app.loadFont(configval(config, 'main', 'font'))
+            if appInit : app.loadFont(configval(config, 'main', 'font'))
         if self.ui_twsize.value() != configintval(config, 'ui', 'tweakglyphsize') :
             config.set('ui', 'tweakglyphsize', str(self.ui_twsize.value()))
-            if app : app.setTweakGlyphSize(self.ui_twsize.value())
+            if appInit : app.setTweakGlyphSize(self.ui_twsize.value())
         if self.ui_apsize.value() != configintval(config, 'ui', 'attglyphsize') :
             config.set('ui', 'attglyphsize', str(self.ui_apsize.value()))
-            if app : app.setAttGlyphSize(self.ui_apsize.value())
+            if appInit : app.setAttGlyphSize(self.ui_apsize.value())
         self.updateChanged(self.ui_sizes, config, 'ui', 'waterfall', "")
         self.cbChanged(self.ui_ent, config, 'ui', 'entities')
 
