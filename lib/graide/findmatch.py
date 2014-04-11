@@ -175,6 +175,7 @@ class GlyphPatternMatcher() :
         faceAndFont = makeFontAndFace(fontFileName, 12)
         
         if showProgress :
+            print "Total tests=",totalTests
             progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
             progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
@@ -225,6 +226,7 @@ class GlyphPatternMatcher() :
                     if progressDialog.wasCanceled() :
                         canceled = True;
                     progressDialog.setValue(cntTested)
+                    progressDialog.forceShow()
                 
                 if canceled : break
             # end of for t loop
@@ -233,7 +235,7 @@ class GlyphPatternMatcher() :
         # end of for g loop
         
         if showProgress :
-            progressDialog.setValue(totalTests)
+            progressDialog.hide() # to counteract forceShow()
         
         if canceled :
             return False
