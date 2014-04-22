@@ -112,7 +112,7 @@ class PassesView(QtGui.QTableWidget) :
         self.selectRow(-1)
         self.currsel = None
         if jsonall :
-            json = jsonall[0]
+            json = jsonall[1]
         else :
             json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
@@ -201,7 +201,7 @@ class PassesView(QtGui.QTableWidget) :
                 highlight = False
                 if j < len(json['passes']) :
                     passid = int(json['passes'][j]['id']) - 1
-                    if len(json['passes'][j]['rules']) :
+                    if 'rules' in json['passes'][j] and len(json['passes'][j]['rules']) :
                         highlight = True
                         self.rules.append(json['passes'][j]['rules'])
                     else :
@@ -295,8 +295,9 @@ class PassesView(QtGui.QTableWidget) :
         if col >= 1 :
             for j in range(self.rowCount()) :
                 w = self.cellWidget(j, col)
-                w.setFixedWidth(new)
-                w.update()
+                if w :
+                    w.setFixedWidth(new)
+                    w.update()
 
     def doCellDoubleClicked(self, row, col) :
         if col == 0 :
