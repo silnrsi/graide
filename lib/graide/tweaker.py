@@ -171,6 +171,11 @@ class Tweak(Test) :
             self.glyphs.append(newGlyph)
         else :
             self.glyphs[index].update(gid, gname)
+
+
+    def deleteExtraGlyphs(self, newLen) :
+        while len(self.glyphs) > newLen :
+            self.glyphs.pop()
             
 
     # New GDL rules have been generated, so pending adjustments are now accepted.
@@ -700,7 +705,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.selectSlot(0)
         self.dataMode = True
     
-    # end of setControlsForTweakItems
+    # end of setControlsForTweakItem
     
     
     # Show the given slot in the controls
@@ -1142,8 +1147,9 @@ class TweakableRunView(RunView) :
             glyph = self.parentView.app.font[slot.gid]
             gname = glyph.GDLName() or glyph.psname
             currentTweak.updateGlyph(i, slot.gid, gname)
+        currentTweak.deleteExtraGlyphs(len(run))
+        
             
-    
     def glyphClicked(self, gitem, index) :
         if index == self.currselection :
             # Reclicking the same glyph has no effect
