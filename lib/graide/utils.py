@@ -273,7 +273,7 @@ def generateTweakerGDL(config, app) :
                     if twglyph.gclass and twglyph.gclass != "" :
                         f.write(twglyph.gclass)
                     else:
-                        f.write(twglyph.name);
+                        f.write(twglyph.name)
                     if twglyph.status == "optional" :
                         f.write("?")
                     shiftx = twglyph.shiftx + twglyph.shiftx_pending
@@ -284,7 +284,7 @@ def generateTweakerGDL(config, app) :
                         if shifty != 0 : f.write("shift.y = " + str(shifty) + "m; ")
                         f.write("}")
                 i += 1
-            f.write(" ;")
+            if i > 0 : f.write(" ;")
             
 #            if tweak.feats and tweak.feats != "" :
 #                f.write("\nendif;")
