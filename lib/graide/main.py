@@ -847,7 +847,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         
     # end of runClicked
 
-    def loadRunViewAndPasses(self, widget, json) :
+    def loadRunViewAndPasses(self, widget, json, scroll = '') :
         # widget might be self (the main window) or it might be the Matcher
         rtl = widget.runRtl.isChecked()
         runResult = Run(rtl)
@@ -864,16 +864,18 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.tab_passes.loadResults(self.font, json, self.gdx, rtl)
         self.tab_passes.setTopToolTip(widget.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
+        self.tab_passes.updateScroll(scroll)
         
         return runResult
 
     # end of loadRunViewAndPasses
-        
+    
+    
     def runGraphiteOverString(self, fontFileName, faceAndFont, inputString, size, rtl, feats, lang, expand) :
         
         if inputString and inputString != "" :
             text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), inputString)     
+                    lambda m: unichr(int(m.group(1) or m.group(2), 16)), inputString)
         else :
             text = None
         if not text :
@@ -942,7 +944,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         run = Run(rtl)
         run.addslots(json['output'])   # final output
         for i, s in enumerate(run) :
-            g = font[s.gid]
+            g = font[s.gid] # g is a GraideGlyph
             if g :
                 t = g.GDLName() or g.psname
                 glyphList.append(t)

@@ -662,6 +662,7 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.revert.setEnabled(False)
         
         self.tweakSelected = None   # Tweak object
+        self.rtl = False            # get from Tweak object later
         self.glyphSelected = None   # TweakGlyph
         self.slotSelected = -1
         
@@ -678,6 +679,7 @@ class TweakInfoWidget(QtGui.QFrame) :
        
     def setControlsForTweakItem(self, item) :
         self.tweakSelected = self.parent().currentTweak()
+        self.rtl = self.tweakSelected.rtl
         if self.tweakSelected :
             glyphs = self.tweakSelected.glyphs
         else :
@@ -1055,10 +1057,13 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
         
 
     def mouseMoveEvent(self, event) :
+        rtl = self.runView.run.rtl
+        rtlDir = -1 if rtl else 1
         posPx = event.scenePos()
         posPxStart = event.buttonDownScenePos(QtCore.Qt.LeftButton)
         self.diffPx = (posPx - posPxStart).toTuple()
-        xNew = self.shiftStart[0] + (self.diffPx[0] / self.scale)
+        diffXPxRtl = self.diffPx[0] * rtlDir
+        xNew = self.shiftStart[0] + (diffXPxRtl / self.scale)
         yNew = self.shiftStart[1] - (self.diffPx[1] / self.scale)  # subtract because y coordinate system is opposite
         self.runView.tweaker().setX(xNew)
         self.runView.tweaker().setY(yNew)
@@ -1104,15 +1109,17 @@ class TweakableRunView(RunView) :
         shiftData = currentTweak.glyphShifts(index)
         
         self.scale = scale   # convert from font's design units to display units
+        rtl = self.run.rtl
+        rtlDir = -1 if rtl else 1
         
         px = TweakableGlyphPixmapItem(index, glyph.item.pixmap, scale, self, model, parent, scene)
         px.setShifts(shiftData)        
 
         # Don't include shiftx and shifty, because they are already incorporated into the GDL rules
         # and so are accounted for in the slot's origins.
-        xoffset = slot.origin[0] + px.shiftx_pending
+        xoffset = slot.origin[0] + (px.shiftx_pending * rtlDir)
         yoffset = slot.origin[1] + px.shifty_pending
-        ppos = (xoffset * scale + glyph.item.left, -yoffset * scale - glyph.item.top)
+        ppos = ((xoffset * scale) + glyph.item.left, -yoffset * scale - glyph.item.top)
         px.setOffset(*ppos)
         self._pixmaps.append(px)
         if slot : slot.pixmap(px)
@@ -1149,6 +1156,8 @@ class TweakableRunView(RunView) :
     
     def keyPressEvent(self, event) :
         
+        rtl = self.run.rtl
+        rtlDir = -1 if rtl else 1
         shiftPressed = event.modifiers() & QtCore.Qt.ShiftModifier
         if shiftPressed:
             # Tweak glyph positions.
@@ -1160,13 +1169,13 @@ class TweakableRunView(RunView) :
             elif event.key() == QtCore.Qt.Key_Down :
                 self.tweaker().incrementY(-20)
             elif event.key() == QtCore.Qt.Key_Right :
-                self.tweaker().incrementX(20)
+                self.tweaker().incrementX(20 * rtlDir)
             elif event.key() == QtCore.Qt.Key_Left :
-                self.tweaker().incrementX(-20)
+                self.tweaker().incrementX(-20 * rtlDir)
         
         elif event.key() == QtCore.Qt.Key_Left or event.key() == QtCore.Qt.Key_Right :
             # Move slot selection.
-            if self.run.rtl :
+            if rtl :
                 forward = True if event.key() == QtCore.Qt.Key_Left else False
             else :
                 forward = True if event.key() == QtCore.Qt.Key_Right else False

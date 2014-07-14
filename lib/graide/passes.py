@@ -113,6 +113,7 @@ class PassesView(QtGui.QTableWidget) :
         self.currsel = None
         if jsonall :
             json = jsonall[1]
+            ####json = jsonall[0]
         else :
             json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
@@ -202,6 +203,7 @@ class PassesView(QtGui.QTableWidget) :
                 if j < len(json['passes']) :
                     passid = int(json['passes'][j]['id']) - 1
                     if 'rules' in json['passes'][j] and len(json['passes'][j]['rules']) :
+                    ####if len(json['passes'][j]['rules']) :
                         highlight = True
                         self.rules.append(json['passes'][j]['rules'])
                     else :
@@ -220,6 +222,9 @@ class PassesView(QtGui.QTableWidget) :
                 w = max(w, neww)
                 wt = max(wt, newt)
         self.finishLoad(w, wt)
+        
+    # end of loadResults
+    
 
     def loadRules(self, font, json, inirun, gdx) :
         self.selectRow(-1)
@@ -287,6 +292,9 @@ class PassesView(QtGui.QTableWidget) :
             wt = max(wt, newt)
             
         self.finishLoad(w, wt)
+        
+    # end of loadRules
+    
 
     def setTopToolTip(self, txt) :
         self.item(0, 0).setToolTip(txt)
@@ -318,3 +326,16 @@ class PassesView(QtGui.QTableWidget) :
             if it : it.setBackground(self.palette().highlight())
             w = self.cellWidget(self.selectedRow, 1)
             w.setBackgroundBrush(self.palette().highlight())
+
+
+    def updateScroll(self, scrollWhere) :
+        if scrollWhere == '' :
+            pass
+        elif scrollWhere == 'to-end' :
+            self.scrollToItem(self.item(0,0))  # scroll to the top to help get it unconfused
+            self.updateScroll(self.rowCount() - 1)
+        else :
+            # scrollWhere is an integer
+            print "scrolling to row",scrollWhere
+            item = self.item(scrollWhere, 0)
+            self.scrollToItem(item)

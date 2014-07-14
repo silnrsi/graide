@@ -86,6 +86,7 @@ class Font(object) :
     def __len__(self) :
         return len(self.glyphs)
 
+    # [] syntax returns the indicated element of the glyphs array.
     def __getitem__(self, y) :
         try :
             return self.glyphs[y]

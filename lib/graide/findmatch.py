@@ -379,7 +379,8 @@ class MatchList(QtGui.QWidget) :
 
     def initResults(self, fname) :
          self.addGroup('matches')
-        
+    
+    # As far as I know this method should never be called:  
     def loadTests(self, fname):
         print "loadTests - WHY ARE WE CALLING THIS METHOD?"
         
@@ -928,7 +929,11 @@ class Matcher(QtGui.QTabWidget) :
             print "No Graphite result" ###
             self.json = [ {'passes' : [], 'output' : [] } ]
                 
-        self.run = self.app.loadRunViewAndPasses(self, self.json)
+        self.run = self.app.loadRunViewAndPasses(self, self.json, 
+            # In the Matcher we are generally interested in the output of the final pass, so scroll it into view:
+            'to-end')
+        
+        
         
     # end of runClicked
     
