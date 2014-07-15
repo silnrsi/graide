@@ -85,7 +85,9 @@ class TweakGlyph() :
 
 
 # A single string containing potentially tweaked glyphs.
-class Tweak(Test) : 
+class Tweak(Test) :
+    
+    self.glyphs => list of TweakGlyphs
     
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white', \
             glyphs = []) : 
@@ -95,7 +97,7 @@ class Tweak(Test) :
         
 
     def setGlyphs(self, glyphs) :
-        self.glyphs = glyphs
+        self.glyphs = glyphs  # list of TweakGlyphs
         
 
     def glyphs(self) :
@@ -188,6 +190,9 @@ class Tweak(Test) :
 
 # The control that handles the list of tweaked strings
 class TweakList(QtGui.QWidget) :
+    
+    # parent => Tweaker
+    # view => TweakView
 
     def __init__(self, app, font, xmlfilename = None, parent = None) :
         super(TweakList, self).__init__(parent) # parent = Tweaker
@@ -607,6 +612,9 @@ class TweakList(QtGui.QWidget) :
 
 # The controls at the bottom of the pane that allow adjustment of the glyph tweaks
 class TweakInfoWidget(QtGui.QFrame) :
+    
+    # self.parent => Tweaker
+    # self.parent().currentTweak() => Tweak
 
     def __init__(self, app, parent = None) :
         super(TweakInfoWidget, self).__init__(parent) # parent = Tweaker
@@ -931,6 +939,8 @@ class TweakInfoWidget(QtGui.QFrame) :
 # Main class to manage tweaking
 class Tweaker(QtGui.QWidget) :
 
+    #self.view => TweakView
+    
     def __init__(self, font, parent = None, xmlfile = None) :   # parent = app
         super(Tweaker, self).__init__(parent)
         self.app = parent
@@ -1021,6 +1031,8 @@ class Tweaker(QtGui.QWidget) :
 
 # A single displayed glyph of in a TweakedRunView
 class TweakableGlyphPixmapItem(GlyphPixmapItem) :
+    
+    # self.runView => TweakableRunView
 
     def __init__(self, index, px, scale, runView, model = None, parent = None, scene = None) :
         super(TweakableGlyphPixmapItem, self).__init__(index, px, model, parent, scene)
@@ -1091,6 +1103,9 @@ class TweakableGlyphPixmapItem(GlyphPixmapItem) :
 
 
 class TweakableRunView(RunView) :
+    
+    # self.parentView => TweakView
+    # self.parentView.tweaker => Tweaker
     
     def __init__(self, font = None, run = None, parent = None) :
         super(TweakableRunView, self).__init__(font, run, None)
@@ -1215,6 +1230,8 @@ class TweakableRunView(RunView) :
                
 # The display of the moveable glyphs in the bottom right-hand pane
 class TweakView(QtGui.QWidget) :
+    
+    # tweaker => Tweaker
 
     # Communication with the Glyph and Slot tabs
     slotSelected = QtCore.Signal(DataObj, ModelSuper)
