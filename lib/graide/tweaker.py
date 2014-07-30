@@ -87,7 +87,7 @@ class TweakGlyph() :
 # A single string containing potentially tweaked glyphs.
 class Tweak(Test) :
     
-    self.glyphs => list of TweakGlyphs
+    # self.glyphs => list of TweakGlyphs
     
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white', \
             glyphs = []) : 
