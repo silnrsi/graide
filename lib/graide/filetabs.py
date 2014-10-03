@@ -61,11 +61,16 @@ class FindDialog(QtGui.QDialog) :
     def closeDialog(self) :        # clicked close button
         self.hide()
         self.parent().closedSearch()
+        
+    def targetText(self) :
+        return self.text.text()
 
-    def openDialog(self) :
+    def openDialog(self, setTarget) :
         self.show()
         #self.raise_()
         #self.activateWindow()
+        if setTarget :
+            self.text.setText(self.parent().getSelectedText())
         self.text.setFocus(QtCore.Qt.MouseFocusReason)
         return True
 
@@ -74,7 +79,7 @@ class FindDialog(QtGui.QDialog) :
 
 class EditFile(QtGui.QPlainTextEdit) :
 
-    highlighFormat = None
+    highlightFormat = None
 
     def __init__(self, tabIndex, fname, abspath, fileTabs, size = 14, fontspec = 'mono', tabstop = 40) :
         super(EditFile, self).__init__()
@@ -82,11 +87,11 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.fname = fname
         self.abspath = abspath
         self.fileTabs = fileTabs
-        self.selection = QtGui.QTextEdit.ExtraSelection()
-        self.selection.format = QtGui.QTextCharFormat()
-        self.selection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
-        self.selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
-        
+        self.lineSelection = QtGui.QTextEdit.ExtraSelection()
+        self.lineSelection.format = QtGui.QTextCharFormat()
+        self.lineSelection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
+        self.lineSelection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
+                
         font = QtGui.QFont(fontspec)
         font.setPointSize(size)
         self.setFont(font)
@@ -113,14 +118,23 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.addAction(aFind)
         self.findDialog = FindDialog(self)
         self.findIsOpen = False
+        
+        aFindNext = QtGui.QAction(self)
+        aFindNext.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F3))
+        aFindNext.triggered.connect(self.searchFwd)
+        self.addAction(aFindNext)
+        aFindPrev = QtGui.QAction(self)
+        aFindPrev.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F3))
+        aFindPrev.triggered.connect(self.searchBwd)
+        self.addAction(aFindPrev)
 
     # end of __init__
     
     
     def highlight(self, lineno) :
-        self.selection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
-        self.setExtraSelections([self.selection])
-        self.setTextCursor(self.selection.cursor)
+        self.lineSelection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
+        self.setExtraSelections([self.lineSelection])
+        self.setTextCursor(self.lineSelection.cursor)
 
     def unhighlight(self, lineno) :
         self.setExtraSelections([])
@@ -160,8 +174,20 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.findDialog.close()
 
     def search(self) :
-        self.findDialog.openDialog()
+        self.findDialog.openDialog(True)
         self.findIsOpen = True
+        
+    def searchFwd(self) :
+        targetText = self.findDialog.targetText()
+        self.find(targetText)
+        
+        cTmp = self.cursor
+        print cTmp.__class__
+
+
+    def searchBwd(self) :
+        targetText = self.findDialog.targetText()
+        self.find(targetText, QtGui.QTextDocument.FindBackward)
 
     def closedSearch(self) :
         self.findIsOpen = False
@@ -188,6 +214,10 @@ class EditFile(QtGui.QPlainTextEdit) :
         super(EditFile,self).mouseDoubleClickEvent(event)
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
+        
+    def getSelectedText(self) :
+        selectedText = self.textCursor().selectedText()
+        return selectedText
         
     def _updateLabel(self) :
         if self.document().isModified() :
