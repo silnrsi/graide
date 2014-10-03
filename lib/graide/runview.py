@@ -36,7 +36,11 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
     def mousePressEvent(self, mouseEvent) :
         if self.model :
-            self.model.glyphClicked(self, self.index)
+            self.model.glyphClicked(self, self.index, False)
+            
+    def mouseDoubleClickEvent(self, mouseEvent) :
+        if self.model :
+            self.model.glyphClicked(self, self.index, True)
 
     def select(self, state) :
         self.selected = state
@@ -72,8 +76,8 @@ class RunTextView(QtGui.QPlainTextEdit) :
 # and for the Passes and Rules tabs.
 class RunView(QtCore.QObject, ModelSuper) :
 
-    slotSelected = QtCore.Signal(DataObj, ModelSuper)
-    glyphSelected = QtCore.Signal(DataObj, ModelSuper)
+    slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
+    glyphSelected = QtCore.Signal(DataObj, ModelSuper, bool)
 
     def __init__(self, font = None, run = None, parent = None) :
         super(RunView, self).__init__()
@@ -86,6 +90,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
         self.tview.mousePressEvent = self.tEvent
+        self.tview.mouseDoubleClickEvent = self.tEvent
         self._fSelect = QtGui.QTextCharFormat()
         self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
         self._fHighlights = {}
@@ -95,6 +100,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         if run and font :
             self.loadrun(run, font)
         self.gview.setScene(self._scene)
+        
 
     def loadrun(self, run, font, resize = True) :
         self.run = run
@@ -159,9 +165,12 @@ class RunView(QtCore.QObject, ModelSuper) :
         pass # overridden by TweakableRunView
 
 
-    def glyphClicked(self, gitem, index) :
+    def glyphClicked(self, gitem, index, doubleClick) :
         if index != self.currselection :
-            self.changeSelection(index)
+            self.changeSelection(index, doubleClick)
+        elif doubleClick :
+            # Force the Glyph tab to be current:
+            self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self, doubleClick)
 
     def keyPressEvent(self, event) :
         if self.currselection < 0 : return  # no selection to move
@@ -188,7 +197,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self.changeSelection(newSel)
                 
         
-    def changeSelection(self, newSel) :
+    def changeSelection(self, newSel, doubleClick) :
         s = self.tview.extraSelections()
         
         if self.currselection >= 0 :
@@ -207,8 +216,8 @@ class RunView(QtCore.QObject, ModelSuper) :
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter,
                     QtGui.QTextCursor.KeepAnchor, self._gindices[newSel + 1] - self._gindices[newSel] - 2 )
             s.append(tselect)
-            self.slotSelected.emit(self.run[self.currselection], self)
-            self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self)
+            self.slotSelected.emit(self.run[self.currselection], self, doubleClick)
+            self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self, doubleClick)
         else :
             self.currselection = -1
             
@@ -217,20 +226,23 @@ class RunView(QtCore.QObject, ModelSuper) :
 
     def clearSelected(self) :
         if self.currselection >= 0 :
-            self._pixmaps[self.currselection].select(False)
+            if self._pixmaps[self.currselection] != None :
+                self._pixmaps[self.currselection].select(False)
+            # else there was no glyph to display
             s = self.tview.extraSelections()
             s.pop()
             self.tview.setExtraSelections(s)
         self.currselection = -1
     
     def tEvent(self, event) :
+        doubleClick = (event.type() == QtCore.QEvent.MouseButtonDblClick)
         c = self.tview.cursorForPosition(event.pos()).position()
         for (i, g) in enumerate(self._gindices) :
             if c < g :
-                self.glyphClicked(None, i - 1)
+                self.glyphClicked(None, i - 1, doubleClick)
                 return True
         return False
-
+        
     def clear(self) :
         self._scene.clear()
         self.tview.setPlainText("")

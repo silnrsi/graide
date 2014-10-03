@@ -45,6 +45,8 @@ from graide.posedit import PosEdit, PosView
 from graide.tweaker import Tweaker, TweakView
 from graide.findmatch import GlyphPatternMatcher, MatchList, Matcher
 from PySide import QtCore, QtGui
+from graide.utils import ModelSuper, DataObj
+
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
@@ -569,6 +571,7 @@ class MainWindow(QtGui.QMainWindow) :
         # Passes tab
         self.tab_passes = PassesView()
         self.tab_passes.slotSelected.connect(self.slotSelected)
+        self.tab_passes.glyphSelected.connect(self.glyphSelected);
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tab_results.addTab(self.tab_passes, "Passes")
@@ -587,6 +590,7 @@ class MainWindow(QtGui.QMainWindow) :
         # Rules tab
         self.tab_rules = PassesView()
         self.tab_rules.slotSelected.connect(self.slotSelected)
+        self.tab_passes.glyphSelected.connect(self.glyphSelected);
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tab_results.addTab(self.tab_rules, "Rules")
@@ -720,15 +724,19 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     
     # end of _saveProjectData    
 
-    def glyphSelected(self, data, model) :
+    QtCore.Slot(DataObj, ModelSuper, bool)
+    def glyphSelected(self, data, model, doubleClick) :
+        print "MainWindow::glyphSelected", doubleClick
         # data = Glyph, model = FontModel
         self.glyphAttrib.changeData(data, model)
-        self.tab_info.setCurrentWidget(self.tab_glyph)
+        if doubleClick:
+            self.tab_info.setCurrentWidget(self.tab_glyph)
 
-    def slotSelected(self, data, model) :
+    QtCore.Slot(DataObj, ModelSuper, bool)
+    def slotSelected(self, data, model, doubleClick) :
         # data = Slot, model = RunView
         self.tab_slot.changeData(data, model)
-        if self.tab_info.currentWidget() is not self.tab_glyph :
+        if doubleClick and self.tab_info.currentWidget() is not self.tab_glyph :
             self.tab_info.setCurrentWidget(self.tab_slot)
 
     def rulesSelected(self, row, view, passview) :

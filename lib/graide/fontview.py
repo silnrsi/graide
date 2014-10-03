@@ -75,6 +75,7 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
         cellwidth = self.delegate.sizeHint(None, None).width() + 1
         if cellwidth < 56 : cellwidth = 56
         self.columns = width / cellwidth
+        if self.columns == 0 : self.columns = 1  # don't know if this is really needed
         self.rows = (self.font.numGlyphs + self.columns - 1) / self.columns
         if oldcolumns and oldcolumns > self.columns :
             self.columnsRemoved.emit(self.createIndex(0, 0), oldcolumns, self.columns)
@@ -95,7 +96,7 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
 
 class FontView(QtGui.QTableView) :
 
-    changeGlyph = QtCore.Signal(DataObj, ModelSuper)
+    changeGlyph = QtCore.Signal(DataObj, ModelSuper, bool)
 
     def __init__(self, font, parent = None) :
         super(FontView, self).__init__(parent)
@@ -129,7 +130,7 @@ class FontView(QtGui.QTableView) :
             super(FontView, self).keyPressEvent(event)
 
     def do_activate(self, index) :
-        self.changeGlyph.emit(index.data(), self.model)
+        self.changeGlyph.emit(index.data(), self.model, True)
 
     def classSelected(self, name) :
         self.model.font.classSelected(name)
