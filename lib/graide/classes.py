@@ -37,7 +37,7 @@ class ClassMemberDialog(QtGui.QDialog) :
 
         self.setWindowTitle(className)
         listWidget = QtGui.QListWidget(self)
-        listWidget.clicked.connect(self.doReturn)
+        #listWidget.clicked.connect(self.doReturn)
         itemHeight = 18
         cnt = 0
         for member in memberList:
@@ -188,7 +188,7 @@ class Classes(QtGui.QWidget) :
         memberText = self.tab.item(row, 1).text()
         memberList = memberText.split(" ")
         dialog = ClassMemberDialog(self, className, memberList)
-        dialog.exec_()
+        dialog.show()   # modeless
         
     
     # Highlight the source code where the given class is defined in the code pane.
