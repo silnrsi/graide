@@ -44,12 +44,10 @@ class PassesView(QtGui.QTableWidget) :
 
     @QtCore.Slot(DataObj, ModelSuper, bool)
     def changeSlot(self, data, model, doubleClick) : # data = Slot, model = RunView
-        print "PassesView::changeSlot",doubleClick
         self.slotSelected.emit(data, model, doubleClick)
 
     @QtCore.Slot(DataObj, ModelSuper, bool)
     def changeGlyph(self, data, model, doubleClick) : # data = glyph ID, model = RunView
-        print "PassesView::changeGlyph",doubleClick
         self.glyphSelected.emit(data, model, doubleClick)
         if self.currsel and self.currsel != model :
             self.currsel.clearSelected()
@@ -341,3 +339,9 @@ class PassesView(QtGui.QTableWidget) :
             print "scrolling to row",scrollWhere
             item = self.item(scrollWhere, 0)
             self.scrollToItem(item)
+            
+    def rule(self, num) :
+        return self.rules[num]
+        
+    def runView(self, num) :
+        return self.runViews[num]
