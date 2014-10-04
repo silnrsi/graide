@@ -225,8 +225,8 @@ def loadFont(font) :
         if not font.temporary : font.temporary = {}
         font.temporary['generateFontPostHook'] = doGenerate
 
-fontforge.hooks['loadFontHook'] = loadFont
 if fontforge.hasUserInterface() :
+    fontforge.hooks['loadFontHook'] = loadFont
     fontforge.registerMenuItem(loadConfig, None, None, "Font", None, "Graide", "Load configuration")
     fontforge.registerMenuItem(editConfig, None, None, "Font", None, "Graide", "Edit configuration")
 else:

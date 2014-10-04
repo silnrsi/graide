@@ -104,14 +104,13 @@ class MainWindow(QtGui.QMainWindow) :
                 config.add_section(s)
                 
         print "Loading font..." #===
-        if self.cfgFileName is None or self.cfgFileName == "":
+        if config.has_option('main', 'font') :
+            self.loadFont(config.get('main', 'font'))
+        elif self.cfgFileName is None or self.cfgFileName == "":
             # show() function will force them to create one.
             pass
         else :
-            if config.has_option('main', 'font') :
-                fontFile = config.get('main', 'font')
-            else :
-                fontFile = ""
+            fontFile = ""
             okCancel = self.runStartupDialog()  # forces them to define a font or Cancel
             if okCancel == False :
                 self.doExit()
@@ -158,8 +157,9 @@ class MainWindow(QtGui.QMainWindow) :
     def show(self) :
         super(MainWindow, self).show()
         
-        initializedConfig = self.runStartupDialog(True)  # make sure there is a valid project
-        
+        #initializedConfig = self.runStartupDialog(True)  # make sure there is a valid project
+        initializedConfig = True
+
         if initializedConfig :
             self._ensureMainGdlFile()
             self._openFileList()
@@ -576,12 +576,12 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tab_results.addTab(self.tab_passes, "Passes")
         if self.json :
-            self.run.addslots(self.json['output'])
+            self.run.addslots(self.json[-1]['output'])
             self.runView.loadrun(self.run, self.font)
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
-            istr = unicode(map(lambda x:unichr(x['unicode']), self.json['chars']))
+            istr = unicode(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runLoaded = True

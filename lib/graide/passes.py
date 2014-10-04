@@ -37,25 +37,25 @@ class PassesView(QtGui.QTableWidget) : pass
 class PassesView(QtGui.QTableWidget) :
 
     # Communication with the Glyph, Slot and Rules tabs:
-    slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
-    glyphSelected = QtCore.Signal(DataObj, ModelSuper, bool)
+    slotSelected = QtCore.Signal(DataObj, ModelSuper)
+    glyphSelected = QtCore.Signal(DataObj, ModelSuper)
     rowActivated = QtCore.Signal(int, RunView, PassesView)
 
 
-    @QtCore.Slot(DataObj, ModelSuper, bool)
-    def changeSlot(self, data, model, doubleClick) : # data = Slot, model = RunView
-        self.slotSelected.emit(data, model, doubleClick)
+    @QtCore.Slot(DataObj, ModelSuper)
+    def changeSlot(self, data, model) : # data = Slot, model = RunView
+        self.slotSelected.emit(data, model)
 
-    @QtCore.Slot(DataObj, ModelSuper, bool)
-    def changeGlyph(self, data, model, doubleClick) : # data = glyph ID, model = RunView
-        self.glyphSelected.emit(data, model, doubleClick)
+    @QtCore.Slot(DataObj, ModelSuper)
+    def changeGlyph(self, data, model) : # data = glyph ID, model = RunView
+        self.glyphSelected.emit(data, model)
         if self.currsel and self.currsel != model :
             self.currsel.clearSelected()
         self.currsel = model
-        
+
     @QtCore.Slot(int)
     def activateRow(self, row) :
-        self.rowActivated(row, self.runViews[row])
+        self.rowActivated(row, self.views[row])
 
     def __init__(self, parent = None, index = 0) :
         super(PassesView, self).__init__(parent)
@@ -65,7 +65,7 @@ class PassesView(QtGui.QTableWidget) :
         self.currsel = None
         self.passindex = index  # used for Rules tab
         self.connected = False
-        self.runViews = []
+        self.views = []
         self.selectedRow = -1
         self.rules = []
         
@@ -73,9 +73,9 @@ class PassesView(QtGui.QTableWidget) :
         self.passindex = index
 
     def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
-        if num >= len(self.runViews) :
+        if num >= len(self.views) :
             v = RunView(font, run, self)
-            self.runViews.append(v)
+            self.views.append(v)
             self.setCellWidget(num, 1, v.gview)
             self.setCellWidget(num, 2, v.tview)
             l = QtGui.QTableWidgetItem(label)
@@ -87,7 +87,7 @@ class PassesView(QtGui.QTableWidget) :
             except :
                 print "Passes connection failed"
         else :
-            v = self.runViews[num]
+            v = self.views[num]
             v.loadrun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
@@ -113,7 +113,7 @@ class PassesView(QtGui.QTableWidget) :
         self.currsel = None
         if jsonall :
             json = jsonall[1]
-            ###json = jsonall[0]
+            ####json = jsonall[0]
         else :
             json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
@@ -151,7 +151,7 @@ class PassesView(QtGui.QTableWidget) :
             else :
                 count += 1
         if count != self.rowCount() :
-            if count < self.rowCount() : self.runViews = self.runViews[:count]
+            if count < self.rowCount() : self.views = self.views[:count]
             self.setRowCount(count)
         w = 0
         wt = 0
@@ -203,7 +203,7 @@ class PassesView(QtGui.QTableWidget) :
                 if j < len(json['passes']) :
                     passid = int(json['passes'][j]['id']) - 1
                     if 'rules' in json['passes'][j] and len(json['passes'][j]['rules']) :
-                    ###if len(json['passes'][j]['rules']) :
+                    ####if len(json['passes'][j]['rules']) :
                         highlight = True
                         self.rules.append(json['passes'][j]['rules'])
                     else :
@@ -229,7 +229,7 @@ class PassesView(QtGui.QTableWidget) :
     def loadRules(self, font, json, inirun, gdx) :
         self.selectRow(-1)
         self.currsel = None
-        self.runViews = []
+        self.views = []
         # runs correspond to rules matched (fired or failed)
         self.runs = [inirun.copy()]	 # initialize with the Init run
         self.runs[0].label="Init"
@@ -309,7 +309,7 @@ class PassesView(QtGui.QTableWidget) :
 
     def doCellDoubleClicked(self, row, col) :
         if col == 0 :
-            self.rowActivated.emit(row, self.runViews[row], self)
+            self.rowActivated.emit(row, self.views[row], self)
  
     def selectRow(self, row) :
         if self.selectedRow >= 0 :
@@ -339,9 +339,3 @@ class PassesView(QtGui.QTableWidget) :
             print "scrolling to row",scrollWhere
             item = self.item(scrollWhere, 0)
             self.scrollToItem(item)
-            
-    def rule(self, num) :
-        return self.rules[num]
-        
-    def runView(self, num) :
-        return self.runViews[num]
