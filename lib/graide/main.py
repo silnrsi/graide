@@ -726,7 +726,6 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     QtCore.Slot(DataObj, ModelSuper, bool)
     def glyphSelected(self, data, model, doubleClick) :
-        print "MainWindow::glyphSelected", doubleClick
         # data = Glyph, model = FontModel
         self.glyphAttrib.changeData(data, model)
         if doubleClick:

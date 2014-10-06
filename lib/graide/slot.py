@@ -43,49 +43,99 @@ class Slot(DataObj) :
         self.highlightType = ""
 
     def attribModel(self) :
+
         res = []
         for k in ('index', 'id', 'gid', 'break', 'insert', 'justification') :
             if hasattr(self, k) :
                 res.append(Attribute(k, self.__getattribute__, None, False, k))
         for k in ('origin', 'advance', "shift") :
             if hasattr(self, k) :
-                res.append(Attribute(k, self.getpos, None, False, k))
+                res.append(Attribute(k, self.getPos, None, False, k))
         for k in ('before', 'after') :
-            res.append(Attribute(k, self.getcharinfo, None, False, k))
+            res.append(Attribute(k, self.getCharInfo, None, False, k))
+            
+        if hasattr(self, 'collision') :
+            cres = []
+            cres.append(Attribute('flags', self.getColFlags, None, False))
+            cres.append(Attribute('margin', self.getColMargin, None, False))
+            cres.append(Attribute('min', self.getColLimitMin, None, False))
+            cres.append(Attribute('max', self.getColLimitMax, None, False))
+            cres.append(Attribute('shift', self.getColShift, None, False))
+            
         if hasattr(self, 'parent') :
-            res.append(Attribute('parent', self.getparent, None, False, 'parent'))
-            res.append(Attribute('parent offset', self.getoffset, None, False))
+            res.append(Attribute('parent', self.getParent, None, False, 'parent'))
+            res.append(Attribute('parent offset', self.getOffset, None, False))
+            
+        resAttrib = AttribModel(res)
+
         ures = []
         for i in range(len(self.user)) :
-            ures.append(Attribute(str(i), self.getuser, None, False, i))
-        resAttrib = AttribModel(res)
+            ures.append(Attribute(str(i), self.getUser, None, False, i))
+            
+        if hasattr(self, 'collision') :
+            cAttrib = AttribModel(cres, resAttrib)
+            resAttrib.add(Attribute('collision', None, None, True, cAttrib))
+
         uAttrib = AttribModel(ures, resAttrib)
         resAttrib.add(Attribute('user attributes', None, None, True, uAttrib))
         return resAttrib
 
-    def getpos(self, name) :
+    def getPos(self, name) :
         res = self.__getattribute__(name)
         return "(%d, %d)" % (res[0], res[1])
 
-    def getcharinfo(self, name) :
+    def getCharInfo(self, name) :
         return self.charinfo[name]
 
-    def getuser(self, index) :
+    def getUser(self, index) :
         return self.user[index]
 
-    def getparent(self, name) :
+    def getParent(self, name) :
         try :
             return self.parent['id']
         except :
             return None
 
-    def getoffset(self) :
+    def getOffset(self) :
         try :
             res = self.parent['offset']
             return "(%d, %d)" % (res[0], res[1])
         except :
             return None
-
+            
+    def getColFlags(self) :
+        try :
+            return self.collision['flags']
+        except :
+            return None
+            
+    def getColMargin(self) :
+        try :
+            return self.collision['margin']
+        except :
+            return None
+            
+    def getColLimitMin(self) :
+        try :
+            res = self.collision['limit']
+            return "(%d, %d)" % (res[0], res[1])
+        except :
+            return None
+ 
+    def getColLimitMax(self) :
+        try :
+            res = self.collision['limit']
+            return "(%d, %d)" % (res[2], res[3])
+        except :
+            return None
+       
+    def getColShift(self) :
+        try :
+            res = self.collision['shift']
+            return "(%d, %d)" % (res[0], res[1])
+        except :
+            return None
+       
     def highlight(self, type = "default") :
         self.highlighted = True
         self.highlightType = type
