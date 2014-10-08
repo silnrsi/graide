@@ -577,7 +577,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_results.addTab(self.tab_passes, "Passes")
         if self.json :
             self.run.addslots(self.json[-1]['output'])
-            self.runView.loadrun(self.run, self.font)
+            self.runView.loadRun(self.run, self.font)
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
@@ -726,7 +726,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     QtCore.Slot(DataObj, ModelSuper, bool)
     def glyphSelected(self, data, model, doubleClick) :
-        # data = Glyph, model = FontModel
+        # data = GraideGlyph, model = RunView
         self.glyphAttrib.changeData(data, model)
         if doubleClick:
             self.tab_info.setCurrentWidget(self.tab_glyph)
@@ -860,7 +860,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         runResult = Run(rtl)
         ###if self.run :
         runResult.addslots(json[-1]['output'])
-        widget.runView.loadrun(runResult, self.font, resize = False)
+        widget.runView.loadRun(runResult, self.font, resize = False)
         if not widget.runLoaded :
             try :
                 widget.runView.slotSelected.connect(self.slotSelected)
@@ -1007,14 +1007,14 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         (n, v) = self.propDialog('Point')
         if n :
             glyph = self.glyphAttrib.data
-            glyph.setpoint(n, v)
+            glyph.setPoint(n, v)
             self.glyphAttrib.changeData(glyph, None)
 
     def glyphAddProperty(self) :
         (n, v) = self.propDialog('Property')
         if n :
             glyph = self.glyphAttrib.data
-            glyph.setgdlproperty(n, v)
+            glyph.setGdlProperty(n, v)
             self.glyphAttrib.changeData(glyph, None)
 
     def glyphRemoveProperty(self) :

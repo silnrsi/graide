@@ -114,7 +114,7 @@ class Font(object) :
         self.glyphs[index] = g
         return g
 
-    def addGDXGlyph(self, e) :
+    def addGdxGlyph(self, e) :
         gid = int(e.get('glyphid'))
         g = self[gid]
         cname = e.get('className')
@@ -141,17 +141,17 @@ class Font(object) :
                 storemirror = True
             elif n == 'mirror.glyph' :
                 mirrorglyph = a.get('value')
-            elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
-                pass
+            #elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
+            #    pass
             elif n.endswith('.x') :
                 g.setAnchor(n[:-2], int(a.get('value')), None)
             elif n.endswith('.y') :
                 g.setAnchor(n[:-2], None, int(a.get('value')))
             elif n.find('.') == -1 :
-                g.setgdlproperty(n, a.get('value'))
+                g.setGdlProperty(n, a.get('value'))
         if storemirror and mirrorglyph :
-            g.setgdlproperty('mirror.glyph', mirrorglyph)
-            g.setgdlproperty('mirror.isEncoded', '1')
+            g.setGdlProperty('mirror.glyph', mirrorglyph)
+            g.setGdlProperty('mirror.isEncoded', '1')
 
     def renameGlyph(self, g, name, gdlname = None) :
         if g.psname != name :

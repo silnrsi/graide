@@ -47,7 +47,7 @@ class Gdx(object) :
                     self.passes[-1].append(Rule(e, relbase))
                 if e.tag == 'glyph' :
                     self.keepelements = False
-                    if not apgdlfile : font.addGDXGlyph(e)
+                    if not apgdlfile : font.addGdxGlyph(e)
                 elif e.tag == 'class' :
                     self.keepelements = False
                     n = e.get('name')

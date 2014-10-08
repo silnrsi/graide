@@ -81,13 +81,18 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         for a in ['uid', 'comment'] :
             res.append(Attribute(a, self.__getattribute__, self.__setattr__, False, a))
         for a in sorted(self.properties.keys()) :
-            res.append(Attribute(a, self.getproperty, self.setproperty, False, a))
+            res.append(Attribute(a, self.getProperty, self.setPropertyX, False, a))
         for a in sorted(self.gdl_properties.keys()) :
-            res.append(Attribute(a, self.getgdlproperty, self.setgdlproperty, False, a))
+            if a == "*actualForPseudo*" :
+                actual = self.getGdlProperty("*actualForPseudo*")
+                if actual != 0 :
+                    res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
+            else :
+                res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
         resAttrib = AttribModel(res)
         pres = []
         for k in self.anchors.keys() :
-            pres.append(Attribute(k, self.getpoint, self.setpoint, False, k))
+            pres.append(Attribute(k, self.getPoint, self.setPoint, False, k))
         pAttrib = AttribModel(pres, resAttrib)
         resAttrib.add(Attribute('points', None, None, True, pAttrib))
         if len(self.justifies) :
@@ -95,13 +100,13 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             for (i, j) in enumerate(self.justifies) :
                 jlevel = []
                 for k in j.keys() :
-                    jlevel.append(Attribute(k, self.getjustify, None, False, i, k))
+                    jlevel.append(Attribute(k, self.getJustify, None, False, i, k))
                 lAttrib = AttribModel(jlevel, jAttrib)
                 jAttrib.add(Attribute(str(i), None, None, True, lAttrib))
             resAttrib.add(Attribute('Justify', None, None, True, jAttrib))
         return resAttrib
 
-    def getproperty(self, key) :
+    def getProperty(self, key) :
         return self.properties[key]
 
     def setAnchor(self, name, x, y, t = None) :
@@ -110,25 +115,25 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             self.anchorChanged.emit(name, x, y)
         return send
 
-    def setproperty(self, key, value) :
+    def setPropertyX(self, key, value) :    # don't inherit
         if value == None :
             del self.properties[key]
         else :
             self.properties[key] = value
 
-    def getgdlproperty(self, key) :
+    def getGdlProperty(self, key) :
         return self.gdl_properties[key]
 
-    def setgdlproperty(self, key, value) :
+    def setGdlProperty(self, key, value) :
         if value == None :
             del self.gdl_properties[key]
         else :
             self.gdl_properties[key] = value
 
-    def getpoint(self, key) :
+    def getPoint(self, key) :
         return str(self.anchors[key])
 
-    def setpoint(self, key, value) :
+    def setPoint(self, key, value) :
         if value == None :
             (x, y) = (None, None)
         elif value == "" :
@@ -143,11 +148,11 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 errorDialog.exec_()
         self.setAnchor(key, x, y)
 
-    def getjustify(self, level, name) :
+    def getJustify(self, level, name) :
         if level >= len(self.justifies) or name not in self.justifies[level] : return None
         return self.justifies[level][name]
 
-    def setjustify(self, level, name, val) :
+    def setJustify(self, level, name, val) :
         if level >= len(self.justifies) :
             self.justifies.extend(({},) * (level - len(self.justifies) + 1))
         self.justifies[level][name] = val

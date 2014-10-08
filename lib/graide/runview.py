@@ -19,6 +19,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+# A RunView consists of two sub-views: a display of the current glyphs (QGraphicsView)
+# and a list of corresponding glyph names (QPlainTextEdit).
+
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
@@ -75,16 +78,21 @@ class RunTextView(QtGui.QPlainTextEdit) :
 # Used for both the output pane in the bottom left corner of the window
 # and for the Passes and Rules tabs.
 class RunView(QtCore.QObject, ModelSuper) :
+    
+    MinHt = 70
 
     slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper, bool)
 
-    def __init__(self, font = None, run = None, parent = None) :
+    def __init__(self, font = None, run = None, parent = None) : # parent = PassesView, Matcher, or none
         super(RunView, self).__init__()
         self.parent = parent
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
-        if font : self.gview.resize(self.gview.size().width(), font.pixrect.height())
+        if font : 
+            self.gview.resize(self.gview.size().width(), max(font.pixrect.height(), RunView.MinHt))
+        else :
+            self.gview.resize(200, RunView.MinHt)
         self._scene = QtGui.QGraphicsScene(self.gview) # the scene contains the pixmaps
         self._scene.keyPressEvent = self.keyPressEvent
         self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
@@ -98,11 +106,12 @@ class RunView(QtCore.QObject, ModelSuper) :
             self._fHighlights[n] = QtGui.QTextCharFormat()
             self._fHighlights[n].setBackground(Layout.slotColours[n])
         if run and font :
-            self.loadrun(run, font)
+            self.loadRun(run, font)
         self.gview.setScene(self._scene)
         
+        
 
-    def loadrun(self, run, font, resize = True) :
+    def loadRun(self, run, font, resize = True) :
         self.run = run
         self._font = font
         self.currselection = -1
@@ -119,15 +128,24 @@ class RunView(QtCore.QObject, ModelSuper) :
         
         for i, s in enumerate(run) :
             g = font[s.gid]
-            if g and g.item and g.item.pixmap :
-                res = self.createPixmap(s, g, i, res, scale, model = self, scene = self._scene)
+            
+            # Is this a pseudo-glyph?
+            try :
+                gidActual = int(g.getGdlProperty("*actualForPseudo*"))
+            except :
+                gidActual = 0
+            gActual = font[gidActual] if gidActual != 0  else g
+
+            if gActual and gActual.item and gActual.item.pixmap :
+                res = self.createPixmap(s, gActual, i, res, scale, model = self, scene = self._scene)
             else :
+                #print "no GraideGlyph for",s.gid
                 self._pixmaps.append(None)
             if g :
-                t = g.GDLName() or g.psname
+                glyphName = g.GDLName() or g.psname
                 self.tview.moveCursor(QtGui.QTextCursor.End)
-                self.tview.insertPlainText(t + "  ") # 2 spaces between glyph names
-                self._gindices.append(self._gindices[-1] + len(t) + 2)
+                self.tview.insertPlainText(glyphName + "  ") # 2 spaces between glyph names
+                self._gindices.append(self._gindices[-1] + len(glyphName) + 2)
                 if s.highlighted :
                     hselect = QtGui.QTextEdit.ExtraSelection()
                     if s.highlightType in self._fHighlights :
@@ -140,14 +158,19 @@ class RunView(QtCore.QObject, ModelSuper) :
                             QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 2 - self._gindices[-2])
                     sels.append(hselect)
         
+        self.tview.moveCursor(QtGui.QTextCursor.Start) # scroll to top
+        
         if len(sels) :
             self.tview.setExtraSelections(sels)
         self.boundingRect = res
         self._scene.setSceneRect(res)
+        
         if resize :
-            self.gview.setFixedSize(res.left() + res.width() + 2, res.height() - res.top() + 2)
-            self.gview.resize(res.left() + res.width() + 2, res.height() - res.top() + 2)
+            ht = max(res.height() - res.top() + 2, RunView.MinHt)
+            self.gview.setFixedSize(res.left() + res.width() + 2, ht)
+            self.gview.resize(res.left() + res.width() + 2, ht)
             self.gview.updateScene([])
+
             
     # Overridden for TweakableRunView.
     def createPixmap(self, slot, glyph, index, res, scale, model = None, parent = None, scene = None) :
