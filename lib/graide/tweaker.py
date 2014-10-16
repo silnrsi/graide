@@ -1165,12 +1165,12 @@ class TweakableRunView(RunView) :
         currentTweak.deleteExtraGlyphs(len(run))
         
             
-    def glyphClicked(self, gitem, index) :
+    def glyphClicked(self, gitem, index, doubleClick) :
         if index == self.currselection :
             # Reclicking the same glyph has no effect
             pass
         else :
-            super(TweakableRunView, self).glyphClicked(gitem, index)
+            super(TweakableRunView, self).glyphClicked(gitem, index, False)
             # Also inform the Tweaker so it can update the controls
             self.tweaker().slotChanged(index)
             
@@ -1205,13 +1205,13 @@ class TweakableRunView(RunView) :
                 newSel = self.currselection + 1
                 if newSel >= len(self._pixmaps) : newSel = len(self._pixmaps) - 1
                 if newSel != self.currselection :
-                    self.changeSelection(newSel)
+                    self.changeSelection(newSel, False)
                     self.tweaker().slotChanged(self.currselection)                
             else :
                 newSel = self.currselection - 1
                 if newSel < 0 : newSel = 0
                 if newSel != self.currselection :
-                    self.changeSelection(newSel)
+                    self.changeSelection(newSel, False)
                     self.tweaker().slotChanged(self.currselection)
     
     # end of keyPressEvent
@@ -1321,7 +1321,7 @@ class TweakView(QtGui.QWidget) :
         self.run = Run(tweak.rtl)
         if self.json :
             self.run.addslots(self.json[-1]['output'])
-        self.runView.loadrun(self.run, self.font, resize = False)
+        self.runView.loadRun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
                 # Don't switch to the Slot tab, but just update the contents.
@@ -1343,7 +1343,7 @@ class TweakView(QtGui.QWidget) :
     
     def highlightSlot(self, slotIndex) :
         self.currSlotIndex = slotIndex
-        self.runView.glyphClicked(None, slotIndex)
+        self.runView.glyphClicked(None, slotIndex, False)
 
 
 #    def snagKeyPress(self, event) :
