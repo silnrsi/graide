@@ -916,7 +916,19 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         jsonResult = json.load(tempJsonFile)
         if isinstance(jsonResult, dict) : jsonResult = [jsonResult]
         tempJsonFile.close()
+
+        # copy JSON to a debugger file in an accessible place
+        tempJsonFile = open(tempJsonFileName, "r")
+        stuff = tempJsonFile.read()
+        jsonDbgFilename = "./graide_dbg_output.json"
+        dbgJsonFile = open(jsonDbgFilename, "w")
+        dbgJsonFile.write("# Graphite JSON output for input string:\n#\n# " + inputString + "\n\n");
+        dbgJsonFile.write(stuff)
+        dbgJsonFile.close()
+        
+        tempJsonFile.close();
         os.unlink(tempJsonFileName)
+        
         return jsonResult
     
     # end of runGraphiteOverString
