@@ -902,7 +902,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             # Cache these so we don't have to keep recreating them
             self.fontFaces[size] = faceAndFont
         
-        ###print "text=", text ###
+        inputEntities = as_entities(text)
+        ###print "inputEntities=", inputEntities ###
         
         #if faceAndFont == None :
         #    runGraphite(fontFileName, text, runfname, feats, rtl, lang, size, expand)
@@ -922,7 +923,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         stuff = tempJsonFile.read()
         jsonDbgFilename = "./graide_dbg_output.json"
         dbgJsonFile = open(jsonDbgFilename, "w")
-        dbgJsonFile.write("# Graphite JSON output for input string:\n#\n# " + inputString + "\n\n");
+        dbgJsonFile.write("# Graphite JSON output for input string:\n#\n# ")
+        dbgJsonFile.write(inputEntities)
+        dbgJsonFile.write("\n\n");
         dbgJsonFile.write(stuff)
         dbgJsonFile.close()
         

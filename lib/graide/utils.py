@@ -204,9 +204,9 @@ def relpath(p, base) :
     d = os.path.dirname(base) or '.'
     return os.path.relpath(p, d)
 
-def as_entities(txt) :
-    if txt :
-        return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), txt)
+def as_entities(text) :
+    if text :
+        return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), text)
     else :
         return ""
 
