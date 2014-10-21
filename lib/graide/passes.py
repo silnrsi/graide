@@ -145,11 +145,6 @@ class PassesView(QtGui.QTableWidget) :
         #
         # Best thing to do is to more or less ignore the JSON IDs, since they are not reliable.
             
-        if len(jsonall) > 1 :
-            if 'passes' in jsonall[1] :
-                count += len(jsonall[1]['passes']) + 1
-            else :
-                count += 1
         if count != self.rowCount() :
             if count < self.rowCount() : self.runViews = self.runViews[:count]
             self.setRowCount(count)
@@ -187,40 +182,6 @@ class PassesView(QtGui.QTableWidget) :
             w = max(w, neww)
             wt = max(wt, newt)
             
-        # import pdb; pdb.set_trace()
-        if len(jsonall) > 1 :
-            json = jsonall[1]
-            base = num
-            num = 0
-            if 'passes' in json :
-                num = len(json['passes']) - 1
-            else :
-                json['passes'] = []
-            num += 1
-            for j in range(num) :
-                run = Run(rtl)
-                highlight = False
-                if j < len(json['passes']) :
-                    passid = int(json['passes'][j]['id']) - 1
-                    if 'rules' in json['passes'][j] and len(json['passes'][j]['rules']) :
-                    ####if len(json['passes'][j]['rules']) :
-                        highlight = True
-                        self.rules.append(json['passes'][j]['rules'])
-                    else :
-                        self.rules.append(None)
-                    pname = "Pass: %d" % passid
-                    if gdx :
-                        pname += " - " + gdx.passtypes[passid - 1]
-                else :
-                    pname = "Justification"
-                    self.rules.append(None)
-                if j < len(json['passes']) - 1 :
-                    run.addslots(json['passes'][j+1]['slots'])
-                else :
-                    run.addslots(json['output'])
-                (neww, newt) = self.addrun(font, run, pname, base + j, highlight = highlight)
-                w = max(w, neww)
-                wt = max(wt, newt)
         self.finishLoad(w, wt)
         
     # end of loadResults
