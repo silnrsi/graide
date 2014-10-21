@@ -72,7 +72,7 @@ class PassesView(QtGui.QTableWidget) :
     def setPassIndex(self, index) :
         self.passindex = index
 
-    def addRun(self, font, run, label, num, tooltip = "", highlight = False) :
+    def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.runViews) :
             v = RunView(font, run, self)
             self.runViews.append(v)
@@ -88,7 +88,7 @@ class PassesView(QtGui.QTableWidget) :
                 print "Passes connection failed"
         else :
             v = self.runViews[num]
-            v.loadRun(run, font)
+            v.loadrun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
         l.setBackground(Layout.activePassColour if highlight else QtGui.QColor(255, 255, 255))
@@ -183,7 +183,7 @@ class PassesView(QtGui.QTableWidget) :
                     
                 # if passid == -1, NEXT pass is bidi pass
                     
-            (neww, newt) = self.addRun(font, run, pname, j, highlight = highlight)
+            (neww, newt) = self.addrun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
             
@@ -218,7 +218,7 @@ class PassesView(QtGui.QTableWidget) :
                     run.addslots(json['passes'][j+1]['slots'])
                 else :
                     run.addslots(json['output'])
-                (neww, newt) = self.addRun(font, run, pname, base + j, highlight = highlight)
+                (neww, newt) = self.addrun(font, run, pname, base + j, highlight = highlight)
                 w = max(w, neww)
                 wt = max(wt, newt)
         self.finishLoad(w, wt)
@@ -284,10 +284,10 @@ class PassesView(QtGui.QTableWidget) :
         w = 0
         wt = 0
         self.setRowCount(len(self.runs))
-        
-        for r in range(len(self.runs)) :
-            tip = gdx.passes[self.passindex][self.runs[r].ruleindex].pretty if gdx and self.runs[r].ruleindex >= 0 else ""
-            (neww, newt) = self.addRun(font, self.runs[r], self.runs[r].label, r, tooltip = tip)
+        for j in range(len(self.runs)) :
+            (neww, newt) = self.addrun(font, self.runs[j], self.runs[j].label, j,
+                    tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
+                                    if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)
             wt = max(wt, newt)
             
