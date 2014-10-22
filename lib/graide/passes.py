@@ -88,7 +88,7 @@ class PassesView(QtGui.QTableWidget) :
                 print "Passes connection failed"
         else :
             v = self.runViews[num]
-            v.loadrun(run, font)
+            v.loadRun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
         l.setBackground(Layout.activePassColour if highlight else QtGui.QColor(255, 255, 255))
