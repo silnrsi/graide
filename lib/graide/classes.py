@@ -21,6 +21,7 @@
 from PySide import QtCore, QtGui
 from graide.utils import configintval
 from graide.layout import Layout
+import traceback
 
 class ClassMemberDialog(QtGui.QDialog) :
     
@@ -165,7 +166,7 @@ class Classes(QtGui.QWidget) :
                 m.setFlags(QtCore.Qt.NoItemFlags | QtCore.Qt.ItemIsEnabled)
             else :
                 m.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
-            m.loc = (c.fname, c.lineno, c.editable)
+            m.fileLoc = (c.fname, c.lineno, c.editable)
             self.tab.setItem(i, 0, l)
             self.tab.setItem(i, 1, m)
 
@@ -194,7 +195,7 @@ class Classes(QtGui.QWidget) :
     # Highlight the source code where the given class is defined in the code pane.
     def findSourceForClass(self, row) :
         c = self.tab.item(row, 1)
-        if not c.loc[0] or c.loc[2] :
+        if not c.fileLoc[0] or c.fileLoc[2] :
             d = QtGui.QDialog(self)
             name = self.tab.item(row, 0).text()
             d.setWindowTitle(name)
@@ -209,8 +210,8 @@ class Classes(QtGui.QWidget) :
                 t = edit.toPlainText()
                 self.tab.item(row, 1).setText(t)
                 self.classUpdated.emit(name, t)
-        elif c.loc[0] :
-            self.app.selectLine(*c.loc[:2])
+        elif c.fileLoc[0] :
+            self.app.selectLine(*c.fileLoc[:2])
             return True    	
 
     #end of findSourceForClass

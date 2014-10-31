@@ -20,6 +20,7 @@
 
 from graide.attribview import Attribute, AttribModel
 from graide.utils import copyobj, DataObj
+import traceback
 
 class Slot(DataObj) :
 
@@ -146,3 +147,8 @@ class Slot(DataObj) :
         self.px = px
         if self.highlighted :
             px.highlight(self.highlightType)
+
+    # Return line-and-file info corresponding to this row and column.
+    def lineAndFile(self, row, col) :
+        #print "Slot::doubleClick",event
+        return None

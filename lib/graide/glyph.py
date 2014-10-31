@@ -20,10 +20,11 @@
 
 from PySide import QtCore, QtGui
 from graide import freetype
-import array, ctypes, re
+import array, ctypes, re, traceback
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj
 from graide.makegdl.glyph import Glyph as gdlGlyph
+
 
 def ftGlyph(face, gid, fill = 0) :
     res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
@@ -69,17 +70,18 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         self.item = item
         self.isHigh = False
         self.justifies = []
+        self.fileLoc = None
 
     def __str__(self) :
         return self.psname
 
     def attribModel(self) :
         res = []
-        for a in ['psname', 'gid'] :
-            res.append(Attribute(a, self.__getattribute__, None, False, a)) # read-only
-        res.append(Attribute('GDLName', self.GDLName, self.setGDL))
-        for a in ['uid', 'comment'] :
-            res.append(Attribute(a, self.__getattribute__, self.__setattr__, False, a))
+        res.append(Attribute('glyph number', self.__getattribute__, None, False, 'gid')) # read-only
+        res.append(Attribute('GDL name', self.GDLName, self.setGDL))
+        res.append(Attribute('Postscript', self.__getattribute__, None, False, 'psname')) #read-only
+        res.append(Attribute('USV', self.__getattribute__, self.__setattr__, False, 'uid'))
+        res.append(Attribute('comment', self.__getattribute__, self.__setattr__, False, 'comment'))
         for a in sorted(self.properties.keys()) :
             res.append(Attribute(a, self.getProperty, self.setPropertyX, False, a))
         for a in sorted(self.gdl_properties.keys()) :
@@ -89,12 +91,17 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                     res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
             else :
                 res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
+                
         resAttrib = AttribModel(res)
+        
+        # points
         pres = []
-        for k in self.anchors.keys() :
+        for k in sorted(self.anchors.keys()) :
             pres.append(Attribute(k, self.getPoint, self.setPoint, False, k))
         pAttrib = AttribModel(pres, resAttrib)
         resAttrib.add(Attribute('points', None, None, True, pAttrib))
+        
+        # justification
         if len(self.justifies) :
             jAttrib = AttribModel([], resAttrib)
             for (i, j) in enumerate(self.justifies) :
@@ -103,8 +110,27 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                     jlevel.append(Attribute(k, self.getJustify, None, False, i, k))
                 lAttrib = AttribModel(jlevel, jAttrib)
                 jAttrib.add(Attribute(str(i), None, None, True, lAttrib))
-            resAttrib.add(Attribute('Justify', None, None, True, jAttrib))
+            resAttrib.add(Attribute('justify', None, None, True, jAttrib))
+        
+        #collision
+        cres = []
+        if (len(self.collisionProps)) :
+            for k in sorted(self.collisionProps.keys()) :
+                cres.append(Attribute(k, self.getCollision, None, False, k))
+            cAttrib = AttribModel(cres, resAttrib)
+            resAttrib.add(Attribute('collision', None, None, True, cAttrib))
+        
         return resAttrib
+    
+    # Return line-and-file info corresponding to this row and column.  
+    def lineAndFile(self, row, col) :
+        if row == 0 or row == 1 or row == 2 : # glyph ID, GDL name, or PS name
+            if self.fileLoc[0] :
+                return self.fileLoc[:2]
+            else :
+                return None
+        else :
+            return None
 
     def getProperty(self, key) :
         return self.properties[key]
@@ -147,7 +173,10 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 errorDialog.setText(msg)
                 errorDialog.exec_()
         self.setAnchor(key, x, y)
-
+    
+    def getCollision(self, key) :
+        return self.collisionProps[key]
+        
     def getJustify(self, level, name) :
         if level >= len(self.justifies) or name not in self.justifies[level] : return None
         return self.justifies[level][name]

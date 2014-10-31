@@ -17,10 +17,11 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import re
+import re, traceback
 from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import SubElement
 
+# Convert from Graphite AP name to the standard name, eg upperM -> _upper
 def gr_ap(txt) :
     if txt.endswith('M') :
         return "_" + txt[:-1]
@@ -29,6 +30,7 @@ def gr_ap(txt) :
     else :
         return txt
 
+# Convert from standard AP name to the Graphite name, eg _upper -> upperM
 def ap_gr(txt) :
     if txt.startswith('_') :
         return txt[1:] + 'M'
@@ -51,6 +53,7 @@ class Glyph(object) :
         self.classes = set()
         self.gdl_properties = {}
         self.properties = {}
+        self.collisionProps = {}
 
     def setName(self, name) :
         self.psname = name
@@ -69,6 +72,9 @@ class Glyph(object) :
         return send
         # if not name.startswith("_") and t != 'basemark' :
         #     self.isBase = True
+        
+    def setCollisionProp(self, name, value) :
+        self.collisionProps[name] = value
 
     def parseNames(self) :
         if self.psname :

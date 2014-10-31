@@ -20,7 +20,7 @@
 from PySide import QtGui, QtCore
 from graide.utils import configintval, configval
 from graide.layout import Layout
-import os, codecs
+import os, codecs, traceback
 
 class FindDialog(QtGui.QDialog) :
 
@@ -290,7 +290,8 @@ class FileTabs(QtGui.QTabWidget) :
                 self.highlightLine(i, lineno)
                 return
         # File not found - open it up.
-        newFile = EditFile(self.count(), fname, os.path.abspath(fname), self, size = self.size, fontspec = self.fontspec, tabstop = self.tabstop)
+        newFile = EditFile(self.count(), fname, os.path.abspath(fname), self, size = self.size,
+            fontspec = self.fontspec, tabstop = self.tabstop)
         self.addTab(newFile, fname)
         self.highlightLine(self.count() - 1, lineno)
         apgdlfile = configval(self.app.config, 'build', 'makegdlfile')

@@ -23,6 +23,7 @@ from graide.run import Run
 from graide.runview import RunView
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
+import traceback
 
 class PassesItem(QtGui.QTableWidgetItem) :
 
@@ -72,7 +73,7 @@ class PassesView(QtGui.QTableWidget) :
     def setPassIndex(self, index) :
         self.passindex = index
 
-    def addrun(self, font, run, label, num, tooltip = "", highlight = False) :
+    def addRun(self, font, run, label, num, tooltip = "", highlight = False) :
         if num >= len(self.runViews) :
             v = RunView(font, run, self)
             self.runViews.append(v)
@@ -178,7 +179,7 @@ class PassesView(QtGui.QTableWidget) :
                     
                 # if passid == -1, NEXT pass is bidi pass
                     
-            (neww, newt) = self.addrun(font, run, pname, j, highlight = highlight)
+            (neww, newt) = self.addRun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
             
@@ -246,7 +247,7 @@ class PassesView(QtGui.QTableWidget) :
         wt = 0
         self.setRowCount(len(self.runs))
         for j in range(len(self.runs)) :
-            (neww, newt) = self.addrun(font, self.runs[j], self.runs[j].label, j,
+            (neww, newt) = self.addRun(font, self.runs[j], self.runs[j].label, j,
                     tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
                                     if gdx and self.runs[j].ruleindex >= 0 else "")
             w = max(w, neww)

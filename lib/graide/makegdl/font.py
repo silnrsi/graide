@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-import os, re
+import os, re, traceback
 from graide.makegdl.glyph import Glyph
 from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import ElementTree, parse, Element
@@ -132,6 +132,13 @@ class Font(object) :
         u = e.get('usv')
         if u and u.startswith('U+') : u = u[2:]
         if u : g.uid = u
+            
+        inFile = e.get("inFile")
+        atLine = e.get("atLine")
+        atLine = int(atLine) if atLine else 0
+        atLine = atLine -1 # subtract 1 because GDX is 1-based but file editor is 0-based
+        if inFile : g.fileLoc = (inFile, atLine)
+            
         for a in e.iterfind('glyphAttrValue') :
             n = a.get('name')
             m = re.match(ur'^justify.(\d).([^.]+)', n)
@@ -143,6 +150,8 @@ class Font(object) :
                 mirrorglyph = a.get('value')
             #elif n in ('*actualForPseudo*', 'breakweight', 'directionality') :
             #    pass
+            elif n.startswith('collision') :
+                g.setCollisionProp(n[10:], int(a.get('value')))
             elif n.endswith('.x') :
                 g.setAnchor(n[:-2], int(a.get('value')), None)
             elif n.endswith('.y') :

@@ -50,8 +50,10 @@ from graide.utils import ModelSuper, DataObj
 from tempfile import NamedTemporaryFile, TemporaryFile
 from ConfigParser import RawConfigParser
 import json, os, sys, re
-import codecs  ### debug
+import codecs, traceback  ### debug
 
+# Debugging:
+#for line in traceback.format_stack(): print line.strip()
 
 class MainWindow(QtGui.QMainWindow) :
 
@@ -473,7 +475,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
         self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
         self.glyph_vb.setSpacing(Layout.buttonSpacing)
-        self.glyphAttrib = AttribView()
+        self.glyphAttrib = AttribView(self)
         self.glyph_vb.addWidget(self.glyphAttrib)
         self.glyph_bbox = QtGui.QWidget(self.tab_glyph)
         self.glyph_hb = QtGui.QHBoxLayout(self.glyph_bbox)
@@ -504,7 +506,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_info.addTab(self.tab_glyph, "Glyph")
         
         # Slot tab
-        self.tab_slot = AttribView()
+        self.tab_slot = AttribView(self)
         self.tab_info.addTab(self.tab_slot, "Slot")
         
         # Classes tab

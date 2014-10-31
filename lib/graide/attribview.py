@@ -21,6 +21,9 @@
 
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
+import traceback
+
+#for line in traceback.format_stack(): print line.strip()
 
 class LinePlainTextEdit(QtGui.QPlainTextEdit) :
 
@@ -41,7 +44,9 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
 
     def createEditor(self, parent, option, index) :
         dat = index.data()
-        if index.column() == 1 and dat and len(dat) > 20 :
+        if index.column() == 0 :
+            pass
+        elif index.column() == 1 and dat and len(dat) > 20 :
             editor = LinePlainTextEdit(parent)
             editor.editFinished.connect(self.commitAndCloseEditor)
             editor.setMinimumHeight(100)
@@ -68,12 +73,12 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
 
 class Attribute(object) :
 
-    def __init__(self, name, getter, setter, istree = False, *parms) :
+    def __init__(self, name, getter, setter, istree = False, *params) :
         self.name = name
         self.setter = setter
         self.getter = getter
-        self.params = parms
-        self.tree = parms[0] if istree else None
+        self.params = params
+        self.tree = params[0] if istree else None
 
     def child(self, row) :
         if self.tree :
@@ -97,8 +102,8 @@ class Attribute(object) :
             self.name = value
             return True
         elif column == 1 and self.setter:
-            parms = list(self.params[:]) + [value]
-            self.setter(*parms)
+            params = list(self.params[:]) + [value]
+            self.setter(*params)
             return True
         return False
 
@@ -108,11 +113,12 @@ class Attribute(object) :
 
 class AttribModel(QtCore.QAbstractItemModel) :
 
-    def __init__(self, data, parent = None, root = None) :
+    def __init__(self, data, parent = None, root = None) : # data is a list of Attributes
         super(AttribModel, self).__init__(parent)
         self.__data = data
         self.__root = root if root else self
         self.__parent = parent
+            
 
     def add(self, data) :
         self.__data.append(data)
@@ -191,16 +197,18 @@ class AttribModel(QtCore.QAbstractItemModel) :
 
 class AttribView(QtGui.QTreeView) :
 
-    def __init__(self, parent = None) :
+    def __init__(self, app, parent = None) :
         super(AttribView, self).__init__(parent)
+        self.app = app
         self.header().setStretchLastSection(True)
         self.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.header().hide()
         self.attribDelegate = AttributeDelegate(self)
+        #self.setItemDelegateForColumn(0, self.attribDelegate)
         self.setItemDelegateForColumn(1, self.attribDelegate)
 
     @QtCore.Slot(DataObj, ModelSuper)
-    def changeData(self, data, model) :
+    def changeData(self, data, model) :  # data is a Slot, GraideGlyph, etc., model is eg RunView
         self.data = data
         self.model = data.attribModel() if data else None
         self.setModel(self.model)
@@ -209,6 +217,14 @@ class AttribView(QtGui.QTreeView) :
     def removeCurrent(self) :
         index = self.currentIndex()
         self.model.setData(index, None, QtCore.Qt.EditRole)
+        
+    def mouseDoubleClickEvent(self, event) :
+        super(AttribView, self).mouseDoubleClickEvent(event)
+        col = self.currentIndex().column()
+        row = self.currentIndex().row()
+        lineAndFile = self.data.lineAndFile(row, col)
+        if lineAndFile : 
+            self.app.selectLine(*lineAndFile)
 
 if __name__ == '__main__' :
 

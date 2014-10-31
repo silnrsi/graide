@@ -19,7 +19,7 @@
 
 from xml.etree.cElementTree import iterparse
 from graide.makegdl.glyph import isMakeGDLSpecialClass
-import os
+import os, traceback
 
 class Gdx(object) :
 
@@ -60,6 +60,8 @@ class Gdx(object) :
                         if len(c) == 1 and g and g.GDLName() == n :
                             pass
                         elif not isMakeGDLSpecialClass(n) :
+                            # Note: subtract 1 from the line number because the GDX file 1-based,
+                            # the file editor is 0-based.
                             if not apgdlfile :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
                             elif n not in font.classes or ronly :
