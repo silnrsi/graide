@@ -135,12 +135,13 @@ class Font(object) :
             
         inFile = e.get("inFile")
         atLine = e.get("atLine")
-        atLine = int(atLine) if atLine else 0
-        atLine = atLine -1 # subtract 1 because GDX is 1-based but file editor is 0-based
-        if inFile : g.fileLoc = (inFile, atLine)
+        atLine = int(atLine)-1 if atLine else -1  # subtract 1 because GDX is 1-based but file editor is 0-based
+        if inFile : g.addLineAndFile("gid", inFile, atLine)
             
         for a in e.iterfind('glyphAttrValue') :
             n = a.get('name')
+            inFile = a.get("inFile")
+            atLine = a.get("atLine")
             m = re.match(ur'^justify.(\d).([^.]+)', n)
             if m :
                 g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
@@ -158,9 +159,15 @@ class Font(object) :
                 g.setAnchor(n[:-2], None, int(a.get('value')))
             elif n.find('.') == -1 :
                 g.setGdlProperty(n, a.get('value'))
+            
+            if inFile :
+                atLine = int(atLine) - 1 if atLine else -1
+                g.addLineAndFile(n, inFile, atLine)
+
         if storemirror and mirrorglyph :
             g.setGdlProperty('mirror.glyph', mirrorglyph)
             g.setGdlProperty('mirror.isEncoded', '1')
+            
 
     def renameGlyph(self, g, name, gdlname = None) :
         if g.psname != name :

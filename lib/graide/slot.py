@@ -48,12 +48,12 @@ class Slot(DataObj) :
         res = []
         for k in ('index', 'id', 'gid', 'break', 'insert', 'justification') :
             if hasattr(self, k) :
-                res.append(Attribute(k, self.__getattribute__, None, False, k))
+                res.append(Attribute(k, self.__getattribute__, None, False, None, k))
         for k in ('origin', 'advance', "shift") :
             if hasattr(self, k) :
-                res.append(Attribute(k, self.getPos, None, False, k))
+                res.append(Attribute(k, self.getPos, None, False, None, k))
         for k in ('before', 'after') :
-            res.append(Attribute(k, self.getCharInfo, None, False, k))
+            res.append(Attribute(k, self.getCharInfo, None, False, None, k))
             
         if hasattr(self, 'collision') :
             cres = []
@@ -64,21 +64,21 @@ class Slot(DataObj) :
             cres.append(Attribute('shift', self.getColShift, None, False))
             
         if hasattr(self, 'parent') :
-            res.append(Attribute('parent', self.getParent, None, False, 'parent'))
+            res.append(Attribute('parent', self.getParent, None, False, None, 'parent'))
             res.append(Attribute('parent offset', self.getOffset, None, False))
             
         resAttrib = AttribModel(res)
 
         ures = []
         for i in range(len(self.user)) :
-            ures.append(Attribute(str(i), self.getUser, None, False, i))
+            ures.append(Attribute(str(i), self.getUser, None, False, None, i))
             
         if hasattr(self, 'collision') :
             cAttrib = AttribModel(cres, resAttrib)
-            resAttrib.add(Attribute('collision', None, None, True, cAttrib))
+            resAttrib.add(Attribute('collision', None, None, True, None, cAttrib))
 
         uAttrib = AttribModel(ures, resAttrib)
-        resAttrib.add(Attribute('user attributes', None, None, True, uAttrib))
+        resAttrib.add(Attribute('user attributes', None, None, True, None, uAttrib))
         return resAttrib
 
     def getPos(self, name) :

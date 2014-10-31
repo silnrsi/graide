@@ -60,6 +60,7 @@ class GlyphItem(object) :
             self.pixmaps[height] = ftGlyph(self.face, self.gid)
         return self.pixmaps[height]
 
+
 class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
 
     anchorChanged = QtCore.Signal(str, int, int)
@@ -70,67 +71,88 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         self.item = item
         self.isHigh = False
         self.justifies = []
-        self.fileLoc = None
+        self.fileLocs = {}   # file locations where attributes are set
 
     def __str__(self) :
         return self.psname
 
     def attribModel(self) :
-        res = []
-        res.append(Attribute('glyph number', self.__getattribute__, None, False, 'gid')) # read-only
-        res.append(Attribute('GDL name', self.GDLName, self.setGDL))
-        res.append(Attribute('Postscript', self.__getattribute__, None, False, 'psname')) #read-only
-        res.append(Attribute('USV', self.__getattribute__, self.__setattr__, False, 'uid'))
-        res.append(Attribute('comment', self.__getattribute__, self.__setattr__, False, 'comment'))
+        attrList = []
+        
+        defaultFloc = self._fileLoc("gid")
+        attrList.append(Attribute('glyph number', self.__getattribute__, None, False, defaultFloc, 'gid')) # read-only
+        attrList.append(Attribute('GDL name', self.GDLName, None, fileLoc=defaultFloc))  ## self.setGDL
+        attrList.append(Attribute('Postscript', self.__getattribute__, None, False, defaultFloc, 'psname')) #read-only
+        #attrList.append(Attribute('USV', self.__getattribute__, self.__setattr__, False, 'uid'))
+        attrList.append(Attribute('USV', self.__getattribute__, None, False, defaultFloc, 'uid'))
+        attrList.append(Attribute('comment', self.__getattribute__, None, False, None, 'comment')) ## self.__setattr__, False, 'comment'))
+
         for a in sorted(self.properties.keys()) :
-            res.append(Attribute(a, self.getProperty, self.setPropertyX, False, a))
+            # classes
+            attrList.append(Attribute(a, self.getProperty, None, False, self._fileLoc(a), a))  ## self.setPropertyX
+            
         for a in sorted(self.gdl_properties.keys()) :
+            # breakweight, dir, mirror, etc.
             if a == "*actualForPseudo*" :
                 actual = self.getGdlProperty("*actualForPseudo*")
                 if actual != 0 :
-                    res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
+                    attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), a)) ## self.setGdlProperty
             else :
-                res.append(Attribute(a, self.getGdlProperty, self.setGdlProperty, False, a))
+                attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), a))  ## self.setGdlProperty
                 
-        resAttrib = AttribModel(res)
+        topModel = AttribModel(attrList) # top-level structure
         
         # points
-        pres = []
+        ptAttrList = []
+        ptModel = AttribModel(ptAttrList, topModel) # sub-tree for points
         for k in sorted(self.anchors.keys()) :
-            pres.append(Attribute(k, self.getPoint, self.setPoint, False, k))
-        pAttrib = AttribModel(pres, resAttrib)
-        resAttrib.add(Attribute('points', None, None, True, pAttrib))
+            ptAttrList.append(Attribute(k, self.getPoint, None, False, self._fileLoc(k), k))  ## self.setPoint
+        topModel.add(Attribute('points', None, None, True, None, ptModel))
         
-        # justification
+        # justification - TODO clean up line-and-file stuff for multiple levels
         if len(self.justifies) :
-            jAttrib = AttribModel([], resAttrib)
-            for (i, j) in enumerate(self.justifies) :
-                jlevel = []
+            jModel = AttribModel([], topModel)  # sub-tree for justify attrs
+            for (iLevel, j) in enumerate(self.justifies) :
+                jlAttrs = [] # list of justify attrs at this level
+                lModel = AttribModel(jlAttrs, jModel)  # sub-tree for this level
                 for k in j.keys() :
-                    jlevel.append(Attribute(k, self.getJustify, None, False, i, k))
-                lAttrib = AttribModel(jlevel, jAttrib)
-                jAttrib.add(Attribute(str(i), None, None, True, lAttrib))
-            resAttrib.add(Attribute('justify', None, None, True, jAttrib))
+                    fullName = "justify." + string(iLevel) + "." + k
+                    jlAttrs.append(Attribute(k, self.getJustify, None, False,
+                            self._fileLoc(fullName), iLevel, k))
+                jModel.add(Attribute(str(iLevel), None, None, True, None, lModel))
+            topModel.add(Attribute('justify', None, None, True, None, jModel))
         
         #collision
-        cres = []
+        colAttrList = []
         if (len(self.collisionProps)) :
+            colModel = AttribModel(colAttrList, topModel) # sub-tree for collision
             for k in sorted(self.collisionProps.keys()) :
-                cres.append(Attribute(k, self.getCollision, None, False, k))
-            cAttrib = AttribModel(cres, resAttrib)
-            resAttrib.add(Attribute('collision', None, None, True, cAttrib))
+                colAttrList.append(Attribute(k, self.getCollision, None, False, self._fileLoc("collision."+k), k))
+            topModel.add(Attribute('collision', None, None, True, None, colModel))
         
-        return resAttrib
+        return topModel
     
     # Return line-and-file info corresponding to this row and column.  
     def lineAndFile(self, row, col) :
         if row == 0 or row == 1 or row == 2 : # glyph ID, GDL name, or PS name
             if self.fileLoc[0] :
-                return self.fileLoc[:2]
+                return self.fileLoc[0][:2]
             else :
                 return None
         else :
             return None
+    
+    # Store a line-and-file associated with a glyph attribute.
+    def addLineAndFile(self, attrName, inFile, atLine) :
+        self.fileLocs[attrName] = (inFile, atLine);
+        
+    def _fileLoc(self, attrName) :
+        if attrName in self.fileLocs :
+            x = self.fileLocs[attrName]
+        else :
+            x = self.fileLocs["gid"]
+        ###print attrName, x
+        return x
 
     def getProperty(self, key) :
         return self.properties[key]

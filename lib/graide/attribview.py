@@ -73,12 +73,14 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
 
 class Attribute(object) :
 
-    def __init__(self, name, getter, setter, istree = False, *params) :
+    def __init__(self, name, getter, setter, isTree = False, fileLoc = None, *params) :
         self.name = name
         self.setter = setter
         self.getter = getter
         self.params = params
-        self.tree = params[0] if istree else None
+        self.isTree = isTree # debugging
+        self.tree = params[0] if isTree else None  # an AttribModel, if this has an embedded tree
+        self.fileLoc = fileLoc
 
     def child(self, row) :
         if self.tree :
@@ -110,6 +112,25 @@ class Attribute(object) :
     def isEditable(self, column) :
         if self.setter : return True
         return False
+        
+    def getFileLoc(self, treePath) :
+        if self.fileLoc :
+            return self.fileLoc
+        elif self.tree :
+            return self.tree.fileLocAt(treePath)   # tree is an AttribModel
+        else :
+            return None
+        
+    def debugPrintData(self) :
+        print self.name
+        if self.isTree : 
+            print ">>>"
+            self.tree.debugPrintData()
+            print "<<<"
+
+
+# An AttribModel consists of a list of Attributes, corresponding to a row in the AttribView control.
+# An Attribute can be a sub-tree which in turn contains an AttribModel with the list of sub-items
 
 class AttribModel(QtCore.QAbstractItemModel) :
 
@@ -119,7 +140,6 @@ class AttribModel(QtCore.QAbstractItemModel) :
         self.__root = root if root else self
         self.__parent = parent
             
-
     def add(self, data) :
         self.__data.append(data)
 
@@ -194,6 +214,19 @@ class AttribModel(QtCore.QAbstractItemModel) :
         if res :
             self.__root.dataChanged.emit(index, index)
         return res
+        
+    def fileLocAt(self, treePath) :
+        i = treePath[0]
+        attrData = self.__data[i]
+        return attrData.getFileLoc(treePath[1:])
+
+        
+    def debugPrintData(self) :
+        print self.__data
+        for d in self.__data :
+            d.debugPrintData()
+
+            
 
 class AttribView(QtGui.QTreeView) :
 
@@ -204,8 +237,7 @@ class AttribView(QtGui.QTreeView) :
         self.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.header().hide()
         self.attribDelegate = AttributeDelegate(self)
-        #self.setItemDelegateForColumn(0, self.attribDelegate)
-        self.setItemDelegateForColumn(1, self.attribDelegate)
+        #self.setItemDelegateForColumn(1, self.attribDelegate)
 
     @QtCore.Slot(DataObj, ModelSuper)
     def changeData(self, data, model) :  # data is a Slot, GraideGlyph, etc., model is eg RunView
@@ -220,11 +252,18 @@ class AttribView(QtGui.QTreeView) :
         
     def mouseDoubleClickEvent(self, event) :
         super(AttribView, self).mouseDoubleClickEvent(event)
-        col = self.currentIndex().column()
+        
+        # Generate a path to where the click was in the tree control.
         row = self.currentIndex().row()
-        lineAndFile = self.data.lineAndFile(row, col)
-        if lineAndFile : 
-            self.app.selectLine(*lineAndFile)
+        parentIndex = self.currentIndex().parent()
+        treePath = [row]
+        while parentIndex.row() > -1 :
+            treePath.insert(0, parentIndex.row()) # prepend
+            parentIndex = parentIndex.parent()
+
+        fileLoc = self.model.fileLocAt(treePath)
+        if fileLoc : 
+            self.app.selectLine(*fileLoc)
 
 if __name__ == '__main__' :
 
