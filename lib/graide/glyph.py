@@ -77,6 +77,10 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         return self.psname
 
     def attribModel(self) :
+        
+        print "GraideGlyph::attribModel"
+        print self.fileLocs
+        
         attrList = []
         
         defaultFloc = self._fileLoc("gid")
@@ -149,8 +153,10 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     def _fileLoc(self, attrName) :
         if attrName in self.fileLocs :
             x = self.fileLocs[attrName]
-        else :
+        elif "gid" in self.fileLocs :
             x = self.fileLocs["gid"]
+        else :
+            x = None
         ###print attrName, x
         return x
 

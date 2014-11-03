@@ -728,7 +728,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     QtCore.Slot(DataObj, ModelSuper, bool)
     def glyphSelected(self, data, model, doubleClick) :
-        # data = GraideGlyph, model = RunView
+        # data = GraideGlyph, model = RunView, FontView
         self.glyphAttrib.changeData(data, model)
         if doubleClick:
             self.tab_info.setCurrentWidget(self.tab_glyph)
