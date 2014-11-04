@@ -20,6 +20,7 @@
 import os, subprocess, re, sys
 from tempfile import mktemp
 from shutil import copyfile
+from PySide import QtCore, QtGui
 from xml.etree import cElementTree as XmlTree
 
 mainapp = None
@@ -200,6 +201,7 @@ def ETinsert(elem, child) :
             return
     elem.append(child)
 
+# Return the file p with a path relative to the given base.
 def relpath(p, base) :
     d = os.path.dirname(base) or '.'
     return os.path.relpath(p, d)
@@ -306,3 +308,9 @@ def generateTweakerGDL(config, app) :
     app.tab_tweak.acceptPending(tweakxmlfile)
     
     return ""  # success
+    
+def popUpError(msg) :
+    dlg = QtGui.QMessageBox()
+    dlg.setText(msg)
+    dlg.setWindowTitle("Graide")
+    dlg.exec_()

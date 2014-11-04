@@ -22,7 +22,7 @@ from PySide import QtCore, QtGui
 from graide import freetype
 import array, ctypes, re, traceback
 from graide.attribview import Attribute, AttribModel
-from graide.utils import DataObj
+from graide.utils import DataObj, popUpError
 from graide.makegdl.glyph import Glyph as gdlGlyph
 
 
@@ -193,10 +193,8 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             try :
                 (x, y) = map(int, re.split(r",\s*", value[1:-1]))
             except :
-                msg = "Please use the format (x, y)."
-                errorDialog = QtGui.QMessageBox()
-                errorDialog.setText(msg)
-                errorDialog.exec_()
+                popUpError("Please use the format (x, y).")
+
         self.setAnchor(key, x, y)
     
     def getCollision(self, key) :

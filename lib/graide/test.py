@@ -22,7 +22,7 @@ from PySide import QtGui
 from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
 from graide.layout import Layout
-from graide.utils import configintval, as_entities
+from graide.utils import configintval, as_entities, popUpError
 import re
 
 class Test(object) :
@@ -163,8 +163,6 @@ class Test(object) :
             if self.rtl : e.set('rtl', 'True')
             if self.width != 100 : e.set('expand', str(self.width))
         except :
-            msg = "ERROR: test could not be saved: " + self.name
-            errorDialog = QtGui.QMessageBox()
-            errorDialog.setText(msg)
-            errorDialog.exec_()
+            popUpError(msg = "ERROR: test could not be saved: " + self.name)
+
         return e

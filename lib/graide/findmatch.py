@@ -25,7 +25,7 @@ from rungraphite import makeFontAndFace
 
 from PySide import QtCore, QtGui
 from graide.test import Test
-from graide.utils import configval, configintval, reportError, as_entities, relpath, ETcanon, ETinsert
+from graide.utils import configval, configintval, reportError, as_entities, relpath, ETcanon, ETinsert, popUpError
 from graide.run import Run
 from graide.runview import RunView
 from graide.layout import Layout
@@ -125,11 +125,7 @@ class GlyphPatternMatcher() :
                 
             else :
                 self.pattern = ""               
-                msg = "ERROR: '" + item + "' is not a valid class or glyph name."
-                #reportError(msg)
-                errorDialog = QtGui.QMessageBox()
-                errorDialog.setText(msg)
-                errorDialog.exec_()
+                popUpError("ERROR: '" + item + "' is not a valid class or glyph name.")
 
                 return
             

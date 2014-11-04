@@ -347,7 +347,10 @@ class TestList(QtGui.QWidget) :
         if fs is None:
             fs = h.makeelement('fontsrc', {})
             ETinsert(h, fs)
-        fs.text = 'url(' + relpath(self.app.fontFileName, fname) + ')'
+        if self.app.fontFileName :
+            fs.text = 'url(' + relpath(self.app.fontFileName, fname) + ')'
+        else :
+            fs.text = 'url(unknown font)'
         used = set()
         for i in range(len(self.testGroups)) :
             g = et.SubElement(e, 'testgroup')

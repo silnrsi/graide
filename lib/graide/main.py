@@ -27,7 +27,7 @@ from graide.runview import RunView
 from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler, as_entities
+from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler, as_entities, popUpError
 from graide.layout import Layout
 from graide.rungraphite import runGraphite, makeFontAndFace, runGraphiteWithFontFace
 from graide.featureselector import make_FeaturesMap, FeatureDialog
@@ -107,7 +107,12 @@ class MainWindow(QtGui.QMainWindow) :
                 
         print "Loading font..." #===
         if config.has_option('main', 'font') :
-            self.loadFont(config.get('main', 'font'))
+            fontname = config.get('main', 'font')
+            if fontname == None or fontname == "" :
+                popUpError("WARNING: No font file specified")
+            elif not os.path.exists(fontname) :
+                popUpError("WARNING: Font file " + fontname + " does not exist.")
+            self.loadFont(fontname)
         elif self.cfgFileName is None or self.cfgFileName == "":
             # show() function will force them to create one.
             pass
@@ -195,12 +200,10 @@ class MainWindow(QtGui.QMainWindow) :
         fontFile = self.config.get('main', 'font') if self.config.has_option('main', 'font') else ""
         while fontFile is None or fontFile == "" or not os.path.exists(fontFile) :
             if fontFile == "" or not os.path.exists(fontFile) :
-                errorDialog = QtGui.QMessageBox()
                 if fontFile is None or fontFile == "" :
-                    errorDialog.setText("Please choose a valid .TTF file.")
+                    popUpError("Please choose a valid .TTF file.")
                 else :
-                    errorDialog.setText("Font file '" + fontFile + "' does not exist.")
-                errorDialog.exec_()
+                    popUpError("Font file '" + fontFile + "' does not exist.")
             # Configuration has no font - get them to set it.
             okCancel = self.runConfigDialog()
             if not okCancel : self.doExit()
@@ -250,7 +253,7 @@ class MainWindow(QtGui.QMainWindow) :
         else :
             fontsize = 40
         self.fontFileName = str(fontname)
-        self.fonttime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
+        self.fontBuildTime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
         self.font.loadFont(self.fontFileName, fontsize)
         self.feats = make_FeaturesMap(self.fontFileName) # map languages to features
         
@@ -820,7 +823,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         #    # Error in saving code or building 
         #    return
             
-        if os.stat(self.fontFileName).st_ctime > self.fonttime :
+        if os.stat(self.fontFileName).st_ctime > self.fontBuildTime :
             self.loadFont(self.fontFileName)
         
         if not self.currFeats and self.currLang not in self.feats :
@@ -1066,6 +1069,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
+        print "_configOpenExisting"
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()
@@ -1081,35 +1085,27 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         try :
             self.config.read(cfgFileName)
         except :
-            errorDialog = QtGui.QMessageBox()
-            errorDialog.setText("ERROR: configuration file " + cfgFileName + " could not be read.")
-            errorDialog.exec_()
-            return false
+            popUpError("ERROR: configuration file " + cfgFileName + " could not be read.")
+            return False
 
         if self.config.has_option('main', 'font') :
             fontFileName = self.config.get('main', 'font')
             if not os.path.exists(fontFileName) :
-                errorDialog = QtGui.QMessageBox()
-                errorDialog.setText("ERROR: font file " + fontFileName + " does not exist.")
-                errorDialog.exec_()
+                popUpError("ERROR: font file " + fontFileName + " does not exist.")
                 return False  # fail and try to open a different project
             self.loadFont(fontFileName)
             
             if self.config.has_option('main', 'ap') :
                 apFileName = self.config.get('main', 'ap')
                 if not os.path.exists(apFileName) :
-                    errorDialog = QtGui.QMessageBox()
-                    errorDialog.setText("WARNING: AP file " + apFileName + " does not exist.")
-                    errorDialog.exec_()
+                    popUpError("WARNING: AP file " + apFileName + " does not exist.")
                 else :
                     self.loadAP(apFileName)
             
         if self.config.has_option('main', 'testsfile') :
             testsFileName = self.config.get('main', 'testsfile')
             if not os.path.exists(testsFileName) :
-                errorDialog = QtGui.QMessageBox()
-                errorDialog.setText("WARNING: Tests file " + testsFileName + " does not exist.")
-                errorDialog.exec_()
+                popUpError("WARNING: Tests file " + testsFileName + " does not exist.")
             else :
                 self.loadTests(testsFileName)
             

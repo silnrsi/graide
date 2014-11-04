@@ -77,6 +77,7 @@ class FindDialog(QtGui.QDialog) :
 # end of class FileDialog
 
 
+
 class EditFile(QtGui.QPlainTextEdit) :
 
     highlightFormat = None
@@ -91,6 +92,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.lineSelection.format = QtGui.QTextCharFormat()
         self.lineSelection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.lineSelection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
+        self.modTime = None
                 
         font = QtGui.QFont(fontspec)
         font.setPointSize(size)
@@ -167,6 +169,24 @@ class EditFile(QtGui.QPlainTextEdit) :
         f = file(self.fname)
         self.setPlainText("".join(f.readlines()))
         f.close()
+        self.modTime = os.stat(self.fname).st_mtime
+        
+    def reloadIfModified(self) :
+        if not self.modTime :
+            self.reload()
+        elif not self.modTime or os.stat(self.fname).st_mtime > self.modTime :
+            msgBox = QtGui.QMessageBox()
+            msgBox.setWindowTitle("Reload " + self.fname)
+            msgBox.setText("The '" + self.fname + "' file has been modified. Reload it?")
+            msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+            msgBox.setDefaultButton(QtGui.QMessageBox.Yes)
+            reload = (msgBox.exec_() == QtGui.QMessageBox.Yes)
+            if reload :
+                self.reload()
+            else :
+                # Set the current file's modTime anyway, to pretend like we loaded it,
+                # so we don't keep asking.
+                self.modTime = os.stat(self.fname).st_mtime
 
     def closeEvent(self, event) :
         self.fileTabs.deleteOpenFile(self.fname)
@@ -180,10 +200,6 @@ class EditFile(QtGui.QPlainTextEdit) :
     def searchFwd(self) :
         targetText = self.findDialog.targetText()
         self.find(targetText)
-        
-        cTmp = self.cursor
-        print cTmp.__class__
-
 
     def searchBwd(self) :
         targetText = self.findDialog.targetText()
@@ -196,6 +212,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self.findDialog.hide()
 
     def gainedFocus(self) :
+        self.fileTabs.reloadModifiedFiles()
         if self.findIsOpen :
             self.findDialog.show()
         selectedText = self.textCursor().selectedText()
@@ -206,6 +223,7 @@ class EditFile(QtGui.QPlainTextEdit) :
         self._updateLabel()
             
     def mouseReleaseEvent(self, event) :
+        self.fileTabs.reloadModifiedFiles()
         super(EditFile,self).mouseReleaseEvent(event)
         selectedText = self.textCursor().selectedText()
         self.fileTabs.setSelectedText(selectedText)
@@ -398,5 +416,9 @@ class FileTabs(QtGui.QTabWidget) :
         if not self.app.config.has_section('window') :
             self.app.config.add_section('window')
         self.app.config.set('window', 'openfiles', openFileString)
+        
+    def reloadModifiedFiles(self) :
+        for i in range(self.count()) :
+            self.widget(i).reloadIfModified()
         
 #end of class FileTabs

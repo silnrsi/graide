@@ -22,7 +22,7 @@ from PySide import QtCore, QtGui
 from xml.etree import cElementTree as XmlTree
 from graide.font import GraideFont
 from graide.test import Test
-from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
+from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert, popUpError
 from graide.layout import Layout
 from graide.run import Run
 from graide.runview import GlyphPixmapItem, RunView
@@ -138,10 +138,7 @@ class Tweak(Test) :
                 gf.set('shifty-pending', str(twglyph.shifty_pending))
                 
         except :
-            msg = "ERROR: tweak could not be saved: " + self.name
-            errorDialog = QtGui.QMessageBox()
-            errorDialog.setText(msg)
-            errorDialog.exec_()
+            popUpError("ERROR: tweak could not be saved: " + self.name)
             
         return e
         
