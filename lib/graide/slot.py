@@ -71,7 +71,7 @@ class Slot(DataObj) :
 
         ures = []
         for i in range(len(self.user)) :
-            ures.append(Attribute(str(i), self.getUser, None, False, None, i))
+            ures.append(Attribute(str(i+1), self.getUser, None, False, None, i))
             
         if hasattr(self, 'collision') :
             cAttrib = AttribModel(cres, resAttrib)
