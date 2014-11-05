@@ -171,6 +171,12 @@ class MainWindow(QtGui.QMainWindow) :
             self._ensureMainGdlFile()
             self._openFileList()
         
+        if (self.tab_font) :
+            # This helps ensure the cells of the Font tab are the right size.
+            # It has to be done at the very last minute.
+            self.tab_font.resizeRowsToContents()
+            self.tab_font.resizeColumnsToContents()
+        
         
     def runStartupDialog(self, delayedInit = False) :
         result = (not self.cfgFileName is None or self.cfgFileName == "")
@@ -241,7 +247,7 @@ class MainWindow(QtGui.QMainWindow) :
         
 
     def loadFont(self, fontname) :
-
+        
         if fontname == None : return
         if fontname == "" : return
         if not os.path.exists(fontname) : return
@@ -274,6 +280,7 @@ class MainWindow(QtGui.QMainWindow) :
                 self.tab_results.setCurrentIndex(i)
                 self.tab_classes.classSelected.connect(self.font.classSelected)
             self.tab_classes.loadFont(self.font)
+
         if hasattr(self, 'runView') :
             self.runView.gview.setFixedHeight(self.font.pixrect.height())
             
@@ -1069,7 +1076,6 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
-        print "_configOpenExisting"
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()

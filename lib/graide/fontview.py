@@ -21,6 +21,9 @@
 
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
+import traceback
+
+#for line in traceback.format_stack(): print line.strip()
 
 class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
