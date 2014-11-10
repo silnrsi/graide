@@ -44,12 +44,13 @@ class Slot(DataObj) :
         self.highlightType = ""
 
     def attribModel(self) :
-
         res = []
-        for k in ('index', 'id', 'gid', 'break', 'insert', 'justification') :
-            if hasattr(self, k) :
-                res.append(Attribute(k, self.__getattribute__, None, False, None, k))
-        for k in ('origin', 'advance', "shift") :
+        for pair in (('index', 'index'), ('glyph number','gid'), ('slot ID', 'id'), 
+                ('breakweight', 'break'), ('insert', 'insert'), ('justification', 'justification')) :
+            label,attr = pair
+            if hasattr(self, attr) :
+                res.append(Attribute(label, self.__getattribute__, None, False, None, attr))
+        for k in ('origin', 'advance', 'shift') :
             if hasattr(self, k) :
                 res.append(Attribute(k, self.getPos, None, False, None, k))
         for k in ('before', 'after') :
@@ -64,7 +65,7 @@ class Slot(DataObj) :
             cres.append(Attribute('shift', self.getColShift, None, False))
             
         if hasattr(self, 'parent') :
-            res.append(Attribute('parent', self.getParent, None, False, None, 'parent'))
+            res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
             res.append(Attribute('parent offset', self.getOffset, None, False))
             
         resAttrib = AttribModel(res)
