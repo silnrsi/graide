@@ -298,7 +298,7 @@ class PassesView(QtGui.QTableWidget) :
             self.updateScroll(self.rowCount() - 1)
         else :
             # scrollWhere is an integer
-            print "scrolling to row",scrollWhere
+            #print "scrolling to row",scrollWhere
             item = self.item(scrollWhere, 0)
             self.scrollToItem(item)
             
