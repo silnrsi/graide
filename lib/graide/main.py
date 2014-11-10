@@ -703,10 +703,11 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         qCleanupResources()
       
     def infoTabChanged(self) :
-        # TODO: figure out which tab is current and update the matching bottom tab.
-        # For now, do all of them.
-        self.tab_posedit.updatePositions()
-        self.tab_tweak.updatePositions()
+        # Don't call updatePositions unnecessarily, because it causes a switch of focus.
+        if self.tab_info.currentWidget() == self.tab_tweak :
+            self.tab_tweak.updatePositions()
+        elif self.tab_info.currentWidget() == self.tab_posedit :
+            self.tab_posedit.updatePositions()
 
     def _saveProjectData(self) :
         self.recentProjects.addProject(self.cfgFileName)  # remember that this was a recent project
