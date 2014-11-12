@@ -146,6 +146,7 @@ class EditFile(QtGui.QPlainTextEdit) :
             f = codecs.open(self.fname, "w", encoding="UTF-8")
             f.write(self.document().toPlainText())
             f.close()
+            self.modTime = os.stat(self.fname).st_mtime
             self.document().setModified(False)
             self._updateLabel()
             return True
