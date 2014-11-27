@@ -25,6 +25,7 @@
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
+import os, time
 
 class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
@@ -42,8 +43,8 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
             self.model.glyphClicked(self, self.index, False)
             
     def mouseDoubleClickEvent(self, mouseEvent) :
-        if self.model :
-            self.model.glyphClicked(self, self.index, True)
+        if self.scene :
+            self.scene.mouseDoubleClickEvent(mouseEvent)
 
     def select(self, state) :
         self.selected = state
@@ -89,12 +90,14 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.parent = parent
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
+        self.gview.mouseDoubleClickEvent = self.sEvent
         if font : 
             self.gview.resize(self.gview.size().width(), max(font.pixrect.height(), RunView.MinHt))
         else :
             self.gview.resize(200, RunView.MinHt)
         self._scene = QtGui.QGraphicsScene(self.gview) # the scene contains the pixmaps
         self._scene.keyPressEvent = self.keyPressEvent
+        self._scene.mouseDoubleClickEvent = self.sEvent
         self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
         self.tview.mousePressEvent = self.tEvent
@@ -266,6 +269,26 @@ class RunView(QtCore.QObject, ModelSuper) :
                 return True
         return False
         
+    def sEvent(self, event) :
+        if event.type() == QtCore.QEvent.MouseButtonDblClick :
+            image = QtGui.QImage(self._scene.width(), self._scene.height(), QtGui.QImage.Format_ARGB32)
+            image.fill(0xFFFFFFFF)
+            painter = QtGui.QPainter()
+            painter.begin(image)
+            self._scene.render(painter)
+            #time.sleep(3)
+            painter.end()
+            count = 1
+            fname = ''
+            while True :
+                fname = 'graide_image_{}.png'.format(str(count))
+                if not os.path.exists(fname) :
+                    break
+                count += 1
+            image.save(fname)
+            #time.sleep(3)
+            print "Saved image to " + fname
+
     def clear(self) :
         self._scene.clear()
         self.tview.setPlainText("")

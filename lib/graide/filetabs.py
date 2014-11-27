@@ -85,6 +85,7 @@ class EditFile(QtGui.QPlainTextEdit) :
     def __init__(self, tabIndex, fname, abspath, fileTabs, size = 14, fontspec = 'mono', tabstop = 40) :
         super(EditFile, self).__init__()
         self.tabIndex = tabIndex
+        fname = fname.replace("\\", "/")
         self.fname = fname
         self.abspath = abspath
         self.fileTabs = fileTabs
