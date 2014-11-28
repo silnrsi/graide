@@ -92,7 +92,12 @@ class PassesView(QtGui.QTableWidget) :
             v.loadRun(run, font)
             l = self.item(num, 0)
         if tooltip : l.setToolTip(tooltip)
-        l.setBackground(Layout.activePassColour if highlight else QtGui.QColor(255, 255, 255))
+        if highlight == "active" :
+            l.setBackground(Layout.activePassColour)
+        elif highlight == "semi-active" :
+            l.setBackground(Layout.semiActivePassColour)
+        else :
+            l.setBackground(QtGui.QColor(255, 255, 255))
         l.highlight = highlight
         self.verticalHeader().setDefaultSectionSize(v.gview.size().height())
         return (v.gview.width(), v.tview.width())
@@ -172,10 +177,13 @@ class PassesView(QtGui.QTableWidget) :
                 if gdx :
                     pname += " - " + gdx.passtypes[j-1]  # j-1 because Init is not in the passtypes array
                 if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
-                    highlight = True
+                    highlight = "active"
                     self.rules.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
                 else :
                     self.rules.append(None)
+                    if 1 < j and j < num - 1 and gdx.passtypes[j-1] == "positioning":
+                        if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], json['passes'][j]['slots']) :
+                            highlight = "semi-active"
                     
                 # if passid == -1, NEXT pass is bidi pass
                     
@@ -186,6 +194,14 @@ class PassesView(QtGui.QTableWidget) :
         self.finishLoad(w, wt)
         
     # end of loadResults
+    
+    
+    def hasCollisionFixedSlot(self, prevSlots, thisSlots) :
+        for i, slotInfo in enumerate(thisSlots) :
+            prevInfo = prevSlots[i]
+            if slotInfo['collision']['shift'] != prevInfo['collision']['shift'] :
+                return True
+        return False
     
 
     def loadRules(self, font, json, inirun, gdx) :
@@ -276,8 +292,10 @@ class PassesView(QtGui.QTableWidget) :
     def selectRow(self, row) :
         if self.selectedRow >= 0 :
             it = self.item(self.selectedRow, 0)
-            if it.highlight :
+            if it.highlight == "active" :
                 it.setBackground(Layout.activePassColour)
+            elif it.highlight == "semi-active" :
+                it.setBackground(Layout.semiActivePassColour)
             else : 
                 it.setBackground(QtGui.QColor(255, 255, 255))
             w = self.cellWidget(self.selectedRow, 1)

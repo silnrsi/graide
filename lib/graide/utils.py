@@ -152,6 +152,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if getattr(sys, 'frozen', None) : parms['env'] = os.environ
     res = 1
     if grcompiler is not None :
+        print "Compiling..."
         res = subprocess.call((grcompiler, "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)
     if res :
         copyfile(tempname, fontfile)

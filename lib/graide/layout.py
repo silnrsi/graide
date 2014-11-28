@@ -29,6 +29,7 @@ class BaseLayout(object) :
     errorColour = QtGui.QColor(255, 160, 160)           # pink
     warnColour = QtGui.QColor(255, 255, 160)            # yellow
     activePassColour = QtGui.QColor(255, 255, 208)      # light yellow
+    semiActivePassColour = QtGui.QColor(255, 240, 215)  # light peach
     slotColours = {
         'default' : QtGui.QColor(0, 0, 0, 32),          # gray, semi-transparent
         'input' : QtGui.QColor(200, 00, 0, 32),         # pink, semi-transparent
