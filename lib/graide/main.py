@@ -76,7 +76,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.fontFaces = {}
         self.fontFileName = None
         self.apname = None
-        self.appTitle = "Graide v0.5"
+        self.appTitle = "Graide v0.8"
+        self.currConfigTab = 0
         
         self.debugCnt = 0  # debug
 
@@ -631,7 +632,7 @@ class MainWindow(QtGui.QMainWindow) :
         filemenu.addAction('&Reset Names', self.resetNames)
         filemenu.addAction('Exit', self.doExit)
         ################3
-        filemenu.addAction('Start-up...', self.runStartupDialog)
+        filemenu.addAction('Start up...', self.runStartupDialog)
 
         projectmenu = self.menuBar().addMenu("&Project")
         projectmenu.addAction(self.aCfg)
@@ -1056,7 +1057,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if not self.cfgFileName :
             self.configNewClicked()
             return
-        dialog = ConfigDialog(self.config)
+        dialog = ConfigDialog(self.config, self.currConfigTab)
         if dialog.exec_() :
             dialog.updateConfig(self, self.config)
             if self.cfgFileName :
@@ -1067,6 +1068,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             return True  # OK
         else :
             return False  # Cancel
+            
+    def setConfigTab(self, index) :
+        self.currConfigTab = index
 
     # Open an (existing) project.
     def configOpenClicked(self) :
