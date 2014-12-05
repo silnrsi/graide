@@ -355,7 +355,7 @@ class Font(object) :
             self.outclass(fh, "clig" + k, map(lambda x: self.gdls[x[0]], self.ligs[k]))
             self.outclass(fh, "cligno_" + k, map(lambda x: self.gdls[x[1]], self.ligs[k]))
         fh.write("\nendtable;\n")
-        fh.write("#define MAXGLYPH %d\n\n" % (len(self.glyphs) - 1))
+        fh.write("\n\n#define MAXGLYPH %d\n\n" % (len(self.glyphs) - 1))
 
     def outPosRules(self, fh, num) :
         fh.write("""

@@ -98,7 +98,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
         
-        if config.has_option('main', 'ap') :    # AP XML file
+        if config.has_option('main', 'ap') and not configval(config, 'build', 'apronly'):    # AP XML file
             # Generate the AP GDL file.
             apFilename = config.get('main', 'ap')
             font.saveAP(apFilename, gdlfile)
@@ -115,12 +115,12 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             font.createClasses()
             font.calculatePointClasses()
             font.ligClasses()
-            v = int(config.get('build', 'attpass'))
+            attPassNum = int(config.get('build', 'attpass'))
             f = file(gdlfile, "w")
             font.outGDL(f)
-            if v > 0 : font.outPosRules(f, v)
+            if attPassNum > 0 : font.outPosRules(f, attPassNum)
             if configval(config, 'build', 'gdlfile') :
-                f.write('#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
+                f.write('\n\n#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
             f.close()
             if app : app.updateFileEdit(gdlfile)
     else :
