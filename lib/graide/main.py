@@ -299,7 +299,8 @@ class MainWindow(QtGui.QMainWindow) :
                                 ronly = configintval(self.config, 'build', 'apronly'))
         else :
             self.gdx = None
-        if hasattr(self, 'tab_classes') : self.tab_classes.loadFont(self.font)
+        if hasattr(self, 'tab_classes') :
+            self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsfile) :
         self.testsfile = testsfile
@@ -1058,7 +1059,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.configNewClicked()
             return
         dialog = ConfigDialog(self.config, self.currConfigTab)
-        if dialog.exec_() :
+        result = dialog.exec_()
+        self.setConfigTab(dialog.currentTab())
+        if result :
             dialog.updateConfig(self, self.config)
             if self.cfgFileName :
                 f = file(self.cfgFileName, "w")

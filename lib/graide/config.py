@@ -319,8 +319,6 @@ class ConfigDialog(QtGui.QDialog) :
             self.build_twkpass.setValue(1)
                 
     def updateConfig(self, app, config) :
-        app.setConfigTab(self.tb.currentIndex())
-        
         self.updateChanged(self.general_font, config, 'main', 'font', "ttf", (app.loadFont if app else None))
         self.updateChanged(self.general_gdl, config, 'build', 'gdlfile', "gdl", (app.selectLine if app else None))
         self.updateChanged(self.general_tests, config, 'main', 'testsfile', "xml", (app.loadTests if app else None))
@@ -398,5 +396,9 @@ class ConfigDialog(QtGui.QDialog) :
         if widget.isChecked != configval(config, section, option) :
             config.set(section, option, "1" if widget.isChecked() else "0")
             if fn : fn(widget.isChecked())
+                
+    def currentTab(self) :
+        print self.tb.currentIndex()
+        return self.tb.currentIndex()
 
 # end of class ConfigDialog
