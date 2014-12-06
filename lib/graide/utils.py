@@ -95,6 +95,7 @@ def findgrcompiler() :
 # Return 0 if successful.
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
+    
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
         
@@ -159,6 +160,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     os.remove(tempname)
     
     return res
+
 
 replacements = {
     'a' : ['main', 'ap'],
