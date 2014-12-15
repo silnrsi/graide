@@ -13,6 +13,10 @@ for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
     os.symlink(s, f)
 '''
 
+versionSuffix = '0_8'
+showConsole = False
+consoleSuffix = '_console' if showConsole else ''
+
 def toc_remove(atoc, *anames) :
     atoc.data = filter(lambda x: x[0] not in anames, atoc.data)
 
@@ -37,11 +41,11 @@ if sys.platform == 'win32' :
     pydir = os.path.dirname(sys.executable)
     pth = os.path.join(pydir, 'lib\\site-packages\\pyside')
     for d in ('QtSvg', 'QtXml') :
-	bins += [(d+'4.dll', os.path.join(pth, d+'4.dll'), 'BINARY')]
+        bins += [(d+'4.dll', os.path.join(pth, d+'4.dll'), 'BINARY')]
     pth = os.path.join(pth, 'plugins')
     for d in glob.glob(os.path.join(pth, 'imageformats/*')) :
-	if os.path.exists(d) :
-	     bins += [(d[len(pth):], d, 'BINARY')]
+        if os.path.exists(d) :
+            bins += [(d[len(pth):], d, 'BINARY')]
 #    import pdb; pdb.set_trace()
 #    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
 #    bins += grdeps
@@ -78,9 +82,9 @@ exe = EXE(pyz,
           bins,
           a.zipfiles,
           a.datas,
-          name=os.path.join('build', 'graide' + ext),
+          name=os.path.join('build', 'graide' + versionSuffix + consoleSuffix + ext),
           debug=False,
           strip=None,
           upx=True,
           icon=os.path.join('lib', 'graide', 'images', ('graide.ico' if sys.platform == 'win32' else 'graide.icns')),
-          console=False)
+          console=showConsole)
