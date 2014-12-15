@@ -1146,7 +1146,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             openFiles = openFileString.split(';')
             for f in openFiles :
                 if (f) :
-                    self.tab_edit.selectLine(f, -1)
+                    if os.path.isfile(f) :
+                        self.tab_edit.selectLine(f, -1)
         # Open the main file.
         mainfile = configval(self.config, 'build', 'gdlfile')
         if mainfile :
