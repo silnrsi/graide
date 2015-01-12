@@ -398,7 +398,6 @@ class ConfigDialog(QtGui.QDialog) :
             if fn : fn(widget.isChecked())
                 
     def currentTab(self) :
-        print self.tb.currentIndex()
         return self.tb.currentIndex()
 
 # end of class ConfigDialog
