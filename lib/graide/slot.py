@@ -63,6 +63,7 @@ class Slot(DataObj) :
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
             cres.append(Attribute('shift', self.getColShift, None, False))
+            cres.append(Attribute('offset', self.getColOffset, None, False))
             
         if hasattr(self, 'parent') :
             res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
@@ -134,6 +135,13 @@ class Slot(DataObj) :
     def getColShift(self) :
         try :
             res = self.collision['shift']
+            return "(%d, %d)" % (res[0], res[1])
+        except :
+            return None
+       
+    def getColOffset(self) :
+        try :
+            res = self.collision['offset']
             return "(%d, %d)" % (res[0], res[1])
         except :
             return None

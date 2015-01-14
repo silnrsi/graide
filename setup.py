@@ -9,8 +9,8 @@ scripts = ['graide', 'ttfrename']
 if sys.platform == "win32" :
     scripts += glob('lib/graide/dll/*.dll')
 
-setup(  name = 'graide',
-        version = '0.0.1',
+setup(  name = 'graphite-graide',
+        version = '0.8',
         description = 'Graphite Integrated Development Environment',
         author = 'M. Hosken',
         package_dir = {'' : 'lib'},
