@@ -199,7 +199,7 @@ class PassesView(QtGui.QTableWidget) :
     def hasCollisionFixedSlot(self, prevSlots, thisSlots) :
         for i, slotInfo in enumerate(thisSlots) :
             prevInfo = prevSlots[i]
-            if 'collision' in slotInfo.keys() and slotInfo['collision']['shift'] != prevInfo['collision']['shift'] :
+            if 'collision' in slotInfo.keys() and slotInfo['collision']['offset'] != prevInfo['collision']['offset'] :
                 return True
         return False
     
