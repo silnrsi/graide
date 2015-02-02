@@ -19,7 +19,7 @@
 
 import re
 
-names = {
+uniToPsnameMap = {
     '0020' : 'space',
     '0021' : 'exclam',
     '0022' : 'quotedbl',
@@ -903,7 +903,7 @@ names = {
 # these are all historic names that could occur in fonts
 # from http://partners.adobe.com/asn/tech/type/glyphlist.txt
 
-agl = {
+aglToUniMap = {
 	'AEmacron' : u"\u01E2",
 	'AEsmall' : u"\uF7E6",
 	'Aacutesmall' : u"\uF7E1",
@@ -4341,8 +4341,8 @@ agl = {
 	'zukatakana' : u"\u30BA"
 	}
 
-for k, v in names.items() :
-    agl[v] = unichr(int(k, 16))
+for k, v in uniToPsnameMap.items() :
+    aglToUniMap[v] = unichr(int(k, 16))
 
 def parse(name) :
     res = []
@@ -4358,6 +4358,7 @@ class Name(object) :
         self.finalcomp = finalcomp
         if not name : return
 
+        # Determine the components for any glyph that represents multiple USVs.
         for comp in name.split("_") :
             base, dot, mod = comp.partition(".")
             if not base and mod : 
@@ -4372,8 +4373,8 @@ class Name(object) :
                     self.components.append((int(base[1:], 16), mod))
                 else :
                     self.components.append((int(base, 16), mod))
-            elif base in agl :
-                self.components.append((ord(agl[base]), mod))
+            elif base in aglToUniMap :
+                self.components.append((ord(aglToUniMap[base]), mod))
             elif len(self.components) :
                 self.components[-1] = (self.components[-1][0], mod)
             else :
@@ -4390,7 +4391,7 @@ class Name(object) :
 
     @classmethod
     def createFromGDL(cls, name) :
-        """Convert from GDLName back to cannonical name. An inexact science"""
+        """Convert from GDLName back to canonical name. An inexact science"""
         self = cls()
         if name.startswith("g_") :
             name = name[2:]
@@ -4404,7 +4405,7 @@ class Name(object) :
             cs = name.split("_")
             cs[0] = c + cs[0]
             for i in range(len(cs)) :
-                if cs[i] in agl :
+                if cs[i] in aglToUniMap :
                     self.components.append((0, c))
                 else :
                     self.ext = ".".join(cs[i:])
@@ -4412,6 +4413,7 @@ class Name(object) :
             self.psname = self.canonical()
         return self
 
+    # Calculate the canonical name (if necessary) and return it.
     def canonical(self, noprefix = False) :
         if self.cname and not noprefix : return self.cname
         res = ""
@@ -4426,8 +4428,8 @@ class Name(object) :
                 n = u
             if not u :
                 pass
-            elif n in names :
-                res += names[n]
+            elif n in uniToPsnameMap :
+                res += uniToPsnameMap[n]
             elif not res and not noprefix :
                 res = "u" + n
             else :
@@ -4458,9 +4460,9 @@ class Name(object) :
 
             if not u :
                 pass
-            elif n in names :
+            elif n in uniToPsnameMap :
                 if not res : res = "g_"
-                res += re.sub("([A-Z])", lambda x : "_" + x.group(1).lower(), names[n])
+                res += re.sub("([A-Z])", lambda x : "_" + x.group(1).lower(), uniToPsnameMap[n])
             elif not res :
                 res = "g" + n.lower()
             else :

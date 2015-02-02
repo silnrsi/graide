@@ -135,6 +135,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             # Is this a pseudo-glyph?
             try :
                 gidActual = int(g.getGdlProperty("*actualForPseudo*"))
+                #print s.gid," actual=",gidActual
             except :
                 gidActual = 0
             gActual = font[gidActual] if gidActual != 0  else g
