@@ -181,7 +181,7 @@ class PassesView(QtGui.QTableWidget) :
                     self.rules.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
                 else :
                     self.rules.append(None)
-                    if 1 < j and j < num - 1 and gdx.passtypes[j-1] == "positioning":
+                    if 1 < j and j < num - 1 : # and gdx.passtypes[j-1] == "positioning":
                         if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], json['passes'][j]['slots']) :
                             highlight = "semi-active"
                     

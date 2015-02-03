@@ -595,7 +595,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
-            istr = unicode(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
+            istr = u"".join(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runLoaded = True
