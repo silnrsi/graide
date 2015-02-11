@@ -54,7 +54,7 @@ class WaterfallDialog(QtGui.QDialog) :
                 (px, left, top) = ftGlyph(face, s.gid)
                 if px :
                     item = QtGui.QGraphicsPixmapItem(px, None, self.scene)
-                    ppos = (s.origin[0] * factor + left, -s.origin[1] * factor - top)
+                    ppos = (s.drawPosX() * factor + left, -s.drawPosY() * factor - top)
                     item.setOffset(ppos[0], ppos[1])
                     pixmaps.append(px)
                     pixitems.append(item)

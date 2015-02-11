@@ -30,10 +30,19 @@ class Slot(DataObj) :
         self.px = None          # set in self.pixmap()
         for k, v in info.items() :
             setattr(self, k, v)
+        
+        # Note that these two are different from the collision attribute displayed below.
+        # They are used for values that are NOT incorporated into the slot's origin, ie,
+        # for the runs in the Collision tab.
+        self.colKernInProc = 0
+        self.colShiftInProc = [0,0]
+
 
     def copy(self) :
         res = Slot()
         copyobj(self, res)
+        if hasattr(self, 'collision') :
+            res.collision = self.collision.copy() # otherwise slot copies will shared this dict!
         self.px = None
         #self.highlighted = False
         #self.highlightType = ""
@@ -145,6 +154,18 @@ class Slot(DataObj) :
             return "(%d, %d)" % (res[0], res[1])
         except :
             return None
+            
+    def getColValues(self, subAttrName):
+        return self.collision[subAttrName]
+            
+    def setColOffset(self, value) :
+        self.collision['offset'] = value
+        
+    def getColKern(self) :
+        return self.colKern
+        
+    def setColKern(self, f) :
+        self.colKern = f
        
     def highlight(self, type = "default") :
         self.highlighted = True
@@ -152,7 +173,7 @@ class Slot(DataObj) :
         if (self.px) :
             self.px.highlight(type)
 
-    def pixmap(self, px) :
+    def setPixmap(self, px) :
         self.px = px
         if self.highlighted :
             px.highlight(self.highlightType)
@@ -161,3 +182,9 @@ class Slot(DataObj) :
     def lineAndFile(self, row, col) :
         #print "Slot::doubleClick",event
         return None
+
+    def drawPosX(self) :
+        return self.origin[0] + self.colShiftInProc[0] + self.colKernInProc
+        
+    def drawPosY(self) :
+        return self.origin[1] + self.colShiftInProc[1]

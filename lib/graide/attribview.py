@@ -240,7 +240,7 @@ class AttribView(QtGui.QTreeView) :
         #self.setItemDelegateForColumn(1, self.attribDelegate)
 
     @QtCore.Slot(DataObj, ModelSuper)
-    def changeData(self, data, model) :  # data is a Slot, GraideGlyph, etc., model is eg RunView
+    def changeData(self, data, model) :  # data is a Slot, GraideGlyph, etc.; model is eg RunView
         self.data = data
         self.model = data.attribModel() if data else None
         self.setModel(self.model)

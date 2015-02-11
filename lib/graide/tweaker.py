@@ -1134,12 +1134,13 @@ class TweakableRunView(RunView) :
 
         # Don't include shiftx and shifty, because they are already incorporated into the GDL rules
         # and so are accounted for in the slot's origins.
+        # TODO: handle collision shifts
         xoffset = slot.origin[0] + (px.shiftx_pending * rtlDir)
         yoffset = slot.origin[1] + px.shifty_pending
         ppos = ((xoffset * scale) + glyph.item.left, -yoffset * scale - glyph.item.top)
         px.setOffset(*ppos)
         self._pixmaps.append(px)
-        if slot : slot.pixmap(px)
+        if slot : slot.setPixmap(px)
         sz = glyph.item.pixmap.size()
         r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
         res = res.united(r)
