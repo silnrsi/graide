@@ -120,7 +120,7 @@ class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
             # this is not the kind of thing that should be moved, eg, a base glyph
             return False
         resS = self.parent().getAnchor(self.text(2))
-        # print (self.position[0]/self.scale + resM[0], self.position[1]/self.scale + resM[1])
+        #print (self.position[0]/self.scale + resM[0], self.position[1]/self.scale + resM[1])
         return ((self.position[0] + self.scale * resM[0], self.position[1] - self.scale * resM[1]),
                 self.position,
                 [(resM[0] * self.scale, -resM[1] * self.scale), (resS[0] * self.scale, -resS[1] * self.scale)])
@@ -160,7 +160,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
 
     def keyPressEvent(self, event) :
         if event.modifiers() & QtCore.Qt.ShiftModifier :
-            # print "Shift pressed for " + str(self.item.glyph.name)
+            #print "Shift pressed for " + str(self.item.glyph.name)
             self.shiftState = True
             if self.moveState :
                 if self.apItem :
@@ -173,7 +173,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
 
     def keyReleaseEvent(self, event) :
         if not event.modifiers() & QtCore.Qt.ShiftModifier :
-            # print "Shift released for " + str(self.item.glyph.name)
+            #print "Shift released for " + str(self.item.glyph.name)
             self.shiftState = False
             if self.moveState :
                 if self.apItem :
@@ -235,7 +235,7 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
             if self.apItem :
                 appos = (self.sceneAP[0] + self.diff[0], self.sceneAP[1] + self.diff[1])
                 self.apItem.setPos(*appos)
-                # print "    ", (self.apItem.scenePos().x() / self.item.scale, self.apItem.scenePos().y() / self.item.scale)
+                #print "    ", (self.apItem.scenePos().x() / self.item.scale, self.apItem.scenePos().y() / self.item.scale)
         self.item.position = (self.origPos[0] + self.diff[0], self.origPos[1] + self.diff[1])
         super(PosPixmapItem, self).mouseMoveEvent(event)
         

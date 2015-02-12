@@ -105,13 +105,12 @@ class RunView(QtCore.QObject, ModelSuper) :
         self._fSelect = QtGui.QTextCharFormat()
         self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
         self._fHighlights = {}
-        for n in Layout.slotColours.keys() :
-            self._fHighlights[n] = QtGui.QTextCharFormat()
-            self._fHighlights[n].setBackground(Layout.slotColours[n])
+        for c in Layout.slotColours.keys() :
+            self._fHighlights[c] = QtGui.QTextCharFormat()
+            self._fHighlights[c].setBackground(Layout.slotColours[c])
         if run and font :
             self.loadRun(run, font)
         self.gview.setScene(self._scene)
-        
         
 
     def loadRun(self, run, font, resize = True) :
@@ -135,6 +134,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             # Is this a pseudo-glyph?
             try :
                 gidActual = int(g.getGdlProperty("*actualForPseudo*"))
+                #print s.gid," actual=",gidActual
             except :
                 gidActual = 0
             gActual = font[gidActual] if gidActual != 0  else g
@@ -178,10 +178,10 @@ class RunView(QtCore.QObject, ModelSuper) :
     # Overridden for TweakableRunView.
     def createPixmap(self, slot, glyph, index, res, scale, model = None, parent = None, scene = None) :
         px = GlyphPixmapItem(index, glyph.item.pixmap, model, parent, scene)
-        ppos = (slot.origin[0] * scale + glyph.item.left, -slot.origin[1] * scale - glyph.item.top)
+        ppos = (slot.drawPosX() * scale + glyph.item.left, -slot.drawPosY() * scale - glyph.item.top)
         px.setOffset(*ppos)
         self._pixmaps.append(px)
-        if slot : slot.pixmap(px)
+        if slot : slot.setPixmap(px)
         sz = glyph.item.pixmap.size()
         r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
         res = res.united(r)

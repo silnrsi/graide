@@ -595,7 +595,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
-            istr = unicode(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
+            istr = u"".join(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runLoaded = True
@@ -756,11 +756,18 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
         self.tab_rules.setPassIndex(row - 1)
-        if passview.rules[row] is not None :
-            self.tab_rules.loadRules(self.font, passview.rule(row), passview.runView(row-1).run, self.gdx)
+        if passview.rules(row) is not None :
+            self.tab_rules.loadRules(self.font, passview.rules(row), passview.runView(row-1).run, self.gdx)
             ruleLabel = "Rules: pass %d" % row
             self.tab_results.setTabText(3, ruleLabel)
             self.tab_results.setCurrentWidget(self.tab_rules)
+            
+        elif passview.collisions(row) is not None :
+            self.tab_rules.loadCollisions(self.font, passview.collisions(row), passview.runView(row-1).run, self.gdx)
+            ruleLabel = "Collisions: pass %d" % row
+            self.tab_results.setTabText(3, ruleLabel)
+            self.tab_results.setCurrentWidget(self.tab_rules)
+            
         passview.selectRow(row)
 
     def rulesClosed(self, dialog) :

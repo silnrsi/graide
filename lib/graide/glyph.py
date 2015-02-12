@@ -42,6 +42,7 @@ def ftGlyph(face, gid, fill = 0) :
         pixmap = None
     return (pixmap, left, top)
 
+# GlyphItems are stored in the GraideFont, in the glyphItems instance variable.
 class GlyphItem(object) :
 
     def __init__(self, face, gid, height = 40) :
@@ -49,7 +50,7 @@ class GlyphItem(object) :
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
         n = ctypes.create_string_buffer(64)
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = re.sub(ur'[^A-Za-z0-9._]', '', n.value)
+        self.name = re.sub(ur'[^A-Za-z0-9._]', '', n.value) # Postscript name
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid

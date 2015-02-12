@@ -33,10 +33,27 @@ class GraideFont(gdlFont) :
         self.isread = False
         self.highlighted = None
         self.attGlyphSize = 200
+        
+        self.gnames = {} # full list of Postscript names
+        self.top = 0
+        self.size = 0
+        self.fname = None # font filename, eg, "Hello.ttf"
+        self.upem = None
+        self.numGlyphs = 0
 
     def isRead(self) : return self.isread
 
+
+    def initGlyphs(self, nGlyphs = None) :
+        #print "GraideFont::initGlyphs",nGlyphs
+        if nGlyphs :
+            self.numGlyphs = nGlyphs
+        super(GraideFont, self).initGlyphs(self.numGlyphs)
+
+
     def loadFont(self, fontfile, size = 40) :
+        #print "GraideFont::loadFont",fontfile
+        
         self.glyphItems = []
         self.pixrect = QtCore.QRect()
         self.gnames = {}
@@ -64,7 +81,9 @@ class GraideFont(gdlFont) :
         self.isread = True
 
     def loadEmptyGlyphs(self) :
-        self.initGlyphs()
+        #print "GraideFont::loadEmptyGlyphs"
+        
+        self.initGlyphs(self.numGlyphs)
         for i in range(self.numGlyphs) :
             self.addGlyph(i)
         face = freetype.Face(self.fname)
@@ -73,15 +92,17 @@ class GraideFont(gdlFont) :
             self[gid].uid = "%04X" % uni
             (uni, gid) = face.get_next_char(uni, gid)
 
-    def addGlyph(self, index, name = None, gdlname = None) :
+    def addGlyph(self, index, psName = None, gdlName = None) :
+        #print "GraideFont::addGlyph",index,psName,gdlName
+        
         if index < len(self.glyphItems) :
-            if (not name or name not in self.gnames) :
-                name = self.glyphItems[index].name
-            elif name != self.glyphItems[index].name and name in self.gnames :
-                index = self.gnames[name]
-        elif name and name in self.gnames :
-            index = self.gnames[name]
-        g = super(GraideFont, self).addGlyph(index, name, gdlname, GraideGlyph)
+            if (not psName or psName not in self.gnames) :
+                psName = self.glyphItems[index].name
+            elif psName != self.glyphItems[index].name and psName in self.gnames :
+                index = self.gnames[psName]
+        elif psName and psName in self.gnames :
+            index = self.gnames[psName]
+        g = super(GraideFont, self).addGlyph(index, psName, gdlName, GraideGlyph)
         if g.gid < len(self.glyphItems) :
             g.item = self.glyphItems[g.gid]
         return g

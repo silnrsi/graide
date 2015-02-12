@@ -39,12 +39,12 @@ class Run(list) :
             res.append(slot.copy())
         return res
 
-    def idindex(self, ident) :
+    def indexOfId(self, ident) :
         for (i, slot) in enumerate(self) :
             if slot.id == ident : return i
         return -1
 
-    def replace(self, runinfo, start, end = None) :
+    def replaceSlots(self, runinfo, start, end = None) :
         """ Replaces the subrange between a slot with id of start up to but
             not including a slot with id of end (if specified, else the end
             of the run), with the given runinfo.
@@ -66,3 +66,22 @@ class Run(list) :
             slot.index = i
         return (ini, fin)
 
+
+    def modifySlotWithId(self, id, attrName, value) :
+        for (i, s) in enumerate(self) :
+            if s.id == id :
+                if attrName == 'colOffset' :
+                    s.setColOffset(value)
+                # possibly extend this with more attributes
+                return (i, s)
+                
+        return (-1, None)
+
+    def clearHighlight(self) :
+        for (i, s) in enumerate(self) :
+            s.clearHighlight()
+            
+    def kernAfter(self, iKern, value) :
+        for (i, s) in enumerate(self) :
+            if (i > iKern) :
+                s.colKernInProc = s.colKernInProc + value * (-1 if self.rtl else 1)
