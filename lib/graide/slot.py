@@ -71,8 +71,13 @@ class Slot(DataObj) :
             cres.append(Attribute('margin', self.getColMargin, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
-            cres.append(Attribute('shift', self.getColShift, None, False))
+            #cres.append(Attribute('shift', self.getColShift, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
+            flagBlocking = 256
+            if self.getColFlags() & flagBlocking :
+                cres.append(Attribute('minxoffset', self.getColMinXOffset, None, False))
+            else :
+                cres.append(Attribute('minxoffset', self.getColMinXOffsetInvalid, None, False))
             
         if hasattr(self, 'parent') :
             res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
@@ -167,6 +172,15 @@ class Slot(DataObj) :
     def setColKern(self, f) :
         self.colKern = f
        
+    def getColMinXOffset(self) :
+        try :
+            return self.collision['minxoffset']
+        except :
+            return None
+            
+    def getColMinXOffsetInvalid(self) :
+        return "---"
+            
     def highlight(self, type = "default") :
         self.highlighted = True
         self.highlightType = type
