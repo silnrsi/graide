@@ -312,6 +312,7 @@ class PassesView(QtGui.QTableWidget) :
                     if 'missed' in moveInfo.keys() :
                         # no collision
                         #print "phase",phase,"loop",loop,"missed",moveInfo['missed']
+                        pass
                         
                     elif 'slot' in moveInfo.keys() :
                         fixType = moveInfo['target']['fix']
