@@ -67,7 +67,7 @@ class Slot(DataObj) :
             
         if hasattr(self, 'collision') :
             cres = []
-            cres.append(Attribute('flags', self.getColFlags, None, False))
+            cres.append(Attribute('flags', self.getColFlagsAnnot, None, False))
             cres.append(Attribute('margin', self.getColMargin, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
@@ -123,6 +123,14 @@ class Slot(DataObj) :
     def getColFlags(self) :
         try :
             return self.collision['flags']
+        except :
+            return None
+            
+    def getColFlagsAnnot(self) :
+        try :
+            flags = self.collision['flags']
+            result = self.colFlagsAnnot(flags)
+            return result
         except :
             return None
             
@@ -202,3 +210,18 @@ class Slot(DataObj) :
         
     def drawPosY(self) :
         return self.origin[1] + self.colShiftInProc[1]
+
+    @staticmethod
+    def colFlagsAnnot(flags) :
+        result = str(flags)
+        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN", 128: "JUMPABLE", 256: "BLOCKING" }
+        sep = "="
+        for k in flagDict.keys() :
+            if flags & k == k :
+                result += sep + flagDict[k]
+                sep = "+"
+            maxKey = k
+        if flags >= maxKey * 2 :
+            result += "+???"
+        return result
+            

@@ -24,6 +24,7 @@ import array, ctypes, re, traceback
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj, popUpError
 from graide.makegdl.glyph import Glyph as gdlGlyph
+from graide.slot import Slot
 
 
 def ftGlyph(face, gid, fill = 0) :
@@ -129,7 +130,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         if (len(self.collisionProps)) :
             colModel = AttribModel(colAttrList, topModel) # sub-tree for collision
             for k in sorted(self.collisionProps.keys()) :
-                colAttrList.append(Attribute(k, self.getCollision, None, False, self._fileLoc("collision."+k), k))
+                colAttrList.append(Attribute(k, self.getCollisionAnnot, None, False, self._fileLoc("collision."+k), k))
             topModel.add(Attribute('collision', None, None, True, None, colModel))
         
         return topModel
@@ -200,6 +201,12 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     
     def getCollision(self, key) :
         return self.collisionProps[key]
+        
+    def getCollisionAnnot(self, key) :
+        value = self.collisionProps[key]
+        if key == "flags" :
+            value = Slot.colFlagsAnnot(value)
+        return value
         
     def getJustify(self, level, name) :
         if level >= len(self.justifies) or name not in self.justifies[level] : return None
