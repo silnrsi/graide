@@ -125,13 +125,21 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 jModel.add(Attribute(str(iLevel), None, None, True, None, lModel))
             topModel.add(Attribute('justify', None, None, True, None, jModel))
         
-        #collision
+        # collision
         colAttrList = []
         if (len(self.collisionProps)) :
             colModel = AttribModel(colAttrList, topModel) # sub-tree for collision
             for k in sorted(self.collisionProps.keys()) :
                 colAttrList.append(Attribute(k, self.getCollisionAnnot, None, False, self._fileLoc("collision."+k), k))
             topModel.add(Attribute('collision', None, None, True, None, colModel))
+            
+        # octaboxes
+        octaAttrList = []
+        if (len(self.octaboxProps)) :
+            octaModel = AttribModel(octaAttrList, topModel) # sub-tree for octaboxes
+            for k in sorted(self.octaboxProps.keys()) :
+                octaAttrList.append(Attribute(k, self.getOctabox, None, False, None, k))
+            topModel.add(Attribute('octabox', None, None, True, None, octaModel))
         
         return topModel
     
@@ -207,6 +215,9 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         if key == "flags" :
             value = Slot.colFlagsAnnot(value)
         return value
+        
+    def getOctabox(self, key) :
+        return self.octaboxProps[key]
         
     def getJustify(self, level, name) :
         if level >= len(self.justifies) or name not in self.justifies[level] : return None

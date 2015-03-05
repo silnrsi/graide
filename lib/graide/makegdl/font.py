@@ -178,6 +178,8 @@ class Font(object) :
                 #    pass
                 elif attrName.startswith('collision') :
                     g.setCollisionProp(attrName[10:], int(a.get('value')))
+                elif attrName.startswith('octabox') :
+                    g.setOctaboxProp(attrName[8:], a.get('value'))
                 elif attrName.endswith('.x') :
                     g.setAnchor(attrName[:-2], int(a.get('value')), None)
                 elif attrName.endswith('.y') :
