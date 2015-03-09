@@ -33,9 +33,9 @@ class Slot(DataObj) :
         
         # Note that these two are different from the collision attribute displayed below.
         # They are used for values that are NOT incorporated into the slot's origin, ie,
-        # for the runs in the Collision tab.
-        self.colKernInProc = 0
-        self.colShiftInProc = [0,0]
+        # for the runs in the Collision tab. These should remain None for runs in other contexts.
+        self.colPending = None
+        self.colKernPending = None # from neighboring glyphs
 
 
     def copy(self) :
@@ -71,13 +71,16 @@ class Slot(DataObj) :
             cres.append(Attribute('margin', self.getColMargin, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
-            #cres.append(Attribute('shift', self.getColShift, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
-            flagBlocking = 256
-            if self.getColFlags() & flagBlocking :
-                cres.append(Attribute('minxoffset', self.getColMinXOffset, None, False))
+            flagOverlap = 256
+            if self.getColFlags() & flagOverlap :
+                cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
             else :
-                cres.append(Attribute('minxoffset', self.getColMinXOffsetInvalid, None, False))
+                cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
+            if self.colPending :
+                cres.append(Attribute('pending', self.getColPending, None, False))
+            #if self.colKernPending :
+            #    cres.append(Attribute('', self.getColKernPending, None, False))
             
         if hasattr(self, 'parent') :
             res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
@@ -154,13 +157,6 @@ class Slot(DataObj) :
         except :
             return None
        
-    def getColShift(self) :
-        try :
-            res = self.collision['shift']
-            return "(%d, %d)" % (res[0], res[1])
-        except :
-            return None
-       
     def getColOffset(self) :
         try :
             res = self.collision['offset']
@@ -180,15 +176,35 @@ class Slot(DataObj) :
     def setColKern(self, f) :
         self.colKern = f
        
-    def getColMinXOffset(self) :
+    def getColMaxOverlap(self) :
         try :
-            return self.collision['minxoffset']
+            return self.collision['maxoverlap']
         except :
             return None
             
-    def getColMinXOffsetInvalid(self) :
+    def getColMaxOverlapInvalid(self) :
         return "---"
+    
+    def getColPending(self) :
+        try :
+            res = self.colPending
+            return "(%d, %d)" % (res[0], res[1])
+        except :
+            return None
             
+    def getColKernPending(self) :
+        try : 
+            res = self.colKernPending
+            return "%d" % (res)
+        except :
+            return None
+            
+    def setColPending(self, value) :
+        self.colPending = value
+        
+    def setColKernPending(self, value) :
+        self.colKernPending = value
+       
     def highlight(self, type = "default") :
         self.highlighted = True
         self.highlightType = type
@@ -206,15 +222,24 @@ class Slot(DataObj) :
         return None
 
     def drawPosX(self) :
-        return self.origin[0] + self.colShiftInProc[0] + self.colKernInProc
+        res = self.origin[0]
+        #print self.__getattribute__('gid'),self.colPending[0] if self.colPending else "None",self.colKernPending if self.colKernPending else "None"
+        if self.colPending :
+            res += self.colPending[0]
+        if self.colKernPending :
+            res += self.colKernPending
+        return res
         
     def drawPosY(self) :
-        return self.origin[1] + self.colShiftInProc[1]
+        res = self.origin[1]
+        if self.colPending :
+            res += self.colPending[1]
+        return res
 
     @staticmethod
     def colFlagsAnnot(flags) :
         result = str(flags)
-        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN", 128: "JUMPABLE", 256: "BLOCKING" }
+        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN", 128: "JUMPABLE", 256: "OVERLAP" }
         sep = "="
         for k in flagDict.keys() :
             if flags & k == k :

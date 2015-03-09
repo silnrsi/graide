@@ -72,7 +72,10 @@ class Run(list) :
             if s.id == id :
                 if attrName == 'colOffset' :
                     s.setColOffset(value)
-                # possibly extend this with more attributes
+                elif attrName == 'colPending' :
+                    s.setColPending(value)
+                #elif attrName == 'colKernPending' :
+                #    s.setColKernPending(value)
                 return (i, s)
                 
         return (-1, None)
@@ -83,5 +86,9 @@ class Run(list) :
             
     def kernAfter(self, iKern, value) :
         for (i, s) in enumerate(self) :
-            if (i > iKern) :
-                s.colKernInProc = s.colKernInProc + value * (-1 if self.rtl else 1)
+            if s.colKernPending == None : s.colKernPending = 0
+            if self.rtl and i < iKern :
+                s.colKernPending = s.colKernPending + value
+            elif not self.rtl and i > iKern :                
+                s.colKernPending = s.colKernPending + value * -1
+                
