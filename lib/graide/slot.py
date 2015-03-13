@@ -78,7 +78,7 @@ class Slot(DataObj) :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
             else :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
-            cres.append(Attribute('block', self.getColBlockAttrs, None, False))
+            cres.append(Attribute('blocker', self.getColBlockAttrs, None, False))
             if self.colPending :
                 cres.append(Attribute('pending', self.getColPending, None, False))
             #if self.colKernPending :
