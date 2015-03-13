@@ -69,6 +69,7 @@ class Slot(DataObj) :
             cres = []
             cres.append(Attribute('flags', self.getColFlagsAnnot, None, False))
             cres.append(Attribute('margin', self.getColMargin, None, False))
+            cres.append(Attribute('marginmin', self.getColMarginMin, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
@@ -77,6 +78,7 @@ class Slot(DataObj) :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
             else :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
+            cres.append(Attribute('block', self.getColBlockAttrs, None, False))
             if self.colPending :
                 cres.append(Attribute('pending', self.getColPending, None, False))
             #if self.colKernPending :
@@ -143,6 +145,12 @@ class Slot(DataObj) :
         except :
             return None
             
+    def getColMarginMin(self) :
+        try :
+            return self.collision['marginmin']
+        except :
+            return None
+            
     def getColLimitMin(self) :
         try :
             res = self.collision['limit']
@@ -184,6 +192,27 @@ class Slot(DataObj) :
             
     def getColMaxOverlapInvalid(self) :
         return "---"
+        
+    def getColBlockAttrs(self) :
+        try :
+            glyph = self.collision['blockglyph']
+            offset = self.collision['blockoffset']
+            return "%d (%d, %d)" % (glyph, offset[0], offset[1])
+        except :
+            return None
+            
+    def getColBlockGlyph(self) :
+        try :
+            return self.collision['blockglyph']
+        except :
+            return None
+            
+    def getColBlockOffset(self) :
+        try :
+            res = self.collision['blockoffset']
+            return "(%d, %d)" % (res[0], res[1])
+        except :
+            return None
     
     def getColPending(self) :
         try :
