@@ -78,7 +78,7 @@ class Slot(DataObj) :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
             else :
                 cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
-            cres.append(Attribute('blocker', self.getColBlockAttrs, None, False))
+            cres.append(Attribute('exclude', self.getColExclAttrs, None, False))
             if self.colPending :
                 cres.append(Attribute('pending', self.getColPending, None, False))
             #if self.colKernPending :
@@ -193,23 +193,23 @@ class Slot(DataObj) :
     def getColMaxOverlapInvalid(self) :
         return "---"
         
-    def getColBlockAttrs(self) :
+    def getColExclAttrs(self) :
         try :
-            glyph = self.collision['blockglyph']
-            offset = self.collision['blockoffset']
+            glyph = self.collision['exclude']
+            offset = self.collision['excludeoffset']
             return "%d (%d, %d)" % (glyph, offset[0], offset[1])
         except :
             return None
             
-    def getColBlockGlyph(self) :
+    def getColExlcGlyph(self) :
         try :
-            return self.collision['blockglyph']
+            return self.collision['exclude']
         except :
             return None
             
-    def getColBlockOffset(self) :
+    def getColExclOffset(self) :
         try :
-            res = self.collision['blockoffset']
+            res = self.collision['excludeoffset']
             return "(%d, %d)" % (res[0], res[1])
         except :
             return None
