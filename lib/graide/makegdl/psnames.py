@@ -18,6 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 import re
+import traceback  # Debug
 
 uniToPsnameMap = {
     '0020' : 'space',
@@ -4444,13 +4445,17 @@ class Name(object) :
         return cname
 
     def GDL(self) :
-        if self.GDLName : return self.GDLName
+        if self.GDLName : 
+            return self.GDLName
         res = ""
         if not len(self.components) :
-            if not self.psname : return None
+            if not self.psname : 
+                return None
+                
             res = "g_" + self.psname.replace('.', '_')
             self.GDLName = re.sub(r"([A-Z])", lambda x : "_" + x.group(1).lower(), res)
             return self.GDLName
+            
         for k in self.components :
             u = k[0]
             if not isinstance(u, basestring) and u :
@@ -4470,9 +4475,17 @@ class Name(object) :
             if res and k[1] :
                 res += "_" + k[1].lower().replace('.', '_')
             res += "_"
+            
         self.GDLName = res[0:-1]
+        
         if self.ext :
             self.GDLName += "_" + self.ext.lower().replace('.', '_')
+            
+        if self.GDLName == "" : # last resort for some names
+            self.GDLName = "g" + self.psname
+        if self.GDLName[0:1] == "_" :
+            self.GDLName = "g" + self.GDLName
+        
         return self.GDLName
 
     def head(self) :
