@@ -74,9 +74,9 @@ class PassesView(QtGui.QTableWidget) :
     def setPassIndex(self, index) :
         self.passindex = index
 
-    def addRun(self, font, run, label, num, tooltip = "", highlight = False) :
+    def addRun(self, font, run, label, num, tooltip = "", highlight = False, collision = False) :
         if num >= len(self.runViews) :
-            v = RunView(font, run, self)
+            v = RunView(font, run, self, collision = collision)
             self.runViews.append(v)
             self.setCellWidget(num, 1, v.gview)
             self.setCellWidget(num, 2, v.tview)
@@ -329,7 +329,6 @@ class PassesView(QtGui.QTableWidget) :
                         #####initOffset = initRun[i].getColValues('offset') # from previous pass
                         
                         if fixType == "kern" :
-                            print "kerned",i,pending
                             newValue = [pending, 0]
                             #newValuePlus = [pending + int(initOffset[0]), 0]
                         else :
@@ -379,7 +378,8 @@ class PassesView(QtGui.QTableWidget) :
         for j in range(len(self.runs)) :
             (neww, newt) = self.addRun(font, self.runs[j], self.runs[j].label, j,
                     tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
-                                    if gdx and self.runs[j].ruleindex >= 0 else "")
+                                    if gdx and self.runs[j].ruleindex >= 0 else "",
+                    collision = True)
             w = max(w, neww)
             wt = max(wt, newt)
             

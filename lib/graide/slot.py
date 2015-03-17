@@ -18,8 +18,10 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
+from PySide import QtCore
 from graide.attribview import Attribute, AttribModel
 from graide.utils import copyobj, DataObj
+from graide.layout import Layout
 import traceback
 
 class Slot(DataObj) :
@@ -36,6 +38,7 @@ class Slot(DataObj) :
         # for the runs in the Collision tab. These should remain None for runs in other contexts.
         self.colPending = None
         self.colKernPending = None # from neighboring glyphs
+        self.pxExcl = None
 
 
     def copy(self) :
@@ -44,6 +47,7 @@ class Slot(DataObj) :
         if hasattr(self, 'collision') :
             res.collision = self.collision.copy() # otherwise slot copies will shared this dict!
         self.px = None
+        self.pxExcl = None
         #self.highlighted = False
         #self.highlightType = ""
         return res
@@ -201,18 +205,25 @@ class Slot(DataObj) :
         except :
             return None
             
-    def getColExlcGlyph(self) :
+    def getColExclGlyph(self) :
         try :
             return self.collision['exclude']
         except :
             return None
             
-    def getColExclOffset(self) :
+    def getColExclOffset(self) :    # return a string
         try :
             res = self.collision['excludeoffset']
             return "(%d, %d)" % (res[0], res[1])
         except :
             return None
+            
+    def getColExclOffsetSize(self) :    # return a QSize object
+        try :
+            res = self.collision['excludeoffset']
+            return QtCore.QSize(res[0], res[1])
+        except :
+            return QtCore.QSize(0, 0)
     
     def getColPending(self) :
         try :
@@ -244,6 +255,11 @@ class Slot(DataObj) :
         self.px = px
         if self.highlighted :
             px.highlight(self.highlightType)
+            
+    def setExclPixmap(self, px) :
+        self.pxExcl = px  # not actually used
+        self.pxExcl.highlight('exclude')
+        
 
     # Return line-and-file info corresponding to this row and column.
     def lineAndFile(self, row, col) :

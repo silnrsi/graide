@@ -74,6 +74,9 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         self.isHigh = False
         self.justifies = []
         self.fileLocs = {}   # file locations where attributes are set
+        
+    def setItem(self, item) :
+        self.item = item
 
     def __str__(self) :
         return self.psname
@@ -100,6 +103,8 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 actual = self.getGdlProperty("*actualForPseudo*")
                 if actual != 0 :
                     attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), a)) ## self.setGdlProperty
+            elif a == "*skipPasses*" :
+                attrList.append(Attribute(a, self.getGdlPropertyWithBinary, None, False, None, a))
             else :
                 attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), a))  ## self.setGdlProperty
                 
@@ -184,6 +189,11 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
 
     def getGdlProperty(self, key) :
         return self.gdl_properties[key]
+        
+    def getGdlPropertyWithBinary(self, key) :
+        value = int(self.gdl_properties[key])
+        binary = bin(value)[2:]
+        return "%d = %s" % (value, binary)
 
     def setGdlProperty(self, key, value) :
         if value == None :

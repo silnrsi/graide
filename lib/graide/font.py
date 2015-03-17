@@ -77,7 +77,7 @@ class GraideFont(gdlFont) :
                 
         for (i, g) in enumerate(self.glyphs) :
             if i < len(self.glyphItems) and g :
-                g.item = self.glyphItems[i]
+                g.setItem(self.glyphItems[i])
         self.isread = True
 
     def loadEmptyGlyphs(self) :

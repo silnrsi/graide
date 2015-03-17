@@ -25,7 +25,7 @@
 from PySide import QtCore, QtGui
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
-import os, time
+import os, time, traceback
 
 class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
 
@@ -60,7 +60,8 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
             painter.fillRect(r, option.palette.highlight())
         elif self.highlighted and self.highlightType in self.highlightColours :
             painter.fillRect(r, self.highlightColours[self.highlightType])
-        super(GlyphPixmapItem, self).paint(painter, option, widget)
+
+        super(GlyphPixmapItem, self).paint(painter, option, widget)  # paint the foreground
       
       
 # Apparently not used
@@ -85,7 +86,7 @@ class RunView(QtCore.QObject, ModelSuper) :
     slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
     glyphSelected = QtCore.Signal(DataObj, ModelSuper, bool)
 
-    def __init__(self, font = None, run = None, parent = None) : # parent = PassesView, Matcher, or none
+    def __init__(self, font = None, run = None, parent = None, collision = False) : # parent = PassesView, Matcher, or none
         super(RunView, self).__init__()
         self.parent = parent
         self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
@@ -108,6 +109,7 @@ class RunView(QtCore.QObject, ModelSuper) :
         for c in Layout.slotColours.keys() :
             self._fHighlights[c] = QtGui.QTextCharFormat()
             self._fHighlights[c].setBackground(Layout.slotColours[c])
+        self.collision = collision
         if run and font :
             self.loadRun(run, font)
         self.gview.setScene(self._scene)
@@ -160,6 +162,12 @@ class RunView(QtCore.QObject, ModelSuper) :
                     hselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, 
                             QtGui.QTextCursor.KeepAnchor, self._gindices[-1] - 2 - self._gindices[-2])
                     sels.append(hselect)
+                    
+            if self.collision and s.getColExclGlyph() :
+                gExclude = s.getColExclGlyph()
+                gExclude = font[gExclude]
+                exclOff = s.getColExclOffsetSize()
+                resExcl = self.createPixmap(s, gExclude, i, res, scale, model = self, scene = self._scene, exclOff = exclOff)
         
         self.tview.moveCursor(QtGui.QTextCursor.Start) # scroll to top
         
@@ -176,12 +184,21 @@ class RunView(QtCore.QObject, ModelSuper) :
 
             
     # Overridden for TweakableRunView.
-    def createPixmap(self, slot, glyph, index, res, scale, model = None, parent = None, scene = None) :
+    def createPixmap(self, slot, glyph, index, res, scale, model = None, parent = None, scene = None, exclOff = None) :
+        exclude = (exclOff != None) # is this a collision.exclude.glyph?
+        if not exclOff :
+            exclOff = QtCore.QSize(0, 0)
+            
         px = GlyphPixmapItem(index, glyph.item.pixmap, model, parent, scene)
-        ppos = (slot.drawPosX() * scale + glyph.item.left, -slot.drawPosY() * scale - glyph.item.top)
+        ppos = (((slot.drawPosX()  + exclOff.width()) * scale) + glyph.item.left, 
+                ((-slot.drawPosY() - exclOff.height()) * scale) - glyph.item.top)
         px.setOffset(*ppos)
         self._pixmaps.append(px)
-        if slot : slot.setPixmap(px)
+        if slot : 
+            if exclude :
+                slot.setExclPixmap(px)
+            else :
+                slot.setPixmap(px)
         sz = glyph.item.pixmap.size()
         r = QtCore.QRect(ppos[0], ppos[1], sz.width(), sz.height())
         res = res.united(r)
