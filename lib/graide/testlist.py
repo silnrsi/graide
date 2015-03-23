@@ -32,11 +32,32 @@ def asBool(txt) :
     if txt.isdigit() : return int(txt) != 0
     return False
 
+
+class TestListWidget(QtGui.QListWidget) :
+    
+    def __init__(self, testList) :
+        super(TestListWidget, self).__init__()
+        self.testList = testList
+        
+    def keyPressEvent(self, event) :
+        res = super(TestListWidget, self).keyPressEvent(event)
+        
+        if event.key() == QtCore.Qt.Key_Up :
+            self.testList.upArrowKey()
+        elif event.key() == QtCore.Qt.Key_Down :
+            self.testList.downArrowKey()
+
+        return res
+
+# end of clas TestListWidget
+
+    
 class TestList(QtGui.QWidget) :
 
     def __init__(self, app, fname = None, parent = None) :
         super(TestList, self).__init__(parent)
         self.noclick = False
+        self.quickProofMode = True
         self.app = app
         self.testFiles = []     # list of filenames, include paths
         self.currentFile = ""
@@ -294,9 +315,9 @@ class TestList(QtGui.QWidget) :
         self.currentFile = self.testFiles[index]
         
     def addGroup(self, name, index = None, comment = "") :
-        listWidget = QtGui.QListWidget() # create a test list widget for this group
-        listWidget.itemDoubleClicked.connect(self.runTest)
-        listWidget.itemClicked.connect(self.loadTest)
+        listWidget = TestListWidget(self) # create a test list widget for this group
+        listWidget.itemClicked.connect(self.singleClick)
+        listWidget.itemDoubleClicked.connect(self.doubleClick)
         groupList = []  # initially empty
         if index is None :
             self.liststack.addWidget(listWidget)
@@ -310,7 +331,7 @@ class TestList(QtGui.QWidget) :
             self.comments.insert(index, comment)
         
         return listWidget
-
+        
     def appendTest(self, t, l = None) :
         if not l : l = self.liststack.currentWidget()
         self.testGroups[self.liststack.indexOf(l)].append(t)
@@ -497,21 +518,50 @@ class TestList(QtGui.QWidget) :
             self.testGroups[groupindex].insert(testindex + 1, self.testGroups[groupindex].pop(testindex))
             l.insertItem(testindex + 1, l.takeItem(testindex))
             l.setCurrentRow(testindex + 1)
+            
+    def singleClick(self, item) :
+        if self.quickProofMode :
+            self.loadTest(item)
+            self.runTest(item)
+        else :
+            if not self.noclick :
+                self.loadTest(item)
+            else :
+                self.noclick = False
+            
+    def doubleClick(self, item) :
+        if self.quickProofMode :
+            # the single click routine already did everything
+            pass
+        else :
+            # event sends itemClicked first so no need to select
+            self.runTest(item)
+            self.noclick = True  # because itemClicked event will happen again--ignore it
 
     def loadTest(self, item) :
-        if not self.noclick :
-            groupIndex = self.liststack.currentIndex()
-            testIndex = self.liststack.currentWidget().currentRow()
-            self.app.setRun(self.testGroups[groupIndex][testIndex])
-        else :
-            # this is the side-effect of a double-click: ignore it
-            self.noclick = False
+        groupIndex = self.liststack.currentIndex()
+        testIndex = self.liststack.currentWidget().currentRow()
+        self.app.setRun(self.testGroups[groupIndex][testIndex])
 
     def runTest(self, item) :
-        # event sends clicked first so no need to select
         self.app.runClicked()
-        self.noclick = True  # because itemClick event will happen again--ignore it
 
+    def upArrowKey(self) :
+        l = self.liststack.currentWidget()
+        groupIndex = self.liststack.currentIndex()
+        testIndex = l.currentRow()
+        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        if self.quickProofMode :
+            self.runTest("bogus")
+
+    def downArrowKey(self) :
+        l = self.liststack.currentWidget()
+        groupIndex = self.liststack.currentIndex()
+        testIndex = l.currentRow()
+        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        if self.quickProofMode :
+            self.runTest("bogus")
+        
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
         k += "\n" + (t.lang or "")

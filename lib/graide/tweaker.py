@@ -22,6 +22,7 @@ from PySide import QtCore, QtGui
 from xml.etree import cElementTree as XmlTree
 from graide.font import GraideFont
 from graide.test import Test
+from graide.testlist import TestListWidget
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert, popUpError
 from graide.layout import Layout
 from graide.run import Run
@@ -399,7 +400,7 @@ class TweakList(QtGui.QWidget) :
     
             
     def addGroup(self, name, index = None, comment = "") :
-        listwidget = QtGui.QListWidget()
+        listwidget = TestListWidget(self)
         #listwidget.itemDoubleClicked.connect(self.runTest)
         listwidget.itemClicked.connect(self.loadTweak)
         res = []
@@ -566,7 +567,20 @@ class TweakList(QtGui.QWidget) :
             l.insertItem(tIndex + 1, l.takeItem(tIndex))
             l.setCurrentRow(tIndex + 1)
 
-    
+    def upArrowKey(self) :
+        l = self.liststack.currentWidget()
+        groupIndex = self.liststack.currentIndex()
+        testIndex = l.currentRow()
+        self.app.setRun(self.tweakGroups[groupIndex][testIndex])
+        self.showTweak("bogus")
+
+    def downArrowKey(self) :
+        l = self.liststack.currentWidget()
+        groupIndex = self.liststack.currentIndex()
+        testIndex = l.currentRow()
+        self.app.setRun(self.tweakGroups[groupIndex][testIndex])
+        self.showTweak("bogus")
+        
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
         k += "\n" + (t.lang or "")
