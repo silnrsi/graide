@@ -121,10 +121,10 @@ class Font(object) :
         self.glyphs[index] = g
         return g
 
-    def addGdxGlyph(self, e, apGdlFile) :
-        hasApGdl = not not apGdlFile    # if there is an AP GDL file, very little gets set here,
+    def addGdxGlyph(self, e, apFileName) :
+        hasApFile = not not apFileName  # if there is an AP XML File, very little gets set here
+                                        # (most of the glyph attrs get set directly from the XML file),
                                         # but we do need to set actualForPsuedo, and also the glyph name
-        
         gid = int(e.get('glyphid'))
         
         g = self[gid]
@@ -141,7 +141,7 @@ class Font(object) :
             else :
                 g = self.addGlyph(gid)
 
-        if hasApGdl :
+        if hasApFile :
             storemirror = False
             setFromGdx = ("*actualForPseudo*") # only set this attr
         #else : - I think we need to do this regardless
@@ -160,9 +160,10 @@ class Font(object) :
         for a in e.iterfind('glyphAttrValue') :
             attrName = a.get('name')
             
-            if not hasApGdl or attrName in setFromGdx :
+            if not hasApFile or attrName in setFromGdx :
                 inFile = a.get("inFile")
                 atLine = a.get("atLine")
+                    
                 m = re.match(ur'^justify.(\d).([^.]+)', attrName)
                 if m :
                     g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
@@ -256,11 +257,11 @@ class Font(object) :
 
     # Return the list of classes that should be updated in the AP XML file.
     # This does not include classes that are auto-generated or defined in the hand-crafted GDL code.
-    def filterAutoClasses(self, names, apGdlFile) :
+    def filterAutoClasses(self, names, autoGdlFile) :
         res = []
         for n in names :
             c = self.classes[n]
-            if not c.generated and (not c.fname or c.fname == apGdlFile) : res.append(n)
+            if not c.generated and (not c.fname or c.fname == autoGdlFile) : res.append(n)
         return res
 
     # TODO: move this method to GraideFont, or refactor
@@ -275,13 +276,13 @@ class Font(object) :
             i += 1
         return True
 
-    def saveAP(self, apFileName, apGdlFile) :
+    def saveAP(self, apFileName, autoGdlFile) :
         root = Element('font')
         root.set('upem', str(self.emunits()))
         root.set('producer', 'graide 1.0')
         root.text = "\n\n"
         for g in self.glyphs :
-            if g : g.createAP(root, self, apGdlFile)
+            if g : g.createAP(root, self, autoGdlFile)
         ElementTree(root).write(apFileName, encoding="utf-8", xml_declaration=True)
 
     def createClasses(self) :

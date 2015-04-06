@@ -121,7 +121,7 @@ class Glyph(object) :
                     self.classes.add(c)
                     font.addGlyphClass(c, self.gid, editable = True)
 
-    def createAP(self, elem, font, apgdlfile) :
+    def createAP(self, elem, font, autoGdlFile) :
         e = SubElement(elem, 'glyph')
         if self.psname : e.set('PSName', self.psname)
         if self.uid : e.set('UID', self.uid)
@@ -129,7 +129,7 @@ class Glyph(object) :
         ce = None
         if 'classes' in self.properties and self.properties['classes'].strip() :
             tempClasses = self.properties['classes']
-            self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), apgdlfile))
+            self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), autoGdlFile))
             
         for k in sorted(self.anchors.keys()) :
             v = self.anchors[k]

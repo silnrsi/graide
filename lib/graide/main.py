@@ -296,6 +296,7 @@ class MainWindow(QtGui.QMainWindow) :
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'),
+                                configval(self.config, 'main', 'ap'),
                                 ronly = configintval(self.config, 'build', 'apronly'))
         else :
             self.gdx = None

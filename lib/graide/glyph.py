@@ -165,11 +165,12 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     def _fileLoc(self, attrName) :
         if attrName in self.fileLocs :
             x = self.fileLocs[attrName]
+        elif attrName + '.x' in self.fileLocs :
+            x = self.fileLocs[attrName + '.x']
         elif "gid" in self.fileLocs :
             x = self.fileLocs["gid"]
         else :
             x = None
-        ###print attrName, x
         return x
 
     def getProperty(self, key) :

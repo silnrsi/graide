@@ -28,12 +28,11 @@ class Gdx(object) :
         self.passtypes = []
         self.keepelements = False
 
-    def readfile(self, fname, font, apGdlFile = None, ronly = False) :
-        #print "Gdx::readfile"
+    def readfile(self, fname, font, autoGdlFile = None, apFileName = None, ronly = False) :
         relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
         
         self.file = file(fname)
-        if not apGdlFile :
+        if not apFileName :  # autoGdlFile??
             font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
@@ -48,7 +47,7 @@ class Gdx(object) :
                     self.passes[-1].append(Rule(e, relbase))
                 if e.tag == 'glyph' :
                     self.keepelements = False
-                    font.addGdxGlyph(e, apGdlFile)
+                    font.addGdxGlyph(e, apFileName)
                 elif e.tag == 'class' :
                     self.keepelements = False
                     n = e.get('name')
@@ -63,7 +62,7 @@ class Gdx(object) :
                         elif not isMakeGDLSpecialClass(n) :
                             # Note: subtract 1 from the line number because the GDX file 1-based,
                             # the file editor is 0-based.
-                            if not apGdlFile :
+                            if not autoGdlFile :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1)
                             elif n not in font.classes or ronly :
                                 font.addClass(n, map(lambda x: int(x.get('glyphid')), c), f, l - 1, generated = True)
