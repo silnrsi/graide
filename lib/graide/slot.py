@@ -78,10 +78,11 @@ class Slot(DataObj) :
             cres.append(Attribute('max', self.getColLimitMax, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
             flagOverlap = 256
-            if self.getColFlags() & flagOverlap :
-                cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
-            else :
-                cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
+            #if self.getColFlags() & flagOverlap :
+            #    cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
+            #else :
+            #    cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
+            cres.append(Attribute('order', self.getColOrderAttrs, None, False))
             cres.append(Attribute('exclude', self.getColExclAttrs, None, False))
             if self.colPending :
                 cres.append(Attribute('pending', self.getColPending, None, False))
@@ -188,14 +189,22 @@ class Slot(DataObj) :
     def setColKern(self, f) :
         self.colKern = f
        
-    def getColMaxOverlap(self) :
-        try :
-            return self.collision['maxoverlap']
-        except :
-            return None
+#    def getColMaxOverlap(self) :
+#        try :
+#            return self.collision['maxoverlap']
+#        except :
+#            return None
             
-    def getColMaxOverlapInvalid(self) :
-        return "---"
+#    def getColMaxOverlapInvalid(self) :
+#        return "---"
+
+    def getColOrderAttrs(self) :
+        try :
+            res = self.collision['order']
+            flagAnnot = self.colOrderFlagsAnnot(res[1])
+            return "%d: %s" % (res[0], flagAnnot)
+        except:
+            return None
         
     def getColExclAttrs(self) :
         try :
@@ -284,7 +293,7 @@ class Slot(DataObj) :
     @staticmethod
     def colFlagsAnnot(flags) :
         result = str(flags)
-        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN", 128: "JUMPABLE", 256: "OVERLAP" }
+        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN" }
         sep = "="
         for k in flagDict.keys() :
             if flags & k == k :
@@ -295,3 +304,16 @@ class Slot(DataObj) :
             result += "+???"
         return result
             
+    @staticmethod
+    def colOrderFlagsAnnot(flags) :
+        result = str(flags)
+        flagDict = { 1: "LEFT", 2: "RIGHT", 3: "UP", 4: "DOWN" }
+        sep = "="
+        for k in flagDict.keys() :
+            if flags & k == k :
+                result += sep + flagDict[k]
+                sep = "+"
+            maxKey = k
+        if flags >= maxKey * 2 :
+            result += "+???"
+        return result
