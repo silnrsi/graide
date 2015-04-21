@@ -72,6 +72,7 @@ class Slot(DataObj) :
         if hasattr(self, 'collision') :
             cres = []
             cres.append(Attribute('flags', self.getColFlagsAnnot, None, False))
+            cres.append(Attribute('status', self.getColStatusAnnot, None, False))
             cres.append(Attribute('margin', self.getColMargin, None, False))
             cres.append(Attribute('marginmin', self.getColMarginMin, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
@@ -140,6 +141,14 @@ class Slot(DataObj) :
         try :
             flags = self.collision['flags']
             result = self.colFlagsAnnot(flags)
+            return result
+        except :
+            return None
+            
+    def getColStatusAnnot(self) :
+        try :
+            status = self.collision['status']
+            result = self.colFlagsAnnot(status)
             return result
         except :
             return None
@@ -295,11 +304,12 @@ class Slot(DataObj) :
         result = str(flags)
         flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN" }
         sep = "="
+        maxKey = 0
         for k in flagDict.keys() :
             if flags & k == k :
                 result += sep + flagDict[k]
                 sep = "+"
-            maxKey = k
+            maxKey = k if (k > maxKey) else maxKey
         if flags >= maxKey * 2 :
             result += "+???"
         return result
