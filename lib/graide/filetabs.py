@@ -405,13 +405,13 @@ class FileTabs(QtGui.QTabWidget) :
                 if f == filename :
                     return
             self.openFiles.append(filename)
-            self.saveOpenFiles()
+            self.recordOpenFiles()
 
     def deleteOpenFile(self, filename) :
         self.openFiles.remove(filename)
-        self.saveOpenFiles()
+        self.recordOpenFiles()
     
-    def saveOpenFiles(self) :
+    def recordOpenFiles(self) :
         openFileString = ''
         for f in self.openFiles :
             openFileString = openFileString + f + ';'

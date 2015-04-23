@@ -102,7 +102,7 @@ class MainWindow(QtGui.QMainWindow) :
         print "Finding compiler..." #===
 
         findgrcompiler()
-        for s in ('main', 'build', 'ui') :
+        for s in ('main', 'build', 'ui', 'window', 'data') :
             if not config.has_section(s) :
                 config.add_section(s)
                 
@@ -305,8 +305,17 @@ class MainWindow(QtGui.QMainWindow) :
 
     def loadTests(self, testsfile) :
         self.testsfile = testsfile
+        if self.config.has_option('data', 'testfiles') :
+            print "has file list"
+            fileListString = configval(self.config, 'data', 'testfiles')
+            fileList = fileListString.split(';')
+        else :
+            print "no file list"
+            fileList = [testsfile]
         if hasattr(self, "tab_tests") and self.tab_tests :
-            self.tab_tests.addFile(testsfile, None, False)
+            for f in fileList :
+                print 'test list',f
+                self.tab_tests.addFile(f, None, False)
         # otherwise MainWindow is not set up yet
             
     def loadTweaks(self, tweaksfile) :
@@ -1092,6 +1101,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
+        print "_configOpenExisting"
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()
@@ -1225,6 +1235,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             print "ERROR: project " + fullname + " does not exist"
         else :
             self._configOpenExisting(fullname)
+            
             
             
 # end of MainWindow class

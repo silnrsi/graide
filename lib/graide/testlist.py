@@ -54,7 +54,7 @@ class TestListWidget(QtGui.QListWidget) :
     
 class TestList(QtGui.QWidget) :
 
-    def __init__(self, app, fname = None, parent = None) :
+    def __init__(self, app, fName = None, parent = None) :
         super(TestList, self).__init__(parent)
         self.noclick = False
         self.quickProofMode = True
@@ -66,6 +66,10 @@ class TestList(QtGui.QWidget) :
         self.comments = []
         self.fcount = 0
         self.header = None
+
+        # Get the current test stuff from the configuration before setting up the files, which could change it.
+        curTest = self.app.config.get('data','currenttest')
+        fListString = self.app.config.get('data', 'testfiles')
 
         self.setActions(app)
         vLayout = QtGui.QVBoxLayout()
@@ -121,7 +125,7 @@ class TestList(QtGui.QWidget) :
         self.fcombo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeFileCombo)
         
         self.gcombo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeGroupCombo)
-        self.addGroup('main')
+        self.addGroup('main', record = False)
 
         # list control
         self.bbox = QtGui.QWidget(self)
@@ -152,8 +156,17 @@ class TestList(QtGui.QWidget) :
         
         self.setLayout(vLayout)
 
-        if fname :
-            self.addFile(fname, None, False)
+        if fListString :
+            fList = fListString.split(';')
+            for f in fList :
+                if f != "" :
+                    self.addFile(f, None, False)
+        elif fname :
+            self.addFile(fName, None, False)
+            
+        self.selectCurrentTest(curTest)
+        
+    # end of __init__
 
     def setActions(self, app) :
         self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
@@ -182,9 +195,33 @@ class TestList(QtGui.QWidget) :
         self.aDel.triggered.connect(self.delTestClicked)
         
     # end of setActions
+    
+    def selectCurrentTest(self, curTestString) :
+        (fileIndex, groupIndex, testIndex) = curTestString.split('.')
+        fileIndex = int(fileIndex)
+        groupIndex = int(groupIndex)
+        testIndex = int(testIndex)
+        if fileIndex == -1 :
+            fileIndex = 0
+            groupIndex = -1
+            testIndex = -1
+        if groupIndex == -1 :
+            groupIndex = 0
+            testIndex = -1
+        # First set up the data structures for the right file and group. Ideally this
+        # would happen as a result of calling setCurrentIndex, but the signal processing
+        # doesn't allow things to happen in the right order.
+        self.changeFile(fileIndex)
+        self.changeGroup(groupIndex)
+        # These calls make the combo boxes match the data.
+        self.fcombo.setCurrentIndex(fileIndex)
+        self.gcombo.setCurrentIndex(groupIndex)
+        l = self.liststack.currentWidget()
+        l.setCurrentItem(l.item(testIndex))
+        self.recordCurrentTest()
 
     def initTests(self, fname) :
-         self.addGroup('main')
+         self.addGroup('main', record = False)
         
     def loadTests(self, fname):
         #print "loadTests(" + fname + ")"
@@ -299,6 +336,8 @@ class TestList(QtGui.QWidget) :
             self.fcombo.insertItem(index, basename)
         # TODO add file to configuration list
         self.changeFile(index)
+        self.recordTestFiles()
+        self.recordCurrentTest()
         
     def changeFile(self, index) :
         #print "changeFile(" + str(index) + ")"
@@ -313,8 +352,9 @@ class TestList(QtGui.QWidget) :
         # Load the new test file.
         self.loadTests(self.testFiles[index])
         self.currentFile = self.testFiles[index]
+        self.recordCurrentTest()
         
-    def addGroup(self, name, index = None, comment = "") :
+    def addGroup(self, name, index = None, comment = "", record = True) :
         listWidget = TestListWidget(self) # create a test list widget for this group
         listWidget.itemClicked.connect(self.singleClick)
         listWidget.itemDoubleClicked.connect(self.doubleClick)
@@ -329,7 +369,8 @@ class TestList(QtGui.QWidget) :
             self.gcombo.insertItem(index, name)
             self.testGroups.insert(index, groupList)
             self.comments.insert(index, comment)
-        
+        if record :
+            self.recordCurrentTest()
         return listWidget
         
     def appendTest(self, t, l = None) :
@@ -452,13 +493,18 @@ class TestList(QtGui.QWidget) :
         
         index = min(index, len(self.testFiles) - 1)
         self.changeFile(index)
+        self.record
         
     @QtCore.Slot(int)
     def changeGroupCombo(self, index) :
         #print "changeGroupCombo(" + str(index) + ")"
+        self.changeGroup(index)
+        
+    def changeGroup(self, index) :
         self.liststack.setCurrentIndex(index)
         if index < len(self.comments) :
             self.gcombo.setToolTip(self.comments[index])
+        self.recordCurrentTest()
 
     def addGroupClicked(self) :
         (name, ok) = QtGui.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
@@ -466,12 +512,14 @@ class TestList(QtGui.QWidget) :
             index = self.gcombo.currentIndex() + 1
             self.addGroup(name, index)
             self.gcombo.setCurrentIndex(self.gcombo.currentIndex() + 1)
+            self.recordCurrentTest()
 
     def delGroupClicked(self) :
         index = self.gcombo.currentIndex()
         self.liststack.removeWidget(self.list.widget(index))
         self.gcombo.removeItem(index)
         self.testGroups.pop(index)
+        self.recordCurrentTest()
 
     def editClicked(self) :
         self.editTest(self.liststack.currentWidget().currentRow())
@@ -484,13 +532,14 @@ class TestList(QtGui.QWidget) :
         if not t.name or not res :
             self.testGroups[groupIndex].pop()
             self.liststack.widget(groupIndex).takeItem(len(self.testGroups))
+        self.recordTestFiles()
 
     def delTestClicked(self) :
         groupindex = self.liststack.currentIndex()
         testindex = self.liststack.widget(groupindex).currentRow()
         self.testGroups[groupindex].pop(testindex)
         self.liststack.widget(groupindex).takeItem(testindex)
-        
+        self.recordTestFiles()
 
     def saveTestsClicked(self) :
         self.saveTests()
@@ -509,6 +558,7 @@ class TestList(QtGui.QWidget) :
             self.testGroups[groupindex].insert(testindex - 1, self.testGroups[groupindex].pop(testindex))
             l.insertItem(testindex - 1, l.takeItem(testindex))
             l.setCurrentRow(testindex - 1)
+        self.recordCurrentTest()
 
     def downClicked(self) :
         l = self.liststack.currentWidget()
@@ -518,6 +568,7 @@ class TestList(QtGui.QWidget) :
             self.testGroups[groupindex].insert(testindex + 1, self.testGroups[groupindex].pop(testindex))
             l.insertItem(testindex + 1, l.takeItem(testindex))
             l.setCurrentRow(testindex + 1)
+        self.recordCurrentTest()
             
     def singleClick(self, item) :
         if self.quickProofMode :
@@ -541,7 +592,7 @@ class TestList(QtGui.QWidget) :
     def loadTest(self, item) :
         groupIndex = self.liststack.currentIndex()
         testIndex = self.liststack.currentWidget().currentRow()
-        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        self.selectTest(groupIndex, testIndex)
 
     def runTest(self, item) :
         self.app.runClicked()
@@ -550,7 +601,7 @@ class TestList(QtGui.QWidget) :
         l = self.liststack.currentWidget()
         groupIndex = self.liststack.currentIndex()
         testIndex = l.currentRow()
-        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        self.selectTest(groupIndex, testIndex)
         if self.quickProofMode :
             self.runTest("bogus")
 
@@ -558,9 +609,29 @@ class TestList(QtGui.QWidget) :
         l = self.liststack.currentWidget()
         groupIndex = self.liststack.currentIndex()
         testIndex = l.currentRow()
-        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        self.selectTest(groupIndex, testIndex)
         if self.quickProofMode :
             self.runTest("bogus")
+    
+    def selectTest(self, groupIndex, testIndex) :
+        self.recordCurrentTest()
+        self.app.setRun(self.testGroups[groupIndex][testIndex])
+        
+    def recordCurrentTest(self) :
+        fileIndex = self.fcombo.currentIndex()
+        l = self.liststack.currentWidget()
+        groupIndex = self.liststack.currentIndex()
+        testIndex = l.currentRow() if l else -1
+        value = str(fileIndex) + '.' + str(groupIndex) + '.' + str(testIndex)
+        self.app.config.set('data', 'currenttest', value)
+        
+    def recordTestFiles(self) :
+        fileString = ''
+        for f in self.testFiles :
+            fileString = fileString + f + ';'
+        if not self.app.config.has_section('data') :
+            self.app.config.add_section('data')
+        self.app.config.set('data', 'testfiles', fileString)
         
     def findStyleClass(self, t) :
         k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
