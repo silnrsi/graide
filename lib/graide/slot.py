@@ -73,8 +73,9 @@ class Slot(DataObj) :
             cres = []
             cres.append(Attribute('flags', self.getColFlagsAnnot, None, False))
             cres.append(Attribute('status', self.getColStatusAnnot, None, False))
-            cres.append(Attribute('margin', self.getColMargin, None, False))
-            cres.append(Attribute('marginmin', self.getColMarginMin, None, False))
+            ##cres.append(Attribute('margin', self.getColMargin, None, False))
+            ##cres.append(Attribute('marginmin', self.getColMarginMin, None, False))
+            cres.append(Attribute('margin', self.getColMarginAttrs, None, False))
             cres.append(Attribute('min', self.getColLimitMin, None, False))
             cres.append(Attribute('max', self.getColLimitMax, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
@@ -83,12 +84,21 @@ class Slot(DataObj) :
             #    cres.append(Attribute('maxoverlap', self.getColMaxOverlap, None, False))
             #else :
             #    cres.append(Attribute('maxoverlap', self.getColMaxOverlapInvalid, None, False))
-            cres.append(Attribute('order', self.getColOrderAttrs, None, False))
+            ##cres.append(Attribute('order', self.getColOrderAttrs, None, False))
             cres.append(Attribute('exclude', self.getColExclAttrs, None, False))
             if self.colPending :
                 cres.append(Attribute('pending', self.getColPending, None, False))
             #if self.colKernPending :
             #    cres.append(Attribute('', self.getColKernPending, None, False))
+            
+        if hasattr(self, 'collision') and self.hasSequenceAttrs() :
+            sres = []
+            sres.append(Attribute('class & order', self.getSequenceAttrs, None, False))
+            sres.append(Attribute('above', self.getSeqAboveAttrs, None, False))
+            sres.append(Attribute('below', self.getSeqBelowAttrs, None, False))
+            sres.append(Attribute('valign', self.getSeqValignAttrs, None, False))
+        else :
+            sres = None
             
         if hasattr(self, 'parent') :
             res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
@@ -96,14 +106,18 @@ class Slot(DataObj) :
             
         resAttrib = AttribModel(res)
 
+        if hasattr(self, 'collision') :
+            cAttrib = AttribModel(cres, resAttrib)
+            resAttrib.add(Attribute('collision', None, None, True, None, cAttrib))
+            
+        if sres :
+            sAttrib = AttribModel(sres, resAttrib)
+            resAttrib.add(Attribute('sequence', None, None, True, None, sAttrib))
+
         ures = []
         for i in range(len(self.user)) :
             ures.append(Attribute(str(i+1), self.getUser, None, False, None, i))
             
-        if hasattr(self, 'collision') :
-            cAttrib = AttribModel(cres, resAttrib)
-            resAttrib.add(Attribute('collision', None, None, True, None, cAttrib))
-
         uAttrib = AttribModel(ures, resAttrib)
         resAttrib.add(Attribute('user attributes', None, None, True, None, uAttrib))
         return resAttrib
@@ -147,7 +161,6 @@ class Slot(DataObj) :
             
     def getColStatusAnnot(self) :
         try :
-            status = self.collision['status']
             result = self.colFlagsAnnot(status)
             return result
         except :
@@ -162,6 +175,13 @@ class Slot(DataObj) :
     def getColMarginMin(self) :
         try :
             return self.collision['marginmin']
+        except :
+            return None
+            
+    def getColMarginAttrs(self) :
+        try : 
+            values = self.collision['margin']  ## margin, marginweight
+            return "%d @ %d" % (values[0], values[1])
         except :
             return None
             
@@ -207,12 +227,48 @@ class Slot(DataObj) :
 #    def getColMaxOverlapInvalid(self) :
 #        return "---"
 
-    def getColOrderAttrs(self) :
+    def getColOrderAttrs(self) :  ## OBSOLETE
         try :
             res = self.collision['order']
-            flagAnnot = self.colOrderFlagsAnnot(res[1])
+            flagAnnot = self.seqOrderFlagsAnnot(res[1])
             return "%d: %s" % (res[0], flagAnnot)
         except:
+            return None
+            
+    def hasSequenceAttrs(self) :
+        try :
+            self.collision['sequence']
+            return True
+        except :
+            return False
+            
+    def getSequenceAttrs(self) :
+        try : 
+            values = self.collision['sequence']  ## class, order
+            flagAnnot = self.seqOrderFlagsAnnot(values[1])
+            return "%d : %s" % (values[0], flagAnnot)
+        except :
+            return None
+
+    def getSeqAboveAttrs(self) :
+        try : 
+            values = self.collision['seqabove']  ## xoffset, weight
+            return "%d @ %d" % (values[0], values[1])
+        except :
+            return None
+
+    def getSeqBelowAttrs(self) :
+        try : 
+            values = self.collision['seqbelow']  ## xlimit, weight
+            return "%d @ %d" % (values[0], values[1])
+        except :
+            return None
+            
+    def getSeqValignAttrs(self) :
+        try : 
+            values = self.collision['seqabove']  ## height, weight
+            return "%d @ %d" % (values[0], values[1])
+        except :
             return None
         
     def getColExclAttrs(self) :
@@ -315,7 +371,7 @@ class Slot(DataObj) :
         return result
             
     @staticmethod
-    def colOrderFlagsAnnot(flags) :
+    def seqOrderFlagsAnnot(flags) :
         result = str(flags)
         flagDict = { 1: "LEFT", 2: "RIGHT", 3: "UP", 4: "DOWN" }
         sep = "="
