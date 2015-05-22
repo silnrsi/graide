@@ -68,8 +68,8 @@ class TestList(QtGui.QWidget) :
         self.header = None
 
         # Get the current test stuff from the configuration before setting up the files, which could change it.
-        curTest = self.app.config.get('data','currenttest')
-        fListString = self.app.config.get('data', 'testfiles')
+        curTest = self.app.config.get('data','currenttest') if self.app.config.has_option('data','currenttest') else ""
+        fListString = self.app.config.get('data', 'testfiles') if self.app.config.has_option('data','testfiles') else ""
 
         self.setActions(app)
         vLayout = QtGui.QVBoxLayout()
@@ -161,9 +161,9 @@ class TestList(QtGui.QWidget) :
             for f in fList :
                 if f != "" :
                     self.addFile(f, None, False)
-        elif fname :
+        elif fName :
             self.addFile(fName, None, False)
-            
+        
         self.selectCurrentTest(curTest)
         
     # end of __init__
@@ -197,6 +197,8 @@ class TestList(QtGui.QWidget) :
     # end of setActions
     
     def selectCurrentTest(self, curTestString) :
+        if curTestString == "" :
+            return
         (fileIndex, groupIndex, testIndex) = curTestString.split('.')
         fileIndex = int(fileIndex)
         groupIndex = int(groupIndex)
