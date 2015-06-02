@@ -54,6 +54,7 @@ class Glyph(object) :
         self.gdl_properties = {}
         self.properties = {}
         self.collisionProps = {}
+        self.sequenceProps = {}
         self.octaboxProps = {}
 
     def setName(self, name) :
@@ -76,6 +77,9 @@ class Glyph(object) :
         
     def setCollisionProp(self, name, value) :
         self.collisionProps[name] = value
+        
+    def setSequenceProp(self, name, value) :
+        self.sequenceProps[name] = value
         
     def setOctaboxProp(self, name, value) :
         self.octaboxProps[name] = value

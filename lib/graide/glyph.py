@@ -134,9 +134,17 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         colAttrList = []
         if (len(self.collisionProps)) :
             colModel = AttribModel(colAttrList, topModel) # sub-tree for collision
-            for k in sorted(self.collisionProps.keys()) :
+            for k in self.sortedCollKeys(self.collisionProps.keys()) :
                 colAttrList.append(Attribute(k, self.getCollisionAnnot, None, False, self._fileLoc("collision."+k), k))
             topModel.add(Attribute('collision', None, None, True, None, colModel))
+            
+        #sequence
+        seqAttrList = []
+        if (len(self.sequenceProps)) :
+            seqModel = AttribModel(seqAttrList, topModel) #sub-tree for sequence
+            for k in self.sortedSeqKeys(self.sequenceProps.keys()) :
+                seqAttrList.append(Attribute(k, self.getSequence, None, False, self._fileLoc("sequence."+k), k))
+            topModel.add(Attribute('sequence', None, None, True, None, seqModel)) 
             
         # octaboxes
         octaAttrList = []
@@ -161,6 +169,31 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     # Store a line-and-file associated with a glyph attribute.
     def addLineAndFile(self, attrName, inFile, atLine) :
         self.fileLocs[attrName] = (inFile, atLine);
+        
+    def sortedCollKeys(self, keys) :
+        goodOrder = ["flags", "min.x", "max.x", "min.y", "max.y", "margin", "marginweight", \
+            "exclude.glyph", "exclude.offset.x", "exclude.offset.y", "complexFit"]
+        result = list()
+        for k in goodOrder :  # add items above in that order
+            if k in keys :
+                result.append(k)
+        for k in keys :       # add anything else
+            if not k in result :
+                result.append(k)
+        return result
+        
+    def sortedSeqKeys(self, keys) :
+        goodOrder = ["class", "proxClass", "order", "above.xoffset", "above.weight", "below.xlimit", "below.weight", \
+            "valign.height", "valign.weight"]
+        result = list()
+        for k in goodOrder :  # add items above in that order
+            if k in keys :
+                result.append(k)
+        for k in keys :       # add anything else
+            if not k in result :
+                result.append(k)
+        return result
+
         
     def _fileLoc(self, attrName) :
         if attrName in self.fileLocs :
@@ -225,6 +258,10 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         value = self.collisionProps[key]
         if key == "flags" :
             value = Slot.colFlagsAnnot(value)
+        return value
+        
+    def getSequence(self, key) :
+        value = self.sequenceProps[key]
         return value
         
     def getOctabox(self, key) :

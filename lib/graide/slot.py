@@ -93,7 +93,8 @@ class Slot(DataObj) :
             
         if hasattr(self, 'collision') and self.hasSequenceAttrs() :
             sres = []
-            sres.append(Attribute('class & order', self.getSequenceAttrs, None, False))
+            sres.append(Attribute('class', self.getSeqClassAttrs, None, False))
+            sres.append(Attribute('order', self.getSeqOrderAttr, None, False))
             sres.append(Attribute('above', self.getSeqAboveAttrs, None, False))
             sres.append(Attribute('below', self.getSeqBelowAttrs, None, False))
             sres.append(Attribute('valign', self.getSeqValignAttrs, None, False))
@@ -237,16 +238,23 @@ class Slot(DataObj) :
             
     def hasSequenceAttrs(self) :
         try :
-            self.collision['sequence']
+            self.collision['seqclass']
             return True
         except :
             return False
             
-    def getSequenceAttrs(self) :
+    def getSeqClassAttrs(self) :
         try : 
-            values = self.collision['sequence']  ## class, order
-            flagAnnot = self.seqOrderFlagsAnnot(values[1])
-            return "%d : %s" % (values[0], flagAnnot)
+            values = self.collision['seqclass']  ## class, proxClass
+            return "%d / %d" % (values[0], values[1])
+        except :
+            return None
+            
+    def getSeqOrderAttr(self) :
+        try :
+            value = self.collision['seqorder']
+            flagAnnot = self.seqOrderFlagsAnnot(value)
+            return flagAnnot
         except :
             return None
 
