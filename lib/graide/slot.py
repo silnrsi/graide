@@ -24,6 +24,8 @@ from graide.utils import copyobj, DataObj
 from graide.layout import Layout
 import traceback
 
+def getVal(*parms) : return str(parms[0])
+
 class Slot(DataObj) :
 
     def __init__(self, info = {}) :
@@ -39,6 +41,7 @@ class Slot(DataObj) :
         self.colPending = None
         self.colKernPending = None # from neighboring glyphs
         self.pxExcl = None
+        self.colRemoves = {'x' : [], 'y' : [], 's' : [], 'd' : []}
 
 
     def copy(self) :
@@ -48,6 +51,7 @@ class Slot(DataObj) :
             res.collision = self.collision.copy() # otherwise slot copies will shared this dict!
         self.px = None
         self.pxExcl = None
+        res.colRemoves = {'x' : [], 'y' : [], 's' : [], 'd' : []}
         #self.highlighted = False
         #self.highlightType = ""
         return res
@@ -69,6 +73,7 @@ class Slot(DataObj) :
         for k in ('before', 'after') :
             res.append(Attribute(k, self.getCharInfo, None, False, None, k))
             
+        crem = {}
         if hasattr(self, 'collision') :
             cres = []
             cres.append(Attribute('flags', self.getColFlagsAnnot, None, False))
@@ -91,6 +96,13 @@ class Slot(DataObj) :
             #if self.colKernPending :
             #    cres.append(Attribute('', self.getColKernPending, None, False))
             
+            for rk in 'xysd' :
+                if len(self.getColRemoves()[rk]) :
+                    trem = []
+                    for v in self.getColRemoves()[rk] :
+                        trem.append(Attribute(v[2]+'('+str(v[1])+')', getVal, None, False, None, v[3]))
+                    crem[rk] = trem
+
         if hasattr(self, 'collision') and self.hasSequenceAttrs() :
             sres = []
             sres.append(Attribute('class', self.getSeqClassAttrs, None, False))
@@ -110,6 +122,14 @@ class Slot(DataObj) :
         if hasattr(self, 'collision') :
             cAttrib = AttribModel(cres, resAttrib)
             resAttrib.add(Attribute('collision', None, None, True, None, cAttrib))
+            if len(crem) :
+                cremAttrib = AttribModel([], cAttrib)
+                cAttrib.add(Attribute('removals', None, None, True, None, cremAttrib))
+                for k in 'xysd' :
+                    if k not in crem : continue
+                    v = crem[k]
+                    tmodel = AttribModel(v, cremAttrib)
+                    cremAttrib.add(Attribute(k, None, None, True, None, tmodel))
             
         if sres :
             sAttrib = AttribModel(sres, resAttrib)
@@ -218,6 +238,12 @@ class Slot(DataObj) :
         
     def setColKern(self, f) :
         self.colKern = f
+
+    def getColRemoves(self) :
+        return self.colRemoves
+
+    def addColRemoves(self, k, f) :
+        self.colRemoves[k].append(f)
        
 #    def getColMaxOverlap(self) :
 #        try :

@@ -335,7 +335,14 @@ class PassesView(QtGui.QTableWidget) :
                             newValue = pending
                             #newValuePlus = [pending[0] + int(initOffset[0]), pending[1] + int(initOffset[1])]
                         (i, s) = nextRun.modifySlotWithId(slotId, 'colPending', newValue)
-                                            
+
+                        if 'vectors' in moveInfo :
+                            for vec in moveInfo['vectors'] :
+                                k = vec['direction'][0]
+                                for rem in vec['removals'] :
+                                    i = nextRun.indexOfId(rem[0])
+                                    if i > -1 :
+                                        nextRun[i].addColRemoves(k, rem)
                         if slotId in prevMoves.keys() :
                             changed = (newValue[0] != prevMoves[slotId][0] or newValue[1] != prevMoves[slotId][1])
                         else :
