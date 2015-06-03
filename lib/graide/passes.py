@@ -340,9 +340,10 @@ class PassesView(QtGui.QTableWidget) :
                             for vec in moveInfo['vectors'] :
                                 k = vec['direction'][0]
                                 for rem in vec['removals'] :
-                                    i = nextRun.indexOfId(rem[0])
-                                    if i > -1 :
-                                        nextRun[i].addColRemoves(k, rem)
+                                    j = nextRun.indexOfId(rem[0])
+                                    if j > -1 :
+                                        nextRun[j].addColRemoves(k, rem)
+                                s.addResults(k, vec['ranges'], vec['bestVal'], vec['bestCost'])
                         if slotId in prevMoves.keys() :
                             changed = (newValue[0] != prevMoves[slotId][0] or newValue[1] != prevMoves[slotId][1])
                         else :

@@ -24,7 +24,17 @@ from graide.utils import copyobj, DataObj
 from graide.layout import Layout
 import traceback
 
-def getVal(*parms) : return str(parms[0])
+def getVal(p, *parms) : 
+    if hasattr(p, 'len') :
+        return "\n".join(map(str, p))
+    else :
+        return str(p)
+
+class Results(object) :
+    def __init__(self, r, v, c) :
+        self.ranges = r
+        self.val = v
+        self.cost = c
 
 class Slot(DataObj) :
 
@@ -42,6 +52,7 @@ class Slot(DataObj) :
         self.colKernPending = None # from neighboring glyphs
         self.pxExcl = None
         self.colRemoves = {'x' : [], 'y' : [], 's' : [], 'd' : []}
+        self.colResults = {}
 
 
     def copy(self) :
@@ -52,6 +63,7 @@ class Slot(DataObj) :
         self.px = None
         self.pxExcl = None
         res.colRemoves = {'x' : [], 'y' : [], 's' : [], 'd' : []}
+        res.colResults = {}
         #self.highlighted = False
         #self.highlightType = ""
         return res
@@ -130,6 +142,19 @@ class Slot(DataObj) :
                     v = crem[k]
                     tmodel = AttribModel(v, cremAttrib)
                     cremAttrib.add(Attribute(k, None, None, True, None, tmodel))
+            r = self.getColResults()
+            if len(r) :
+                crAttribModel = AttribModel([], cAttrib)
+                cAttrib.add(Attribute('results', None, None, True, None, crAttribModel))
+                for k in 'xysd' :
+                    if k not in r : continue
+                    v = r[k]
+                    lModel = AttribModel([], crAttribModel)
+                    crAttribModel.add(Attribute(k, None, None, True, None, lModel))
+                    lModel.add(Attribute('totalrange', getVal, None, False, None, "(%d, %d)" % (v.ranges[0][0], v.ranges[0][1])))
+                    lModel.add(Attribute('ranges', getVal, None, False, None, v.ranges[1:]))
+                    lModel.add(Attribute('bestVal', getVal, None, False, None, v.val))
+                    lModel.add(Attribute('bestCost', getVal, None, False, None, v.cost))
             
         if sres :
             sAttrib = AttribModel(sres, resAttrib)
@@ -244,7 +269,13 @@ class Slot(DataObj) :
 
     def addColRemoves(self, k, f) :
         self.colRemoves[k].append(f)
-       
+
+    def addResults(self, k, r, v, c) :
+        self.colResults[k] = Results(r, v, c)
+
+    def getColResults(self) :
+        return self.colResults
+
 #    def getColMaxOverlap(self) :
 #        try :
 #            return self.collision['maxoverlap']
