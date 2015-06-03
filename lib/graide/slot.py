@@ -438,7 +438,7 @@ class Slot(DataObj) :
     @staticmethod
     def seqOrderFlagsAnnot(flags) :
         result = str(flags)
-        flagDict = { 1: "LEFT", 2: "RIGHT", 3: "UP", 4: "DOWN" }
+        flagDict = { 1: "LEFTDOWN", 2: "RIGHTUP", 3: "NOABOVE", 4: "NOBELOW" }
         sep = "="
         for k in flagDict.keys() :
             if flags & k == k :
