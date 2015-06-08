@@ -144,8 +144,8 @@ class Font(object) :
         if hasApFile :
             storemirror = False
             setFromGdx = ("*actualForPseudo*") # only set this attr
-        #else : - I think we need to do this regardless
-        g.clear()
+        else : #- I think we need to do this regardless [MH: Don't clear if hasApFile, since won't read attributes from gdx]
+            g.clear()
         if gdlName : self.setGDL(g, gdlName)
         storemirror = False
         u = e.get('usv')
@@ -160,7 +160,7 @@ class Font(object) :
         for a in e.iterfind('glyphAttrValue') :
             attrName = a.get('name')
             
-            if not hasApFile or attrName in setFromGdx :
+            if attrName in setFromGdx :
                 inFile = a.get("inFile")
                 atLine = a.get("atLine")
                     
@@ -179,6 +179,8 @@ class Font(object) :
                     g.setSequenceProp(attrName[9:], int(a.get('value')))
                 elif attrName.startswith('octabox') :
                     g.setOctaboxProp(attrName[8:], a.get('value'))
+                elif hasApFile :
+                    pass # AP takes precedent for the following attributes so skip them
                 elif attrName.endswith('.x') :
                     g.setAnchor(attrName[:-2], int(a.get('value')), None)
                 elif attrName.endswith('.y') :
@@ -340,6 +342,7 @@ class Font(object) :
     def outGDL(self, fh) :
         munits = self.emunits()
         fh.write('table(glyph) {MUnits = ' + str(munits) + '};\n')
+        nglyphs = 0
         for g in self.glyphs :
             if not g or not g.psname : continue
             if g.psname == '.notdef' :
@@ -355,6 +358,7 @@ class Font(object) :
                 outs.append("%s=%s" % (p, v))
             if len(outs) : fh.write(" {" + "; ".join(outs) + "}")
             fh.write(";\n")
+            nglyphs += 1
         fh.write("\n")
         fh.write("\n/* Point Classes */\n")
         for p in self.points.values() :
@@ -382,7 +386,7 @@ class Font(object) :
             self.outclass(fh, "clig" + k, map(lambda x: self.gdls[x[0]], self.ligs[k]))
             self.outclass(fh, "cligno_" + k, map(lambda x: self.gdls[x[1]], self.ligs[k]))
         fh.write("\nendtable;\n")
-        fh.write("\n\n#define MAXGLYPH %d\n\n" % (len(self.glyphs) - 1))
+        fh.write("\n\n#define MAXGLYPH %d\n\n" % (nglyphs - 1))
 
     def outPosRules(self, fh, num) :
         fh.write("""
