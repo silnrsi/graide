@@ -146,6 +146,7 @@ class Font(object) :
             setFromGdx = ("*actualForPseudo*") # only set this attr
         else : #- I think we need to do this regardless [MH: Don't clear if hasApFile, since won't read attributes from gdx]
             g.clear()
+            setFromGdx = "all"
         if gdlName : self.setGDL(g, gdlName)
         storemirror = False
         u = e.get('usv')
@@ -160,7 +161,7 @@ class Font(object) :
         for a in e.iterfind('glyphAttrValue') :
             attrName = a.get('name')
             
-            if attrName in setFromGdx :
+            if setFromGdx == "all" or attrName in setFromGdx :
                 inFile = a.get("inFile")
                 atLine = a.get("atLine")
                     

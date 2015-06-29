@@ -151,8 +151,8 @@ class Slot(DataObj) :
                     v = r[k]
                     lModel = AttribModel([], crAttribModel)
                     crAttribModel.add(Attribute(k, None, None, True, None, lModel))
-                    lModel.add(Attribute('totalrange', getVal, None, False, None, "(%d, %d)" % (v.ranges[0][0], v.ranges[0][1])))
-                    lModel.add(Attribute('ranges', getVal, None, False, None, v.ranges[1:]))
+                    lModel.add(Attribute('totalRange', getVal, None, False, None, "[%d, %d]" % (v.ranges[0][0], v.ranges[0][1])))
+                    lModel.add(Attribute('legalRanges', getVal, None, False, None, v.ranges[1:]))
                     lModel.add(Attribute('bestVal', getVal, None, False, None, v.val))
                     lModel.add(Attribute('bestCost', getVal, None, False, None, v.cost))
             
@@ -438,7 +438,7 @@ class Slot(DataObj) :
     @staticmethod
     def seqOrderFlagsAnnot(flags) :
         result = str(flags)
-        flagDict = { 1: "LEFTDOWN", 2: "RIGHTUP", 3: "NOABOVE", 4: "NOBELOW" }
+        flagDict = { 1: "LEFTDOWN", 2: "RIGHTUP", 4: "NOABOVE", 8: "NOBELOW" }
         sep = "="
         for k in flagDict.keys() :
             if flags & k == k :
