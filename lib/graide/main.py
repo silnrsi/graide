@@ -108,7 +108,7 @@ class MainWindow(QtGui.QMainWindow) :
                 
         print "Loading font..." #===
         if config.has_option('main', 'font') :
-            fontname = config.get('main', 'font')
+            fontname = os.path.join(os.path.dirname(self.cfgFileName), config.get('main', 'font'))
             if fontname == None or fontname == "" :
                 popUpError("WARNING: No font file specified")
             elif not os.path.exists(fontname) :
@@ -122,7 +122,8 @@ class MainWindow(QtGui.QMainWindow) :
             okCancel = self.runStartupDialog()  # forces them to define a font or Cancel
             if okCancel == False :
                 self.doExit()
-            self.loadFont(config.get('main', 'font'))
+            fontname = os.path.join(os.path.dirname(self.cfgFileName), config.get('main', 'font'))
+            self.loadFont(fontname)
 
         if jsonFile :
             f = file(jsonFile)
@@ -267,7 +268,7 @@ class MainWindow(QtGui.QMainWindow) :
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
         
-        self.loadAP(configval(self.config, 'main', 'ap'))
+        self.loadAP(os.path.join(os.path.dirname(self.cfgFileName), configval(self.config, 'main', 'ap')))
         if hasattr(self, 'tab_font') :
             if self.tab_font :
                 self.tab_font.resizeRowsToContents()

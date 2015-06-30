@@ -141,12 +141,8 @@ class Font(object) :
             else :
                 g = self.addGlyph(gid)
 
-        if hasApFile :
-            storemirror = False
-            setFromGdx = ("*actualForPseudo*") # only set this attr
-        else : #- I think we need to do this regardless [MH: Don't clear if hasApFile, since won't read attributes from gdx]
+        if not hasApFile :
             g.clear()
-            setFromGdx = "all"
         if gdlName : self.setGDL(g, gdlName)
         storemirror = False
         u = e.get('usv')
@@ -161,37 +157,34 @@ class Font(object) :
         for a in e.iterfind('glyphAttrValue') :
             attrName = a.get('name')
             
-            if setFromGdx == "all" or attrName in setFromGdx :
-                inFile = a.get("inFile")
-                atLine = a.get("atLine")
-                    
-                m = re.match(ur'^justify.(\d).([^.]+)', attrName)
-                if m :
-                    g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
-                elif attrName == 'mirror.isEncoded' :
-                    storemirror = True
-                elif attrName == 'mirror.glyph' :
-                    mirrorglyph = a.get('value')
-                #elif attrName in ('*actualForPseudo*', 'breakweight', 'directionality') :
-                #    pass
-                elif attrName.startswith('collision') :
-                    g.setCollisionProp(attrName[10:], int(a.get('value')))
-                elif attrName.startswith('sequence') :
-                    g.setSequenceProp(attrName[9:], int(a.get('value')))
-                elif attrName.startswith('octabox') :
-                    g.setOctaboxProp(attrName[8:], a.get('value'))
-                elif hasApFile :
-                    pass # AP takes precedent for the following attributes so skip them
-                elif attrName.endswith('.x') :
-                    g.setAnchor(attrName[:-2], int(a.get('value')), None)
-                elif attrName.endswith('.y') :
-                    g.setAnchor(attrName[:-2], None, int(a.get('value')))
-                elif attrName.find('.') == -1 :
-                    g.setGdlProperty(attrName, a.get('value'))
+            inFile = a.get("inFile")
+            atLine = a.get("atLine")
                 
-                if inFile :
-                    atLine = int(atLine) - 1 if atLine else -1
-                    g.addLineAndFile(attrName, inFile, atLine)
+            m = re.match(ur'^justify.(\d).([^.]+)', attrName)
+            if m :
+                g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
+            elif attrName == 'mirror.isEncoded' :
+                storemirror = True
+            elif attrName == 'mirror.glyph' :
+                mirrorglyph = a.get('value')
+            elif attrName.startswith('collision') :
+                g.setCollisionProp(attrName[10:], int(a.get('value')))
+            elif attrName.startswith('sequence') :
+                g.setSequenceProp(attrName[9:], int(a.get('value')))
+            elif attrName.startswith('octabox') :
+                g.setOctaboxProp(attrName[8:], a.get('value'))
+            elif hasApFile :
+                pass # AP takes precedent for the following attributes so skip them
+            elif attrName.endswith('.x') :
+                g.setAnchor(attrName[:-2], int(a.get('value')), None)
+            elif attrName.endswith('.y') :
+                g.setAnchor(attrName[:-2], None, int(a.get('value')))
+            elif attrName.find('.') == -1 :
+                g.setGdlProperty(attrName, a.get('value'))
+            
+            if inFile :
+                atLine = int(atLine) - 1 if atLine else -1
+                g.addLineAndFile(attrName, inFile, atLine)
 
         if storemirror and mirrorglyph :
             g.setGdlProperty('mirror.glyph', mirrorglyph)
