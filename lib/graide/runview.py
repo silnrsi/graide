@@ -121,6 +121,9 @@ class RunView(QtCore.QObject, ModelSuper) :
         self.currselection = -1
         self._scene.clear()
         self._pixmaps = []
+        # There might not be a 1-to-1 correspondence between slots and pixmaps -
+        # slots with exclude glyphs create an extra pixmap:
+        self._slotToPixmap = {}
         self._gindices = [0]
         scale = font.size * 1. / font.upem
         res = QtCore.QRect()
@@ -141,6 +144,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 gidActual = 0
             gActual = font[gidActual] if gidActual != 0  else g
 
+            self._slotToPixmap[i] = len(self._pixmaps)
             if gActual and gActual.item and gActual.item.pixmap :
                 res = self.createPixmap(s, gActual, i, res, scale, model = self, scene = self._scene)
             else :
@@ -244,12 +248,12 @@ class RunView(QtCore.QObject, ModelSuper) :
         s = self.tview.extraSelections()
         
         if self.currselection >= 0 :
-            if self._pixmaps[self.currselection] :
-                self._pixmaps[self.currselection].select(False)
+            self.selectPixmapForSlot(self.currselection, False)
             s.pop()
+            
         if newSel >= 0 and self.currselection != newSel :
             self.currselection = newSel
-            if self._pixmaps[newSel] : self._pixmaps[newSel].select(True)
+            self.selectPixmapForSlot(newSel, True)
                 
             # Highlight the name of the selected glyph in the text view.
             tselect = QtGui.QTextEdit.ExtraSelection()
@@ -259,24 +263,37 @@ class RunView(QtCore.QObject, ModelSuper) :
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter,
                     QtGui.QTextCursor.KeepAnchor, self._gindices[newSel + 1] - self._gindices[newSel] - 2 )
             s.append(tselect)
-            self.slotSelected.emit(self.run[self.currselection], self, doubleClick)
-            self.glyphSelected.emit(self._font[self.run[self.currselection].gid], self, doubleClick)
+            selectedSlot = self.run[self.currselection]
+            self.slotSelected.emit(selectedSlot, self, doubleClick)
+            self.glyphSelected.emit(self._font[selectedSlot.gid], self, doubleClick)
         else :
             self.currselection = -1
             
         self.tview.setExtraSelections(s)
         
-
     def clearSelected(self) :
         if self.currselection >= 0 :
-            if self._pixmaps[self.currselection] != None :
-                self._pixmaps[self.currselection].select(False)
-            # else there was no glyph to display
+            self.selectPixmapForSlot(self.currselection, False)
+
             s = self.tview.extraSelections()
             s.pop()
             self.tview.setExtraSelections(s)
         self.currselection = -1
     
+    # There is not necessarily a one-to-one correspondence between slots and pixmaps 
+    # (due to exclude glyphs), so this method maps from one to the other.
+    def selectPixmapForSlot(self, i, selectValue) :
+        if i >= 0 :
+            try :
+                try :
+                    pixmap = self._pixmaps[self._slotToPixmap[i]]
+                except :
+                    pixmap = self._pixmaps[i]
+            except :
+                pixmap = None
+            if pixmap :
+                pixmap.select(selectValue)
+            
     def tEvent(self, event) :
         doubleClick = (event.type() == QtCore.QEvent.MouseButtonDblClick)
         c = self.tview.cursorForPosition(event.pos()).position()
