@@ -97,7 +97,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             # classes
             attrList.append(Attribute(a, self.getProperty, None, False, self._fileLoc(a), a))  ## self.setPropertyX
             
-        for a in sorted(self.gdl_properties.keys()) :
+        for a in sorted(self.gdlProperties.keys()) :
             # breakweight, dir, mirror, etc.
             if a == "*actualForPseudo*" :
                 actual = self.getGdlProperty("*actualForPseudo*")
@@ -116,6 +116,16 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         for k in sorted(self.anchors.keys()) :
             ptAttrList.append(Attribute(k, self.getPoint, None, False, self._fileLoc(k), k))  ## self.setPoint
         topModel.add(Attribute('points', None, None, True, None, ptModel))
+        
+        # user-defined
+        #try : self.userProperties
+        #except : self.userProperties = {}
+        if len(self.userProperties) :
+            userAttrList = []
+            userModel = AttribModel(userAttrList, topModel) # sub-tree for user-defined attrs
+            for k in sorted(self.userProperties.keys()) :
+                userAttrList.append(Attribute(k, self.getUserProperty, None, False, self._fileLoc(k), k))
+            topModel.add(Attribute('user-defined', None, None, True, None, userModel))
         
         # justification - TODO clean up line-and-file stuff for multiple levels
         if len(self.justifies) :
@@ -222,18 +232,31 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             self.properties[key] = value
 
     def getGdlProperty(self, key) :
-        return self.gdl_properties[key]
+        return self.gdlProperties[key]
         
     def getGdlPropertyWithBinary(self, key) :
-        value = int(self.gdl_properties[key])
+        value = int(self.gdlProperties[key])
         binary = bin(value)[2:]
         return "%d = %s" % (value, binary)
 
     def setGdlProperty(self, key, value) :
         if value == None :
-            del self.gdl_properties[key]
+            del self.gdlProperties[key]
         else :
-            self.gdl_properties[key] = value
+            self.gdlProperties[key] = value
+    
+    def getUserProperty(self, key) :
+        return self.userProperties[key]
+        
+    def setUserProperty(self, key, value) :
+        #try :
+        #    self.userProperties
+        #except :
+        #    self.userProperties = {}
+        if value == None :
+            del self.userProperties[key]
+        else :
+            self.userProperties[key] = value
 
     def getPoint(self, key) :
         return str(self.anchors[key])
@@ -291,3 +314,16 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
 
     def isHighlighted(self) :
         return self.isHigh
+
+    @staticmethod
+    def builtInGlyphAttr(attrName) :
+        if attrName == "*skipPasses*" :
+            return True
+        elif attrName == "breakweight" :
+            return True
+        elif attrName == "directionality" :
+            return True
+        elif attrName.startswith('mirror') :
+            return True
+        else :
+            return False

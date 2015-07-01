@@ -179,8 +179,10 @@ class Font(object) :
                 g.setAnchor(attrName[:-2], int(a.get('value')), None)
             elif attrName.endswith('.y') :
                 g.setAnchor(attrName[:-2], None, int(a.get('value')))
-            elif attrName.find('.') == -1 :
+            elif g.builtInGlyphAttr(attrName) :
                 g.setGdlProperty(attrName, a.get('value'))
+            else :
+                g.setUserProperty(attrName, a.get('value'))
             
             if inFile :
                 atLine = int(atLine) - 1 if atLine else -1
@@ -348,7 +350,7 @@ class Font(object) :
                 for a in g.anchors.keys() :
                     v = g.anchors[a]
                     outs.append(a + "=point(" + str(int(v[0])) + "m, " + str(int(v[1])) + "m)")
-            for (p, v) in g.gdl_properties.items() :
+            for (p, v) in g.gdlProperties.items() :
                 outs.append("%s=%s" % (p, v))
             if len(outs) : fh.write(" {" + "; ".join(outs) + "}")
             fh.write(";\n")

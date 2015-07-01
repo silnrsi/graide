@@ -51,7 +51,8 @@ class Glyph(object) :
     def clear(self) :
         self.anchors = {}
         self.classes = set()
-        self.gdl_properties = {}
+        self.gdlProperties = {}
+        self.userProperties = {}
         self.properties = {}
         self.collisionProps = {}
         self.sequenceProps = {}
@@ -110,7 +111,7 @@ class Glyph(object) :
             if n == 'GDLName' :
                 self.setGDL(p.get('value'))
             elif n.startswith('GDL_') :
-                self.gdl_properties[n[4:]] = p.get('value')
+                self.gdlProperties[n[4:]] = p.get('value')
             else :
                 self.properties[n] = p.get('value')
         for p in elem.iterfind('point') :
@@ -147,10 +148,10 @@ class Glyph(object) :
             if ce is not None : ce.tail = "\n    "
             ce = p
             
-        for k in sorted(self.gdl_properties.keys()) :
+        for k in sorted(self.gdlProperties.keys()) :
             if k == "*skipPasses*" : continue  # not set in GDL
                 
-            v = self.gdl_properties[k]
+            v = self.gdlProperties[k]
             if v :
                 p = SubElement(e, 'property')
                 p.set('name', 'GDL_' + k)
