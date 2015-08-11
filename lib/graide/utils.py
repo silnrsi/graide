@@ -40,6 +40,12 @@ def configval(config, section, option) :
     else :
         return None
 
+def configvalString(config, section, option) :
+    if config.has_option(section, option) :
+        return config.get(section, option)
+    else :
+        return ''
+
 def configintval(config, section, option) :
     if config.has_option(section, option) :
         txt = config.get(section, option)

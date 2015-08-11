@@ -27,7 +27,7 @@ from graide.runview import RunView
 from graide.passes import PassesView
 from graide.gdx import Gdx
 from graide.filetabs import FileTabs
-from graide.utils import buildGraphite, configval, configintval, registerErrorLog, findgrcompiler, as_entities, popUpError
+from graide.utils import buildGraphite, configval, configintval, configvalString, registerErrorLog, findgrcompiler, as_entities, popUpError
 from graide.layout import Layout
 from graide.rungraphite import runGraphite, makeFontAndFace, runGraphiteWithFontFace
 from graide.featureselector import make_FeaturesMap, FeatureDialog
@@ -268,7 +268,7 @@ class MainWindow(QtGui.QMainWindow) :
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
         
-        self.loadAP(os.path.join(os.path.dirname(self.cfgFileName), configval(self.config, 'main', 'ap')))
+        self.loadAP(os.path.join(os.path.dirname(self.cfgFileName), configvalString(self.config, 'main', 'ap')))
         if hasattr(self, 'tab_font') :
             if self.tab_font :
                 self.tab_font.resizeRowsToContents()
