@@ -67,6 +67,9 @@
 #define VERTICAL_FROM_LEFT 4
 #define VERTICAL_FROM_RIGHT 8
 
+#define LEFT_TO_RIGHT 1
+#define RIGHT_TO_LEFT 2
+
 #define JMODE_NORMAL 0
 #define JMODE_MEASURE 1
 #define JMODE_JUSTIFY 2

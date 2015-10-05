@@ -112,7 +112,13 @@ class Slot(DataObj) :
                 if len(self.getColRemoves()[rk]) :
                     trem = []
                     for v in self.getColRemoves()[rk] :
-                        trem.append(Attribute(v[2]+'('+str(v[1])+')', getVal, None, False, None, v[3]))
+                        if v[2] == "exclude" : # exclude is not a good label for this
+                            label = "weighted"
+                        elif v[2] == "remove" :
+                            label = "absolute"
+                        else :
+                            label = v[2]
+                        trem.append(Attribute(label+'('+str(v[1])+')', getVal, None, False, None, v[3]))
                     crem[rk] = trem
 
         if hasattr(self, 'collision') and self.hasSequenceAttrs() :
