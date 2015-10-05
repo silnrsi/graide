@@ -26,6 +26,7 @@ class Run(list) :
 
     def __init__(self, rtl = False) :
         self.rtl = rtl
+        self.kernEdges = None
 
     def addslots(self, runinfo) :
         for slotinfo in runinfo :
@@ -92,3 +93,5 @@ class Run(list) :
             elif not self.rtl and i > iKern :                
                 s.colKernPending = s.colKernPending + value * -1
                 
+    def addKernEdge(self, edges, minx, width) :
+        self.kernEdges = (edges, minx, width)

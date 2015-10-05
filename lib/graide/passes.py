@@ -344,6 +344,12 @@ class PassesView(QtGui.QTableWidget) :
                                     if j > -1 :
                                         nextRun[j].addColRemoves(k, rem)
                                 s.addResults(k, vec['ranges'], vec['bestVal'], vec['bestCost'])
+                        elif 'slices' in moveInfo :
+                            shift = moveInfo['result']
+                            edges = [None] * len(moveInfo['slices'])
+                            for sl in moveInfo['slices'] :
+                                edges[sl['i']] = sl['targetEdge'] + shift
+                            nextRun.addKernEdge(edges, moveInfo['miny'], moveInfo['slicewidth'])
                         if slotId in prevMoves.keys() :
                             changed = (newValue[0] != prevMoves[slotId][0] or newValue[1] != prevMoves[slotId][1])
                         else :
