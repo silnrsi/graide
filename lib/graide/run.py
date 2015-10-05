@@ -93,5 +93,5 @@ class Run(list) :
             elif not self.rtl and i > iKern :                
                 s.colKernPending = s.colKernPending + value * -1
                 
-    def addKernEdge(self, edges, minx, width) :
-        self.kernEdges = (edges, minx, width)
+    def addKernEdge(self, edges, others, minx, width) :
+        self.kernEdges = (edges, others, minx, width)

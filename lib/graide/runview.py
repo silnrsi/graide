@@ -174,25 +174,31 @@ class RunView(QtCore.QObject, ModelSuper) :
                 resExcl = self.createPixmap(s, gExclude, i, res, scale, model = self, scene = self._scene, exclOff = exclOff)
         
         if run.kernEdges is not None :
-            self.kernLines = []
-            pen = QtGui.QPen('darkGreen')
-#            pen.setWidth(2) # pixels
-            curry = run.kernEdges[1]
-            lastx = None
-            for e in run.kernEdges[0] :
-                if e > 1e+37 :
-                    lastx = None
-                    continue
+            def doedge(lastx, curry, e, scale, pen) :
+                if e > 1e+37 or e < -1e+37 : return None
                 if lastx is not None :
                     t = QtGui.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
                     t.setPen(pen)
                     self.kernLines.append(t)
-                t = QtGui.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[2]) * scale, scene = self._scene)
+                t = QtGui.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
                 t.setPen(pen)
                 self.kernLines.append(t)
-#                print "({}, {})".format(e * scale, curry * scale)
-                curry += run.kernEdges[2]
-                lastx = e
+                return e
+
+            self.kernLines = []
+            pene = QtGui.QPen('darkGreen')
+            peno = QtGui.QPen('darkBlue')
+#            pen.setWidth(2) # pixels
+            curry = run.kernEdges[2]
+            lastx = None
+            for e in run.kernEdges[0] :
+                lastx = doedge(lastx, curry, e, scale, pene)
+                curry += run.kernEdges[3]
+            curry = run.kernEdges[2]
+            lastx = None
+            for e in run.kernEdges[1] :
+                lastx = doedge(lastx, curry, e, scale, peno)
+                curry += run.kernEdges[3]
         self.tview.moveCursor(QtGui.QTextCursor.Start) # scroll to top
         
         if len(sels) :
