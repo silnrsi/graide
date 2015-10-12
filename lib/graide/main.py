@@ -767,15 +767,17 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def rulesSelected(self, row, view, passview) :
         if row == 0 : return
         self.tab_rules.setPassIndex(row - 1)
-        if passview.rules(row) is not None :
-            self.tab_rules.loadRules(self.font, passview.rules(row), passview.runView(row-1).run, self.gdx)
-            ruleLabel = "Rules: pass %d" % row
-            self.tab_results.setTabText(3, ruleLabel)
-            self.tab_results.setCurrentWidget(self.tab_rules)
-            
-        elif passview.collisions(row) is not None :
-            self.tab_rules.loadCollisions(self.font, passview.collisions(row), passview.runView(row-1).run, self.gdx)
-            ruleLabel = "Collisions: pass %d" % row
+        
+        if passview.rules(row) is not None or passview.collisions(row) is not None:
+            self.tab_rules.loadRules(self.font, passview.rules(row), passview.collisions(row), passview.runView(row-1).run, self.gdx)
+            if passview.collisions(row) is not None :
+                if passview.rules(row) is not None :
+                    ruleLabel = "Rules + Collisions: pass %d" % row
+                else :
+                    ruleLabel = "Collisions: pass %d" % row
+            else :
+                ruleLabel = "Rules: pass %d" % row
+                
             self.tab_results.setTabText(3, ruleLabel)
             self.tab_results.setCurrentWidget(self.tab_rules)
             
@@ -787,7 +789,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.ruleView = None
 
     def ruleSelected(self, row, view, passview) :
-        if self.gdx and hasattr(view.run, 'passindex') :
+        if self.gdx and hasattr(view.run, 'passindex') and view.run.ruleindex >= 0:
             rule = self.gdx.passes[view.run.passindex][view.run.ruleindex]
             self.selectLine(rule.srcfile, rule.srcline)
 

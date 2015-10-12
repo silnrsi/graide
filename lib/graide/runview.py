@@ -174,7 +174,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 resExcl = self.createPixmap(s, gExclude, i, res, scale, model = self, scene = self._scene, exclOff = exclOff)
         
         if run.kernEdges is not None :
-            def doedge(lastx, curry, e, scale, pen) :
+            def doEdge(lastx, curry, e, scale, pen) :  # local function
                 if e > 1e+37 or e < -1e+37 : return None
                 if lastx is not None :
                     t = QtGui.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
@@ -192,13 +192,14 @@ class RunView(QtCore.QObject, ModelSuper) :
             curry = run.kernEdges[2]
             lastx = None
             for e in run.kernEdges[0] :
-                lastx = doedge(lastx, curry, e, scale, pene)
+                lastx = doEdge(lastx, curry, e, scale, pene)
                 curry += run.kernEdges[3]
             curry = run.kernEdges[2]
             lastx = None
             for e in run.kernEdges[1] :
-                lastx = doedge(lastx, curry, e, scale, peno)
+                lastx = doEdge(lastx, curry, e, scale, peno)
                 curry += run.kernEdges[3]
+                
         self.tview.moveCursor(QtGui.QTextCursor.Start) # scroll to top
         
         if len(sels) :

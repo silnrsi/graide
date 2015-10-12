@@ -181,17 +181,18 @@ class PassesView(QtGui.QTableWidget) :
                 if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
                     highlight = "active"
                     self.rulesJson.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
-                    self.collFixJson.append(None)
                 else :
                     self.rulesJson.append(None)
-                    if 1 < j and j < num and gdx and gdx.passtypes[j-1] == "positioning":
-                        thisSlots = json['output'] if (j == num - 1) else json['passes'][j]['slots']
-                        if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], thisSlots) :
-                            highlight = "semi-active"
-                    if json['passes'][j-1].has_key('collisions') :
-                        self.collFixJson.append(json['passes'][j-1]['collisions'])
-                    else :
-                        self.collFixJson.append(None)
+                
+                # Add rows for any collisions, if this is such a pass.
+                if 1 < j and j < num and gdx and gdx.passtypes[j-1] == "positioning":
+                    thisSlots = json['output'] if (j == num - 1) else json['passes'][j]['slots']
+                    if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], thisSlots) :
+                        highlight = "semi-active"
+                if json['passes'][j-1].has_key('collisions') :
+                    self.collFixJson.append(json['passes'][j-1]['collisions'])
+                else :
+                    self.collFixJson.append(None)
                     
                 # if passid == -1, NEXT pass is bidi pass
                     
@@ -212,7 +213,7 @@ class PassesView(QtGui.QTableWidget) :
         return False
     
     # The user double-clicked on a pass. Load the view of it showing the rules matched.
-    def loadRules(self, font, json, initRun, gdx) :
+    def loadRules(self, font, json, jsonCollisions, initRun, gdx) :
         self.selectRow(-1)
         self.currsel = None
         self.runViews = []
@@ -220,54 +221,65 @@ class PassesView(QtGui.QTableWidget) :
         self.runs = [initRun.copy()]	 # initialize with the Init run, equivalent to last run of previous pass
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
-        begprev = -1
-        endprev = -1
-        beg = -1
-        end = -1
-        for runInfo in json :		# graphite output for each rule
-            for cRule in runInfo['considered'] :	# rules that matched for this pass
-                nextRun = self.runs[-1].copy()
-                
-                if begprev != -1 :	# in the previous run, highlight the modified output glyphs, if any
-                    for slot in self.runs[-1][begprev:endprev] :
-                	    slot.highlight('output')
-                	    
-                if cRule['failed'] :
-                    ind = self.runs[-1].indexOfId(cRule['input']['start'])
-                    lext = " (failed)"
-                    for slot in self.runs[-1][ind:ind + cRule['input']['length']] :
-                        slot.highlight('default')
-                    begprev = -1
-                    
-                else : # rule fired
-                    # Adjust this run to reflect the changes made by the rule.
-                    (beg, end) = nextRun.replaceSlots(runInfo['output']['slots'],
-                    		runInfo['output']['range']['start'], runInfo['output']['range']['end'])
-                    lext = ""
-                    islot = beg
-                    for slot in self.runs[-1][beg:end] :   # in the previous run, highlight the matched input glyphs
-                        if begprev <= islot and islot < endprev :
-                            slot.highlight('inAndOut')     # both input and output
-                        else :
-                            slot.highlight('input')
-                        islot = islot + 1
-                    if 'postshift' in runInfo['output'] :
-                        for slot in self.runs[-1][end:] :
-                            slot.origin = (slot.drawPosX() + runInfo['output']['postshift'][0],
-                                           slot.drawPosY() + runInfo['output']['postshift'][1])
-                    begprev = beg  # remember where to highlight the output glyphs in the next iteration
-                    endprev = begprev + len(runInfo['output']['slots'])
-                    
-                self.runs.append(nextRun)
-                nextRun.label = "Rule: %d%s" % (cRule['id'], lext)
-                nextRun.passindex = self.passindex
-                nextRun.ruleindex = int(cRule['id'])
-                # why can't we highlight the output glyphs here?
         
-        # highlight the output of the last run
-        if begprev != -1 :
-            for slot in self.runs[-1][begprev:endprev] :
-                slot.highlight('output')
+        if json is not None :
+            begprev = -1
+            endprev = -1
+            beg = -1
+            end = -1
+            for runInfo in json :		# graphite output for each rule
+                for cRule in runInfo['considered'] :	# rules that matched for this pass
+                    nextRun = self.runs[-1].copy()
+                    
+                    if begprev != -1 :	# in the previous run, highlight the modified output glyphs, if any
+                        for slot in self.runs[-1][begprev:endprev] :
+                    	    slot.highlight('output')
+                    	    
+                    if cRule['failed'] :
+                        ind = self.runs[-1].indexOfId(cRule['input']['start'])
+                        lext = " (failed)"
+                        for slot in self.runs[-1][ind:ind + cRule['input']['length']] :
+                            slot.highlight('default')
+                        begprev = -1
+                        
+                    else : # rule fired
+                        # Adjust this run to reflect the changes made by the rule.
+                        (beg, end) = nextRun.replaceSlots(runInfo['output']['slots'],
+                        		runInfo['output']['range']['start'], runInfo['output']['range']['end'])
+                        lext = ""
+                        islot = beg
+                        for slot in self.runs[-1][beg:end] :   # in the previous run, highlight the matched input glyphs
+                            if begprev <= islot and islot < endprev :
+                                slot.highlight('inAndOut')     # both input and output
+                            else :
+                                slot.highlight('input')
+                            islot = islot + 1
+                        if 'postshift' in runInfo['output'] :
+                            for slot in self.runs[-1][end:] :
+                                slot.origin = (slot.drawPosX() + runInfo['output']['postshift'][0],
+                                               slot.drawPosY() + runInfo['output']['postshift'][1])
+                        begprev = beg  # remember where to highlight the output glyphs in the next iteration
+                        endprev = begprev + len(runInfo['output']['slots'])
+                    
+                    self.runs.append(nextRun)
+                    nextRun.label = "Rule: %d%s" % (cRule['id'], lext)
+                    nextRun.passindex = self.passindex
+                    nextRun.ruleindex = int(cRule['id'])
+                    # why can't we highlight the output glyphs here?
+                    
+                # end for cRule in runInfo
+                
+            # end of for runInfo in json
+
+            # highlight the output of the last run
+            if begprev != -1 :
+                for slot in self.runs[-1][begprev:endprev] :
+                    slot.highlight('output')
+        
+        # end of if json is not None
+        
+        if jsonCollisions is not None :
+            self.loadCollisionsAux(font, jsonCollisions, initRun, gdx)
 
         w = 0
         wt = 0
@@ -283,7 +295,7 @@ class PassesView(QtGui.QTableWidget) :
         
     # end of loadRules
     
-    
+    # No longer used
     def loadCollisions(self, font, json, initRun, gdx) :
         #print "PassesView::loadCollisions", json
         self.selectRow(-1)
@@ -293,10 +305,26 @@ class PassesView(QtGui.QTableWidget) :
         self.runs = [initRun.copy()]	 # initialize with the Init run, equivalent to last run of previous pass
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
-        begprev = -1
-        endprev = -1
-        beg = -1
-        end = -1
+        
+        self.loadCollisionsAux(font, json, initRun, gdx)
+        
+        w = 0
+        wt = 0
+        self.setRowCount(len(self.runs))
+        for j in range(len(self.runs)) :
+            (neww, newt) = self.addRun(font, self.runs[j], self.runs[j].label, j,
+                    tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
+                                    if gdx and self.runs[j].ruleindex >= 0 else "",
+                    collision = True)
+            w = max(w, neww)
+            wt = max(wt, newt)
+            
+        self.finishLoad(w, wt)
+
+    # end of loadCollisions
+        
+    def loadCollisionsAux(self, font, json, initRun, gdx) :
+        
         prevMoves = {}
         for phaseInfo in json :
             if 'num-loops' in phaseInfo.keys() :
@@ -372,36 +400,19 @@ class PassesView(QtGui.QTableWidget) :
                         #    s.colShiftPending = adjust
                 
                         self.runs.append(nextRun)
-                        #if loop > -1 :
-                        #    nextRun.label = "Phase: %s.%d" % (phase, loop+1)
-                        #else :
-                        #    nextRun.label = "Phase: %s" % (phase)
                         if phase == "1" and loop == -1 :
-                            nextRun.label = "Loop: 1"
+                            nextRun.label = "Shift loop: 1"
                         elif phase == "3" :
                             nextRun.label = "Kern"
                         elif phase == "2a" :
-                            nextRun.label = "Loop: %d (rev)" % (loop+2)
+                            nextRun.label = "Shift loop: %d (rev)" % (loop+2)
                         else :
-                            nextRun.label = "Loop: %d" % (loop+2)
+                            nextRun.label = "Shift loop: %d" % (loop+2)
                         nextRun.passindex = self.passindex
                         nextRun.ruleindex = -1
 
                     
-        w = 0
-        wt = 0
-        self.setRowCount(len(self.runs))
-        for j in range(len(self.runs)) :
-            (neww, newt) = self.addRun(font, self.runs[j], self.runs[j].label, j,
-                    tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
-                                    if gdx and self.runs[j].ruleindex >= 0 else "",
-                    collision = True)
-            w = max(w, neww)
-            wt = max(wt, newt)
-            
-        self.finishLoad(w, wt)
-
-    # end of loadCollisions
+    # end of loadCollisionsAux
     
 
     def setTopToolTip(self, txt) :
