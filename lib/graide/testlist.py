@@ -407,6 +407,10 @@ class TestList(QtGui.QWidget) :
             e.append(h)
         else :
             h = et.SubElement(e, 'head')
+        cols = h.find('columns')
+        if cols is None :
+            cols = h.makeelement('columns', {'label' : "15%", 'string' : '50%', 'comment' : '30%', 'style' : '5%'})
+            ETinsert(h, cols)
         fs = h.find('fontsrc')
         if fs is None:
             fs = h.makeelement('fontsrc', {})
