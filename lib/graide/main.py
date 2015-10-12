@@ -594,7 +594,6 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_errors.errorSelected.connect(self.tab_edit.selectLine)
 
         # Passes tab
-        print self.__class__
         self.tab_passes = PassesView(self)
         self.tab_passes.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphSelected);
