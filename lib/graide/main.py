@@ -594,7 +594,8 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_errors.errorSelected.connect(self.tab_edit.selectLine)
 
         # Passes tab
-        self.tab_passes = PassesView()
+        print self.__class__
+        self.tab_passes = PassesView(self)
         self.tab_passes.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphSelected);
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
@@ -613,7 +614,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.setCentralWidget(self.centralwidget)
 
         # Rules tab
-        self.tab_rules = PassesView()
+        self.tab_rules = PassesView(self)
         self.tab_rules.slotSelected.connect(self.slotSelected)
         self.tab_passes.glyphSelected.connect(self.glyphSelected);
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)

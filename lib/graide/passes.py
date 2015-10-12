@@ -21,7 +21,7 @@
 from PySide import QtGui, QtCore
 from graide.run import Run
 from graide.runview import RunView
-from graide.utils import ModelSuper, DataObj
+from graide.utils import ModelSuper, DataObj, configintval
 from graide.layout import Layout
 import traceback
 
@@ -60,6 +60,8 @@ class PassesView(QtGui.QTableWidget) :
 
     def __init__(self, parent = None, index = 0) :
         super(PassesView, self).__init__(parent)
+        print "PassesView parent: ",parent.__class__
+        self.app = parent
         self.setColumnCount(3)
         self.horizontalHeader().hide()
         self.verticalHeader().hide()
@@ -372,7 +374,7 @@ class PassesView(QtGui.QTableWidget) :
                                     if j > -1 :
                                         nextRun[j].addColRemoves(k, rem)
                                 s.addResults(k, vec['ranges'], vec['bestVal'], vec['bestCost'])
-                        elif 'slices' in moveInfo :
+                        elif 'slices' in moveInfo and configintval(self.app.config, 'ui', 'kernedges') :
                             shift = moveInfo['result']
                             edges = [None] * len(moveInfo['slices'])
                             others = [None] * len(moveInfo['slices'])

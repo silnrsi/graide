@@ -276,7 +276,13 @@ class ConfigDialog(QtGui.QDialog) :
         uiGridLo.addWidget(QtGui.QLabel('Display character entities'), 7, 0)
         uiGridLo.addWidget(self.ui_ent, 7, 1)
         
-        uiGridLo.setRowStretch(8, 1)
+        self.ui_kernedges = QtGui.QCheckBox()
+        self.ui_kernedges.setChecked(configintval(config, 'ui', 'kernedges'))
+        self.ui_kernedges.setToolTip('Display the edges of glyphs that affect kerning in the Collisions tab')
+        uiGridLo.addWidget(QtGui.QLabel('Display kerning edges'), 8, 0)
+        uiGridLo.addWidget(self.ui_kernedges, 8, 1)
+        
+        uiGridLo.setRowStretch(9, 1)
         self.tb.addItem(self.ui, 'User Interface')
         
         self.resize(500, 500)
@@ -374,6 +380,7 @@ class ConfigDialog(QtGui.QDialog) :
             if appInit : app.setAttGlyphSize(self.ui_apsize.value())
         self.updateChanged(self.ui_sizes, config, 'ui', 'waterfall', "")
         self.cbChanged(self.ui_ent, config, 'ui', 'entities')
+        self.cbChanged(self.ui_kernedges,  config, 'ui', 'kernedges')
 
     # When OK is clicked on config dialog:
     def updateChanged(self, widget, config, section, option, defaultExt, fn = None) :

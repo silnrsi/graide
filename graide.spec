@@ -13,7 +13,7 @@ for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
     os.symlink(s, f)
 '''
 
-versionSuffix = '0_8'
+versionSuffix = '0_8_1'
 showConsole = False
 consoleSuffix = '_console' if showConsole else ''
 
