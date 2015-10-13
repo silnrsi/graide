@@ -60,7 +60,6 @@ class PassesView(QtGui.QTableWidget) :
 
     def __init__(self, parent = None, index = 0) :
         super(PassesView, self).__init__(parent)
-        print "PassesView parent: ",parent.__class__
         self.app = parent
         self.setColumnCount(3)
         self.horizontalHeader().hide()
