@@ -12,8 +12,9 @@ for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
     if os.path.exists(f) : os.unlink(f)
     os.symlink(s, f)
 '''
+#''' to keep vim happy
 
-versionSuffix = '0_8_1'
+versionSuffix = '0_8_5'
 showConsole = False
 consoleSuffix = '_console' if showConsole else ''
 
@@ -24,11 +25,17 @@ libdir = 'lib'
 ext = ''
 if sys.platform == 'linux2' :
     libdir += '-linux-' + platform.machine() + '-2.7'
-elif sys.platform == 'win32' :
+
+pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir]
+
+if sys.platform == 'win32' :
+    pydir = os.path.dirname(sys.executable)
+    pth = os.path.join(pydir, 'Lib\\site-packages\\pyside')
+    pathex.append(pth)
     ext = '.exe'
 
 a = Analysis(['build/scripts-2.7/graide'],
-             pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir],
+             pathex=pathex,
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)
@@ -39,7 +46,7 @@ if sys.platform == 'win32' :
     for d in glob.glob('grcompiler_win/*.*') :
         bins += [(d[15:], d, 'BINARY')]
     pydir = os.path.dirname(sys.executable)
-    pth = os.path.join(pydir, 'lib\\site-packages\\pyside')
+    pth = os.path.join(pydir, 'Lib\\site-packages\\pyside')
     for d in ('QtSvg', 'QtXml') :
         bins += [(d+'4.dll', os.path.join(pth, d+'4.dll'), 'BINARY')]
     pth = os.path.join(pth, 'plugins')

@@ -23,6 +23,7 @@ import sys, os
 
 if getattr(sys, 'frozen', None) :
     os.environ['PATH'] += os.pathsep + sys._MEIPASS
+    print os.environ['PATH']
 
 from PySide import QtGui, QtCore
 from graide import main
