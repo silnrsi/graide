@@ -4360,6 +4360,7 @@ class Name(object) :
         if not name : return
 
         # Determine the components for any glyph that represents multiple USVs.
+        prefix = ""
         for comp in name.split("_") :
             base, dot, mod = comp.partition(".")
             if not base and mod : 
@@ -4378,8 +4379,11 @@ class Name(object) :
                 self.components.append((ord(aglToUniMap[base]), mod))
             elif len(self.components) :
                 self.components[-1] = (self.components[-1][0], mod)
+            elif base :
+                self.components.append((prefix + base, mod))
+                prefix = ""
             else :
-                self.components.append((base, mod))
+                prefix += "_"
         if not finalcomp or len(self.components) == 1 :
             self.ext = self.components[-1][1]
             if self.ext :
