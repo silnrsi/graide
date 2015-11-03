@@ -279,7 +279,8 @@ class PassesView(QtGui.QTableWidget) :
         
         # end of if json is not None
         
-        if jsonCollisions is not None :
+        hasCollisions = (jsonCollisions is not None)
+        if hasCollisions :
             self.loadCollisionsAux(font, jsonCollisions, initRun, gdx)
 
         w = 0
@@ -288,7 +289,8 @@ class PassesView(QtGui.QTableWidget) :
         for j in range(len(self.runs)) :
             (neww, newt) = self.addRun(font, self.runs[j], self.runs[j].label, j,
                     tooltip = gdx.passes[self.passindex][self.runs[j].ruleindex].pretty
-                                    if gdx and self.runs[j].ruleindex >= 0 else "")
+                                    if gdx and self.runs[j].ruleindex >= 0 else "",
+                    collision = hasCollisions)
             w = max(w, neww)
             wt = max(wt, newt)
             
