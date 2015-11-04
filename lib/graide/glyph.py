@@ -319,6 +319,8 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     def builtInGlyphAttr(attrName) :
         if attrName == "*skipPasses*" :
             return True
+        elif attrName == "*actualForPseudo*" :
+            return True
         elif attrName == "breakweight" :
             return True
         elif attrName == "directionality" :
@@ -327,3 +329,10 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             return True
         else :
             return False
+            
+    # debugger        
+    def printGdlProperties(self) :
+        print "printGdlProperties:"
+        print ">>>",self.gid
+        print self.gdlProperties
+
