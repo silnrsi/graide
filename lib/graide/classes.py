@@ -181,6 +181,7 @@ class Classes(QtGui.QWidget) :
 
     
     def clicked(self, row, cell) :
+        # FontView::classSelected - highlight glyphs in Font tab
         self.classSelected.emit(self.tab.item(row, 0).text())
         
     

@@ -47,6 +47,7 @@ class PassesView(QtGui.QTableWidget) :
     def changeSlot(self, data, model, doubleClick) : # data = Slot, model = RunView
         self.slotSelected.emit(data, model, doubleClick)
 
+    # see comment in attribview.py for how this works
     @QtCore.Slot(DataObj, ModelSuper, bool)
     def changeGlyph(self, data, model, doubleClick) : # data = glyph ID, model = RunView
         self.glyphSelected.emit(data, model, doubleClick)

@@ -25,6 +25,22 @@ import traceback
 
 #for line in traceback.format_stack(): print line.strip()
 
+#   Here is a summaryhow the Python Slots and Signals interact to update the Glyph tab when a glyph is clicked:
+#
+#   Set up connections:
+#       runView.glyphSelect.connect(passesView.changeGlyph)
+#       mainWindow.tab_passes.glyphSelected.connect(mainWindow.glyphSelected)
+#       mainWindow.tab_passes.glyphSelected.connect(mainwindow.glyphAttrib.changeData)
+#
+#   Then when a glyph is clicked on:
+#       RunView::changeSelection
+#           calls self.glyphSelected.emit (defined as Signal)
+#       PassesView::changeGlyph
+#           calls self.glyphSelected.emit (defined as Signal)
+#       MainWindow::glyphSelected
+#       ...
+#       AttribView::changeData
+
 class LinePlainTextEdit(QtGui.QPlainTextEdit) :
 
     editFinished = QtCore.Signal()
@@ -70,6 +86,9 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
         editor = self.sender()
         self.commitData.emit(editor)
         self.closeEditor.emit(editor)
+        
+#end of class AttributeDelegate
+
 
 class Attribute(object) :
 
@@ -128,9 +147,11 @@ class Attribute(object) :
             self.tree.debugPrintData()
             print "<<<"
 
+# end of class Attribute
+
 
 # An AttribModel consists of a list of Attributes, corresponding to a row in the AttribView control.
-# An Attribute can be a sub-tree which in turn contains an AttribModel with the list of sub-items
+# An Attribute can be a sub-tree which in turn contains an AttribModel with the list of sub-items.
 
 class AttribModel(QtCore.QAbstractItemModel) :
 
@@ -226,6 +247,7 @@ class AttribModel(QtCore.QAbstractItemModel) :
         for d in self.__data :
             d.debugPrintData()
 
+# end of class AttribModel
             
 
 class AttribView(QtGui.QTreeView) :
@@ -240,11 +262,17 @@ class AttribView(QtGui.QTreeView) :
         #self.setItemDelegateForColumn(1, self.attribDelegate)
 
     @QtCore.Slot(DataObj, ModelSuper)
-    def changeData(self, data, model) :  # data is a Slot, GraideGlyph, etc.; model is eg RunView
+    def changeData(self, data, modelBogus) :  # data is a Slot, GraideGlyph, etc.; modelBogus is eg RunView
         self.data = data
         self.model = data.attribModel() if data else None
         self.setModel(self.model)
         self.expandAll()
+        
+    def dataObject(self) :
+        try :
+            return self.data
+        except :
+            return None
 
     def removeCurrent(self) :
         index = self.currentIndex()
@@ -264,6 +292,15 @@ class AttribView(QtGui.QTreeView) :
         fileLoc = self.model.fileLocAt(treePath)
         if fileLoc : 
             self.app.selectLine(*fileLoc)
+
+    def findMainFileLoc(self) :
+        treePath = [0]   # for Glyph tab, assumes glyph number is the first
+        fileLoc = self.model.fileLocAt(treePath)
+        if fileLoc :
+            self.app.selectLine(*fileLoc)
+            
+# end of class AttribView
+
 
 if __name__ == '__main__' :
 

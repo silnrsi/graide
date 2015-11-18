@@ -56,7 +56,7 @@ import codecs, traceback  ### debug
 #for line in traceback.format_stack(): print line.strip()
 
 class MainWindow(QtGui.QMainWindow) :
-
+    
     def __init__(self, config, configFile, jsonFile) :
         
         super(MainWindow, self).__init__()
@@ -509,6 +509,11 @@ class MainWindow(QtGui.QMainWindow) :
             self.glyph_saveAP = QtGui.QToolButton(self.glyph_bbox)
             self.glyph_saveAP.setDefaultAction(self.aSaveAP)
             self.glyph_hb.addWidget(self.glyph_saveAP)
+        self.glyph_find = QtGui.QToolButton()	# find glyph
+        self.glyph_find.setIcon(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")))
+        self.glyph_find.clicked.connect(self.glyphFindSelected)
+        self.glyph_find.setToolTip('Find glyph selected in source code')
+        self.glyph_hb.addWidget(self.glyph_find)
         self.glyph_addPoint = QtGui.QToolButton(self.glyph_bbox)
         self.glyph_addPoint.setIcon(QtGui.QIcon.fromTheme('character-set', QtGui.QIcon(":/images/character-set.png")))
         self.glyph_addPoint.setText(u'\u2022')
@@ -750,12 +755,15 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     
     # end of _saveProjectData    
 
+    # see comment in attribview.py for how this works
     QtCore.Slot(DataObj, ModelSuper, bool)
     def glyphSelected(self, data, model, doubleClick) :
         # data = GraideGlyph, model = RunView, FontView
-        self.glyphAttrib.changeData(data, model)
+        self.glyphAttrib.changeData(data, model)    # redundant with tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
+                                                    # call, so it happens twice. But both might be needed in some cases.
         if doubleClick:
             self.tab_info.setCurrentWidget(self.tab_glyph)
+        
 
     QtCore.Slot(DataObj, ModelSuper, bool)
     def slotSelected(self, data, model, doubleClick) :
@@ -1052,6 +1060,16 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             return (None, None)
             
     # end of propDialog
+    
+    def glyphFindSelected(self) :
+    	glyphName = self.tab_edit.selectedText
+        gidSelected = self.font.glyphWithGDLName(glyphName)
+        if gidSelected > -1 :
+            prevGlyph = self.glyphAttrib.dataObject()
+            glyph = self.font[gidSelected]
+            self.glyphAttrib.changeData(glyph, None)
+            if prevGlyph == glyph :
+                self.glyphAttrib.findMainFileLoc()
 
     def glyphAddPoint(self) :
         (n, v) = self.propDialog('Point')
