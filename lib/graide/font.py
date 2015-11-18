@@ -132,6 +132,24 @@ class GraideFont(gdlFont) :
             if self[i].GDLName() == gdlName :
                 return i
         return -1
+        
+    def glyphOrPseudoWithGDLName(self, gdlName) :
+        gidResult = self.glyphWithGDLName(gdlName)
+        if gidResult == -1 :
+            # Look for a pseudo-glyph.
+            for i in range(self.numGlyphs, len(self.glyphs)) :
+                # use gdl attribute instead of GDLName() to handle pseudos
+                if self[i].gdl == gdlName :
+                    gidResult = i
+                    break
+        if gidResult == -1 :
+            # Look for a single-glyph class.
+            fontClass = self.classes[gdlName] if self.classes.has_key(gdlName) else None
+            if not fontClass == None :
+                if len(fontClass.elements) == 1 :
+                    gidResult = fontClass.elements[0]
+        return gidResult
+            
 
     # Return a likely pair of glyphs to initialize the Positions tab tree control.
 #    def stationaryMobilePair(self) :

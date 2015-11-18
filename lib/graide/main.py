@@ -1063,7 +1063,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     
     def glyphFindSelected(self) :
     	glyphName = self.tab_edit.selectedText
-        gidSelected = self.font.glyphWithGDLName(glyphName)
+        gidSelected = self.font.glyphOrPseudoWithGDLName(glyphName)
         if gidSelected > -1 :
             prevGlyph = self.glyphAttrib.dataObject()
             glyph = self.font[gidSelected]
