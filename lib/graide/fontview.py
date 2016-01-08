@@ -27,11 +27,12 @@ import traceback
 
 class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
-    textheight = 12
+    oldtextheight = 12
 
     def __init__(self, font, parent=None) :
         super(GlyphDelegate, self).__init__(parent)
         self.font = font
+        self.calculateCellFontSize(self.font.size)
 
     def paint(self, painter, option, index) :
         g = index.data()
@@ -47,7 +48,8 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
                 painter.drawPixmap(x, y, g.item.pixmap)
             font = painter.font()
             myfont = QtGui.QFont(font)
-            myfont.setPointSize(myfont.pointSize() * 0.75)
+            self.calculateCellFontSize(self.font.size)
+            myfont.setPointSize(self.cellFontSize)
             theight = myfont.pixelSize()
             painter.setFont(myfont)
             namerect = QtCore.QRect(option.rect.left(), option.rect.bottom()-self.textheight, option.rect.width(), self.textheight)
@@ -62,6 +64,14 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
     def sizeHint(self, option, index) :
         return self.font.pixrect.size() + QtCore.QSize(0, 2 * self.textheight)
+        
+    def calculateCellFontSize(self, fontSize) :
+        self.cellFontSize = self.font.size * 0.2
+        self.cellFontSize = self.cellFontSize if self.cellFontSize > 6 else 6
+        self.cellFontSize = self.cellFontSize if self.cellFontSize < 12 else 12
+        print "font pixel size",self.font.size
+        print "cellFontSize",self.cellFontSize
+        self.textheight = self.cellFontSize * 2        
 
 class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
 
