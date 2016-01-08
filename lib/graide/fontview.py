@@ -27,8 +27,6 @@ import traceback
 
 class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
-    oldtextheight = 12
-
     def __init__(self, font, parent=None) :
         super(GlyphDelegate, self).__init__(parent)
         self.font = font
@@ -69,8 +67,6 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
         self.cellFontSize = self.font.size * 0.2
         self.cellFontSize = self.cellFontSize if self.cellFontSize > 6 else 6
         self.cellFontSize = self.cellFontSize if self.cellFontSize < 12 else 12
-        print "font pixel size",self.font.size
-        print "cellFontSize",self.cellFontSize
         self.textheight = self.cellFontSize * 2        
 
 class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
