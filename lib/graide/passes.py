@@ -223,6 +223,7 @@ class PassesView(QtGui.QTableWidget) :
         self.runs = [initRun.copy()]	 # initialize with the Init run, equivalent to last run of previous pass
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
+        rowInput = 0
         
         if json is not None :
             begprev = -1
@@ -233,41 +234,50 @@ class PassesView(QtGui.QTableWidget) :
                 for cRule in runInfo['considered'] :	# rules that matched for this pass
                     nextRun = self.runs[-1].copy()
                     
-                    if begprev != -1 :	# in the previous run, highlight the modified output glyphs, if any
+                    # in the previous run, highlight the modified output glyphs, if any
+                    if begprev != -1 :
                         for slot in self.runs[-1][begprev:endprev] :
-                    	    slot.highlight('output')
-                    	    
+                    	    slot.highlight(prevHighlight)
+                    	                        
                     if cRule['failed'] :
-                        ind = self.runs[-1].indexOfId(cRule['input']['start'])
                         lext = " (failed)"
-                        for slot in self.runs[-1][ind:ind + cRule['input']['length']] :
-                            slot.highlight('default')
-                        begprev = -1
+                        beg = self.runs[-1].indexOfId(cRule['input']['start'])
+                        end = beg + cRule['input']['length']
+                        
+                        begprev = beg
+                        endprev= end
+                        prevHighlight = 'failed'
                         
                     else : # rule fired
                         # Adjust this run to reflect the changes made by the rule.
                         (beg, end) = nextRun.replaceSlots(runInfo['output']['slots'],
-                        		runInfo['output']['range']['start'], runInfo['output']['range']['end'])
+                                runInfo['output']['range']['start'], runInfo['output']['range']['end'])
                         lext = ""
                         islot = beg
-                        for slot in self.runs[-1][beg:end] :   # in the previous run, highlight the matched input glyphs
-                            if begprev <= islot and islot < endprev :
-                                slot.highlight('inAndOut')     # both input and output
-                            else :
-                                slot.highlight('input')
-                            islot = islot + 1
-                        if 'postshift' in runInfo['output'] :
+                        if rowInput != -1 :
+                            for slot in self.runs[rowInput][beg:end] :   # in a previous run, highlight the matched input glyphs
+                                if begprev <= islot and islot < endprev :
+                                    slot.highlight('inAndOut')     # both input and output
+                                else :
+                                    slot.highlight('input')
+                                islot = islot + 1
+                                
+                        if not cRule['failed'] and 'postshift' in runInfo['output'] :
                             for slot in self.runs[-1][end:] :
                                 slot.origin = (slot.drawPosX() + runInfo['output']['postshift'][0],
                                                slot.drawPosY() + runInfo['output']['postshift'][1])
+                                               
                         begprev = beg  # remember where to highlight the output glyphs in the next iteration
                         endprev = begprev + len(runInfo['output']['slots'])
+                        prevHighlight = 'output'
+                        rowInput = len(self.runs)  # index of the next one added
                     
                     self.runs.append(nextRun)
                     nextRun.label = "Rule: %d%s" % (cRule['id'], lext)
                     nextRun.passindex = self.passindex
                     nextRun.ruleindex = int(cRule['id'])
-                    # why can't we highlight the output glyphs here?
+                    # It would make more sense to highlight the output glyphs here,
+                    # but that doesn't work for some reason.
                     
                 # end for cRule in runInfo
                 
@@ -276,7 +286,7 @@ class PassesView(QtGui.QTableWidget) :
             # highlight the output of the last run
             if begprev != -1 :
                 for slot in self.runs[-1][begprev:endprev] :
-                    slot.highlight('output')
+                    slot.highlight(prevHighlight)
         
         # end of if json is not None
         

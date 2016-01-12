@@ -34,7 +34,8 @@ class BaseLayout(object) :
         'default' : QtGui.QColor(0, 0, 0, 32),          # gray, semi-transparent
         'input' : QtGui.QColor(255, 255, 0, 32),        # yellow, semi-transparent
         'output' : QtGui.QColor(0, 170, 0, 32),         # green, semi-transparent
-        'inAndOut' : QtGui.QColor(50, 180, 0, 32),      # yellow-green, semi-transparent
+        'inAndOut' : QtGui.QColor(100, 160, 0, 32),     # yellow-green, semi-transparent
+        'failed' : QtGui.QColor(0, 0, 0, 32),           # gray, semi-transparent
         'exclude' : QtGui.QColor(255, 160, 0, 60),      # orange, semi-transparent
     }
     posdotColour = QtGui.QColor(0, 160, 0, 192)         # green
