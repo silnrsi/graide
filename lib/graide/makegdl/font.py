@@ -344,14 +344,17 @@ class Font(object) :
             if g.psname == '.notdef' :
                 fh.write(g.GDLName() + ' = glyphid(0)')
             else :
-               fh.write(g.GDLName() + ' = postscript("' + g.psname + '")')
+                fh.write(g.GDLName() + ' = postscript("' + g.psname + '")')
             outs = []
             if len(g.anchors) :
                 for a in g.anchors.keys() :
                     v = g.anchors[a]
                     outs.append(a + "=point(" + str(int(v[0])) + "m, " + str(int(v[1])) + "m)")
             for (p, v) in g.gdlProperties.items() :
-                outs.append("%s=%s" % (p, v))
+                if p == "*skipPasses*" :
+                    pass  # ignore this one
+                else :
+                    outs.append("%s=%s" % (p, v))
             if len(outs) : fh.write(" {" + "; ".join(outs) + "}")
             fh.write(";\n")
             nglyphs += 1

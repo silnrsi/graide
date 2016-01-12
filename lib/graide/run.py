@@ -67,7 +67,6 @@ class Run(list) :
             slot.index = i
         return (ini, fin)
 
-
     def modifySlotWithId(self, id, attrName, value) :
         for (i, s) in enumerate(self) :
             if s.id == id :
