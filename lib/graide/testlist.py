@@ -24,7 +24,9 @@ from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
 import os, re
+import codecs, traceback # debugging
 from cStringIO import StringIO
+
 
 def asBool(txt) :
     if not txt : return False
@@ -226,7 +228,7 @@ class TestList(QtGui.QWidget) :
          self.addGroup('main', record = False)
         
     def loadTests(self, fname):
-        #print "loadTests(" + fname + ")"
+        #print "TestList::loadTests(" + fname + ")"
         
         # Assumes the file has been added to the UI.
         self.testGroups = []
@@ -327,7 +329,9 @@ class TestList(QtGui.QWidget) :
     # end of loadOldTests
             
     def addFile(self, fname, index = None, savePrevious = True) :
-        #print "addFile(" + fname + "," + str(savePrevious) + ")"
+        #print "TestList::addFile(" + fname + "," + str(savePrevious) + ")"
+        if fname == '' : return
+            
         basename = os.path.basename(fname)
         if index == None :
             index = len(self.testFiles)
@@ -342,7 +346,7 @@ class TestList(QtGui.QWidget) :
         self.recordCurrentTest()
         
     def changeFile(self, index) :
-        #print "changeFile(" + str(index) + ")"
+        #print "TestList::changeFile(" + str(index) + ")"
         
         # Save current set of tests.
         if self.currentFile != "" :
@@ -376,6 +380,7 @@ class TestList(QtGui.QWidget) :
         return listWidget
         
     def appendTest(self, t, l = None) :
+        #print "TestList::appendTest(" + t.name + ")"
         if not l : l = self.liststack.currentWidget()
         self.testGroups[self.liststack.indexOf(l)].append(t)
         w = QtGui.QListWidgetItem(t.name or "", l)

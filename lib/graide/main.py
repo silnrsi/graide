@@ -76,7 +76,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.fontFaces = {}
         self.fontFileName = None
         self.apname = None
-        self.appTitle = "Graide v0.8"
+        self.appTitle = "Graide v0.8.6"
         self.currConfigTab = 0
         
         self.debugCnt = 0  # debug
@@ -305,6 +305,7 @@ class MainWindow(QtGui.QMainWindow) :
             self.tab_classes.loadFont(self.font)
 
     def loadTests(self, testsfile) :
+        #print "MainWindow::loadTests(",testsfile,')'
         self.testsfile = testsfile
         if self.config.has_option('data', 'testfiles') :
             print "has file list"
@@ -316,7 +317,7 @@ class MainWindow(QtGui.QMainWindow) :
         if hasattr(self, "tab_tests") and self.tab_tests :
             for f in fileList :
                 print 'test list',f
-                self.tab_tests.addFile(f, None, False)
+                if f != '' : self.tab_tests.addFile(f, None, False)
         # otherwise MainWindow is not set up yet
             
     def loadTweaks(self, tweaksfile) :
