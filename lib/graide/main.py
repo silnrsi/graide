@@ -308,15 +308,14 @@ class MainWindow(QtGui.QMainWindow) :
         #print "MainWindow::loadTests(",testsfile,')'
         self.testsfile = testsfile
         if self.config.has_option('data', 'testfiles') :
-            print "has file list"
+            #print "has file list"
             fileListString = configval(self.config, 'data', 'testfiles')
             fileList = fileListString.split(';')
         else :
-            print "no file list"
+            #print "no file list"
             fileList = [testsfile]
         if hasattr(self, "tab_tests") and self.tab_tests :
             for f in fileList :
-                print 'test list',f
                 if f != '' : self.tab_tests.addFile(f, None, False)
         # otherwise MainWindow is not set up yet
             
@@ -1123,7 +1122,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
-        print "_configOpenExisting"
+        #print "_configOpenExisting"
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()
