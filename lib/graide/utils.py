@@ -177,7 +177,19 @@ replacements = {
 }
 
 def expandMakeCmd(config, txt) :
-    return re.sub(r'%([afgip])', lambda m: os.path.abspath(configval(config, *replacements[m.group(1)])), txt)
+    ###return re.sub(r'%([afgip])', lambda m: os.path.abspath(configval(config, *replacements[m.group(1)])), txt)
+    for key, val in replacements.items() :
+        if key == 'p' :
+            # Not a filename
+            txt = txt.replace('%p', configval(config, val[0], val[1]))
+        elif key == 'i' :
+            # Don't convert main GDL include file to absolute path - this can create problems on Windows.
+            # (It seems to confuse the gdlpp module that handles the #include statements.)
+            # Just use whatever they put in the field.
+            txt = txt.replace('%i', configval(config, val[0], val[1]))
+        else :
+            txt = txt.replace('%'+key, os.path.abspath(configval(config, val[0], val[1])))
+    return txt
 
 def reportError(text) :
     global mainapp, pendingErrors
