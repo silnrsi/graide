@@ -158,13 +158,13 @@ class TestList(QtGui.QWidget) :
         
         self.setLayout(vLayout)
 
+        if fName :
+            self.addFile(fName, None, False)
         if fListString :
             fList = fListString.split(';')
             for f in fList :
-                if f != "" :
+                if f != "" and f != fName:
                     self.addFile(f, None, False)
-        elif fName :
-            self.addFile(fName, None, False)
         
         self.selectCurrentTest(curTest)
         

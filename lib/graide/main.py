@@ -307,13 +307,17 @@ class MainWindow(QtGui.QMainWindow) :
     def loadTests(self, testsfile) :
         #print "MainWindow::loadTests(",testsfile,')'
         self.testsfile = testsfile
+        fileList = []
         if self.config.has_option('data', 'testfiles') :
-            #print "has file list"
             fileListString = configval(self.config, 'data', 'testfiles')
             fileList = fileListString.split(';')
-        else :
-            #print "no file list"
+            #print "has file list:",fileList
+        if not testsfile in fileList :
+            #print "prepend main test file",testsFile
+            fileList2 = fileList
             fileList = [testsfile]
+            fileList.extend(fileList2)
+            #print "-->",fileList
         if hasattr(self, "tab_tests") and self.tab_tests :
             for f in fileList :
                 if f != '' : self.tab_tests.addFile(f, None, False)
