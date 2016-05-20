@@ -45,8 +45,11 @@ class Errors(QtGui.QListWidget) :
         f = file(fname)
         for l in f.readlines() :
             l = l.strip()
+            # Look for FILENAME(LINENUM) : error(ERRORNUM): ... eg
+            #       myfile.gdl(34) : error(103: unexpected token: )
             m = re.match(r'^(.*?)\((\d+)\) : (error|warning)\((\d+)\): (.*)$', l)
             if m :
+                # Specific error/warning with filename and line number:
                 if m.group(3) == 'error' :
                     self.addError(l, m.group(1), int(m.group(2)) - 1)
                 elif m.group(3) == 'warning' :
@@ -54,13 +57,20 @@ class Errors(QtGui.QListWidget) :
                 continue
             m = re.match(r'(error|warning)\((\d+)\): (.*)$', l)
             if m :
+                # Line with "error" or 'warning", eg:
+                #       error(139): Parsing failed
                 if m.group(1) == 'error' :
                     self.addError(l)
                 else :
                     self.addWarning(l)
             m = re.match(r'^Compilation', l)
             if m :
+                # Other, eg,
+                #       Compilation failed - 5 errors, 0 warnings
                 self.addItem(l.strip())
+            # Ignore other lines, eg:
+            #       Table versions generated:
+            #         Silf:4.1
         f.close()
 
     def addError(self, txt, srcfile = None, line = 0) :

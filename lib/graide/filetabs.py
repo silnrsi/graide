@@ -77,6 +77,58 @@ class FindDialog(QtGui.QDialog) :
 # end of class FileDialog
 
 
+class FindInputDialog(QtGui.QDialog) :
+
+    def __init__(self, parent = None, searchText = "", caseSens = False) :
+        super(FindInputDialog,self).__init__(parent)
+        
+        self.setWindowTitle("Find in Open Files")
+        
+        vboxLayout = QtGui.QVBoxLayout(self)
+        vboxLayout.addWidget(QtGui.QLabel("Find text:"))
+        self.searchTextCtrl = QtGui.QLineEdit(searchText)
+        vboxLayout.addWidget(self.searchTextCtrl)
+        self.caseCheck = QtGui.QCheckBox("Case sensitive")
+        if caseSens :
+            self.caseCheck.setChecked(True)
+        else :
+            self.caseCheck.setChecked(False)
+        vboxLayout.addWidget(self.caseCheck)
+        self.ok = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        self.ok.accepted.connect(self.accept)
+        self.ok.rejected.connect(self.reject)
+        vboxLayout.addWidget(self.ok)
+        
+    def searchText(self) :
+        return self.searchTextCtrl.text()
+        
+    def caseSensitive(self) :
+        return self.caseCheck.isChecked()
+
+#end of class FindInputDialog
+
+
+# The tab that shows the find results:
+class FindInFilesResults(QtGui.QListWidget) :
+ 
+    resultSelected = QtCore.Signal(str, int)
+
+    def __init__(self, parent = None) :
+        super(FindInFilesResults, self).__init__(parent)
+        self.itemDoubleClicked.connect(self.selectItem)
+
+    def addItem(self, txt, srcfile = None, line = 0) :
+        w = QtGui.QListWidgetItem(txt, self)
+        w.srcfile = srcfile
+        w.line = line
+        return w
+
+    def selectItem(self, item) :
+        if item.srcfile and len(item.srcfile) :
+            self.resultSelected.emit(item.srcfile, item.line)
+
+# end of class FindInFilesResults
+
 
 class EditFile(QtGui.QPlainTextEdit) :
 
@@ -290,6 +342,7 @@ class FileTabs(QtGui.QTabWidget) :
         else :
             self.openFiles = []
         self.selectedText = ''
+        self.findCaseSens = False
 
     def setActions(self, app) :
         self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
@@ -345,10 +398,14 @@ class FileTabs(QtGui.QTabWidget) :
             self.removeTab(0)
         self.openFiles = []
 
-    def addClicked(self) :        
-        fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
-        self.selectLine(fname, -1)
-        self.updateFromConfigSettings(self.app.config)
+    def addClicked(self) :
+        try:
+            fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
+            self.selectLine(fname, -1)
+            self.updateFromConfigSettings(self.app.config)
+        except :
+            # Probably they pressed Cancel, which throws an exception.
+            pass
 
     def updateFileEdit(self, fname) :
         for i in range(self.count()) :
@@ -422,5 +479,43 @@ class FileTabs(QtGui.QTabWidget) :
     def reloadModifiedFiles(self) :
         for i in range(self.count()) :
             self.widget(i).reloadIfModified()
+            
+    def findInOpenFiles(self, tabFindInOpen) :
+        #(searchText, ok) = FindInputDialog.getText(self, 'Find in Open Files', 'Search text')
+        dlg = FindInputDialog(self, self.currentWidget().getSelectedText(), self.findCaseSens)
+        result = dlg.exec_()
+        if result:
+            searchText = dlg.searchText()
+            self.findCaseSens = dlg.caseSensitive()
+            if searchText != "" :
+                self._findTextInOpenFiles(searchText, tabFindInOpen, self.findCaseSens)
+            return True
+        else :
+            return False
+            
+    def _findTextInOpenFiles(self, searchText, tabFindInOpen, caseSens) :
+        searchTextCase = searchText
+        if caseSens == False :
+            searchTextCase = searchText.lower()
+        tabFindInOpen.clear()
+        cntFound = 0;
+        for fname in self.openFiles :
+            if os.path.exists(fname) :
+                f = file(fname)
+
+                lineNum = 1;
+                for l in f.readlines() :
+                    lStrip = l.strip()
+                    lCase = lStrip
+                    if caseSens == False : lCase = lStrip.lower()
+                    if lCase.find(searchTextCase) > -1 :
+                        lDisplay = lStrip.replace('\t', '    ')
+                        tabFindInOpen.addItem(fname + "(" + str(lineNum) + "):    " + lDisplay, fname, lineNum-1)
+                        cntFound = cntFound + 1
+                    lineNum = lineNum + 1
+        
+        timesText = " time." if cntFound == 1 else " times."
+        tabFindInOpen.addItem("Search complete, found '" + searchText + "' " + str(cntFound) + timesText)
+                    
         
 #end of class FileTabs
