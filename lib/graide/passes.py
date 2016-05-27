@@ -72,6 +72,7 @@ class PassesView(QtGui.QTableWidget) :
         self.selectedRow = -1
         self.rulesJson = []     # Rule JSON for each pass
         self.collFixJson = []   # collision-fix JSON for each pass
+        self.flipFlags = []       # flags for which rules have their direction flipped
         
     def setPassIndex(self, index) :
         self.passindex = index
@@ -116,7 +117,7 @@ class PassesView(QtGui.QTableWidget) :
             self.cellDoubleClicked.connect(self.doCellDoubleClicked)
             self.connected = True
 
-    def loadResults(self, font, jsonall, gdx = None, rtl = False) :
+    def loadResults(self, font, jsonall, gdx = None, rtl = False, fontIsRtl = False) :
         self.rulesJson = []
         self.collFixJson = []
         self.selectRow(-1)
@@ -164,13 +165,19 @@ class PassesView(QtGui.QTableWidget) :
             # Process the output of pass J which = input to pass J+1, rules run by pass J+1.
             # Note that rules[J] are the rules run by pass J+1!
             run = Run(rtl)
+            flipDirFlag = gdx.flipDirs[j-1] if gdx and j > 0 else False
             highlight = False
             if j < num - 1 :
-                run.addslots(json['passes'][j]['slots'])  # output of pass J
+                run.addSlots(json['passes'][j]['slots'])  # output of pass J
                 passid = int(json['passes'][j]['id']) - 1
             else :
-                run.addslots(json['output'])   # final output
+                run.addSlots(json['output'])   # final output
                 passid = j
+            
+            if flipDirFlag :
+                run.reverseSlots()
+            self.flipFlags.append(flipDirFlag)
+                
             if j == 0 :
                 pname = "Init"
                 self.rulesJson.append(None)
@@ -179,7 +186,10 @@ class PassesView(QtGui.QTableWidget) :
             else :
                 pname = "Pass: %d" % j
                 if gdx :
-                    pname += " - " + gdx.passtypes[j-1]  # j-1 because Init is not in the passtypes array
+                    pname += " - " + gdx.passTypes[j-1]  # j-1 because Init is not in the passTypes array
+                    if flipDirFlag == 1 :
+                        pname += " (LTR)" if fontIsRtl else " (RTL)"  # direction reversed
+                    
                 if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
                     highlight = "active"
                     self.rulesJson.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
@@ -187,7 +197,7 @@ class PassesView(QtGui.QTableWidget) :
                     self.rulesJson.append(None)
                 
                 # Add rows for any collisions, if this is such a pass.
-                if 1 < j and j < num and gdx and gdx.passtypes[j-1] == "positioning":
+                if 1 < j and j < num and gdx and gdx.passTypes[j-1] == "positioning":
                     thisSlots = json['output'] if (j == num - 1) else json['passes'][j]['slots']
                     if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], thisSlots) :
                         highlight = "semi-active"
@@ -215,12 +225,17 @@ class PassesView(QtGui.QTableWidget) :
         return False
     
     # The user double-clicked on a pass. Load the view of it showing the rules matched.
-    def loadRules(self, font, json, jsonCollisions, initRun, gdx) :
+    def loadRules(self, font, json, jsonCollisions, initRun, flipDirPrev, flipDirThis, gdx) :
         self.selectRow(-1)
         self.currsel = None
         self.runViews = []
         # runs correspond to rules matched (fired or failed)
-        self.runs = [initRun.copy()]	 # initialize with the Init run, equivalent to last run of previous pass
+        run0 = initRun.copy()
+        if flipDirPrev != flipDirThis :
+            # This pass is reversed from the previous pass. Since we are starting from the output of the
+            # previous pass, reverse the slots.
+            run0.reverse()
+        self.runs = [run0]	 # initialize with the Init run, equivalent to last run of previous pass
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
         rowInput = 0
@@ -233,7 +248,6 @@ class PassesView(QtGui.QTableWidget) :
             for runInfo in json :		# graphite output for each rule
                 for cRule in runInfo['considered'] :	# rules that matched for this pass
                     nextRun = self.runs[-1].copy()
-                    
                     # in the previous run, highlight the modified output glyphs, if any
                     if begprev != -1 :
                         for slot in self.runs[-1][begprev:endprev] :
@@ -250,7 +264,13 @@ class PassesView(QtGui.QTableWidget) :
                         
                     else : # rule fired
                         # Adjust this run to reflect the changes made by the rule.
-                        (beg, end) = nextRun.replaceSlots(runInfo['output']['slots'],
+                        outputSlots = runInfo['output']['slots']
+                        if flipDirThis :
+                            outputSlotsTmp = []
+                            for s in outputSlots : outputSlotsTmp.append(s.copy())
+                            outputSlotsTmp.reverse()
+                            outputSlots = outputSlotsTmp
+                        (beg, end) = nextRun.replaceSlots(outputSlots,
                                 runInfo['output']['range']['start'], runInfo['output']['range']['end'])
                         lext = ""
                         islot = beg
@@ -483,3 +503,6 @@ class PassesView(QtGui.QTableWidget) :
         
     def runView(self, num) :
         return self.runViews[num]
+
+    def flipDir(self, num) :
+        return self.flipFlags[num]

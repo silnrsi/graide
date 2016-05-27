@@ -620,7 +620,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tab_results.addTab(self.tab_passes, "Passes")
         if self.json :
-            self.run.addslots(self.json[-1]['output'])
+            self.run.addSlots(self.json[-1]['output'])
             self.runView.loadRun(self.run, self.font)
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
@@ -792,8 +792,13 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if row == 0 : return
         self.tab_rules.setPassIndex(row - 1)
         
+        # Here we assume that if the default direction of the configuration is RTL, the
+        # font is RTL (which may not necessarily be true).
+        fontIsRtl = configintval(self.config, 'main', 'defaultrtl')
+        
         if passview.rules(row) is not None or passview.collisions(row) is not None:
-            self.tab_rules.loadRules(self.font, passview.rules(row), passview.collisions(row), passview.runView(row-1).run, self.gdx)
+            self.tab_rules.loadRules(self.font, passview.rules(row), passview.collisions(row), passview.runView(row-1).run, passview.flipDir(row-1), passview.flipDir(row), self.gdx)
+            
             if passview.collisions(row) is not None :
                 if passview.rules(row) is not None :
                     ruleLabel = "Rules + Collisions: pass %d" % row
@@ -801,8 +806,10 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                     ruleLabel = "Collisions: pass %d" % row
             else :
                 ruleLabel = "Rules: pass %d" % row
-                
-            self.tab_results.setTabText(3, ruleLabel)
+            flipLabel = (" (LTR)" if fontIsRtl else " (RTL)") if passview.flipDir(row) else ""
+            ruleLabel += flipLabel
+            
+            self.tab_results.setTabText(4, ruleLabel)
             self.tab_results.setCurrentWidget(self.tab_rules)
             
         passview.selectRow(row)
@@ -919,9 +926,13 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def loadRunViewAndPasses(self, widget, json, scroll = '') :
         # widget might be self (the main window) or it might be the Matcher
         rtl = widget.runRtl.isChecked()
+        # Here we assume that if the default direction of the configuration is RTL, the
+        # font is RTL (which may not necessarily be true).
+        fontIsRtl = configintval(self.config, 'main', 'defaultrtl')
+        
         runResult = Run(rtl)
         ###if self.run :
-        runResult.addslots(json[-1]['output'])
+        runResult.addSlots(json[-1]['output'])
         widget.runView.loadRun(runResult, self.font, resize = False)
         if not widget.runLoaded :
             try :
@@ -930,7 +941,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                 widget.runLoaded = True
             except :
                 print "Selection connection failed"
-        self.tab_passes.loadResults(self.font, json, self.gdx, rtl)
+        self.tab_passes.loadResults(self.font, json, self.gdx, rtl, fontIsRtl)
         self.tab_passes.setTopToolTip(widget.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
         self.tab_passes.updateScroll(scroll)
@@ -1026,7 +1037,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             
         glyphList = []
         run = Run(rtl)
-        run.addslots(json['output'])   # final output
+        run.addSlots(json['output'])   # final output
         for i, s in enumerate(run) :
             g = font[s.gid] # g is a GraideGlyph
             if g :

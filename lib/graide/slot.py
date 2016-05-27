@@ -454,3 +454,6 @@ class Slot(DataObj) :
         if flags >= maxKey * 2 :
             result += "+???"
         return result
+
+    def printDebug(self) :
+        print str(self.__getattribute__('gid')) + ":" + str(self.__getattribute__('id'))

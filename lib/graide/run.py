@@ -28,11 +28,16 @@ class Run(list) :
         self.rtl = rtl
         self.kernEdges = None
 
-    def addslots(self, runinfo) :
+    def addSlots(self, runinfo, flipDir = False) :
         for slotinfo in runinfo :
             slot = Slot(slotinfo)
             self.append(slot)
             slot.index = len(self) - 1
+    
+    def reverseSlots(self) :
+        self.reverse()
+        for (i, slot) in enumerate(self) :
+            slot.index = i
 
     def copy(self) :
         res = Run(self.rtl)
@@ -94,3 +99,8 @@ class Run(list) :
                 
     def addKernEdge(self, edges, others, minx, width) :
         self.kernEdges = (edges, others, minx, width)
+
+    def printDebug(self) :
+        for (i, s) in enumerate(self) :
+            s.printDebug()
+        print "------"

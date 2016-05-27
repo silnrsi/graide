@@ -25,7 +25,9 @@ class Gdx(object) :
 
     def __init__(self) :
         self.passes = []
-        self.passtypes = []
+        self.passTypes = []
+        self.collisionFix=[]
+        self.flipDirs = []
         self.keepelements = False
 
     def readfile(self, fname, font, autoGdlFile = None, apFileName = None, ronly = False) :
@@ -37,8 +39,13 @@ class Gdx(object) :
         for (event, e) in iterparse(self.file, events=('start', 'end')) :
             if event == 'start' :
                 if e.tag == 'pass' :
+                    #print "table=",e.get('table'),"index=",e.get('index'),"flipDir=",e.get('flipDir'),"collisionFix",e.get('collisionFix'),"autoKern",e.get('autoKern')
                     self.passes.append([])
-                    self.passtypes.append(e.get('table'))
+                    self.passTypes.append(e.get('table'))
+                    self.collisionFix.append(int(e.get('collisionFix')) if e.get('collisionFix') else 0)
+                    # ignore autoKern for now
+                    self.flipDirs.append(int(e.get('flipDir')) if e.get('flipDir') else 0)
+                    
                 elif e.tag in ('rule', 'glyph', 'class') :
                     self.keepelements = True
             else :

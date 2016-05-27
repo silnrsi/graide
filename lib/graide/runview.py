@@ -370,7 +370,7 @@ if __name__ == "__main__" :
     font.makebitmaps(40)
     rinfo = jinfo['passes'][0]['slots']
     run = Run(False)
-    run.addslots(rinfo)
+    run.addSlots(rinfo)
     view = RunView(run, font).gview
     print "Padauk RunView?" ###
     view.show()
