@@ -489,7 +489,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_hbox.addWidget(self.runAdd)
         
         # test output
-        self.run = Run(self.runRtl.isChecked())
+        self.run = Run(self.font, self.runRtl.isChecked())
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
@@ -806,8 +806,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                     ruleLabel = "Collisions: pass %d" % row
             else :
                 ruleLabel = "Rules: pass %d" % row
-            flipLabel = (" (LTR)" if fontIsRtl else " (RTL)") if passview.flipDir(row) else ""
-            ruleLabel += flipLabel
+
+            ###flipLabel = (" (LTR)" if fontIsRtl else " (RTL)") if passview.flipDir(row) else ""
+            ruleLabel += passview.dirLabel(row)
             
             self.tab_results.setTabText(4, ruleLabel)
             self.tab_results.setCurrentWidget(self.tab_rules)
@@ -1036,7 +1037,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         num = len(json['passes']) + 1  # 0 = Init
             
         glyphList = []
-        run = Run(rtl)
+        run = Run(self.font, rtl)
         run.addSlots(json['output'])   # final output
         for i, s in enumerate(run) :
             g = font[s.gid] # g is a GraideGlyph

@@ -429,7 +429,7 @@ class Slot(DataObj) :
     @staticmethod
     def colFlagsAnnot(flags) :
         result = str(flags)
-        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN" }
+        flagDict = { 1: "FIX", 2: "IGNORE", 4: "START", 8: "END", 16: "KERN", 32: "ISCOL", 64: "KNOWN", 128: "ISSPACE" }
         sep = "="
         maxKey = 0
         for k in flagDict.keys() :
@@ -457,3 +457,4 @@ class Slot(DataObj) :
 
     def printDebug(self) :
         print str(self.__getattribute__('gid')) + ":" + str(self.__getattribute__('id'))
+

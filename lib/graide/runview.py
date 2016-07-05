@@ -369,7 +369,7 @@ if __name__ == "__main__" :
     font.loadFont(os.path.join(tpath, "fonts/Padauk/Padauk.ttf"))
     font.makebitmaps(40)
     rinfo = jinfo['passes'][0]['slots']
-    run = Run(False)
+    run = Run(font, False)
     run.addSlots(rinfo)
     view = RunView(run, font).gview
     print "Padauk RunView?" ###

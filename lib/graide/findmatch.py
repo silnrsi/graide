@@ -854,7 +854,7 @@ class Matcher(QtGui.QTabWidget) :
         #hbox.addWidget(runAdd)
     
         # test output
-        self.run = Run(self.runRtl.isChecked())
+        self.run = Run(self.font, self.runRtl.isChecked())
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         vsplitter.addWidget(self.runView.gview)

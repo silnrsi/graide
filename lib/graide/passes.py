@@ -72,7 +72,8 @@ class PassesView(QtGui.QTableWidget) :
         self.selectedRow = -1
         self.rulesJson = []     # Rule JSON for each pass
         self.collFixJson = []   # collision-fix JSON for each pass
-        self.flipFlags = []       # flags for which rules have their direction flipped
+        self.flipFlags = []     # flags for which rules have their direction flipped
+        self.dirLabels = []
         
     def setPassIndex(self, index) :
         self.passindex = index
@@ -130,14 +131,21 @@ class PassesView(QtGui.QTableWidget) :
         num = len(json['passes']) + 1  # 0 = Init
         count = num
         
+        runDir = "rtl" if rtl else "ltr"
+        fontDir = "rtl" if fontIsRtl else "ltr"
+        
         # JSON format:
         #   'passes': [
         #      0:
         #        'id' : 1
+        #        'rundir' : 'ltr'
+        #        'slotsdir' : 'rtl'
         #        'slots' : <initial data>
         #        'rules' : <rules run by pass 1>
         #      1:
         #        'id' : 2
+        #        'rundir' : 'ltr'
+        #        'slotsdir' : 'rtl'
         #        'slots' : <output of pass 1>
         #        'rules' : <rules run by pass 2>
         #      ...
@@ -146,6 +154,7 @@ class PassesView(QtGui.QTableWidget) :
         #        'slots' : <output of pass N-1>
         #        'rules' : <rules run by pass N>
         #   ]
+        #   'outputdir' : 'rtl'
         #   'output': <output of pass N>
         
         # Also note that pass IDs in JSON do not match pass indices in GDX when there is
@@ -162,33 +171,54 @@ class PassesView(QtGui.QTableWidget) :
         w = 0
         wt = 0
         for j in range(num) :
-            # Process the output of pass J which = input to pass J+1, rules run by pass J+1.
-            # Note that rules[J] are the rules run by pass J+1!
-            run = Run(rtl)
-            flipDirFlag = gdx.flipDirs[j-1] if gdx and j > 0 else False
+            # Process the output of pass J which = input to pass J+1;  the rules are listed with pass J-1.
+            # Note for J = 0 there are no rules.
+            run = Run(font, rtl)
             highlight = False
             if j < num - 1 :
                 run.addSlots(json['passes'][j]['slots'])  # output of pass J
-                passid = int(json['passes'][j]['id']) - 1
+                #passid = int(json['passes'][j]['id']) - 1
             else :
                 run.addSlots(json['output'])   # final output
-                passid = j
+                #passid = j
             
-            if flipDirFlag :
-                run.reverseSlots()
-            self.flipFlags.append(flipDirFlag)
-                
+            #print "*** in loadResults: pass",j,"***"
+            #run.printDebug()
+            
             if j == 0 :
                 pname = "Init"
+                if runDir != fontDir :
+                    pname += " (LTR) " if fontIsRtl else " (RTL) "  # direction reversed
                 self.rulesJson.append(None)
                 self.collFixJson.append(None)
+                self.dirLabels.append("")
+                self.flipFlags.append(False)
                 
             else :
                 pname = "Pass: %d" % j
+
+                if j < num - 1 :
+                    slotDir = json['passes'][j]['slotsdir']
+                    passDir = json['passes'][j-1]['passdir']  # where the rules come from
+                else : 
+                    slotDir = json['outputdir']
+                    passDir = json['passes'][j-1]['passdir']  # where the rules come from 
+                #print j,"- slot dir=",slotDir, "; pass dir=",passDir
+                if slotDir != passDir :
+                    run.reverseDirection()
+                    #run.printDebug()
+                
+                flipFlag = False
+                dirLabel = ""
                 if gdx :
                     pname += " - " + gdx.passTypes[j-1]  # j-1 because Init is not in the passTypes array
-                    if flipDirFlag == 1 :
-                        pname += " (LTR)" if fontIsRtl else " (RTL)"  # direction reversed
+                    if passDir != fontDir :
+                        dirLabel = " (LTR)" if passDir == "ltr" else " (RTL)"  # direction reversed
+                        pname += dirLabel + " "
+                        flipFlag = True
+                        
+                self.flipFlags.append(flipFlag)
+                self.dirLabels.append(dirLabel)
                     
                 if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
                     highlight = "active"
@@ -232,10 +262,19 @@ class PassesView(QtGui.QTableWidget) :
         # runs correspond to rules matched (fired or failed)
         run0 = initRun.copy()
         if flipDirPrev != flipDirThis :
-            # This pass is reversed from the previous pass. Since we are starting from the output of the
-            # previous pass, reverse the slots.
-            run0.reverse()
-        self.runs = [run0]	 # initialize with the Init run, equivalent to last run of previous pass
+            # This pass is reversed from the previous pass. Since we are starting 
+            # from the output of the previous pass, reverse the slots.
+            dontReFlip = True
+            runPassDir = run0.copy()
+            runPassDir.reverseDirection()
+        else :
+            dontReFlip = False
+            runPassDir = run0
+        self.runs = [runPassDir]	 # initialize with the Init run, equivalent to last run of previous pass
+        
+        print "loadRules - 0"
+        self.runs[0].printDebug()
+            
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
         rowInput = 0
@@ -247,7 +286,15 @@ class PassesView(QtGui.QTableWidget) :
             end = -1
             for runInfo in json :		# graphite output for each rule
                 for cRule in runInfo['considered'] :	# rules that matched for this pass
+                    #if dontReFlip :
+                    #    nextRun = run0.copy()  # s
+                    #    dontReFlip = False
+                    #else :
                     nextRun = self.runs[-1].copy()
+                    
+                    print "loadRules - ", len(self.runs)
+                    nextRun.printDebug()
+                    
                     # in the previous run, highlight the modified output glyphs, if any
                     if begprev != -1 :
                         for slot in self.runs[-1][begprev:endprev] :
@@ -265,11 +312,11 @@ class PassesView(QtGui.QTableWidget) :
                     else : # rule fired
                         # Adjust this run to reflect the changes made by the rule.
                         outputSlots = runInfo['output']['slots']
-                        if flipDirThis :
-                            outputSlotsTmp = []
-                            for s in outputSlots : outputSlotsTmp.append(s.copy())
-                            outputSlotsTmp.reverse()
-                            outputSlots = outputSlotsTmp
+                        #if flipDirThis :
+                        #    outputSlotsTmp = []
+                        #    for s in outputSlots : outputSlotsTmp.append(s.copy())
+                        #    outputSlotsTmp.reverse()
+                        #    outputSlots = outputSlotsTmp
                         (beg, end) = nextRun.replaceSlots(outputSlots,
                                 runInfo['output']['range']['start'], runInfo['output']['range']['end'])
                         lext = ""
@@ -293,6 +340,10 @@ class PassesView(QtGui.QTableWidget) :
                         rowInput = len(self.runs)  # index of the next one added
                     
                     self.runs.append(nextRun)
+                    
+                    #print "appended - "
+                    #nextRun.printDebug()
+
                     nextRun.label = "Rule: %d%s" % (cRule['id'], lext)
                     nextRun.passindex = self.passindex
                     nextRun.ruleindex = int(cRule['id'])
@@ -503,6 +554,9 @@ class PassesView(QtGui.QTableWidget) :
         
     def runView(self, num) :
         return self.runViews[num]
-
+        
     def flipDir(self, num) :
         return self.flipFlags[num]
+
+    def dirLabel(self, num) :
+        return self.dirLabels[num]

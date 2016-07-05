@@ -24,7 +24,8 @@ from graide.slot import Slot
 
 class Run(list) :
 
-    def __init__(self, rtl = False) :
+    def __init__(self, font, rtl = False) :
+        self.font = font
         self.rtl = rtl
         self.kernEdges = None
 
@@ -34,13 +35,42 @@ class Run(list) :
             self.append(slot)
             slot.index = len(self) - 1
     
-    def reverseSlots(self) :
-        self.reverse()
-        for (i, slot) in enumerate(self) :
+    # Reverse the slots, but keeping diacritics (directionality = 16) after their bases.
+    def reverseDirection(self) :
+        #print "reverseDirection"
+        #self.printDebug()
+        runTemp = Run(self.font, self.rtl)
+        #print "runTemp length=",len(runTemp)
+        iLastOfSeq = len(self)
+        for i in xrange(len(self)-1, 0, -1):
+            slot = self[i]
+            glyph = self.font[slot.gid]
+            dirAttr = int(glyph.getGdlProperty('directionality'))
+            #print i, "gid=",slot.gid,"dir=",dirAttr
+            if dirAttr != 16 :
+                for iCopy in range(i, iLastOfSeq) :
+                    slotCopy = self[iCopy]
+                    runTemp.append(slotCopy)
+                iLastOfSeq = i
+                #runTemp.printDebug()
+            
+        # Copy any left-over diacritics.
+        for iCopy in range(0, iLastOfSeq) :
+            slotCopy = self[iCopy]
+            runTemp.append(slotCopy)
+        #runTemp.printDebug()
+            
+        while len(self) > 0 : self.pop()    # clear
+        
+        for (i, slot) in enumerate(runTemp) :
+            self.append(slot)
             slot.index = i
+        #print "final reversed"
+        #self.printDebug()
+
 
     def copy(self) :
-        res = Run(self.rtl)
+        res = Run(self.font, self.rtl)
         for slot in self :
             res.append(slot.copy())
         return res
