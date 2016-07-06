@@ -272,8 +272,8 @@ class PassesView(QtGui.QTableWidget) :
             runPassDir = run0
         self.runs = [runPassDir]	 # initialize with the Init run, equivalent to last run of previous pass
         
-        print "loadRules - 0"
-        self.runs[0].printDebug()
+        #print "loadRules - 0"
+        #self.runs[0].printDebug()
             
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
@@ -292,8 +292,8 @@ class PassesView(QtGui.QTableWidget) :
                     #else :
                     nextRun = self.runs[-1].copy()
                     
-                    print "loadRules - ", len(self.runs)
-                    nextRun.printDebug()
+                    #print "loadRules - ", len(self.runs)
+                    #nextRun.printDebug()
                     
                     # in the previous run, highlight the modified output glyphs, if any
                     if begprev != -1 :
