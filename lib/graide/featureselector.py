@@ -39,9 +39,10 @@ class FeatureRefs(object) :
                 name = f.name(langid)
                 if not name : continue
                 name = name[:]
-                self.order.append(name)
                 n = f.num()
-                #if n == 0 : continue  # why does this happen?
+                if n == 0 : 
+                    #print n, name, f.tag()
+                    continue  # probably the lang feature; ignore
                 finfo = {}
                 forder = []
                 for i in range(n) :
@@ -49,10 +50,12 @@ class FeatureRefs(object) :
                     k = f.label(i, langid)[:]
                     finfo[k] = v
                     forder.append(k)
+                self.order.append(name)
                 self.feats[name] = finfo
                 self.featids[name] = f.tag()
                 self.fval[f.tag()] = grval.get(f)
                 self.forders[name] = forder
+                #print n, name, f.tag(), finfo, forder
 
 
     def copy(self) :
@@ -123,6 +126,7 @@ class FeatureDialog(QtGui.QDialog) :
 
 
     def set_feats(self, feats, featsBaseForLang, vals = None, lang = None, width = 100) :
+        
         self.featsBaseForLang = featsBaseForLang
         
         if not vals : vals = feats.fval
@@ -137,26 +141,27 @@ class FeatureDialog(QtGui.QDialog) :
         self.table.setRowCount(num)
         count = 0
         for f in feats.order :
-            fid = feats.featids[f]
-            c = QtGui.QComboBox()
-            c.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeSetting)
-            c.userTag = feats.featids[f]
-            for k in feats.forders[f] :
-                c.addItem(k, feats.feats[f][k])
-                if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
-                    c.setCurrentIndex(c.count() - 1)
-            self.combos.append(c)
-            self.table.setCellWidget(count, 2, c)
-            
-            #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fval[fid] else ""
-            #self.table.setItem(count, 0, QtGui.QTableWidgetItem(modText))
-            # Column 0 currently not used
-            
-            labelWidget = QtGui.QTableWidgetItem(f)
-            if fid in vals and vals[fid] != featsBaseForLang.fval[fid] :
-                labelWidget.setBackground(Layout.activePassColour) # modified from expected
-            self.table.setItem(count, 1, labelWidget)
-            self.labels.append(labelWidget)
+            fid = feats.featids[f] if f in feats.featids else ""
+            if fid != "" :
+                c = QtGui.QComboBox()
+                c.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeSetting)
+                c.userTag = feats.featids[f]
+                for k in feats.forders[f] :
+                    c.addItem(k, feats.feats[f][k])
+                    if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
+                        c.setCurrentIndex(c.count() - 1)
+                self.combos.append(c)
+                self.table.setCellWidget(count, 2, c)
+                
+                #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fval[fid] else ""
+                #self.table.setItem(count, 0, QtGui.QTableWidgetItem(modText))
+                # Column 0 currently not used
+                
+                labelWidget = QtGui.QTableWidgetItem(f)
+                if fid in vals and vals[fid] != featsBaseForLang.fval[fid] :
+                    labelWidget.setBackground(Layout.activePassColour) # modified from expected
+                self.table.setItem(count, 1, labelWidget)
+                self.labels.append(labelWidget)
             
             count += 1
             
@@ -235,3 +240,18 @@ class FeatureDialog(QtGui.QDialog) :
             self.currsize = self.size()
             self.hide()
             self.isHidden = True
+
+    # Somehow the lang features gets in the list; remove it
+    def removeLangFeature(self, featRefs) :
+        print "kludgeRemoveBogusFeature"
+        c = len(featRefs.order)
+        featLabelLast = featRefs.order[c-1]
+        featIdLast = featRefs.featids[featLabelLast]
+        if featIdLast == "" :
+            print "removing..."
+            del featRefs.feats[featLabelLast]
+            del featRefs.featids[featLabelLast]
+            del featRefs.forders[featLabelLast]
+            del featRefs.fval['']
+            del featRefs.order[c-1]
+        return featRefs
