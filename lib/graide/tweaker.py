@@ -1332,7 +1332,7 @@ class TweakView(QtGui.QWidget) :
 
         self.run = Run(tweak.rtl)
         if self.json :
-            self.run.addslots(self.json[-1]['output'])
+            self.run.addSlots(self.json[-1]['output'])
         self.runView.loadRun(self.run, self.font, resize = False)
         if not self.runloaded :
             try :
