@@ -14,7 +14,7 @@ for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
 '''
 #''' to keep vim happy
 
-versionSuffix = '0_8_7'
+versionSuffix = '0_8_75'
 showConsole = False
 consoleSuffix = '_console' if showConsole else ''
 

@@ -76,7 +76,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.fontFaces = {}
         self.fontFileName = None
         self.apname = None
-        self.appTitle = "Graide v0.8.7"
+        self.appTitle = "Graide v0.8.75"
         self.currConfigTab = 0
         
         self.debugCnt = 0  # debug

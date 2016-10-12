@@ -177,7 +177,7 @@ class TestList(QtGui.QWidget) :
         self.aGDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
         self.aGDel.setToolTip('Remove test group')
         self.aGDel.triggered.connect(self.delGroupClicked)
-        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Test ...", app)
+        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Edit Test ...", app)
         self.aEdit.setToolTip('Edit test')
         self.aEdit.triggered.connect(self.editClicked)
         self.aUpp = QtGui.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Test &Up", app)
