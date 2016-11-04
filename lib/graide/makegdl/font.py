@@ -124,7 +124,7 @@ class Font(object) :
     def addGdxGlyph(self, e, apFileName) :
         hasApFile = not not apFileName  # if there is an AP XML File, very little gets set here
                                         # (most of the glyph attrs get set directly from the XML file),
-                                        # but we do need to set actualForPsuedo, and also the glyph name
+                                        # but we do need to set actualForPseudo, and also the glyph name
         gid = int(e.get('glyphid'))
         
         g = self[gid]
@@ -173,14 +173,15 @@ class Font(object) :
                 g.setSequenceProp(attrName[9:], int(a.get('value')))
             elif attrName.startswith('octabox') :
                 g.setOctaboxProp(attrName[8:], a.get('value'))
-            elif hasApFile :
-                pass # AP takes precedent for the following attributes so skip them
-            elif attrName.endswith('.x') :
-                g.setAnchor(attrName[:-2], int(a.get('value')), None)
-            elif attrName.endswith('.y') :
-                g.setAnchor(attrName[:-2], None, int(a.get('value')))
             elif g.builtInGlyphAttr(attrName) :
                 g.setGdlProperty(attrName, a.get('value'))
+            #elif hasApFile :
+            #    pass 
+            # AP file takes precedent for AP attributes so skip them
+            elif attrName.endswith('.x') and not hasApFile : 
+                g.setAnchor(attrName[:-2], int(a.get('value')), None)
+            elif attrName.endswith('.y') and not hasApFile :
+                g.setAnchor(attrName[:-2], None, int(a.get('value')))
             else :
                 g.setUserProperty(attrName, a.get('value'))
             

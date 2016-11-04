@@ -153,6 +153,7 @@ class ConfigDialog(QtGui.QDialog) :
         
         self.build_apronly = QtGui.QCheckBox()
         self.build_apronly.setChecked(configintval(config, 'build', 'apronly'))
+        self.build_apronly.setDisabled(True)  # mechanism to update AP file from Graide is not reliable
         apGridLo.addWidget(QtGui.QLabel('AP Database is read-only:'), 2, 0, 1, columnSpan = 2) # cols 0-1
         apGridLo.addWidget(self.build_apronly, 2, 2)
         
