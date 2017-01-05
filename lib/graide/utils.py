@@ -157,10 +157,29 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = errfile
     if getattr(sys, 'frozen', None) : parms['env'] = os.environ
+        
+    if config.has_option('build', 'ignorewarnings') :
+        warningList = configval(config, 'build', 'ignorewarnings')
+        warningList = warningList.replace(' ', '')
+        if warningList == 'none' :
+            warningList = ['-wall']
+        elif warningList == '' :
+            warningList = ['-w510', '-w3521']  # warnings to ignore by default
+        else :
+            warningList = warningList.replace(',', ' -w')
+            warningList = "-w" + warningList
+            warningList = warningList.split(' ')
+    else :
+        warningList = ['-w510', '-w3521']  # warnings to ignore by default
+        
     res = 1
     if grcompiler is not None :
         print "Compiling..."
-        res = subprocess.call((grcompiler, "-w3521", "-w510", "-d", "-q", gdlfile, tempname, fontfile), **parms)
+        argList = [grcompiler]
+        argList.extend(warningList)
+        argList.extend(["-d", "-q", gdlfile, tempname, fontfile])
+        res = subprocess.call(argList, **parms)
+        
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)

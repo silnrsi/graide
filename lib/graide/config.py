@@ -167,15 +167,25 @@ class ConfigDialog(QtGui.QDialog) :
         #if not self.build_apxml.text() :
         if not self.build_gdlinc.text() :
             self.build_apctrls.setEnabled(False)
-            
+           
+        self.build_noWarning = QtGui.QLineEdit(self.build_apctrls)
+        self.build_noWarning.setMinimumWidth(300)
+        if config.has_option('build', 'ignorewarnings') :
+            self.build_noWarning.setText(configval(config, 'build', 'ignorewarnings'))
+        else :
+            self.build_noWarning.setText("510,3521")  # warnings to ignore by default
+        self.build_noWarning.setToolTip('List warning numbers to be ignored, or \'none\'')
+        buildGridLo.addWidget(QtGui.QLabel('Ignore warnings:'), 4, 0, 1)
+        buildGridLo.addWidget(self.build_noWarning, 4, 2, 1, columnSpan = 3) # cols 1-3
+             
         # Tweaking controls
         self.build_tweak = FileEntry(self.general, configval(config, 'build', 'tweakxmlfile'), 'Tweak Files (*.xml)')
         self.build_tweak.textChanged.connect(self.tweakFileChanged)
-        buildGridLo.addWidget(QtGui.QLabel('Position tweaker file'), 4, 0, 1, columnSpan = 2) # cols 0-1
-        buildGridLo.addWidget(self.build_tweak, 4, 2)
+        buildGridLo.addWidget(QtGui.QLabel('Position tweaker file'), 5, 0, 1, columnSpan = 2) # cols 0-1
+        buildGridLo.addWidget(self.build_tweak, 5, 2)
         # sub-controls for AP generation, enabled or disabled as a unit
         self.build_twkctrls = QtGui.QWidget(self.build) 
-        buildGridLo.addWidget(self.build_twkctrls, 5, 0, 1, 4)
+        buildGridLo.addWidget(self.build_twkctrls, 6, 0, 1, 4)
         tweakGridLo = QtGui.QGridLayout(self.build_twkctrls)
         tweakGridLo.setColumnMinimumWidth(0, 125) # make this columns in this control match build_apgrid
         tweakGridLo.setColumnMinimumWidth(1, 20)
@@ -348,6 +358,14 @@ class ConfigDialog(QtGui.QDialog) :
             if config.has_option('build', 'makegdlfile') :
                 config.remove_option('build', 'makegdlfile')
                 self.build_gdlinc.setText("")
+                
+        if self.build_noWarning.text() :
+            tempVal = self.build_noWarning.text()
+            tempVal = tempVal.replace(' ','')
+            config.set('build', 'ignorewarnings', tempVal)
+        else :
+            if config.has_option('build', 'ignorewarnings') :
+                config.remove_option('build', 'ignorewarnings')
 
         self.updateChanged(self.build_tweak, config, 'build', 'tweakxmlfile',
                 None) # TODO
