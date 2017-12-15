@@ -78,12 +78,12 @@ class Slot(DataObj) :
                 ('breakweight', 'break'), ('insert', 'insert'), ('justification', 'justification')) :
             label,attr = pair
             if hasattr(self, attr) :
-                res.append(Attribute(label, self.__getattribute__, None, False, None, attr))
+                res.append(Attribute(label, self.__getattribute__, None, False, None, False, attr))
         for k in ('origin', 'advance', 'shift') :
             if hasattr(self, k) :
-                res.append(Attribute(k, self.getPos, None, False, None, k))
+                res.append(Attribute(k, self.getPos, None, False, None, False, k))
         for k in ('before', 'after') :
-            res.append(Attribute(k, self.getCharInfo, None, False, None, k))
+            res.append(Attribute(k, self.getCharInfo, None, False, None, False, k))
             
         crem = {}
         if hasattr(self, 'collision') :
@@ -118,7 +118,7 @@ class Slot(DataObj) :
                             label = "absolute"
                         else :
                             label = v[2]
-                        trem.append(Attribute(label+'('+str(v[1])+')', getVal, None, False, None, v[3]))
+                        trem.append(Attribute(label+'('+str(v[1])+')', getVal, None, False, None, False, v[3]))
                     crem[rk] = trem
 
         if hasattr(self, 'collision') and self.hasSequenceAttrs() :
@@ -132,46 +132,46 @@ class Slot(DataObj) :
             sres = None
             
         if hasattr(self, 'parent') :
-            res.append(Attribute('parent slot', self.getParent, None, False, None, 'parent'))
+            res.append(Attribute('parent slot', self.getParent, None, False, None, False, 'parent'))
             res.append(Attribute('parent offset', self.getOffset, None, False))
             
         resAttrib = AttribModel(res)
 
         if hasattr(self, 'collision') :
             cAttrib = AttribModel(cres, resAttrib)
-            resAttrib.add(Attribute('collision', None, None, True, None, cAttrib))
+            resAttrib.add(Attribute('collision', None, None, True, None, False, cAttrib))
             if len(crem) :
                 cremAttrib = AttribModel([], cAttrib)
-                cAttrib.add(Attribute('removals', None, None, True, None, cremAttrib))
+                cAttrib.add(Attribute('removals', None, None, True, None, False, cremAttrib))
                 for k in 'xysd' :
                     if k not in crem : continue
                     v = crem[k]
                     tmodel = AttribModel(v, cremAttrib)
-                    cremAttrib.add(Attribute(k, None, None, True, None, tmodel))
+                    cremAttrib.add(Attribute(k, None, None, True, None, False, tmodel))
             r = self.getColResults()
             if len(r) :
                 crAttribModel = AttribModel([], cAttrib)
-                cAttrib.add(Attribute('results', None, None, True, None, crAttribModel))
+                cAttrib.add(Attribute('results', None, None, True, None, False, crAttribModel))
                 for k in 'xysd' :
                     if k not in r : continue
                     v = r[k]
                     lModel = AttribModel([], crAttribModel)
-                    crAttribModel.add(Attribute(k, None, None, True, None, lModel))
-                    lModel.add(Attribute('totalRange', getVal, None, False, None, "[%d, %d]" % (v.ranges[0][0], v.ranges[0][1])))
-                    lModel.add(Attribute('legalRanges', getVal, None, False, None, v.ranges[1:]))
-                    lModel.add(Attribute('bestVal', getVal, None, False, None, v.val))
-                    lModel.add(Attribute('bestCost', getVal, None, False, None, v.cost))
+                    crAttribModel.add(Attribute(k, None, None, True, None, False, lModel))
+                    lModel.add(Attribute('totalRange', getVal, None, False, None, False, "[%d, %d]" % (v.ranges[0][0], v.ranges[0][1])))
+                    lModel.add(Attribute('legalRanges', getVal, None, False, None, False, v.ranges[1:]))
+                    lModel.add(Attribute('bestVal', getVal, None, False, None, False, v.val))
+                    lModel.add(Attribute('bestCost', getVal, None, False, None, False, v.cost))
             
         if sres :
             sAttrib = AttribModel(sres, resAttrib)
-            resAttrib.add(Attribute('sequence', None, None, True, None, sAttrib))
+            resAttrib.add(Attribute('sequence', None, None, True, None, False, sAttrib))
 
         ures = []
         for i in range(len(self.user)) :
-            ures.append(Attribute(str(i+1), self.getUser, None, False, None, i))
+            ures.append(Attribute(str(i+1), self.getUser, None, False, None, False, i))
             
         uAttrib = AttribModel(ures, resAttrib)
-        resAttrib.add(Attribute('user attributes', None, None, True, None, uAttrib))
+        resAttrib.add(Attribute('user attributes', None, None, True, None, False, uAttrib))
         return resAttrib
 
     def getPos(self, name) :

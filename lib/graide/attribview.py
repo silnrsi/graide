@@ -51,6 +51,60 @@ class LinePlainTextEdit(QtGui.QPlainTextEdit) :
            self.editFinished.emit()
         else :
             return super(LinePlainTextEdit, self).keyPressEvent(key)
+            
+
+class AttrValueListDialog(QtGui.QDialog) :
+    
+    def __init__(self, parent, glyphName, gClassList) :
+        super(AttrValueListDialog,self).__init__(parent)
+        
+        # Hide the help icon, all it does it take up space.
+        #icon = self.windowIcon(); -- just in case icon gets lost
+        flags = self.windowFlags();
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
+        flags = flags & (~helpFlag);
+        self.setWindowFlags(flags);
+        #self.setWindowIcon(icon);
+
+        self.setWindowTitle(glyphName)
+        listWidget = QtGui.QListWidget(self)
+        #listWidget.clicked.connect(self.doReturn)
+        itemHeight = 18
+        cnt = 0
+        for gClass in gClassList:
+            if gClass == "" or gClass == " " :
+                continue
+                
+            item = QtGui.QListWidgetItem(gClass)
+            item.setSizeHint(QtCore.QSize(200, itemHeight))
+            listWidget.addItem(item)
+            cnt = cnt + 1
+            
+        listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        if cnt <= 25 :
+            displayCnt = 4 if cnt < 5 else cnt
+            listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            # It's okay if the list and dialog widths don't match, since there's no scroll bar.
+            # Make the list widget wide enough that they can expand the dialog and see wide names.
+            listWidget.setFixedWidth(300)
+            self.setMinimumWidth(200)
+        else :
+            displayCnt = 25
+            listWidget.setFixedWidth(300)  # make it wide enough to handle long names
+            self.setMinimumWidth(300)
+            #listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        
+        listWidget.setFixedHeight(displayCnt * itemHeight + 10)
+        self.setMinimumHeight(displayCnt * itemHeight + 10)
+        
+    # end of __init_
+        
+                    
+    def doReturn(self) :
+        self.done(0)  # close
+    
+# end of class AttrValueListDialog
+
 
 class AttributeDelegate(QtGui.QStyledItemDelegate) :
 
@@ -92,7 +146,7 @@ class AttributeDelegate(QtGui.QStyledItemDelegate) :
 
 class Attribute(object) :
 
-    def __init__(self, name, getter, setter, isTree = False, fileLoc = None, *params) :
+    def __init__(self, name, getter, setter, isTree = False, fileLoc = None, listPopup = False, *params) :
         self.name = name
         self.setter = setter
         self.getter = getter
@@ -100,7 +154,8 @@ class Attribute(object) :
         self.isTree = isTree # debugging
         self.tree = params[0] if isTree else None  # an AttribModel, if this has an embedded tree
         self.fileLoc = fileLoc
-
+        self.doesListPopup = listPopup
+            
     def child(self, row) :
         if self.tree :
             return self.tree.child(row)
@@ -139,6 +194,21 @@ class Attribute(object) :
             return self.tree.fileLocAt(treePath)   # tree is an AttribModel
         else :
             return None
+            
+    def listForPopup(self) :
+        if self.doesListPopup :
+            classListStr = self.getData(1)
+            # turn into list
+            res = classListStr.split('  ')  # two spaces
+            res.sort()
+            return res
+        else :
+            return None
+            
+    def showPopupList(self, listToShow, widget) :
+        dialog = AttrValueListDialog(widget, self.name, listToShow)
+        dialog.show()   # modeless
+
         
     def debugPrintData(self) :
         print self.name
@@ -240,8 +310,17 @@ class AttribModel(QtCore.QAbstractItemModel) :
         i = treePath[0]
         attrData = self.__data[i]
         return attrData.getFileLoc(treePath[1:])
-
+            
+    def listForPopup(self, treePath) :
+        i = treePath[0]
+        attrData = self.__data[i]
+        return attrData.listForPopup()
         
+    def showPopupList(self, treePath, listToShow, widget) :
+        i = treePath[0]
+        attrData = self.__data[i]
+        return attrData.showPopupList(listToShow, widget)       
+
     def debugPrintData(self) :
         print self.__data
         for d in self.__data :
@@ -279,6 +358,7 @@ class AttribView(QtGui.QTreeView) :
         self.model.setData(index, None, QtCore.Qt.EditRole)
         
     def mouseDoubleClickEvent(self, event) :
+        #print "mouseDoubleClickEvent"
         super(AttribView, self).mouseDoubleClickEvent(event)
         
         # Generate a path to where the click was in the tree control.
@@ -288,10 +368,14 @@ class AttribView(QtGui.QTreeView) :
         while parentIndex.row() > -1 :
             treePath.insert(0, parentIndex.row()) # prepend
             parentIndex = parentIndex.parent()
-
-        fileLoc = self.model.fileLocAt(treePath)
-        if fileLoc : 
-            self.app.selectLine(*fileLoc)
+            
+        pList = self.model.listForPopup(treePath)
+        if pList :
+            self.model.showPopupList(treePath, pList, self)
+        else :
+            fileLoc = self.model.fileLocAt(treePath)
+            if fileLoc : 
+                self.app.selectLine(*fileLoc)
 
     def findMainFileLoc(self) :
         treePath = [0]   # for Glyph tab, assumes glyph number is the first
