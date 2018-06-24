@@ -932,14 +932,14 @@ class TweakInfoWidget(QtWidgets.QFrame) :
 
     # The idea here is to pass appropriate key presses on to the TweakView. I couldn't get it to work.
 #    def keyReleaseEvent(self, event) :
-#        print "TweakInfoWidget::keyReleaseEvent" ###
+#        print("TweakInfoWidget::keyReleaseEvent") ###
 #        if event.key() == QtCore.Qt.Key_Right or event.key() == QtCore.Qt.Key_Left :
-#            print "pass the key press on to the TweakView"  ###
+#            print("pass the key press on to the TweakView")  ###
 #            self.tweakView().snagKeyPress(event)
 #        elif (event.modifiers() & QtCore.Qt.ShiftModifier) and \
 #                (event.key() == QtCore.Qt.Key_Right or event.key() == QtCore.Qt.Key_Left or \
 #                    event.key() == QtCore.Qt.Key_Down or event.key() == QtCore.Qt.Key_Up) :
-#            print "pass the shifted key press on to the TweakView"  ###
+#            print("pass the shifted key press on to the TweakView") ###
 #            self.tweakView().snagKeyPress(event)
 #        else :
 #            super(TweakInfoWidget,self).keyReleaseEvent(event)
@@ -1230,12 +1230,12 @@ class TweakableRunView(RunView) :
     
                     
 #    def snagFocus(self) :
-#        print "TweakableRunView::snagFocus"  ###
+#        print("TweakableRunView::snagFocus") ###
 #        self._scene.setFocus()  # this doesn't seem to actually work
 #        if self._scene.hasFocus() :  ###
-#            print "TweakableRunView has focus"
+#            print("TweakableRunView has focus")
 #        else :
-#            print "TweakableRunView does not have focus"
+#            print("TweakableRunView does not have focus")
             
 # end of class TweakableRunView
 
@@ -1327,7 +1327,7 @@ class TweakView(QtWidgets.QWidget) :
         if jsonResult != False :
             self.json = jsonResult
         else :
-            print "No Graphite result"
+            print("No Graphite result")
             self.json = None
 
         self.run = Run(tweak.rtl)
@@ -1341,7 +1341,7 @@ class TweakView(QtWidgets.QWidget) :
                 self.runView.glyphSelected.connect(self.app.glyphAttrib.changeData)
                 self.runloaded = True
             except :
-                print "Selection connection failed"
+                print("Selection connection failed")
 
         # Bring the Tweak tab to the front
         self.app.tab_results.setCurrentWidget(self.app.tab_tweakview)

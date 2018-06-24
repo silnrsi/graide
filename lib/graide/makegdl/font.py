@@ -420,7 +420,7 @@ pass(%d);
                 fh.write(sep + g)
             else :
                 if g.GDLName() is None :
-                    print "Can't output " + str(g.gid) + " to class " + name
+                    print("Can't output " + str(g.gid) + " to class " + name)
                 else :
                     fh.write(sep + g.GDLName())
             if count % 8 == 0 :

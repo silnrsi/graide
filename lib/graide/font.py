@@ -81,7 +81,7 @@ class GraideFont(gdlFont) :
         self.isread = True
 
     def loadEmptyGlyphs(self) :
-        #print "GraideFont::loadEmptyGlyphs"
+        #print("GraideFont::loadEmptyGlyphs")
         
         self.initGlyphs(self.numGlyphs)
         for i in range(self.numGlyphs) :

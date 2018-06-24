@@ -37,7 +37,7 @@ class Run(list) :
     
     # Reverse the slots, but keeping diacritics (directionality = 16) after their bases.
     def reverseDirection(self) :
-        #print "reverseDirection"
+        #print("reverseDirection")
         #self.printDebug()
         runTemp = Run(self.font, self.rtl)
         #print "runTemp length=",len(runTemp)
@@ -65,7 +65,7 @@ class Run(list) :
         for (i, slot) in enumerate(runTemp) :
             self.append(slot)
             slot.index = i
-        #print "final reversed"
+        #print("final reversed")
         #self.printDebug()
 
 
@@ -133,4 +133,4 @@ class Run(list) :
     def printDebug(self) :
         for (i, s) in enumerate(self) :
             s.printDebug()
-        print "------"
+        print("------")

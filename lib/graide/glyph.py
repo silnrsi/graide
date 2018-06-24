@@ -17,6 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+from __future__ import print_function
 
 from qtpy import QtCore, QtGui
 from graide import freetype
@@ -333,7 +334,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             
     # debugger        
     def printGdlProperties(self) :
-        print "printGdlProperties:"
-        print ">>>",self.gid
-        print self.gdlProperties
+        print("printGdlProperties:")
+        print(">>>",self.gid)
+        print(self.gdlProperties)
 

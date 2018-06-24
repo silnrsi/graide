@@ -91,7 +91,7 @@ class PassesView(QtWidgets.QTableWidget) :
                 v.slotSelected.connect(self.changeSlot)
                 v.glyphSelected.connect(self.changeGlyph)
             except :
-                print "Passes connection failed"
+                print("Passes connection failed")
         else :
             v = self.runViews[num]
             v.loadRun(run, font)
@@ -272,7 +272,7 @@ class PassesView(QtWidgets.QTableWidget) :
             runPassDir = run0
         self.runs = [runPassDir]	 # initialize with the Init run, equivalent to last run of previous pass
         
-        #print "loadRules - 0"
+        #print("loadRules - 0")
         #self.runs[0].printDebug()
             
         self.runs[0].label="Init"
@@ -341,7 +341,7 @@ class PassesView(QtWidgets.QTableWidget) :
                     
                     self.runs.append(nextRun)
                     
-                    #print "appended - "
+                    #print("appended - ")
                     #nextRun.printDebug()
 
                     nextRun.label = "Rule: %d%s" % (cRule['id'], lext)

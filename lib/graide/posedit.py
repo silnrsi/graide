@@ -87,10 +87,10 @@ class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
         #print "PosGlyphTreeItem::setAnchor", name, x, y ###
         #print "px = ",str(self.px) ###
         if self.glyph and self.glyph.setAnchor(name, x, y) :    # actually change the data!
-            #print "redrawing..." ###
+            #print("redrawing...") ###
             self.posGlyphChanged.emit() # make glyphs redraw
         #else : 
-            #print "no glyph???" ###
+            #print("no glyph???") ###
 
     def setPos(self, x, y) :
         """Sets glyph position in design units"""
@@ -160,7 +160,7 @@ class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def keyPressEvent(self, event) :
         if event.modifiers() & QtCore.Qt.ShiftModifier :
-            #print "Shift pressed for " + str(self.item.glyph.name)
+            #print("Shift pressed for " + str(self.item.glyph.name))
             self.shiftState = True
             if self.moveState :
                 if self.apItem :
@@ -173,7 +173,7 @@ class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def keyReleaseEvent(self, event) :
         if not event.modifiers() & QtCore.Qt.ShiftModifier :
-            #print "Shift released for " + str(self.item.glyph.name)
+            #print("Shift released for " + str(self.item.glyph.name))
             self.shiftState = False
             if self.moveState :
                 if self.apItem :
@@ -240,7 +240,7 @@ class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
         super(PosPixmapItem, self).mouseMoveEvent(event)
         
 #    def paint(self, painter, option, widget) :
-#        print "PosPixmapItem::paint - " + str(self.item.text(0)) ###
+#        print("PosPixmapItem::paint - " + str(self.item.text(0))) ###
 #        super(PosPixmapItem, self).paint(painter, option, widget)
 
 
@@ -324,15 +324,15 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
  
     def changePos(self, val) :
         """The X/Y values in the dialog were changed directly."""
-        #print "PosGlyphInfoWidget::changePos" ###
-        #print "item = " + str(self.item) ###
+        #print("PosGlyphInfoWidget::changePos") ###
+        #print("item = " + str(self.item)) ###
         self.item.setAnchor(self.aps.currentText(), self.x.value(), self.y.value())
         self.revert.setEnabled(True)
 
     def setGlyph(self, font, gname, apname, item, apItem) :
-        #print "PosGlyphInfoWidget::setGlyph(gname = " + gname + ")" ###
-        #print "item = " + str(item) ###
-        #print "apItem = " + str(apItem) ###
+        #print("PosGlyphInfoWidget::setGlyph(gname = " + gname + ")") ###
+        #print("item = " + str(item)) ###
+        #print("apItem = " + str(apItem)) ###
         self.font = font
         self.item = item
         
@@ -360,9 +360,9 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
         self.y.setValue(y)
         
     def updateDialog(self) :
-        #print "PosGlyphInfoWidget::updateDialog" ###
+        #print("PosGlyphInfoWidget::updateDialog") ###
         if self.gname != "" :
-            #print "calling setGlyph..." ###
+            #print("calling setGlyph...") ###
             self.setGlyph(self.font, self.gname, self.apname, self.item, self.apItem)
 
     def chooseGlyphAndAP(self, gname, ap) :
@@ -372,7 +372,7 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
             self.glyph.addItems([gname])
             self.glyph.setCurrentIndex(0)
         else :
-            #print "calling setGlyph..." ###
+            #print("calling setGlyph...") ###
             self.setGlyph(self.font, gname, ap, self.item, self.apItem)
             
     def clearItem(self) :
@@ -641,7 +641,7 @@ class PosEdit(QtWidgets.QWidget) :
         self.view.posGlyphChanged()
 
     def selectMobile(self, sGlyph, sAP, mGlyph, mAP, sItem, mItem) :
-        #print "PosEdit::selectMobile" ###
+        #print("PosEdit::selectMobile") ###
         self.stationaryInfo.setGlyph(self.font, sGlyph, sAP, sItem, mItem)
         self.mobileInfo.setGlyph(self.font, mGlyph, mAP, mItem, mItem)
 
@@ -691,7 +691,7 @@ class PosView(QtWidgets.QGraphicsView) :
         self.repaint()
 
     def posGlyphChanged(self) :
-        #print "PosView::posGlyphChanged" ###
+        #print("PosView::posGlyphChanged") ###
         if self.curTreeItem is not None and self._updateable :
             self.addTree(self.curTreeItem, base = (0, 0))
 #            self.org = QtGui.QGraphicsEllipseItem(0, 0, 2, 2, scene = self.scene())

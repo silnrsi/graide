@@ -23,7 +23,7 @@ from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
 
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
 class GlyphDelegate(QtWidgets.QAbstractItemDelegate) :
 
@@ -146,7 +146,7 @@ class FontView(QtWidgets.QTableView) :
         self.viewport().update()
 
 def clicked_glyph(index) :
-    print str(index.data())
+    print(str(index.data()))
 
 if __name__ == "__main__" :
     from graide.font import Font

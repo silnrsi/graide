@@ -126,7 +126,7 @@ class FontView(QtWidgets.QTableView) :
         self.viewport().update()
 
 def clicked_glyph(index) :
-    print str(index.data())
+    print(str(index.data()))
 
 if __name__ == "__main__" :
     from ttfrename.font import Font

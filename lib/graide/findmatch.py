@@ -17,6 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+from __future__ import print_function
 import os, re
 from xml.etree import cElementTree as et
 from graide.utils import reportError
@@ -150,10 +151,10 @@ class GlyphPatternMatcher() :
         matchResults = []
         
         if self.pattern == "" :
-            print "No valid search pattern"
+            print("No valid search pattern")
             return matchResults
         
-        print "Searching " + targetFile + " for '" + self.pattern + "'..."
+        print("Searching " + targetFile + " for '" + self.pattern + "'...")
         
         cpat = re.compile(self.pattern)  # compiled pattern
         
@@ -165,13 +166,13 @@ class GlyphPatternMatcher() :
             e = et.parse(targetFile)
         except Exception as err :
             reportError("Could not search %s: %s" % (targetFile, str(err)))
-            print "could not search " + targetFile ####
+            print("could not search " + targetFile) ####
             return matchResults
             
         faceAndFont = makeFontAndFace(fontFileName, 12)
         
         if showProgress :
-            print "Total tests=",totalTests
+            print("Total tests=",totalTests)
             progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
             progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
@@ -213,7 +214,7 @@ class GlyphPatternMatcher() :
                         if showProgress :
                             progressDialog.setLabelText("Searching..." + str(cntMatched) + " matches")
                 ###else :
-                ###    print testLabel + " did not match"
+                ###    print(testLabel + " did not match")
                 
                 cntTested = cntTested + 1
                 #if cntTested >= 1 : canceled = True
@@ -378,7 +379,7 @@ class MatchList(QtWidgets.QWidget) :
     
     # As far as I know this method should never be called:
     def loadTests(self, fname):
-        print "loadTests - WHY ARE WE CALLING THIS METHOD?"
+        print("loadTests - WHY ARE WE CALLING THIS METHOD?")
         
         # Assumes the file has been added to the UI.
         #for i in range(self.liststack.count()-1, -1, -1) :
@@ -395,7 +396,7 @@ class MatchList(QtWidgets.QWidget) :
             reportError("TestsFile %s: %s" % (fname, str(err)))
             return
         if e.getroot().tag == 'tests' :
-            print "Can't find tests file " + fname
+            print("Can't find tests file " + fname)
             self.loadOldTests(e)
             return
             
@@ -490,7 +491,7 @@ class MatchList(QtWidgets.QWidget) :
 
         
     def changeFile(self, index) :
-        #print "changeFile(" + str(index) + ")"
+        #print("changeFile(" + str(index) + ")")
         
         # Save current set of tests.
         ##if self.currentFile != "" :
@@ -553,9 +554,9 @@ class MatchList(QtWidgets.QWidget) :
 
 
     def writeXML(self, fname) :
-        #print "writeXML(" + fname + ")"
+        #print("writeXML(" + fname + ")")
         
-        print "MatchList::writeXML(" + fname + ")"
+        print("MatchList::writeXML(" + fname + ")")
         
         e = et.Element('ftml', {'version' : '1.0'})
         if self.header is not None :
@@ -618,7 +619,7 @@ class MatchList(QtWidgets.QWidget) :
         
     @QtCore.Slot(int)
     def changeFileCombo(self, index) :
-        #print "changeFileCombo(" + str(index) + ")"
+        #print("changeFileCombo(" + str(index) + ")")
         self.changeFile(index)
 
 
@@ -658,7 +659,7 @@ class MatchList(QtWidgets.QWidget) :
 
     @QtCore.Slot(int)
     def changeGroupCombo(self, index) :
-        #print "changeGroupCombo(" + str(index) + ")"
+        #print("changeGroupCombo(" + str(index) + ")")
         self.liststack.setCurrentIndex(index)
         if index < len(self.comments) :
             self.gcombo.setToolTip(self.comments[index])
@@ -890,10 +891,10 @@ class Matcher(QtWidgets.QTabWidget) :
             targetFile = self.matchList.selectedFile()
             matchResults = patternMatcher.search(self.fontFileName, targetFile, self.matchList)
             
-            ##print matchResults
+            ##print(matchResults)
             
             if matchResults == False :
-                print "Search canceled"
+                print("Search canceled")
             elif matchResults == True :
                 # Results have already been put in the control
                 pass # do nothing
@@ -922,7 +923,7 @@ class Matcher(QtWidgets.QTabWidget) :
         if jsonResult != False :
             self.json = jsonResult
         else :
-            print "No Graphite result" ###
+            print("No Graphite result") ###
             self.json = [ {'passes' : [], 'output' : [] } ]
                 
         self.run = self.app.loadRunViewAndPasses(self, self.json, 

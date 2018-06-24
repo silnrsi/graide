@@ -23,7 +23,7 @@ from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
 
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
 #   Here is a summaryhow the Python Slots and Signals interact to update the Glyph tab when a glyph is clicked:
 #
@@ -211,11 +211,11 @@ class Attribute(object) :
 
         
     def debugPrintData(self) :
-        print self.name
+        print(self.name)
         if self.isTree : 
-            print ">>>"
+            print(">>>")
             self.tree.debugPrintData()
-            print "<<<"
+            print("<<<")
 
 # end of class Attribute
 
@@ -322,7 +322,7 @@ class AttribModel(QtCore.QAbstractItemModel) :
         return attrData.showPopupList(listToShow, widget)       
 
     def debugPrintData(self) :
-        print self.__data
+        print(self.__data)
         for d in self.__data :
             d.debugPrintData()
 
@@ -358,7 +358,7 @@ class AttribView(QtWidgets.QTreeView) :
         self.model.setData(index, None, QtCore.Qt.EditRole)
         
     def mouseDoubleClickEvent(self, event) :
-        #print "mouseDoubleClickEvent"
+        #print("mouseDoubleClickEvent")
         super(AttribView, self).mouseDoubleClickEvent(event)
         
         # Generate a path to where the click was in the tree control.

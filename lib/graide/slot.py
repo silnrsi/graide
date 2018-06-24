@@ -456,5 +456,5 @@ class Slot(DataObj) :
         return result
 
     def printDebug(self) :
-        print str(self.__getattribute__('gid')) + ":" + str(self.__getattribute__('id'))
+        print(str(self.__getattribute__('gid')) + ":" + str(self.__getattribute__('id')))
 

@@ -228,7 +228,7 @@ class TestList(QtWidgets.QWidget) :
          self.addGroup('main', record = False)
         
     def loadTests(self, fname):
-        #print "TestList::loadTests(" + fname + ")"
+        #print("TestList::loadTests(" + fname + ")")
         
         # Assumes the file has been added to the UI.
         self.testGroups = []
@@ -246,7 +246,7 @@ class TestList(QtWidgets.QWidget) :
             reportError("TestsFile %s: %s" % (fname, str(err)))
             return
         if e.getroot().tag == 'tests' :
-            print "Can't find tests file " + fname
+            print("Can't find tests file " + fname)
             self.loadOldTests(e)
             return
             
@@ -329,7 +329,7 @@ class TestList(QtWidgets.QWidget) :
     # end of loadOldTests
             
     def addFile(self, fname, index = None, savePrevious = True) :
-        #print "TestList::addFile(" + fname + "," + str(savePrevious) + ")"
+        #print("TestList::addFile(" + fname + "," + str(savePrevious) + ")")
         if fname == '' : return
             
         basename = os.path.basename(fname)
@@ -346,7 +346,7 @@ class TestList(QtWidgets.QWidget) :
         self.recordCurrentTest()
         
     def changeFile(self, index) :
-        #print "TestList::changeFile(" + str(index) + ")"
+        #print("TestList::changeFile(" + str(index) + ")")
         
         # Save current set of tests.
         if self.currentFile != "" :
@@ -380,7 +380,7 @@ class TestList(QtWidgets.QWidget) :
         return listWidget
         
     def appendTest(self, t, l = None) :
-        #print "TestList::appendTest(" + t.name + ")"
+        #print("TestList::appendTest(" + t.name + ")")
         if not l : l = self.liststack.currentWidget()
         self.testGroups[self.liststack.indexOf(l)].append(t)
         w = QtWidgets.QListWidgetItem(t.name or "", l)
@@ -403,7 +403,7 @@ class TestList(QtWidgets.QWidget) :
             t.background = bgndSave
 
     def writeXML(self, fname) :
-        #print "TestList::writeXML(" + fname + ")"
+        #print("TestList::writeXML(" + fname + ")")
         
         e = et.Element('ftml', {'version' : '1.0'})
         if self.header is not None :
@@ -471,7 +471,7 @@ class TestList(QtWidgets.QWidget) :
         
     @QtCore.Slot(int)
     def changeFileCombo(self, index) :
-        #print "changeFileCombo(" + str(index) + ")"
+        #print("changeFileCombo(" + str(index) + ")")
         self.changeFile(index)
 
     def addFileClicked(self) :
@@ -508,7 +508,7 @@ class TestList(QtWidgets.QWidget) :
         
     @QtCore.Slot(int)
     def changeGroupCombo(self, index) :
-        #print "changeGroupCombo(" + str(index) + ")"
+        #print("changeGroupCombo(" + str(index) + ")")
         self.changeGroup(index)
         
     def changeGroup(self, index) :

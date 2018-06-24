@@ -22,7 +22,7 @@ from graide.makegdl.psnames import Name
 from xml.etree.cElementTree import SubElement
 
 # Debugging:
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
 # Convert from Graphite AP name to the standard name, eg upperM -> _upper
 def gr_ap(txt) :

@@ -233,7 +233,7 @@ else:
     f = fontforge.open(os.path.abspath(sys.argv[1]))
     cfg = getcfg(f)
     if not cfg :
-        print "No configuration, can't build"
+        print("No configuration, can't build")
         sys.exit(1)
     conf = RawConfigParser()
     conf.read(cfg)

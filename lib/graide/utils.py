@@ -115,7 +115,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         if cmd and cmd.strip() :
             # Call the make command to perform makegdl.
             makecmd = expandMakeCmd(config, cmd)
-            print makecmd
+            print(makecmd)
             subprocess.call(makecmd, shell = True)
         else :
             # Use the default makegdl process.
@@ -174,7 +174,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         
     res = 1
     if grcompiler is not None :
-        print "Compiling..."
+        print("Compiling...")
         argList = [grcompiler]
         argList.extend(warningList)
         argList.extend(["-d", "-q", gdlfile, tempname, fontfile])
@@ -342,7 +342,7 @@ def generateTweakerGDL(config, app) :
     
     if app : app.updateFileEdit(tweakgdlfile)
     
-    print "Tweak GDL generated - accepting pending tweaks."
+    print("Tweak GDL generated - accepting pending tweaks.")
     
     # Accept all pending shifts, since they are now part of the Graphite rules.
     app.tab_tweak.acceptPending(tweakxmlfile)

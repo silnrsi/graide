@@ -348,7 +348,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 count += 1
             image.save(fname)
             #time.sleep(3)
-            print "Saved image to " + fname
+            print("Saved image to " + fname)
 
     def clear(self) :
         self._scene.clear()
@@ -361,7 +361,7 @@ if __name__ == "__main__" :
     from run import Run
 
     app = QtWidgets.QApplication(sys.argv)
-    # print app.desktop().logicalDpiY()
+    # print(app.desktop().logicalDpiY())
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests')
     jf = file(os.path.join(tpath, "padauk3.json"))
     jinfo = json.load(jf)
@@ -372,7 +372,7 @@ if __name__ == "__main__" :
     run = Run(font, False)
     run.addSlots(rinfo)
     view = RunView(run, font).gview
-    print "Padauk RunView?" ###
+    print("Padauk RunView?") ###
     view.show()
     sys.exit(app.exec_())
 

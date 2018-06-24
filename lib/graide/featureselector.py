@@ -243,12 +243,12 @@ class FeatureDialog(QtWidgets.QDialog) :
 
     # Somehow the lang features gets in the list; remove it
     def removeLangFeature(self, featRefs) :
-        print "kludgeRemoveBogusFeature"
+        print("kludgeRemoveBogusFeature")
         c = len(featRefs.order)
         featLabelLast = featRefs.order[c-1]
         featIdLast = featRefs.featids[featLabelLast]
         if featIdLast == "" :
-            print "removing..."
+            print("removing...")
             del featRefs.feats[featLabelLast]
             del featRefs.featids[featLabelLast]
             del featRefs.forders[featLabelLast]

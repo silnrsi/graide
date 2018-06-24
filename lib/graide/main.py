@@ -53,7 +53,7 @@ import json, os, sys, re
 import codecs, traceback  ### debug
 
 # Debugging:
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
 class MainWindow(QtWidgets.QMainWindow) :
     
@@ -99,14 +99,14 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.setWindowIcon(appicon)
         if Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
             
-        print "Finding compiler..." #===
+        print("Finding compiler...") #===
 
         findgrcompiler()
         for s in ('main', 'build', 'ui', 'window', 'data') :
             if not config.has_section(s) :
                 config.add_section(s)
                 
-        print "Loading font..." #===
+        print("Loading font...") #===
         if config.has_option('main', 'font') :
             fontname = os.path.join(os.path.dirname(self.cfgFileName), config.get('main', 'font'))
             if fontname == None or fontname == "" :
@@ -150,13 +150,13 @@ class MainWindow(QtWidgets.QMainWindow) :
         if config.has_option('ui', 'attglyphsize') :
             self.setAttGlyphSize(configintval(config, 'ui', 'attglyphsize'))
 
-        print "Initializing program..." #===
+        print("Initializing program...") #===
         self.setActions()
         self.setupUi()
         self.setMenus()
         registerErrorLog(self)
         
-        print "Opening files..." #===
+        print("Opening files...") #===
         self._ensureMainGdlFile()            
         self._openFileList()
         
@@ -876,9 +876,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             gdlFile = file(gdlOutputFileName)
             for l in gdlFile.readlines() :
                 lastLine = l
-            print "..." + l
+            print("..." + l)
         else :
-            print '...no GDL output file'
+            print('...no GDL output file')
         
         if res or self.tab_errors.bringToFront :
             self.tab_results.setCurrentWidget(self.tab_errors)
@@ -925,7 +925,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if jsonResult != False :
             self.json = jsonResult
         else :
-            print "No Graphite result" ###
+            print("No Graphite result") ###
             self.json = [ {'passes' : [], 'output' : [] } ]
                 
         ### Temp
@@ -955,7 +955,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
                 widget.runView.glyphSelected.connect(self.glyphAttrib.changeData)
                 widget.runLoaded = True
             except :
-                print "Selection connection failed"
+                print("Selection connection failed")
         self.tab_passes.loadResults(self.font, json, self.gdx, rtl, fontIsRtl)
         self.tab_passes.setTopToolTip(widget.runEdit.toPlainText())
         self.tab_results.setCurrentWidget(self.tab_passes)
@@ -980,7 +980,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         tempJsonFileName = tempFile.name
         tempFile.close()
         
-        #print self.fontFaces
+        #print(self.fontFaces)
         
         if faceAndFont != None :
             self.fontFaces[size] = faceAndFont
@@ -999,7 +999,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         runGraphiteWithFontFace(self.fontFaces[size], text, tempJsonFileName,
             feats, rtl, lang, size, expand)
         
-        #print tempJsonFileName
+        #print(tempJsonFileName)
         
         tempJsonFile = open(tempJsonFileName)
         jsonResult = json.load(tempJsonFile)
@@ -1167,7 +1167,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
-        #print "_configOpenExisting"
+        #print("_configOpenExisting")
         self._saveProjectData()
         
         self.tab_edit.closeAllTabs()
@@ -1298,7 +1298,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     def openRecentProject(self, i) :
         (basename, fullname, action) = self.aRecProjs[i-1]
         if not os.path.exists(fullname) :
-            print "ERROR: project " + fullname + " does not exist"
+            print("ERROR: project " + fullname + " does not exist")
         else :
             self._configOpenExisting(fullname)
             
