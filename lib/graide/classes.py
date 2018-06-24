@@ -255,17 +255,17 @@ class Classes(QtWidgets.QWidget) :
                 rowMatched = row
                 break
 
-    	if rowMatched > -1 :
-    	    item = self.tab.item(rowMatched, 0)
-    	    self.tab.scrollToItem(item)
-    	    item.setBackground(Layout.activePassColour)
+        if rowMatched > -1 :
+            item = self.tab.item(rowMatched, 0)
+            self.tab.scrollToItem(item)
+            item.setBackground(Layout.activePassColour)
 
-    	    if self.selClassName == className :  # second time clicked
-    	        self.findSourceForClass(rowMatched)
-    	#else :
-    	#    QtGui.QSound.play()
+            if self.selClassName == className :  # second time clicked
+                self.findSourceForClass(rowMatched)
+        #else :
+        #    QtGui.QSound.play()
 
-    	self.selClassName = className
+        self.selClassName = className
 
     # end of findSelectedClass
     
