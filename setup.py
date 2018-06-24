@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from distutils.core import setup
+from setuptools import setup
 import sys
 from glob import glob
 
@@ -15,6 +15,7 @@ setup(  name = 'graphite-graide',
         author = 'M. Hosken',
         package_dir = {'' : 'lib'},
         packages = ['graide', 'graide/freetype', 'graide/makegdl', 'ttfrename'],
+        install_requires = ['future', 'configparser'],
         scripts = scripts,
         **kw
 )
