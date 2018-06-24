@@ -1107,7 +1107,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
     # end of propDialog
     
     def glyphFindSelected(self) :
-    	glyphName = self.tab_edit.selectedText
+        glyphName = self.tab_edit.selectedText
         gidSelected = self.font.glyphOrPseudoWithGDLName(glyphName)
         if gidSelected > -1 :
             prevGlyph = self.glyphAttrib.dataObject()
