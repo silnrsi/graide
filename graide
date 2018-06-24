@@ -52,7 +52,7 @@ else :
 
 if args.font : config.set('main', 'font', args.font)
 if args.ap : config.set('main', 'ap', args.ap)
-if args.size > 0 : config.set('main', 'size', str(args.size))
+if args.size and args.size > 0 : config.set('main', 'size', str(args.size))
 if args.gdx : config.set('main', 'gdx', args.gdx)
 if args.project :
     (dname, args.project) = os.path.split(args.project)
