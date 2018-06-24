@@ -8,7 +8,7 @@ Standards-Version: 3.9.4
 
 Package: graphite-graide
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}, libgraphite2-3 (>= 1.2.2), python-qtpy, libfreetype6, grcompiler
+Depends: ${python:Depends}, ${misc:Depends}, libgraphite2-3 (>= 1.2.2), python-qtpy, python-future, python-configparser, libfreetype6, grcompiler
 Description: IDE for Graphite GDL font description development
  Graide is an IDE including a debugger that helps people develop
  GDL descriptions for smart fonts and compile them into the fonts.
