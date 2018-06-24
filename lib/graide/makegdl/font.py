@@ -162,7 +162,7 @@ class Font(object) :
                 
             m = re.match(ur'^justify.(\d).([^.]+)', attrName)
             if m :
-                g.setjustify(int(m.group(1)), m.group(2), a.get('value'))
+                g.setJustify(int(m.group(1)), m.group(2), a.get('value'))
             elif attrName == 'mirror.isEncoded' :
                 storemirror = True
             elif attrName == 'mirror.glyph' :
