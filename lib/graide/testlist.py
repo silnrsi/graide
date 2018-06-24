@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from xml.etree import cElementTree as et
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
@@ -35,7 +35,7 @@ def asBool(txt) :
     return False
 
 
-class TestListWidget(QtGui.QListWidget) :
+class TestListWidget(QtWidgets.QListWidget) :
     
     def __init__(self, testList) :
         super(TestListWidget, self).__init__()
@@ -54,7 +54,7 @@ class TestListWidget(QtGui.QListWidget) :
 # end of clas TestListWidget
 
     
-class TestList(QtGui.QWidget) :
+class TestList(QtWidgets.QWidget) :
 
     def __init__(self, app, fName = None, parent = None) :
         super(TestList, self).__init__(parent)
@@ -74,25 +74,25 @@ class TestList(QtGui.QWidget) :
         fListString = self.app.config.get('data', 'testfiles') if self.app.config.has_option('data','testfiles') else ""
 
         self.setActions(app)
-        vLayout = QtGui.QVBoxLayout()
+        vLayout = QtWidgets.QVBoxLayout()
         vLayout.setContentsMargins(*Layout.buttonMargins)
         
         # test file control
-        self.cbox1 = QtGui.QWidget(self)
-        fhLayout = QtGui.QHBoxLayout()
+        self.cbox1 = QtWidgets.QWidget(self)
+        fhLayout = QtWidgets.QHBoxLayout()
         fhLayout.setContentsMargins(*Layout.buttonMargins)
         fhLayout.setSpacing(Layout.buttonSpacing)    
         self.cbox1.setLayout(fhLayout)
-        self.fcombo = QtGui.QComboBox(self.cbox1)  # file combo box   
+        self.fcombo = QtWidgets.QComboBox(self.cbox1)  # file combo box
         self.fcombo.setToolTip('Choose test file')
         fhLayout.addWidget(self.fcombo)
         fhLayout.addSpacing(10)
-        self.fabutton = QtGui.QToolButton(self.cbox1)
+        self.fabutton = QtWidgets.QToolButton(self.cbox1)
         self.fabutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.fabutton.setToolTip('Add test file')
         self.fabutton.clicked.connect(self.addFileClicked)
         fhLayout.addWidget(self.fabutton)
-        self.frbutton = QtGui.QToolButton(self.cbox1)
+        self.frbutton = QtWidgets.QToolButton(self.cbox1)
         self.frbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.frbutton.setToolTip('Remove test file from list')
         self.frbutton.clicked.connect(self.delFileClicked)
@@ -100,28 +100,28 @@ class TestList(QtGui.QWidget) :
         vLayout.addWidget(self.cbox1)
         
         # test group controls
-        self.cbox2 = QtGui.QWidget(self)
-        ghLayout = QtGui.QHBoxLayout()
+        self.cbox2 = QtWidgets.QWidget(self)
+        ghLayout = QtWidgets.QHBoxLayout()
         ghLayout.setContentsMargins(*Layout.buttonMargins)
         ghLayout.setSpacing(Layout.buttonSpacing)
         self.cbox2.setLayout(ghLayout)
-        self.gcombo = QtGui.QComboBox(self.cbox2)  # group combo box
+        self.gcombo = QtWidgets.QComboBox(self.cbox2)  # group combo box
         self.gcombo.setToolTip('Choose test group')
         ghLayout.addWidget(self.gcombo)
         ghLayout.addSpacing(10)
-        self.gabutton = QtGui.QToolButton(self.cbox2)
+        self.gabutton = QtWidgets.QToolButton(self.cbox2)
         self.gabutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.gabutton.setToolTip('Add test group below this group')
         self.gabutton.clicked.connect(self.addGroupClicked)
         ghLayout.addWidget(self.gabutton)
-        self.grbutton = QtGui.QToolButton(self.cbox2)
+        self.grbutton = QtWidgets.QToolButton(self.cbox2)
         self.grbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.grbutton.setToolTip('Remove test group')
         self.grbutton.clicked.connect(self.delGroupClicked)
         ghLayout.addWidget(self.grbutton)
         vLayout.addWidget(self.cbox2)
         
-        self.liststack = QtGui.QStackedWidget(self)  # stack of lists of test items
+        self.liststack = QtWidgets.QStackedWidget(self)  # stack of lists of test items
         vLayout.addWidget(self.liststack) 
 
         self.fcombo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeFileCombo)
@@ -130,29 +130,29 @@ class TestList(QtGui.QWidget) :
         self.addGroup('main', record = False)
 
         # list control
-        self.bbox = QtGui.QWidget(self)
-        hbLayout = QtGui.QHBoxLayout()
+        self.bbox = QtWidgets.QWidget(self)
+        hbLayout = QtWidgets.QHBoxLayout()
         self.bbox.setLayout(hbLayout)
         hbLayout.setContentsMargins(*Layout.buttonMargins)
         hbLayout.setSpacing(Layout.buttonSpacing)
         hbLayout.insertStretch(0)
         vLayout.addWidget(self.bbox)
-        self.bEdit = QtGui.QToolButton(self.bbox)
+        self.bEdit = QtWidgets.QToolButton(self.bbox)
         self.bEdit.setDefaultAction(self.aEdit)
         hbLayout.addWidget(self.bEdit)
-        self.bUpp = QtGui.QToolButton(self.bbox)
+        self.bUpp = QtWidgets.QToolButton(self.bbox)
         self.bUpp.setDefaultAction(self.aUpp)
         hbLayout.addWidget(self.bUpp)
-        self.bDown = QtGui.QToolButton(self.bbox)
+        self.bDown = QtWidgets.QToolButton(self.bbox)
         self.bDown.setDefaultAction(self.aDown)
         hbLayout.addWidget(self.bDown)
-        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave = QtWidgets.QToolButton(self.bbox)
         self.bSave.setDefaultAction(self.aSave)
         hbLayout.addWidget(self.bSave)
-        self.bAdd = QtGui.QToolButton(self.bbox)
+        self.bAdd = QtWidgets.QToolButton(self.bbox)
         self.bAdd.setDefaultAction(self.aAdd)
         hbLayout.addWidget(self.bAdd)
-        self.bDel = QtGui.QToolButton(self.bbox)
+        self.bDel = QtWidgets.QToolButton(self.bbox)
         self.bDel.setDefaultAction(self.aDel)
         hbLayout.addWidget(self.bDel)
         
@@ -171,28 +171,28 @@ class TestList(QtGui.QWidget) :
     # end of __init__
 
     def setActions(self, app) :
-        self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
+        self.aGAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
         self.aGAdd.setToolTip('Add test group below this group')
         self.aGAdd.triggered.connect(self.addGroupClicked)
-        self.aGDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
+        self.aGDel = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
         self.aGDel.setToolTip('Remove test group')
         self.aGDel.triggered.connect(self.delGroupClicked)
-        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Edit Test ...", app)
+        self.aEdit = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Edit Test ...", app)
         self.aEdit.setToolTip('Edit test')
         self.aEdit.triggered.connect(self.editClicked)
-        self.aUpp = QtGui.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Test &Up", app)
+        self.aUpp = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Test &Up", app)
         self.aUpp.setToolTip("Move test up")
         self.aUpp.triggered.connect(self.upClicked)
-        self.aDown = QtGui.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Test &Down", app)
+        self.aDown = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Test &Down", app)
         self.aDown.setToolTip("Move test down")
         self.aDown.triggered.connect(self.downClicked)
-        self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tests", app)
+        self.aSave = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tests", app)
         self.aSave.setToolTip('Save test list')
         self.aSave.triggered.connect(self.saveTestsClicked)
-        self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Test ...", app)
+        self.aAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Test ...", app)
         self.aAdd.setToolTip('Add new test')
         self.aAdd.triggered.connect(self.addTestClicked)
-        self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
+        self.aDel = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
         self.aDel.setToolTip('Delete test')
         self.aDel.triggered.connect(self.delTestClicked)
         
@@ -383,7 +383,7 @@ class TestList(QtGui.QWidget) :
         #print "TestList::appendTest(" + t.name + ")"
         if not l : l = self.liststack.currentWidget()
         self.testGroups[self.liststack.indexOf(l)].append(t)
-        w = QtGui.QListWidgetItem(t.name or "", l)
+        w = QtWidgets.QListWidgetItem(t.name or "", l)
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
@@ -476,9 +476,9 @@ class TestList(QtGui.QWidget) :
 
     def addFileClicked(self) :
         # This dialog allows specifying a file that does not exist.
-        qdialog = QtGui.QFileDialog()
-        qdialog.setFileMode(QtGui.QFileDialog.AnyFile)
-        qdialog.setViewMode(QtGui.QFileDialog.Detail)
+        qdialog = QtWidgets.QFileDialog()
+        qdialog.setFileMode(QtWidgets.QFileDialog.AnyFile)
+        qdialog.setViewMode(QtWidgets.QFileDialog.Detail)
         qdialog.setNameFilter('XML files (*.xml)')
         if qdialog.exec_() :
             selected = qdialog.selectedFiles()

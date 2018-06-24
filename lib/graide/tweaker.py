@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from xml.etree import cElementTree as XmlTree
 from graide.font import GraideFont
 from graide.test import Test
@@ -187,7 +187,7 @@ class Tweak(Test) :
         
 
 # The control that handles the list of tweaked strings
-class TweakList(QtGui.QWidget) :
+class TweakList(QtWidgets.QWidget) :
     
     # parent => Tweaker
     # view => TweakView
@@ -204,55 +204,55 @@ class TweakList(QtGui.QWidget) :
         self.header = None
 
         self.setActions(app)
-        vLayout = QtGui.QVBoxLayout()
+        vLayout = QtWidgets.QVBoxLayout()
         vLayout.setContentsMargins(*Layout.buttonMargins)
-        self.cbox = QtGui.QWidget(self)
-        chLayout = QtGui.QHBoxLayout()
+        self.cbox = QtWidgets.QWidget(self)
+        chLayout = QtWidgets.QHBoxLayout()
         chLayout.setContentsMargins(*Layout.buttonMargins)
         chLayout.setSpacing(Layout.buttonSpacing)
         self.cbox.setLayout(chLayout)
-        self.combo = QtGui.QComboBox(self.cbox)
+        self.combo = QtWidgets.QComboBox(self.cbox)
         chLayout.addWidget(self.combo)
         chLayout.addSpacing(10)
-        self.cabutton = QtGui.QToolButton(self.cbox)
+        self.cabutton = QtWidgets.QToolButton(self.cbox)
         self.cabutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.cabutton.setToolTip('Add tweak group below this group')
         self.cabutton.clicked.connect(self.addGroupClicked)
         chLayout.addWidget(self.cabutton)
-        self.crbutton = QtGui.QToolButton(self.cbox)
+        self.crbutton = QtWidgets.QToolButton(self.cbox)
         self.crbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.crbutton.setToolTip('Remove tweak group')
         self.crbutton.clicked.connect(self.delGroupClicked)
         chLayout.addWidget(self.crbutton)
         vLayout.addWidget(self.cbox)
         
-        self.liststack = QtGui.QStackedWidget(self)
+        self.liststack = QtWidgets.QStackedWidget(self)
         vLayout.addWidget(self.liststack)
         self.combo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeGroup)
         self.addGroup('main')
-        self.bbox = QtGui.QWidget(self)
-        hbLayout = QtGui.QHBoxLayout()
+        self.bbox = QtWidgets.QWidget(self)
+        hbLayout = QtWidgets.QHBoxLayout()
         self.bbox.setLayout(hbLayout)
         hbLayout.setContentsMargins(*Layout.buttonMargins)
         hbLayout.setSpacing(Layout.buttonSpacing)
         hbLayout.insertStretch(0)
         vLayout.addWidget(self.bbox)
-        self.bEdit = QtGui.QToolButton(self.bbox)
+        self.bEdit = QtWidgets.QToolButton(self.bbox)
         self.bEdit.setDefaultAction(self.aEdit)
         hbLayout.addWidget(self.bEdit)
-        self.bUpp = QtGui.QToolButton(self.bbox)
+        self.bUpp = QtWidgets.QToolButton(self.bbox)
         self.bUpp.setDefaultAction(self.aUpp)
         hbLayout.addWidget(self.bUpp)
-        self.bDown = QtGui.QToolButton(self.bbox)
+        self.bDown = QtWidgets.QToolButton(self.bbox)
         self.bDown.setDefaultAction(self.aDown)
         hbLayout.addWidget(self.bDown)
-        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave = QtWidgets.QToolButton(self.bbox)
         self.bSave.setDefaultAction(self.aSave)
         hbLayout.addWidget(self.bSave)
-        self.bAdd = QtGui.QToolButton(self.bbox)
+        self.bAdd = QtWidgets.QToolButton(self.bbox)
         self.bAdd.setDefaultAction(self.aAdd)
         hbLayout.addWidget(self.bAdd)
-        self.bDel = QtGui.QToolButton(self.bbox)
+        self.bDel = QtWidgets.QToolButton(self.bbox)
         self.bDel.setDefaultAction(self.aDel)
         hbLayout.addWidget(self.bDel)
         self.setLayout(vLayout)
@@ -263,28 +263,28 @@ class TweakList(QtGui.QWidget) :
     
     
     def setActions(self, app) :
-        self.aGAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
+        self.aGAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Add &Group ...", app)
         self.aGAdd.setToolTip('Add tweak group below this group')
         self.aGAdd.triggered.connect(self.addGroupClicked)
-        self.aGDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
+        self.aGDel = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Remove Group", app)
         self.aGDel.setToolTip('Remove tweak group')
         self.aGDel.triggered.connect(self.delGroupClicked)
-        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Tweak ...", app)
+        self.aEdit = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Tweak ...", app)
         self.aEdit.setToolTip('Edit tweak')
         self.aEdit.triggered.connect(self.editClicked)
-        self.aUpp = QtGui.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Tweak &Up", app)
+        self.aUpp = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Tweak &Up", app)
         self.aUpp.setToolTip("Move tweak up")
         self.aUpp.triggered.connect(self.upClicked)
-        self.aDown = QtGui.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Tweak &Down", app)
+        self.aDown = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Tweak &Down", app)
         self.aDown.setToolTip("Move tweak down")
         self.aDown.triggered.connect(self.downClicked)
-        self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tweaks", app)
+        self.aSave = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tweaks", app)
         self.aSave.setToolTip('Save tweak list')
         self.aSave.triggered.connect(self.saveTestsClicked)
-        self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Tweak ...", app)
+        self.aAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Tweak ...", app)
         self.aAdd.setToolTip('Add new tweak')
         self.aAdd.triggered.connect(self.addTestClicked)
-        self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Tweak", app)
+        self.aDel = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Tweak", app)
         self.aDel.setToolTip('Delete tweak')
         self.aDel.triggered.connect(self.delTestClicked)
 
@@ -420,7 +420,7 @@ class TweakList(QtGui.QWidget) :
     def appendTweak(self, tweak, listwidget = None) :
         if not listwidget : listwidget = self.liststack.currentWidget()
         self.tweakGroups[self.liststack.indexOf(listwidget)].append(tweak)
-        w = QtGui.QListWidgetItem(tweak.name or "",listwidget)
+        w = QtWidgets.QListWidgetItem(tweak.name or "",listwidget)
         if tweak.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(tweak.background))
@@ -622,7 +622,7 @@ class TweakList(QtGui.QWidget) :
 
 
 # The controls at the bottom of the pane that allow adjustment of the glyph tweaks
-class TweakInfoWidget(QtGui.QFrame) :
+class TweakInfoWidget(QtWidgets.QFrame) :
     
     # self.parent => Tweaker
     # self.parent().currentTweak() => Tweak
@@ -632,50 +632,50 @@ class TweakInfoWidget(QtGui.QFrame) :
         self.app = app
 
         self.item = None
-        self.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
+        self.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Sunken)
         self.setLineWidth(1)
-        self.layout = QtGui.QGridLayout(self)
+        self.layout = QtWidgets.QGridLayout(self)
         
-        self.layout.addWidget(QtGui.QLabel("Slot"), 0, 0)
-        self.slotCtrl = QtGui.QComboBox(self)
+        self.layout.addWidget(QtWidgets.QLabel("Slot"), 0, 0)
+        self.slotCtrl = QtWidgets.QComboBox(self)
         self.slotCtrl.currentIndexChanged[unicode].connect(self.slotCtrlChanged)
         self.slotCtrl.editTextChanged.connect(self.slotCtrlChanged)
         self.layout.addWidget(self.slotCtrl, 0, 1, 1, 3)
-        self.revert = QtGui.QPushButton("Revert")
+        self.revert = QtWidgets.QPushButton("Revert")
         self.revert.clicked.connect(self.doRevert)
         self.layout.addWidget(self.revert, 0, 4)
         
-        self.x = QtGui.QSpinBox(self)
+        self.x = QtWidgets.QSpinBox(self)
         self.x.setRange(-32768, 32767)
         self.x.valueChanged[int].connect(self.posCtrlChanged)
-        self.layout.addWidget(QtGui.QLabel("X"), 1, 0)
+        self.layout.addWidget(QtWidgets.QLabel("X"), 1, 0)
         self.layout.addWidget(self.x, 1, 1)
-        self.y = QtGui.QSpinBox(self)
+        self.y = QtWidgets.QSpinBox(self)
         self.y.setRange(-32768, 32767)
         self.y.valueChanged[int].connect(self.posCtrlChanged)
-        self.layout.addWidget(QtGui.QLabel("Y"), 1, 3)
+        self.layout.addWidget(QtWidgets.QLabel("Y"), 1, 3)
         self.layout.addWidget(self.y, 1, 4)
         self.posButtonsEnabled = True
         
-        frame = QtGui.QFrame()
-        #frame.setFrameStyle(QtGui.QFrame.WinPanel | QtGui.QFrame.Sunken)
-        frame.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
-        innerGrid = QtGui.QGridLayout(frame)
+        frame = QtWidgets.QFrame()
+        #frame.setFrameStyle(QtWidgets.QFrame.WinPanel | QtWidgets.QFrame.Sunken)
+        frame.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Sunken)
+        innerGrid = QtWidgets.QGridLayout(frame)
 
         ####self.buttonGroup = QtGui.QButtonGroup(self) - could need if we add any different buttons
-        self.statusReq = QtGui.QRadioButton("Required")
+        self.statusReq = QtWidgets.QRadioButton("Required")
         self.statusReq.toggled.connect(self.statusButtonsChanged)
-        self.statusOpt = QtGui.QRadioButton("Optional")
+        self.statusOpt = QtWidgets.QRadioButton("Optional")
         self.statusOpt.toggled.connect(self.statusButtonsChanged)
-        self.statusIgnore = QtGui.QRadioButton("Ignore")
+        self.statusIgnore = QtWidgets.QRadioButton("Ignore")
         self.statusIgnore.toggled.connect(self.statusButtonsChanged)
         innerGrid.addWidget(self.statusReq, 0, 0, 1, 2)
         innerGrid.addWidget(self.statusOpt, 1, 0, 1, 2)
         innerGrid.addWidget(self.statusIgnore, 2, 0, 1, 2)
         
-        self.gclassCtrl = QtGui.QComboBox(self)
+        self.gclassCtrl = QtWidgets.QComboBox(self)
         self.gclassCtrl.setEditable(True)
-        innerGrid.addWidget(QtGui.QLabel("Class"), 0, 3, 1, 2)
+        innerGrid.addWidget(QtWidgets.QLabel("Class"), 0, 3, 1, 2)
         innerGrid.addWidget(self.gclassCtrl, 1, 3, 1, 2)
         self.gclassCtrl.currentIndexChanged[unicode].connect(self.classCtrlChanged)
         self.gclassCtrl.editTextChanged.connect(self.classCtrlChanged)
@@ -948,7 +948,7 @@ class TweakInfoWidget(QtGui.QFrame) :
 
 
 # Main class to manage tweaking
-class Tweaker(QtGui.QWidget) :
+class Tweaker(QtWidgets.QWidget) :
 
     #self.view => TweakView
     
@@ -957,7 +957,7 @@ class Tweaker(QtGui.QWidget) :
         self.app = parent
         self.font = font
         self.view = None
-        self.layout = QtGui.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         self.initializeLayout(xmlfile)
 
         
@@ -1241,7 +1241,7 @@ class TweakableRunView(RunView) :
 
                
 # The display of the moveable glyphs in the bottom right-hand pane
-class TweakView(QtGui.QWidget) :
+class TweakView(QtWidgets.QWidget) :
     
     # tweaker => Tweaker
 
@@ -1281,7 +1281,7 @@ class TweakView(QtGui.QWidget) :
         self.updateable = True
         
     def _createRunView(self) :
-        layout = QtGui.QVBoxLayout(self)
+        layout = QtWidgets.QVBoxLayout(self)
         self.runView = TweakableRunView(self.font, run = None, parent = self)
         self.runView.gview.resize(self.runView.gview.width(), (self.font.pixrect.height() + 5))
         layout.addWidget(self.runView.gview)

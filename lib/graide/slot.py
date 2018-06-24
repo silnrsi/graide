@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore
+from qtpy import QtCore
 from graide.attribview import Attribute, AttribModel
 from graide.utils import copyobj, DataObj
 from graide.layout import Layout

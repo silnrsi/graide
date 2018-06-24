@@ -17,11 +17,11 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.layout import Layout
 import os, re
 
-class Errors(QtGui.QListWidget) :
+class Errors(QtWidgets.QListWidget) :
 
     errorSelected = QtCore.Signal(str, int)
 
@@ -35,7 +35,7 @@ class Errors(QtGui.QListWidget) :
         self.bringToFront = False
 
     def addItem(self, txt, srcfile = None, line = 0) :
-        w = QtGui.QListWidgetItem(txt, self)
+        w = QtWidgets.QListWidgetItem(txt, self)
         w.srcfile = srcfile
         w.line = line
         return w

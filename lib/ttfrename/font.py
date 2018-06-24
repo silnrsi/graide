@@ -19,7 +19,7 @@
 
 from graide import freetype
 from ttfrename.glyph import GlyphItem
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from fontTools import ttLib
 import re
 
@@ -31,22 +31,22 @@ def getTableModule(tag) :
     return None
 ttLib.getTableModule = getTableModule
 
-class Namedit(QtGui.QDialog) :
+class Namedit(QtWidgets.QDialog) :
 
     def __init__(self, name, uid, parent = None) :
         super(Namedit, self).__init__(parent)
-        self.layout = QtGui.QGridLayout(self)
-        self.name = QtGui.QLineEdit(self)
+        self.layout = QtWidgets.QGridLayout(self)
+        self.name = QtWidgets.QLineEdit(self)
         self.name.setText(name)
         self.name.setSelection(0, len(name))
-        self.layout.addWidget(QtGui.QLabel('Name'), 0, 0)
+        self.layout.addWidget(QtWidgets.QLabel('Name'), 0, 0)
         self.layout.addWidget(self.name, 0, 1)
-        self.uid = QtGui.QLineEdit(self)
+        self.uid = QtWidgets.QLineEdit(self)
         if uid :
             self.uid.setText("%04X" % uid)
-        self.layout.addWidget(QtGui.QLabel('Unicode'), 1, 0)
+        self.layout.addWidget(QtWidgets.QLabel('Unicode'), 1, 0)
         self.layout.addWidget(self.uid, 1, 1)
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.layout.addWidget(o, 2, 0, 1, 2)

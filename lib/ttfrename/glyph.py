@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui
+from qtpy import QtGui
 from graide import freetype
 import array, ctypes
 

@@ -25,14 +25,14 @@ if getattr(sys, 'frozen', None) :
     os.environ['PATH'] += os.pathsep + sys._MEIPASS
     print os.environ['PATH']
 
-from PySide import QtGui, QtCore
+from qtpy import QtCore, QtWidgets
 from graide import main
 from argparse import ArgumentParser
 from ConfigParser import RawConfigParser
 
 if getattr(sys, 'frozen', None) :
     QtCore.QCoreApplication.setLibraryPaths([sys._MEIPASS])
-app = QtGui.QApplication(sys.argv)
+app = QtWidgets.QApplication(sys.argv)
 
 p = ArgumentParser()
 p.add_argument("-p","--project",help="Project configuration file")

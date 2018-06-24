@@ -20,7 +20,7 @@
 import os, subprocess, re, sys
 from tempfile import mktemp
 from shutil import copyfile
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from xml.etree import cElementTree as XmlTree
 
 mainapp = None
@@ -350,7 +350,7 @@ def generateTweakerGDL(config, app) :
     return ""  # success
     
 def popUpError(msg) :
-    dlg = QtGui.QMessageBox()
+    dlg = QtWidgets.QMessageBox()
     dlg.setText(msg)
     dlg.setWindowTitle("Graide")
     dlg.exec_()

@@ -18,14 +18,14 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui, QtCore
+from qtpy import QtGui, QtCore, QtWidgets
 from graide.run import Run
 from graide.runview import RunView
 from graide.utils import ModelSuper, DataObj, configintval
 from graide.layout import Layout
 import traceback
 
-class PassesItem(QtGui.QTableWidgetItem) :
+class PassesItem(QtWidgets.QTableWidgetItem) :
 
     def __init__(self, data) :
         super(PassesItem, self).__init__()
@@ -33,9 +33,9 @@ class PassesItem(QtGui.QTableWidgetItem) :
         
 # The PassesView class is also used for the Rules tab.
 
-class PassesView(QtGui.QTableWidget) : pass
+class PassesView(QtWidgets.QTableWidget) : pass
 
-class PassesView(QtGui.QTableWidget) :
+class PassesView(QtWidgets.QTableWidget) :
 
     # Communication with the Glyph, Slot and Rules tabs:
     slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
@@ -84,7 +84,7 @@ class PassesView(QtGui.QTableWidget) :
             self.runViews.append(v)
             self.setCellWidget(num, 1, v.gview)
             self.setCellWidget(num, 2, v.tview)
-            l = QtGui.QTableWidgetItem(label)
+            l = QtWidgets.QTableWidgetItem(label)
             l.setFlags(QtCore.Qt.ItemIsEnabled)
             self.setItem(num, 0, l)
             try :

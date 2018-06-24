@@ -19,7 +19,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
 
@@ -41,7 +41,7 @@ import traceback
 #       ...
 #       AttribView::changeData
 
-class LinePlainTextEdit(QtGui.QPlainTextEdit) :
+class LinePlainTextEdit(QtWidgets.QPlainTextEdit) :
 
     editFinished = QtCore.Signal()
 
@@ -53,7 +53,7 @@ class LinePlainTextEdit(QtGui.QPlainTextEdit) :
             return super(LinePlainTextEdit, self).keyPressEvent(key)
             
 
-class AttrValueListDialog(QtGui.QDialog) :
+class AttrValueListDialog(QtWidgets.QDialog) :
     
     def __init__(self, parent, glyphName, gClassList) :
         super(AttrValueListDialog,self).__init__(parent)
@@ -67,7 +67,7 @@ class AttrValueListDialog(QtGui.QDialog) :
         #self.setWindowIcon(icon);
 
         self.setWindowTitle(glyphName)
-        listWidget = QtGui.QListWidget(self)
+        listWidget = QtWidgets.QListWidget(self)
         #listWidget.clicked.connect(self.doReturn)
         itemHeight = 18
         cnt = 0
@@ -75,7 +75,7 @@ class AttrValueListDialog(QtGui.QDialog) :
             if gClass == "" or gClass == " " :
                 continue
                 
-            item = QtGui.QListWidgetItem(gClass)
+            item = QtWidgets.QListWidgetItem(gClass)
             item.setSizeHint(QtCore.QSize(200, itemHeight))
             listWidget.addItem(item)
             cnt = cnt + 1
@@ -106,7 +106,7 @@ class AttrValueListDialog(QtGui.QDialog) :
 # end of class AttrValueListDialog
 
 
-class AttributeDelegate(QtGui.QStyledItemDelegate) :
+class AttributeDelegate(QtWidgets.QStyledItemDelegate) :
 
     def __init__(self, parent) :
         super(AttributeDelegate, self).__init__(parent)
@@ -329,13 +329,13 @@ class AttribModel(QtCore.QAbstractItemModel) :
 # end of class AttribModel
             
 
-class AttribView(QtGui.QTreeView) :
+class AttribView(QtWidgets.QTreeView) :
 
     def __init__(self, app, parent = None) :
         super(AttribView, self).__init__(parent)
         self.app = app
         self.header().setStretchLastSection(True)
-        self.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.header().hide()
         self.attribDelegate = AttributeDelegate(self)
         #self.setItemDelegateForColumn(1, self.attribDelegate)
@@ -391,7 +391,7 @@ if __name__ == '__main__' :
     from graide.font import Font
     import sys, os
  
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     font = Font()
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests/fonts/Padauk')
     font.loadFont(os.path.join(tpath, 'Padauk.ttf'), os.path.join(tpath, 'padauk.xml'))

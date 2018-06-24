@@ -17,29 +17,29 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtGui, QtCore
+from qtpy import QtGui, QtCore, QtWidgets
 from graide.utils import configintval, configval
 from graide.layout import Layout
 import os, codecs, traceback
 
-class FindDialog(QtGui.QDialog) :
+class FindDialog(QtWidgets.QDialog) :
 
     def __init__(self, parent = None) :
         super(FindDialog, self).__init__(parent)
         self.setWindowTitle("Find")
-        hboxLayout = QtGui.QHBoxLayout(self)
-        self.text = QtGui.QLineEdit(self)
+        hboxLayout = QtWidgets.QHBoxLayout(self)
+        self.text = QtWidgets.QLineEdit(self)
         self.text.returnPressed.connect(self.searchFwd)
         hboxLayout.addWidget(self.text)
-        self.bBack = QtGui.QToolButton(self)
+        self.bBack = QtWidgets.QToolButton(self)
         self.bBack.setArrowType(QtCore.Qt.UpArrow)
         self.bBack.clicked.connect(self.searchBkwd)
         hboxLayout.addWidget(self.bBack)
-        self.bFwd = QtGui.QToolButton(self)
+        self.bFwd = QtWidgets.QToolButton(self)
         self.bFwd.setArrowType(QtCore.Qt.DownArrow)
         self.bFwd.clicked.connect(self.searchFwd)
         hboxLayout.addWidget(self.bFwd)
-        self.bClose = QtGui.QToolButton(self)
+        self.bClose = QtWidgets.QToolButton(self)
         self.bClose.setIcon(QtGui.QIcon.fromTheme('window-close', QtGui.QIcon(":/images/window-close.png")))
         self.bClose.clicked.connect(self.closeDialog)
         hboxLayout.addWidget(self.bClose)
@@ -77,24 +77,24 @@ class FindDialog(QtGui.QDialog) :
 # end of class FileDialog
 
 
-class FindInputDialog(QtGui.QDialog) :
+class FindInputDialog(QtWidgets.QDialog) :
 
     def __init__(self, parent = None, searchText = "", caseSens = False) :
         super(FindInputDialog,self).__init__(parent)
         
         self.setWindowTitle("Find in Open Files")
         
-        vboxLayout = QtGui.QVBoxLayout(self)
-        vboxLayout.addWidget(QtGui.QLabel("Find text:"))
-        self.searchTextCtrl = QtGui.QLineEdit(searchText)
+        vboxLayout = QtWidgets.QVBoxLayout(self)
+        vboxLayout.addWidget(QtWidgets.QLabel("Find text:"))
+        self.searchTextCtrl = QtWidgets.QLineEdit(searchText)
         vboxLayout.addWidget(self.searchTextCtrl)
-        self.caseCheck = QtGui.QCheckBox("Case sensitive")
+        self.caseCheck = QtWidgets.QCheckBox("Case sensitive")
         if caseSens :
             self.caseCheck.setChecked(True)
         else :
             self.caseCheck.setChecked(False)
         vboxLayout.addWidget(self.caseCheck)
-        self.ok = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        self.ok = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         self.ok.accepted.connect(self.accept)
         self.ok.rejected.connect(self.reject)
         vboxLayout.addWidget(self.ok)
@@ -109,7 +109,7 @@ class FindInputDialog(QtGui.QDialog) :
 
 
 # The tab that shows the find results:
-class FindInFilesResults(QtGui.QListWidget) :
+class FindInFilesResults(QtWidgets.QListWidget) :
  
     resultSelected = QtCore.Signal(str, int)
 
@@ -118,7 +118,7 @@ class FindInFilesResults(QtGui.QListWidget) :
         self.itemDoubleClicked.connect(self.selectItem)
 
     def addItem(self, txt, srcfile = None, line = 0) :
-        w = QtGui.QListWidgetItem(txt, self)
+        w = QtWidgets.QListWidgetItem(txt, self)
         w.srcfile = srcfile
         w.line = line
         return w
@@ -130,7 +130,7 @@ class FindInFilesResults(QtGui.QListWidget) :
 # end of class FindInFilesResults
 
 
-class EditFile(QtGui.QPlainTextEdit) :
+class EditFile(QtWidgets.QPlainTextEdit) :
 
     highlightFormat = None
 
@@ -162,23 +162,23 @@ class EditFile(QtGui.QPlainTextEdit) :
             
         self.fileTabs.addOpenFile(self.fname)
         
-        aSave = QtGui.QAction(self)
+        aSave = QtWidgets.QAction(self)
         aSave.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_S))
         aSave.triggered.connect(self.writeIfModified)
         self.addAction(aSave)
 
-        aFind = QtGui.QAction(self)
+        aFind = QtWidgets.QAction(self)
         aFind.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         aFind.triggered.connect(self.search)
         self.addAction(aFind)
         self.findDialog = FindDialog(self)
         self.findIsOpen = False
         
-        aFindNext = QtGui.QAction(self)
+        aFindNext = QtWidgets.QAction(self)
         aFindNext.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F3))
         aFindNext.triggered.connect(self.searchFwd)
         self.addAction(aFindNext)
-        aFindPrev = QtGui.QAction(self)
+        aFindPrev = QtWidgets.QAction(self)
         aFindPrev.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F3))
         aFindPrev.triggered.connect(self.searchBwd)
         self.addAction(aFindPrev)
@@ -229,12 +229,12 @@ class EditFile(QtGui.QPlainTextEdit) :
         if not self.modTime :
             self.reload()
         elif not self.modTime or os.stat(self.fname).st_mtime > self.modTime :
-            msgBox = QtGui.QMessageBox()
+            msgBox = QtWidgets.QMessageBox()
             msgBox.setWindowTitle("Reload " + self.fname)
             msgBox.setText("The '" + self.fname + "' file has been modified. Reload it?")
-            msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-            msgBox.setDefaultButton(QtGui.QMessageBox.Yes)
-            reload = (msgBox.exec_() == QtGui.QMessageBox.Yes)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.Yes)
+            reload = (msgBox.exec_() == QtWidgets.QMessageBox.Yes)
             if reload :
                 self.reload()
             else :
@@ -303,7 +303,7 @@ class EditFile(QtGui.QPlainTextEdit) :
 
 
 # The window containing all the code files.
-class FileTabs(QtGui.QTabWidget) :
+class FileTabs(QtWidgets.QTabWidget) :
 
     def __init__(self, config, app, parent = None) :
         super(FileTabs, self).__init__(parent)
@@ -312,20 +312,20 @@ class FileTabs(QtGui.QTabWidget) :
         self.tabCloseRequested.connect(self.closeRequest)
         self.setContentsMargins(*Layout.buttonMargins)
         self.currentChanged.connect(self.switchFile)
-        self.bbox = QtGui.QWidget(self)
+        self.bbox = QtWidgets.QWidget(self)
         self.setCornerWidget(self.bbox)
-        self.hbox = QtGui.QHBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         self.bbox.setLayout(self.hbox)
         self.hbox.setContentsMargins(*Layout.buttonMargins)
         self.hbox.setSpacing(Layout.buttonSpacing)
         self.hbox.insertStretch(0)
-        self.bBuild = QtGui.QToolButton(self.bbox)
+        self.bBuild = QtWidgets.QToolButton(self.bbox)
         self.bBuild.setDefaultAction(self.aBuild)
         self.hbox.addWidget(self.bBuild)
-        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave = QtWidgets.QToolButton(self.bbox)
         self.bSave.setDefaultAction(self.aSave)
         self.hbox.addWidget(self.bSave)
-        self.bAdd = QtGui.QToolButton(self.bbox)
+        self.bAdd = QtWidgets.QToolButton(self.bbox)
         self.bAdd.setDefaultAction(self.aAdd)
         self.hbox.addWidget(self.bAdd)
         self.currselIndex = None
@@ -345,13 +345,13 @@ class FileTabs(QtGui.QTabWidget) :
         self.findCaseSens = False
 
     def setActions(self, app) :
-        self.aBuild = QtGui.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
+        self.aBuild = QtWidgets.QAction(QtGui.QIcon.fromTheme("run-build", QtGui.QIcon(":/images/run-build.png")), "&Build", app)
         self.aBuild.setToolTip("Save files and force rebuild")
         self.aBuild.triggered.connect(app.buildClicked)
-        self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save File", app)
+        self.aSave = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save File", app)
         self.aSave.setToolTip('Save all files')
         self.aSave.triggered.connect(self.writeIfModified)
-        self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")), "&Open File ...", app)
+        self.aAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open', QtGui.QIcon(":/images/document-open.png")), "&Open File ...", app)
         self.aAdd.setToolTip('Open file in editor')
         self.aAdd.triggered.connect(self.addClicked)
 
@@ -400,7 +400,7 @@ class FileTabs(QtGui.QTabWidget) :
 
     def addClicked(self) :
         try:
-            fname = os.path.relpath(QtGui.QFileDialog.getOpenFileName(self)[0])
+            fname = os.path.relpath(QtWidgets.QFileDialog.getOpenFileName(self)[0])
             self.selectLine(fname, -1)
             self.updateFromConfigSettings(self.app.config)
         except :

@@ -19,7 +19,7 @@
 
 from graide import freetype
 from graide.glyph import GraideGlyph, GlyphItem
-from PySide import QtCore
+from qtpy import QtCore
 from graide.makegdl.font import Font as gdlFont
 import re
 

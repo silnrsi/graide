@@ -19,23 +19,23 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.glyph import ftGlyph
 from graide import freetype
 
-class WaterfallDialog(QtGui.QDialog) :
+class WaterfallDialog(QtWidgets.QDialog) :
 
     def __init__(self, font, run, sizes = None, margin = 2, parent = None) :
         super(WaterfallDialog, self).__init__(parent)
         if sizes is None :
             sizes = [8, 9, 10, 11, 12, 13, 14, 16, 20, 28, 40]
 
-        self.vbox = QtGui.QVBoxLayout(self)
+        self.vbox = QtWidgets.QVBoxLayout(self)
         self.setLayout(self.vbox)
         self.setWindowTitle("Waterfall")
-        self.gview = QtGui.QGraphicsView(self)
+        self.gview = QtWidgets.QGraphicsView(self)
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
-        self.scene = QtGui.QGraphicsScene(self.gview)
+        self.scene = QtWidgets.QGraphicsScene(self.gview)
         self.pixmaps = []
         self.pixitems = []
         face = freetype.Face(font.fname)
@@ -53,7 +53,7 @@ class WaterfallDialog(QtGui.QDialog) :
             for s in run :
                 (px, left, top) = ftGlyph(face, s.gid)
                 if px :
-                    item = QtGui.QGraphicsPixmapItem(px, None, self.scene)
+                    item = QtWidgets.QGraphicsPixmapItem(px, None, self.scene)
                     ppos = (s.drawPosX() * factor + left, -s.drawPosY() * factor - top)
                     item.setOffset(ppos[0], ppos[1])
                     pixmaps.append(px)

@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui
 from graide import freetype
 import array, ctypes, re, traceback
 from graide.attribview import Attribute, AttribModel

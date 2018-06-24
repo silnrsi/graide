@@ -22,12 +22,12 @@
 # A RunView consists of two sub-views: a display of the current glyphs (QGraphicsView)
 # and a list of corresponding glyph names (QPlainTextEdit).
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
 import os, time, traceback
 
-class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
+class GlyphPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def __init__(self, index, px, model = None, parent = None, scene = None) :
         super(GlyphPixmapItem, self).__init__(px, parent, scene)
@@ -65,7 +65,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
       
       
 # Apparently not used
-class RunTextView(QtGui.QPlainTextEdit) :
+class RunTextView(QtWidgets.QPlainTextEdit) :
 
     def __init__(self, creator, parent = None) :
         super(RunTextView, self).__init__(parent=parent)
@@ -89,22 +89,22 @@ class RunView(QtCore.QObject, ModelSuper) :
     def __init__(self, font = None, run = None, parent = None, collision = False) : # parent = PassesView, Matcher, or none
         super(RunView, self).__init__()
         self.parent = parent
-        self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
+        self.gview = QtWidgets.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         self.gview.mouseDoubleClickEvent = self.sEvent
         if font : 
             self.gview.resize(self.gview.size().width(), max(font.pixrect.height(), RunView.MinHt))
         else :
             self.gview.resize(200, RunView.MinHt)
-        self._scene = QtGui.QGraphicsScene(self.gview) # the scene contains the pixmaps
+        self._scene = QtWidgets.QGraphicsScene(self.gview) # the scene contains the pixmaps
         self._scene.keyPressEvent = self.keyPressEvent
         self._scene.mouseDoubleClickEvent = self.sEvent
-        self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
+        self.tview = QtWidgets.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
         self.tview.mousePressEvent = self.tEvent
         self.tview.mouseDoubleClickEvent = self.tEvent
         self._fSelect = QtGui.QTextCharFormat()
-        self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
+        self._fSelect.setBackground(QtWidgets.QApplication.palette().highlight())
         self._fHighlights = {}
         for c in Layout.slotColours.keys() :
             self._fHighlights[c] = QtGui.QTextCharFormat()
@@ -360,7 +360,7 @@ if __name__ == "__main__" :
     from font import Font
     from run import Run
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     # print app.desktop().logicalDpiY()
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests')
     jf = file(os.path.join(tpath, "padauk3.json"))

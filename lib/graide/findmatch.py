@@ -23,7 +23,7 @@ from graide.utils import reportError
 from rungraphite import makeFontAndFace
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, as_entities, relpath, ETcanon, ETinsert, popUpError
 from graide.run import Run
@@ -40,7 +40,7 @@ def asBool(txt) :
 
 
 # A plain text control that snags the Return key
-class TextEditReturn(QtGui.QPlainTextEdit) :
+class TextEditReturn(QtWidgets.QPlainTextEdit) :
     
     def __init__(self, parent, matcher) :
         super(TextEditReturn, self).__init__(parent)
@@ -81,7 +81,7 @@ class GlyphPatternMatcher() :
                 pattern += ")"
             elif tempCnt == 1 :
                 pattern += self._singleGlyphPattern() # ANY
-            else :    
+            else :
                 pattern += "_" + str(g["gid"])
                 
             tempCnt = tempCnt + 1
@@ -124,7 +124,7 @@ class GlyphPatternMatcher() :
                 itemPattern += ")"
                 
             else :
-                self.pattern = ""               
+                self.pattern = ""
                 popUpError("ERROR: '" + item + "' is not a valid class or glyph name.")
 
                 return
@@ -271,7 +271,7 @@ class GlyphPatternMatcher() :
 
 
 # List of matched results
-class MatchList(QtGui.QWidget) :
+class MatchList(QtWidgets.QWidget) :
 
     def __init__(self, app, font, fname = None, parent = None) : # parent = Matcher
         super(MatchList, self).__init__(parent)
@@ -291,32 +291,32 @@ class MatchList(QtGui.QWidget) :
         self.resultsFile = None
 
         self.setActions(app)
-        self.vbox = QtGui.QVBoxLayout()
+        self.vbox = QtWidgets.QVBoxLayout()
         self.vbox.setContentsMargins(*Layout.buttonMargins)
         
         # test file control
-        self.cbox1 = QtGui.QWidget(self)
-        self.fhbox = QtGui.QHBoxLayout()
+        self.cbox1 = QtWidgets.QWidget(self)
+        self.fhbox = QtWidgets.QHBoxLayout()
         self.fhbox.setContentsMargins(*Layout.buttonMargins)
-        self.fhbox.setSpacing(Layout.buttonSpacing)    
+        self.fhbox.setSpacing(Layout.buttonSpacing)
         self.cbox1.setLayout(self.fhbox)
-        self.fcombo = QtGui.QComboBox(self.cbox1)  # file combo box   
+        self.fcombo = QtWidgets.QComboBox(self.cbox1)  # file combo box
         self.fcombo.setToolTip('Choose test file')
         self.fhbox.addWidget(self.fcombo)
         self.fhbox.addSpacing(10)
-        self.fcbutton = QtGui.QToolButton(self.cbox1)
+        self.fcbutton = QtWidgets.QToolButton(self.cbox1)
         self.fcbutton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.fcbutton.setToolTip('Change test file')
         self.fcbutton.clicked.connect(self.addFileClicked)
         self.fhbox.addWidget(self.fcbutton)
-        #self.frbutton = QtGui.QToolButton(self.cbox1)
+        #self.frbutton = QtWidgets.QToolButton(self.cbox1)
         #self.frbutton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         #self.frbutton.setToolTip('Remove test file from list')
         #self.frbutton.clicked.connect(self.delFileClicked)
         #self.fhbox.addWidget(self.frbutton)
         self.vbox.addWidget(self.cbox1)
         
-        self.liststack = QtGui.QStackedWidget(self)  # stack of lists of test items - for now there will be only one
+        self.liststack = QtWidgets.QStackedWidget(self)  # stack of lists of test items - for now there will be only one
         self.vbox.addWidget(self.liststack)
 
         self.fcombo.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeFileCombo)
@@ -324,29 +324,29 @@ class MatchList(QtGui.QWidget) :
         self.createOneGroup('matches')
 
         # list control
-        self.bbox = QtGui.QWidget(self)
-        self.hbbox = QtGui.QHBoxLayout()
+        self.bbox = QtWidgets.QWidget(self)
+        self.hbbox = QtWidgets.QHBoxLayout()
         self.bbox.setLayout(self.hbbox)
         self.hbbox.setContentsMargins(*Layout.buttonMargins)
         self.hbbox.setSpacing(Layout.buttonSpacing)
         self.hbbox.insertStretch(0)
         self.vbox.addWidget(self.bbox)
-        self.bEdit = QtGui.QToolButton(self.bbox)
+        self.bEdit = QtWidgets.QToolButton(self.bbox)
         self.bEdit.setDefaultAction(self.aEdit)
         self.hbbox.addWidget(self.bEdit)
-        self.bUpp = QtGui.QToolButton(self.bbox)
+        self.bUpp = QtWidgets.QToolButton(self.bbox)
         self.bUpp.setDefaultAction(self.aUpp)
         self.hbbox.addWidget(self.bUpp)
-        self.bDown = QtGui.QToolButton(self.bbox)
+        self.bDown = QtWidgets.QToolButton(self.bbox)
         self.bDown.setDefaultAction(self.aDown)
         self.hbbox.addWidget(self.bDown)
-        self.bSave = QtGui.QToolButton(self.bbox)
+        self.bSave = QtWidgets.QToolButton(self.bbox)
         self.bSave.setDefaultAction(self.aSave)
         self.hbbox.addWidget(self.bSave)
-        self.bAdd = QtGui.QToolButton(self.bbox)
+        self.bAdd = QtWidgets.QToolButton(self.bbox)
         self.bAdd.setDefaultAction(self.aAdd)
         self.hbbox.addWidget(self.bAdd)
-        self.bDel = QtGui.QToolButton(self.bbox)
+        self.bDel = QtWidgets.QToolButton(self.bbox)
         self.bDel.setDefaultAction(self.aDel)
         self.hbbox.addWidget(self.bDel)
         self.setLayout(self.vbox)
@@ -354,29 +354,29 @@ class MatchList(QtGui.QWidget) :
         self.addFile(fname, None, False)
 
     def setActions(self, app) :
-        self.aEdit = QtGui.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Test ...", app)
+        self.aEdit = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-properties', QtGui.QIcon(":/images/document-properties.png")), "&Add Test ...", app)
         self.aEdit.setToolTip('Edit result')
         self.aEdit.triggered.connect(self.editClicked)
-        self.aUpp = QtGui.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Test &Up", app)
+        self.aUpp = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-up', QtGui.QIcon(":/images/go-up.png")), "Test &Up", app)
         self.aUpp.setToolTip("Move result up")
         self.aUpp.triggered.connect(self.upClicked)
-        self.aDown = QtGui.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Test &Down", app)
+        self.aDown = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-down', QtGui.QIcon(":/images/go-down.png")), "Test &Down", app)
         self.aDown.setToolTip("Move result down")
         self.aDown.triggered.connect(self.downClicked)
-        self.aSave = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tests", app)
+        self.aSave = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "&Save Tests", app)
         self.aSave.setToolTip('Save result list')
         self.aSave.triggered.connect(self.saveResultsClicked)
-        self.aAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Test ...", app)
+        self.aAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "&Add Test ...", app)
         self.aAdd.setToolTip('Add new result')
         self.aAdd.triggered.connect(self.addTestClicked)
-        self.aDel = QtGui.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
+        self.aDel = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")), "&Delete Test", app)
         self.aDel.setToolTip('Delete result')
         self.aDel.triggered.connect(self.delTestClicked)
 
     def initResults(self, fname) :
          self.addGroup('matches')
     
-    # As far as I know this method should never be called:  
+    # As far as I know this method should never be called:
     def loadTests(self, fname):
         print "loadTests - WHY ARE WE CALLING THIS METHOD?"
         
@@ -511,10 +511,10 @@ class MatchList(QtGui.QWidget) :
         
 
     def createOneGroup(self, name, index = None, comment = "") :
-        listWidget = QtGui.QListWidget() # create a test list widget for this group
+        listWidget = QtWidgets.QListWidget() # create a test list widget for this group
         listWidget.itemDoubleClicked.connect(self.runTest)
         listWidget.itemClicked.connect(self.loadTest)
-        self.liststack.addWidget(listWidget)        
+        self.liststack.addWidget(listWidget)
         return listWidget
         
 
@@ -531,7 +531,7 @@ class MatchList(QtGui.QWidget) :
         if not l : l = self.liststack.currentWidget()
         groupIndex = self.liststack.indexOf(l) # should always be 0
         self.testGroups[groupIndex].append(t)
-        w = QtGui.QListWidgetItem(t.name or "", l)
+        w = QtWidgets.QListWidgetItem(t.name or "", l)
         if t.comment :
             w.setToolTip(t.comment)
         w.setBackground(QtGui.QBrush(t.background))
@@ -624,9 +624,9 @@ class MatchList(QtGui.QWidget) :
 
     def addFileClicked(self) :
         # This dialog only allows specifying a file that exists.
-        qdialog = QtGui.QFileDialog()
-        qdialog.setFileMode(QtGui.QFileDialog.ExistingFile)
-        qdialog.setViewMode(QtGui.QFileDialog.Detail)
+        qdialog = QtWidgets.QFileDialog()
+        qdialog.setFileMode(QtWidgets.QFileDialog.ExistingFile)
+        qdialog.setViewMode(QtWidgets.QFileDialog.Detail)
         qdialog.setNameFilter('XML files (*.xml)')
         if qdialog.exec_() :
             selected = qdialog.selectedFiles()
@@ -699,7 +699,7 @@ class MatchList(QtGui.QWidget) :
             #    suggestFname = self.testFiles[0][0:-4]
             #suggestFname += "_match.xml"
         
-        (fname, filt) = QtGui.QFileDialog.getSaveFileName(self,
+        (fname, filt) = QtWidgets.QFileDialog.getSaveFileName(self,
                 dir=os.path.dirname(suggestFname), filter='Tests Lists (*.xml)')
         if fname :
             self.writeXML(fname)
@@ -752,7 +752,7 @@ class MatchList(QtGui.QWidget) :
 # end of class MatchList
 
 
-class Matcher(QtGui.QTabWidget) :
+class Matcher(QtWidgets.QTabWidget) :
     
     def __init__(self, fontFileName, font, parent = None, xmlFile = None) :   # parent = app
         super(Matcher, self).__init__(parent)
@@ -760,7 +760,7 @@ class Matcher(QtGui.QTabWidget) :
         self.font = font
         self.app = parent
         self.xmlFile = xmlFile
-        self.layout = QtGui.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         
         # Default test settings
         self.currFeats = {}
@@ -778,11 +778,11 @@ class Matcher(QtGui.QTabWidget) :
         
         
     def setActions(self, app) :
-        self.aSearchGo = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
+        self.aSearchGo = QtWidgets.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
         self.aSearchGo.setToolTip("Search for pattern in specified test file")
         self.aSearchGo.triggered.connect(self.searchClicked)
 
-        self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
+        self.aRunGo = QtWidgets.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
         self.aRunGo.setToolTip("Run text string")
         self.aRunGo.triggered.connect(self.runClicked)
         
@@ -790,25 +790,25 @@ class Matcher(QtGui.QTabWidget) :
     
     
     def initializeLayout(self, xmlFile) :
-        vsplitter = QtGui.QSplitter()  # allows sizing of results view
+        vsplitter = QtWidgets.QSplitter()  # allows sizing of results view
         vsplitter.setOrientation(QtCore.Qt.Vertical)
         vsplitter.setContentsMargins(0, 0, 0, 0)
         vsplitter.setHandleWidth(4)
         self.layout.addWidget(vsplitter)
         
-        self.widget = QtGui.QWidget(vsplitter)
-        vbox = QtGui.QVBoxLayout(self.widget) # MatchList + input control
+        self.widget = QtWidgets.QWidget(vsplitter)
+        vbox = QtWidgets.QVBoxLayout(self.widget) # MatchList + input control
         vbox.setContentsMargins(*Layout.buttonMargins)
         vbox.setSpacing(Layout.buttonSpacing)
         
-        hbox = QtGui.QHBoxLayout()  # just in case we want to add more buttons here
+        hbox = QtWidgets.QHBoxLayout()  # just in case we want to add more buttons here
         vbox.addLayout(hbox)
-        plabel = QtGui.QLabel("Search pattern:")
-        hbox.addWidget(plabel)        
+        plabel = QtWidgets.QLabel("Search pattern:")
+        hbox.addWidget(plabel)
         hbox.addStretch()
         hbox.setContentsMargins(*Layout.buttonMargins)
         hbox.setSpacing(Layout.buttonSpacing)
-        searchGo = QtGui.QToolButton(self.widget)
+        searchGo = QtWidgets.QToolButton(self.widget)
         searchGo.setDefaultAction(self.aSearchGo)
         hbox.addWidget(searchGo)
     
@@ -822,34 +822,34 @@ class Matcher(QtGui.QTabWidget) :
         vbox.addWidget(self.matchList)
 
         # line below MatchList
-        line = QtGui.QFrame(self.widget)
-        line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
+        line = QtWidgets.QFrame(self.widget)
+        line.setFrameStyle(QtWidgets.QFrame.HLine | QtWidgets.QFrame.Raised)
         line.setLineWidth(2)
         vbox.addWidget(line)
         vbox.addSpacing(2)
         
         # input control
-        self.runEdit = QtGui.QPlainTextEdit(self.widget)
+        self.runEdit = QtWidgets.QPlainTextEdit(self.widget)
         self.runEdit.setMaximumHeight(Layout.runEditHeight)
         vbox.addWidget(self.runEdit)
         
         # control buttons
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         vbox.addLayout(hbox)
         hbox.setContentsMargins(*Layout.buttonMargins)
         hbox.setSpacing(Layout.buttonSpacing)
-        runGo = QtGui.QToolButton(self.widget)
+        runGo = QtWidgets.QToolButton(self.widget)
         runGo.setDefaultAction(self.aRunGo)
         hbox.addWidget(runGo)
         hbox.addStretch()
-        self.runRtl = QtGui.QCheckBox("RTL", self.widget)
+        self.runRtl = QtWidgets.QCheckBox("RTL", self.widget)
         self.runRtl.setChecked(True if configintval(self.app.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
         hbox.addWidget(self.runRtl)
-        self.runFeats = QtGui.QToolButton(self.widget)
+        self.runFeats = QtWidgets.QToolButton(self.widget)
         #self.runFeats.setDefaultAction(self.aRunFeats)
         hbox.addWidget(self.runFeats)
-        #runAdd = QtGui.QToolButton(self.widget)
+        #runAdd = QtWidgets.QToolButton(self.widget)
         #runAdd.setDefaultAction(self.aRunAdd)
         #hbox.addWidget(runAdd)
     

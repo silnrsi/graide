@@ -44,7 +44,7 @@ from graide.pyresources import qInitResources, qCleanupResources
 from graide.posedit import PosEdit, PosView
 from graide.tweaker import Tweaker, TweakView
 from graide.findmatch import GlyphPatternMatcher, MatchList, Matcher
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 
 from tempfile import NamedTemporaryFile, TemporaryFile
@@ -55,7 +55,7 @@ import codecs, traceback  ### debug
 # Debugging:
 #for line in traceback.format_stack(): print line.strip()
 
-class MainWindow(QtGui.QMainWindow) :
+class MainWindow(QtWidgets.QMainWindow) :
     
     def __init__(self, config, configFile, jsonFile) :
         
@@ -335,48 +335,48 @@ class MainWindow(QtGui.QMainWindow) :
 
 
     def setActions(self) :
-        self.aRunGo = QtGui.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
+        self.aRunGo = QtWidgets.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
         self.aRunGo.setToolTip("Run text string after rebuild")
         self.aRunGo.triggered.connect(self.runClicked)
         
-        self.aWater = QtGui.QAction(QtGui.QIcon.fromTheme("waterfall", QtGui.QIcon(":/images/waterfall.png")), "&Waterfall ...", self)
+        self.aWater = QtWidgets.QAction(QtGui.QIcon.fromTheme("waterfall", QtGui.QIcon(":/images/waterfall.png")), "&Waterfall ...", self)
         self.aWater.setToolTip('Display run as a waterfall')
         self.aWater.triggered.connect(self.doWaterfall)
         
-        self.aRunMatch = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
+        self.aRunMatch = QtWidgets.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "", self)
         self.aRunMatch.setToolTip("Use test output as pattern to match")
         self.aRunMatch.triggered.connect(self.matchOutput)
         
-        self.aRunFeats = QtGui.QAction(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")), "Set &Features ...", self)
+        self.aRunFeats = QtWidgets.QAction(QtGui.QIcon.fromTheme("view-list-details", QtGui.QIcon(":/images/view-list-details.png")), "Set &Features ...", self)
         self.aRunFeats.triggered.connect(self.featuresClicked)
         self.aRunFeats.setToolTip("Edit features of test run")
         
-        self.aRunAdd = QtGui.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Test from &Run ...", self)
+        self.aRunAdd = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")), "Test from &Run ...", self)
         self.aRunAdd.setToolTip("Add run to tests list under a new name")
         self.aRunAdd.triggered.connect(self.runAddClicked)
 
-        self.aSaveAP = QtGui.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "Save &APs", self)
+        self.aSaveAP = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save', QtGui.QIcon(":/images/document-save.png")), "Save &APs", self)
         self.aSaveAP.triggered.connect(self.saveAP)
         self.aSaveAP.setToolTip('Save AP Database')
 
-        self.aFindInFiles = QtGui.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "Find in Files ...", self)
+        self.aFindInFiles = QtWidgets.QAction(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")), "Find in Files ...", self)
         self.aFindInFiles.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.SHIFT + QtCore.Qt.Key_F))
         self.aFindInFiles.triggered.connect(self.findInFiles)
         self.aFindInFiles.setToolTip('Find a text string in all open files')
 
-        self.aCfg = QtGui.QAction(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")), "&Configure Project ...", self)
+        self.aCfg = QtWidgets.QAction(QtGui.QIcon.fromTheme("configure", QtGui.QIcon(":/images/configure.png")), "&Configure Project ...", self)
         self.aCfg.setToolTip("Configure project")
         self.aCfg.triggered.connect(self.runConfigDialog)
         
-        self.aCfgOpen = QtGui.QAction(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")), "&Open Project ...", self)
+        self.aCfgOpen = QtWidgets.QAction(QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/images/document-open.png")), "&Open Project ...", self)
         self.aCfgOpen.setToolTip("Open existing project")
         self.aCfgOpen.triggered.connect(self.configOpenClicked)
         
-        self.aCfgNew = QtGui.QAction(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")), "&New Project ...", self)
+        self.aCfgNew = QtWidgets.QAction(QtGui.QIcon.fromTheme("document-new", QtGui.QIcon(":/images/document-new.png")), "&New Project ...", self)
         self.aCfgNew.setToolTip("Create new project")
         self.aCfgNew.triggered.connect(self.configNewClicked)
 
-        self.aHAbout = QtGui.QAction("&About", self)
+        self.aHAbout = QtWidgets.QAction("&About", self)
         self.aHAbout.triggered.connect(self.helpAbout)
         
         # Recent projects
@@ -387,7 +387,7 @@ class MainWindow(QtGui.QMainWindow) :
         cnt = 0
         for (basename, fullname) in recentProjectFiles :
             if basename != '' :
-                projAction = QtGui.QAction(basename, self)
+                projAction = QtWidgets.QAction(basename, self)
                 if   cnt == 0 : projAction.triggered.connect(self.openRecentProject1)
                 elif cnt == 1 : projAction.triggered.connect(self.openRecentProject2)
                 elif cnt == 2 : projAction.triggered.connect(self.openRecentProject3)
@@ -400,20 +400,20 @@ class MainWindow(QtGui.QMainWindow) :
     def setupUi(self) :
         qInitResources()
         self.resize(*Layout.initWinSize)
-        self.centralwidget = QtGui.QWidget(self)
-        self.verticalLayout = QtGui.QHBoxLayout(self.centralwidget)
-        self.hsplitter = QtGui.QSplitter(self.centralwidget) #splitter between left tabbed pane and two right panes
+        self.centralwidget = QtWidgets.QWidget(self)
+        self.verticalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
+        self.hsplitter = QtWidgets.QSplitter(self.centralwidget) #splitter between left tabbed pane and two right panes
         self.hsplitter.setOrientation(QtCore.Qt.Horizontal)
         self.hsplitter.setHandleWidth(4)
         self.verticalLayout.addWidget(self.hsplitter)
 
-        self.tab_info = QtGui.QTabWidget(self.hsplitter)  # left pane
+        self.tab_info = QtWidgets.QTabWidget(self.hsplitter)  # left pane
         #self.tab_info = InfoTabs(self.hsplitter)
-        self.widget = QtGui.QWidget(self.hsplitter)
+        self.widget = QtWidgets.QWidget(self.hsplitter)
         self.setwidgetstretch(self.widget, 55, 100)
-        self.topLayout = QtGui.QVBoxLayout(self.widget)  # right two panes
+        self.topLayout = QtWidgets.QVBoxLayout(self)  # right two panes
         self.topLayout.setContentsMargins(*Layout.buttonMargins)
-        self.vsplitter = QtGui.QSplitter(self.widget) # splitter between code pane and lower pane
+        self.vsplitter = QtWidgets.QSplitter(self.widget) # splitter between code pane and lower pane
         self.vsplitter.setOrientation(QtCore.Qt.Vertical)
         self.vsplitter.setHandleWidth(2)
         self.topLayout.addWidget(self.vsplitter)
@@ -422,7 +422,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.ui_left(self.tab_info)
         self.ui_fileEdits(self.vsplitter)
 
-        self.tab_results = QtGui.QTabWidget(self.vsplitter)
+        self.tab_results = QtWidgets.QTabWidget(self.vsplitter)
         self.ui_bottom(self.tab_results)
 
         if self.config.has_section('window') :
@@ -436,12 +436,12 @@ class MainWindow(QtGui.QMainWindow) :
 
     def ui_tests(self, parent) : # parent = tab_info
         self.setwidgetstretch(self.tab_info, 30, 100)
-        self.test_splitter = QtGui.QSplitter() # left-hand vertical pane; allows sizing of results view
+        self.test_splitter = QtWidgets.QSplitter() # left-hand vertical pane; allows sizing of results view
         self.test_splitter.setOrientation(QtCore.Qt.Vertical)
         self.test_splitter.setContentsMargins(0, 0, 0, 0)
         self.test_splitter.setHandleWidth(4)
-        self.test_widget = QtGui.QWidget(self.test_splitter)
-        self.test_vbox = QtGui.QVBoxLayout(self.test_widget) # TestList + input control
+        self.test_widget = QtWidgets.QWidget(self.test_splitter)
+        self.test_vbox = QtWidgets.QVBoxLayout(self.test_widget) # TestList + input control
         self.test_vbox.setContentsMargins(*Layout.buttonMargins)
         self.test_vbox.setSpacing(Layout.buttonSpacing)
         
@@ -451,40 +451,40 @@ class MainWindow(QtGui.QMainWindow) :
         self.test_vbox.addSpacing(2)
         
         # line below test lists
-        self.test_line = QtGui.QFrame(self.test_widget)
-        self.test_line.setFrameStyle(QtGui.QFrame.HLine | QtGui.QFrame.Raised)
+        self.test_line = QtWidgets.QFrame(self.test_widget)
+        self.test_line.setFrameStyle(QtWidgets.QFrame.HLine | QtWidgets.QFrame.Raised)
         self.test_line.setLineWidth(2)
         self.test_vbox.addWidget(self.test_line)
         self.test_vbox.addSpacing(2)
         
         # test input pane
-        self.runEdit = QtGui.QPlainTextEdit(self.test_widget)
+        self.runEdit = QtWidgets.QPlainTextEdit(self.test_widget)
         self.runEdit.setMaximumHeight(Layout.runEditHeight)
         self.test_vbox.addWidget(self.runEdit)
         
         # test control buttons
-        self.test_hbox = QtGui.QHBoxLayout()
+        self.test_hbox = QtWidgets.QHBoxLayout()
         self.test_vbox.addLayout(self.test_hbox)
         self.test_hbox.setContentsMargins(*Layout.buttonMargins)
         self.test_hbox.setSpacing(Layout.buttonSpacing)
-        self.runGo = QtGui.QToolButton(self.test_widget)
+        self.runGo = QtWidgets.QToolButton(self.test_widget)
         self.runGo.setDefaultAction(self.aRunGo)
         self.test_hbox.addWidget(self.runGo)
-        self.runWater = QtGui.QToolButton(self.test_widget)
+        self.runWater = QtWidgets.QToolButton(self.test_widget)
         self.runWater.setDefaultAction(self.aWater)
         self.test_hbox.addWidget(self.runWater)
-        self.runMatch = QtGui.QToolButton(self.test_widget)
+        self.runMatch = QtWidgets.QToolButton(self.test_widget)
         self.runMatch.setDefaultAction(self.aRunMatch)
         self.test_hbox.addWidget(self.runMatch)
         self.test_hbox.addStretch()
-        self.runRtl = QtGui.QCheckBox("RTL", self.test_widget)
+        self.runRtl = QtWidgets.QCheckBox("RTL", self.test_widget)
         self.runRtl.setChecked(True if configintval(self.config, 'main', 'defaultrtl') else False)
         self.runRtl.setToolTip("Process text right to left")
         self.test_hbox.addWidget(self.runRtl)
-        self.runFeats = QtGui.QToolButton(self.test_widget)
+        self.runFeats = QtWidgets.QToolButton(self.test_widget)
         self.runFeats.setDefaultAction(self.aRunFeats)
         self.test_hbox.addWidget(self.runFeats)
-        self.runAdd = QtGui.QToolButton(self.test_widget)
+        self.runAdd = QtWidgets.QToolButton(self.test_widget)
         self.runAdd.setDefaultAction(self.aRunAdd)
         self.test_hbox.addWidget(self.runAdd)
         
@@ -503,38 +503,38 @@ class MainWindow(QtGui.QMainWindow) :
         # glyph, slot, classes, positions
                 
         # Glyph tab
-        self.tab_glyph = QtGui.QWidget()
-        self.glyph_vb = QtGui.QVBoxLayout(self.tab_glyph)
+        self.tab_glyph = QtWidgets.QWidget()
+        self.glyph_vb = QtWidgets.QVBoxLayout(self.tab_glyph)
         self.glyph_vb.setContentsMargins(*Layout.buttonMargins)
         self.glyph_vb.setSpacing(Layout.buttonSpacing)
         self.glyphAttrib = AttribView(self)
         self.glyph_vb.addWidget(self.glyphAttrib)
-        self.glyph_bbox = QtGui.QWidget(self.tab_glyph)
-        self.glyph_hb = QtGui.QHBoxLayout(self.glyph_bbox)
+        self.glyph_bbox = QtWidgets.QWidget(self.tab_glyph)
+        self.glyph_hb = QtWidgets.QHBoxLayout(self.glyph_bbox)
         self.glyph_hb.setContentsMargins(*Layout.buttonMargins)
         self.glyph_hb.setSpacing(Layout.buttonSpacing)
         self.glyph_hb.insertStretch(0)
         if self.apname :
-            self.glyph_saveAP = QtGui.QToolButton(self.glyph_bbox)
+            self.glyph_saveAP = QtWidgets.QToolButton(self.glyph_bbox)
             self.glyph_saveAP.setDefaultAction(self.aSaveAP)
             self.glyph_hb.addWidget(self.glyph_saveAP)
-        self.glyph_find = QtGui.QToolButton()	# find glyph
+        self.glyph_find = QtWidgets.QToolButton()	# find glyph
         self.glyph_find.setIcon(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")))
         self.glyph_find.clicked.connect(self.glyphFindSelected)
         self.glyph_find.setToolTip('Find glyph selected in source code')
         self.glyph_hb.addWidget(self.glyph_find)
-        self.glyph_addPoint = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_addPoint = QtWidgets.QToolButton(self.glyph_bbox)
         self.glyph_addPoint.setIcon(QtGui.QIcon.fromTheme('character-set', QtGui.QIcon(":/images/character-set.png")))
         self.glyph_addPoint.setText(u'\u2022')
         self.glyph_addPoint.clicked.connect(self.glyphAddPoint)
         self.glyph_addPoint.setToolTip('Add attachment point to glyph')
         self.glyph_hb.addWidget(self.glyph_addPoint)
-        self.glyph_addProperty = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_addProperty = QtWidgets.QToolButton(self.glyph_bbox)
         self.glyph_addProperty.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
         self.glyph_addProperty.clicked.connect(self.glyphAddProperty)
         self.glyph_addProperty.setToolTip('Add property to glyph')
         self.glyph_hb.addWidget(self.glyph_addProperty)
-        self.glyph_remove = QtGui.QToolButton(self.glyph_bbox)
+        self.glyph_remove = QtWidgets.QToolButton(self.glyph_bbox)
         self.glyph_remove.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
         self.glyph_remove.clicked.connect(self.glyphRemoveProperty)
         self.glyph_remove.setToolTip('Remove property from glyph')
@@ -576,19 +576,19 @@ class MainWindow(QtGui.QMainWindow) :
     def ui_bottom(self, parent) :
         # bottom pane
         self.setwidgetstretch(self.tab_results, 100, 45)
-        parent.setTabPosition(QtGui.QTabWidget.South)
-        self.cfg_widget = QtGui.QWidget()
-        self.cfg_hbox = QtGui.QHBoxLayout(self.cfg_widget)
+        parent.setTabPosition(QtWidgets.QTabWidget.South)
+        self.cfg_widget = QtWidgets.QWidget()
+        self.cfg_hbox = QtWidgets.QHBoxLayout(self.cfg_widget)
         self.cfg_hbox.setContentsMargins(*Layout.buttonMargins)
         self.cfg_hbox.setSpacing(Layout.buttonSpacing)
         self.cfg_button = ContextToolButton(self.cfg_widget)
         self.cfg_button.setDefaultAction(self.aCfg)
         self.cfg_button.rightClick.connect(self.debugClicked)
         self.cfg_hbox.addWidget(self.cfg_button)
-        self.cfg_open = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_open = QtWidgets.QToolButton(self.cfg_widget)
         self.cfg_open.setDefaultAction(self.aCfgOpen)
         self.cfg_hbox.addWidget(self.cfg_open)
-        self.cfg_new = QtGui.QToolButton(self.cfg_widget)
+        self.cfg_new = QtWidgets.QToolButton(self.cfg_widget)
         self.cfg_new.setDefaultAction(self.aCfgNew)
         self.cfg_hbox.addWidget(self.cfg_new)
         parent.setCornerWidget(self.cfg_widget)
@@ -701,14 +701,14 @@ class MainWindow(QtGui.QMainWindow) :
     # end of setMenus
 
     def helpAbout(self) :
-        QtGui.QMessageBox.about(self, "Graide", """GRAphite Integrated Development Environment
+        QtWidgets.QMessageBox.about(self, "Graide", """GRAphite Integrated Development Environment
 
 An environment for the creation and debugging of Graphite fonts.
 
 Copyright 2012-2013 SIL International and M. Hosken""")
 
     def setwidgetstretch(self, widget, hori, vert) :
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         if hori != 100 : sizePolicy.setHorizontalStretch(hori)
         if vert != 100 : sizePolicy.setVerticalStretch(vert)
         sizePolicy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
@@ -1085,17 +1085,17 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.tab_edit.updateFileEdit(fname)
 
     def propDialog(self, name) :
-        d = QtGui.QDialog(self)
+        d = QtWidgets.QDialog(self)
         d.setWindowTitle(name)
-        g = QtGui.QGridLayout()
+        g = QtWidgets.QGridLayout()
         d.setLayout(g)
-        n = QtGui.QLineEdit()
-        g.addWidget(QtGui.QLabel(name + ' Name:'), 0, 0)
+        n = QtWidgets.QLineEdit()
+        g.addWidget(QtWidgets.QLabel(name + ' Name:'), 0, 0)
         g.addWidget(n, 0, 1)
-        v = QtGui.QLineEdit()
-        g.addWidget(QtGui.QLabel('Value:'), 1, 0)
+        v = QtWidgets.QLineEdit()
+        g.addWidget(QtWidgets.QLabel('Value:'), 1, 0)
         g.addWidget(v, 1, 1)
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         o.accepted.connect(d.accept)
         o.rejected.connect(d.reject)
         g.addWidget(o, 2, 0, 1, 2)
@@ -1160,7 +1160,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     # Open an (existing) project.
     def configOpenClicked(self) :
-        (cfgFileName, filt) = QtGui.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
+        (cfgFileName, filt) = QtWidgets.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(cfgFileName) : return
         if os.path.splitext(cfgFileName)[1] == "" :
         	cfgFileName = cfgFileName + ".cfg"
@@ -1247,7 +1247,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             # record current config, if any, as a recent project
             self.recentProjects.addProject(self.cfgFileName)
             
-        (fname, filt) = QtGui.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
+        (fname, filt) = QtWidgets.QFileDialog.getSaveFileName(self, filter='Configuration files (*.cfg *ini)')
         if not fname : return
         (path, fname) = os.path.split(fname)
         if path :
@@ -1313,7 +1313,7 @@ if __name__ == "__main__" :
     from argparse import ArgumentParser
     import sys
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     p = ArgumentParser()
     p.add_argument("font", help="Font .ttf file to process")
     p.add_argument("-a","--ap",help="AP XML database file for font")

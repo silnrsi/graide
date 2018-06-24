@@ -42,8 +42,8 @@ def editConfig(data, font) :
         conf.set('build', 'usemakegdl', '1')
     else :
         conf.read(cfg)
-    from PySide import QtGui
-    app = QtGui.QApplication([])
+    from qtpy import QtWidgets
+    app = QtWidgets.QApplication([])
     d = ConfigDialog(conf)
     if d.exec_() :
         d.updateConfig(None, conf)

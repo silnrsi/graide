@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui
 from graide.utils import configval, configintval
 import os, sys
 if sys.platform == "win32" : import _winreg

@@ -19,7 +19,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.layout import Layout
 
 POSGLYPHID = 1
@@ -27,13 +27,13 @@ WHEELSCALEINCREMENT = 1.05
 
 
 # One node of the tree control in the upper-left pane, representing a glyph in the cluster
-class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
+class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
 
     posGlyphChanged = QtCore.Signal()
 
     def __init__(self, font, parent, data) :
         QtCore.QObject.__init__(self)       # Qt not happy if this isn't first
-        super(PosGlyphTreeItem, self).__init__(parent, data, type = QtGui.QTreeWidgetItem.UserType + POSGLYPHID)
+        super(PosGlyphTreeItem, self).__init__(parent, data, type = QtWidgets.QTreeWidgetItem.UserType + POSGLYPHID)
         self.px = None
         self.font = font
         self.position = (0, 0)
@@ -145,7 +145,7 @@ class PosGlyphTreeItem(QtGui.QTreeWidgetItem, QtCore.QObject) :
 
 
 # A visible glyph in the lower-right pane
-class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
+class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def __init__(self, px, item, parent = None, scene = None) :
         super(PosPixmapItem, self).__init__(px, parent, scene) # scene = scene from PosView
@@ -245,40 +245,40 @@ class PosPixmapItem(QtGui.QGraphicsPixmapItem) :
 
 
 # One of the controls at the bottom of the pane that allows choice of glyph and AP
-class PosGlyphInfoWidget(QtGui.QFrame) :
+class PosGlyphInfoWidget(QtWidgets.QFrame) :
 
     def __init__(self, title, app, isBase = False, parent = None) :
         super(PosGlyphInfoWidget, self).__init__(parent)
         self.app = app
         self.isBase = isBase
         self.item = None
-        self.setFrameStyle(QtGui.QFrame.Box | QtGui.QFrame.Sunken)
+        self.setFrameStyle(QtWidgets.QFrame.Box | QtWidgets.QFrame.Sunken)
         self.setLineWidth(1)
-        self.layout = QtGui.QGridLayout(self)
-        self.layout.addWidget(QtGui.QLabel(title), 0, 0, 1, 2)
-        self.revert = QtGui.QPushButton("Revert")
+        self.layout = QtWidgets.QGridLayout(self)
+        self.layout.addWidget(QtWidgets.QLabel(title), 0, 0, 1, 2)
+        self.revert = QtWidgets.QPushButton("Revert")
         self.revert.setEnabled(False)
         self.revert.clicked.connect(self.doRevert)
         self.layout.addWidget(self.revert, 0, 3)
-        self.glyph = QtGui.QComboBox(self)
-        self.layout.addWidget(QtGui.QLabel("Glyph"), 1, 0, 1, 2)
+        self.glyph = QtWidgets.QComboBox(self)
+        self.layout.addWidget(QtWidgets.QLabel("Glyph"), 1, 0, 1, 2)
         self.layout.addWidget(self.glyph, 1, 3, 1, 2)
         self.glyph.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.glyph.editTextChanged.connect(self.glyphChanged)
-        self.aps = QtGui.QComboBox(self)
-        self.layout.addWidget(QtGui.QLabel("Attachment"), 2, 0, 1, 2)
+        self.aps = QtWidgets.QComboBox(self)
+        self.layout.addWidget(QtWidgets.QLabel("Attachment"), 2, 0, 1, 2)
         self.layout.addWidget(self.aps, 2, 3, 1, 2)
         self.aps.currentIndexChanged[unicode].connect(self.apChanged)
         self.aps.editTextChanged.connect(self.apChanged)
-        self.x = QtGui.QSpinBox(self)
+        self.x = QtWidgets.QSpinBox(self)
         self.x.setRange(-32768, 32767)
         self.x.valueChanged[int].connect(self.changePos)
-        self.layout.addWidget(QtGui.QLabel("X"), 3, 0)
+        self.layout.addWidget(QtWidgets.QLabel("X"), 3, 0)
         self.layout.addWidget(self.x, 3, 1)
-        self.y = QtGui.QSpinBox(self)
+        self.y = QtWidgets.QSpinBox(self)
         self.y.setRange(-32768, 32767)
         self.y.valueChanged[int].connect(self.changePos)
-        self.layout.addWidget(QtGui.QLabel("Y"), 3, 2)
+        self.layout.addWidget(QtWidgets.QLabel("Y"), 3, 2)
         self.layout.addWidget(self.y, 3, 3)
         self.gname = ""
         self.apname = ""
@@ -387,28 +387,28 @@ class PosGlyphInfoWidget(QtGui.QFrame) :
 #        self.aps.setCurrentIndex(0)
 
 
-class PosGlyphAPDialog(QtGui.QDialog) :
+class PosGlyphAPDialog(QtWidgets.QDialog) :
 
     def __init__(self, font, base = None, preSelect = "") :
         super(PosGlyphAPDialog, self).__init__()
         self.setWindowTitle("Insert Child Glyph")
         self.font = font
         self.base = base
-        self.layout = QtGui.QGridLayout(self)
-        self.names = QtGui.QComboBox(self)
+        self.layout = QtWidgets.QGridLayout(self)
+        self.names = QtWidgets.QComboBox(self)
         nameList = ['(None)'] + sorted(font.gdls.keys())
         self.names.addItems(nameList)
         self.names.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.names.editTextChanged.connect(self.glyphChanged)
-        self.layout.addWidget(QtGui.QLabel("Glyph Name"), 0, 0)
+        self.layout.addWidget(QtWidgets.QLabel("Glyph Name"), 0, 0)
         self.layout.addWidget(self.names, 0, 1)
         
         if base is not None :
-            self.withaps = QtGui.QComboBox(self)
-            self.layout.addWidget(QtGui.QLabel("With AP"), 1, 0)
+            self.withaps = QtWidgets.QComboBox(self)
+            self.layout.addWidget(QtWidgets.QLabel("With AP"), 1, 0)
             self.layout.addWidget(self.withaps, 1, 1)
-            self.ataps = QtGui.QComboBox(self)
-            self.layout.addWidget(QtGui.QLabel("At AP"), 2, 0)
+            self.ataps = QtWidgets.QComboBox(self)
+            self.layout.addWidget(QtWidgets.QLabel("At AP"), 2, 0)
             self.layout.addWidget(self.ataps, 2, 1)
             if base in self.font.gdls :
                 # add APs for supplied base
@@ -422,7 +422,7 @@ class PosGlyphAPDialog(QtGui.QDialog) :
             index = nameList.index(preSelect)
             self.names.setCurrentIndex(index)
             
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.layout.addWidget(o, (1 if base is None else 3), 0, 1, 2)
@@ -434,7 +434,7 @@ class PosGlyphAPDialog(QtGui.QDialog) :
             self.withaps.addItems(sorted(g.anchors.keys()))
 
 # In this version we choose the AP, and then two glyphs to go with it.
-class PosGlyphAPDialog2(QtGui.QDialog) :
+class PosGlyphAPDialog2(QtWidgets.QDialog) :
 
     def __init__(self, font, initAP = None, base = None) :
         super(PosGlyphAPDialog2, self).__init__()
@@ -442,29 +442,29 @@ class PosGlyphAPDialog2(QtGui.QDialog) :
         self.font = font
         self.base = base
 
-        self.layout = QtGui.QGridLayout(self)
+        self.layout = QtWidgets.QGridLayout(self)
         self.pointClasses = self.font.getPointClasses()
-        self.aps = QtGui.QComboBox(self)
+        self.aps = QtWidgets.QComboBox(self)
         self.aps.addItems(['(None)'] + sorted(self.pointClasses.keys()))
         self.aps.currentIndexChanged[unicode].connect(self.apChanged)
-        self.layout.addWidget(QtGui.QLabel("Attachment Point"), 0, 0)
+        self.layout.addWidget(QtWidgets.QLabel("Attachment Point"), 0, 0)
         self.layout.addWidget(self.aps, 0, 1)
             
-        self.stationary = QtGui.QComboBox(self)
+        self.stationary = QtWidgets.QComboBox(self)
         self.stationary.addItems(['(None)'] + sorted(font.gdls.keys()))
 #        self.stationary.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.stationary.editTextChanged.connect(self.glyphChanged)
-        self.layout.addWidget(QtGui.QLabel("Stationary Glyph"), 1, 0)
+        self.layout.addWidget(QtWidgets.QLabel("Stationary Glyph"), 1, 0)
         self.layout.addWidget(self.stationary, 1, 1)
         
-        self.mobile = QtGui.QComboBox(self)
+        self.mobile = QtWidgets.QComboBox(self)
         self.mobile.addItems(['(None)'] + sorted(font.gdls.keys()))
 #        self.mobile.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.mobile.editTextChanged.connect(self.glyphChanged)
-        self.layout.addWidget(QtGui.QLabel("Mobile Glyph"), 2, 0)
+        self.layout.addWidget(QtWidgets.QLabel("Mobile Glyph"), 2, 0)
         self.layout.addWidget(self.mobile, 2, 1)
         
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.layout.addWidget(o, 3, 0, 1, 2)
@@ -490,7 +490,7 @@ class PosGlyphAPDialog2(QtGui.QDialog) :
 
 
 # Tree control at the top of the Position pane, representing a cluster of glyphs
-class PosEditTree(QtGui.QTreeWidget) :
+class PosEditTree(QtWidgets.QTreeWidget) :
 
     def __init__(self, font, parent = None) :
         super(PosEditTree, self).__init__(parent) # parent = PosEdit
@@ -603,14 +603,14 @@ class PosEditTree(QtGui.QTreeWidget) :
              
                 
 # Main class to manage adjusting attachment point positions
-class PosEdit(QtGui.QWidget) :
+class PosEdit(QtWidgets.QWidget) :
 
     def __init__(self, font, parent = None) :
         super(PosEdit, self).__init__(parent)
         self.app = parent
         self.font = font
         self.view = None
-        self.layout = QtGui.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         self.initializeLayout()
         
     def initializeLayout(self) :
@@ -659,18 +659,18 @@ class PosEdit(QtGui.QWidget) :
         
 
 # The display of the moveable glyphs in the bottom right-hand pane
-class PosView(QtGui.QGraphicsView) :
+class PosView(QtWidgets.QGraphicsView) :
 
     def __init__(self, app = None, parent = None) :
         super(PosView, self).__init__(parent)
-        self._scene = QtGui.QGraphicsScene()
+        self._scene = QtWidgets.QGraphicsScene()
         self._scene.view = self
         self.setScene(self._scene)
         self.centerOn(0, 0)
         self.app = app
         self.curTreeItem = None
         self._updateable = True
-        # self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+        # self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
 
     def promote(self) :
         self.app.posSelected()

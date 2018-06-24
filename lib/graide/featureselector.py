@@ -18,7 +18,7 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 import graide.graphite as gr
 from graide.rungraphite import strtolong
 from graide.layout import Layout
@@ -83,43 +83,43 @@ def make_FeaturesMap(font) :
     return result
 
 
-class FeatureDialog(QtGui.QDialog) :
+class FeatureDialog(QtWidgets.QDialog) :
 
     def __init__(self, parent = None) : # parent = main window
         super(FeatureDialog, self).__init__(parent)
         self.setWindowTitle("Set Features")
-        vLayout = QtGui.QVBoxLayout(self)
+        vLayout = QtWidgets.QVBoxLayout(self)
         self.currsize = None
         self.position = None
         self.isHidden = False
         self.setSizeGripEnabled(True)
         self.setWindowFlags(QtCore.Qt.Tool)
         
-        self.table = QtGui.QTableWidget(self)
+        self.table = QtWidgets.QTableWidget(self)
         self.table.setColumnCount(3)  # column 0 is empty for now
         self.table.horizontalHeader().hide()
         self.table.verticalHeader().hide()
         # table is resized later, after feature rows are added
         vLayout.addWidget(self.table)
         
-        extraWidget = QtGui.QWidget(self)
-        gridLayout = QtGui.QGridLayout(extraWidget)
+        extraWidget = QtWidgets.QWidget(self)
+        gridLayout = QtWidgets.QGridLayout(extraWidget)
         vLayout.addWidget(extraWidget)
-        gridLayout.addWidget(QtGui.QLabel('Language', extraWidget), 0, 0)
-        self.lang = QtGui.QLineEdit(extraWidget)
+        gridLayout.addWidget(QtWidgets.QLabel('Language', extraWidget), 0, 0)
+        self.lang = QtWidgets.QLineEdit(extraWidget)
 #        self.lang.setInputMask("<AAan")
         #self.lang.setMaximumWidth(100)
         gridLayout.addWidget(self.lang, 0, 1)
         
-        self.runWidth = QtGui.QSpinBox(extraWidget)
+        self.runWidth = QtWidgets.QSpinBox(extraWidget)
         self.runWidth.setRange(0, 1000)
         self.runWidth.setValue(100)
         self.runWidth.setSuffix("%")
         self.runWidth.setMaximumWidth(70)
-        gridLayout.addWidget(QtGui.QLabel('Justify', extraWidget), 1, 0)
+        gridLayout.addWidget(QtWidgets.QLabel('Justify', extraWidget), 1, 0)
         gridLayout.addWidget(self.runWidth, 1, 1)
         
-        okCancel = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        okCancel = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         okCancel.accepted.connect(self.accept)
         okCancel.rejected.connect(self.reject)
         vLayout.addWidget(okCancel)
@@ -143,7 +143,7 @@ class FeatureDialog(QtGui.QDialog) :
         for f in feats.order :
             fid = feats.featids[f] if f in feats.featids else ""
             if fid != "" :
-                c = QtGui.QComboBox()
+                c = QtWidgets.QComboBox()
                 c.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeSetting)
                 c.userTag = feats.featids[f]
                 for k in feats.forders[f] :
@@ -154,10 +154,10 @@ class FeatureDialog(QtGui.QDialog) :
                 self.table.setCellWidget(count, 2, c)
                 
                 #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fval[fid] else ""
-                #self.table.setItem(count, 0, QtGui.QTableWidgetItem(modText))
+                #self.table.setItem(count, 0, QtWidgets.QTableWidgetItem(modText))
                 # Column 0 currently not used
                 
-                labelWidget = QtGui.QTableWidgetItem(f)
+                labelWidget = QtWidgets.QTableWidgetItem(f)
                 if fid in vals and vals[fid] != featsBaseForLang.fval[fid] :
                     labelWidget.setBackground(Layout.activePassColour) # modified from expected
                 self.table.setItem(count, 1, labelWidget)
