@@ -21,7 +21,7 @@ from __future__ import print_function
 import os, re
 from xml.etree import cElementTree as et
 from graide.utils import reportError
-from rungraphite import makeFontAndFace
+from .rungraphite import makeFontAndFace
 
 
 from qtpy import QtCore, QtGui, QtWidgets
@@ -30,7 +30,7 @@ from graide.utils import configval, configintval, reportError, as_entities, relp
 from graide.run import Run
 from graide.runview import RunView
 from graide.layout import Layout
-from cStringIO import StringIO
+from io import StringIO
 
 
 def asBool(txt) :
