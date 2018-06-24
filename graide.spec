@@ -23,7 +23,7 @@ def toc_remove(atoc, *anames) :
 
 libdir = 'lib'
 ext = ''
-if sys.platform == 'linux2' :
+if sys.platform.startswith('linux') :
     libdir += '-linux-' + platform.machine() + '-2.7'
 
 pathex=[os.path.dirname(sys.argv[0]), 'build/' + libdir]

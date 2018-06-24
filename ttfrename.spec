@@ -3,7 +3,7 @@ import sys, platform, glob
 
 libdir = 'lib'
 ext = ''
-if sys.platform == 'linux2' :
+if sys.platform.startswith('linux2') :
     libdir += '-linux-' + platform.machine() + '-2.7'
 elif sys.platform == 'win32' :
     ext = '.exe'

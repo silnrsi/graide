@@ -32,6 +32,7 @@ else :
 grfiles = {
     'darwin' : 'libgraphite2.dylib',
     'linux2' : 'libgraphite2.so',
+    'linux' : 'libgraphite2.so',
     'win32' : 'graphite2.dll',
     'win64' : 'graphite2-x64.dll'
 }
