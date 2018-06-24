@@ -20,10 +20,10 @@ FT_library_filename before importing the freetype library and freetype will use
 the specified one. 
 '''
 from ctypes import *
-from ft_types import *
-from ft_enums import *
-from ft_errors import *
-from ft_structs import *
+from .ft_types import *
+from .ft_enums import *
+from .ft_errors import *
+from .ft_structs import *
 import ctypes.util, os, sys
 
 __dll__    = None
