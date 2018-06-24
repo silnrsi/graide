@@ -15,7 +15,7 @@ setup(  name = 'graphite-graide',
         author = 'M. Hosken',
         package_dir = {'' : 'lib'},
         packages = ['graide', 'graide/freetype', 'graide/makegdl', 'ttfrename'],
-        install_requires = ['future', 'configparser'],
+        install_requires = ['future', 'configparser', 'QtPy'],
         scripts = scripts,
         **kw
 )
