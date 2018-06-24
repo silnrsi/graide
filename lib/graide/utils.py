@@ -248,7 +248,7 @@ def relpath(p, base) :
 
 def as_entities(text) :
     if text :
-        return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), text)
+        return re.sub(u'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), text)
     else :
         return ""
 

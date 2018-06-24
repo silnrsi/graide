@@ -160,7 +160,7 @@ class Font(object) :
             inFile = a.get("inFile")
             atLine = a.get("atLine")
                 
-            m = re.match(ur'^justify.(\d).([^.]+)', attrName)
+            m = re.match(r'^justify.(\d).([^.]+)', attrName)
             if m :
                 g.setJustify(int(m.group(1)), m.group(2), a.get('value'))
             elif attrName == 'mirror.isEncoded' :

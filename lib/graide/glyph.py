@@ -53,7 +53,7 @@ class GlyphItem(object) :
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
         n = ctypes.create_string_buffer(64)
         freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = re.sub(ur'[^A-Za-z0-9._]', '', n.value) # Postscript name
+        self.name = re.sub(u'[^A-Za-z0-9._]', '', n.value) # Postscript name
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid

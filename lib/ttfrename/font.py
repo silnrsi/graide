@@ -53,7 +53,7 @@ class Namedit(QtWidgets.QDialog) :
 
     def getValues(self) :
         t = self.uid.text()
-        if re.match(ur'^[0-9a-fA-F]+$', t) :
+        if re.match(u'^[0-9a-fA-F]+$', t) :
             uid = int(t, 16)
         else :
             uid = 0
