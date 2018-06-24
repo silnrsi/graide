@@ -55,7 +55,7 @@ if not gr2 :
         gr2 = None
 
 if not gr2 :
-    raise RuntimeError, "Graphite2 library not found"
+    raise RuntimeError("Graphite2 library not found")
 
 def grversion() :
     a = c_int()

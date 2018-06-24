@@ -50,7 +50,7 @@ if not __dll__:
         __dll__ = None
 
 if not __dll__:
-    raise RuntimeError, 'Freetype library not found'
+    raise RuntimeError('Freetype library not found')
 
 
 # -----------------------------------------------------------------------------
@@ -225,8 +225,8 @@ def set_lcd_filter_weights(a,b,c,d,e):
         error = FT_Library_SetLcdFilterWeights(library, weights)
         if error: raise FT_Exception(error)
     else:
-        raise RuntimeError, \
-              'set_lcd_filter_weights require freetype > 2.4.0'
+        raise RuntimeError(
+              'set_lcd_filter_weights require freetype > 2.4.0')
 
 
 
