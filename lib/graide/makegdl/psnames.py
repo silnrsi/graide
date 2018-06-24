@@ -19,6 +19,7 @@
 
 import re
 import traceback  # Debug
+from builtins import chr
 
 uniToPsnameMap = {
     '0020' : 'space',
@@ -4343,7 +4344,7 @@ aglToUniMap = {
 	}
 
 for k, v in uniToPsnameMap.items() :
-    aglToUniMap[v] = unichr(int(k, 16))
+    aglToUniMap[v] = chr(int(k, 16))
 
 def parse(name) :
     res = []

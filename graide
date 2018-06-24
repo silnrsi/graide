@@ -28,7 +28,7 @@ if getattr(sys, 'frozen', None) :
 from qtpy import QtCore, QtWidgets
 from graide import main
 from argparse import ArgumentParser
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
 if getattr(sys, 'frozen', None) :
     QtCore.QCoreApplication.setLibraryPaths([sys._MEIPASS])

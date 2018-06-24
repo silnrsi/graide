@@ -29,8 +29,9 @@ from graide.run import Run
 from graide.runview import GlyphPixmapItem, RunView
 from graide.posedit import PosGlyphInfoWidget ## TODO: remove
 from graide.utils import ModelSuper, DataObj
+from builtins import chr
 import os, re
-from cStringIO import StringIO
+from io import StringIO
 
 def asBool(txt) :
     if not txt : return False
@@ -115,7 +116,7 @@ class Tweak(Test) :
             t = XmlTree.SubElement(e, 'string')
             if self.text :
                 t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
+                    lambda m:chr(int(m.group(1) or m.group(2), 16)), self.text)
             else :
                 t.text = ""
             e.set('label', self.name)

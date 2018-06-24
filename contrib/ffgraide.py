@@ -1,5 +1,5 @@
 import fontforge, os, sys, re
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 from graide.config import ConfigDialog
 from graide.utils import buildGraphite, configintval
 from graide.makegdl.font import Font as gdlFont

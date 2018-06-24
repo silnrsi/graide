@@ -25,7 +25,7 @@ from graide.utils import configval, configintval, reportError, relpath, ETcanon,
 from graide.layout import Layout
 import os, re
 import codecs, traceback # debugging
-from cStringIO import StringIO
+from io import StringIO
 
 
 def asBool(txt) :

@@ -19,6 +19,7 @@
 
 
 from ctypes import *
+from builtins import str
 import ctypes.util
 import sys, os
 
@@ -149,7 +150,7 @@ def tag_to_str(num) :
     gr2.gr_tag_to_str(num, s)
     return str(s.value)
 
-class Label(unicode) :
+class Label(str) :
     def __new__(typename, ref, size) :
         return super(Label, typename).__new__(typename, string_at(ref, size))
 

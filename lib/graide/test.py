@@ -23,6 +23,7 @@ from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
 from graide.layout import Layout
 from graide.utils import configintval, as_entities, popUpError
+from builtins import chr
 import re
 
 class Test(object) :
@@ -154,7 +155,7 @@ class Test(object) :
             t = et.SubElement(e, 'string')
             if self.text :
                 t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
+                    lambda m:chr(int(m.group(1) or m.group(2), 16)), self.text)
             else :
                 t.text = ""
             e.set('label', self.name)

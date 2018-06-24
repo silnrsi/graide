@@ -47,8 +47,9 @@ from graide.findmatch import GlyphPatternMatcher, MatchList, Matcher
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 
+from builtins import chr
 from tempfile import NamedTemporaryFile, TemporaryFile
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 import json, os, sys, re
 import codecs, traceback  ### debug
 
@@ -625,7 +626,7 @@ class MainWindow(QtWidgets.QMainWindow) :
             self.runView.slotSelected.connect(self.slotSelected)
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
-            istr = u"".join(map(lambda x:unichr(x['unicode']), self.json[-1]['chars']))
+            istr = u"".join(map(lambda x:chr(x['unicode']), self.json[-1]['chars']))
             self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
             self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
             self.runLoaded = True
@@ -970,7 +971,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         
         if inputString and inputString != "" :
             text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                    lambda m: unichr(int(m.group(1) or m.group(2), 16)), inputString)
+                    lambda m: chr(int(m.group(1) or m.group(2), 16)), inputString)
         else :
             text = None
         if not text :
