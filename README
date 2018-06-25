@@ -12,6 +12,7 @@ PySide or PySide2
 For those wanting to add images to the lib/graide/images directory. Make sure you
 update the pyresources.qrc and run:
 
-pyside-rcc -o pyresources.py pyresources.qrc
+pyside2-rcc -o pyresources.py pyresources.qrc
+sed -i -e 's/PySide2/qtpy/' pyresources.py
 
 so that you can see the images from the program.
