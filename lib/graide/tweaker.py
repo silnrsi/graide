@@ -27,11 +27,14 @@ from graide.utils import configval, configintval, reportError, relpath, ETcanon,
 from graide.layout import Layout
 from graide.run import Run
 from graide.runview import GlyphPixmapItem, RunView
-from graide.posedit import PosGlyphInfoWidget ## TODO: remove
 from graide.utils import ModelSuper, DataObj
 from builtins import chr
 import os, re
 from io import StringIO
+try:
+    unicode
+except NameError:
+    unicode = str
 
 def asBool(txt) :
     if not txt : return False

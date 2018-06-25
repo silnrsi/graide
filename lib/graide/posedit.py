@@ -21,6 +21,10 @@
 
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.layout import Layout
+try:
+    unicode
+except NameError:
+    unicode = str
 
 POSGLYPHID = 1
 WHEELSCALEINCREMENT = 1.05
