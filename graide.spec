@@ -2,8 +2,6 @@
 import sys, platform, glob, os
 
 macfixup='''
-import sys
-import os
 
 for t in ('QtCore', 'QtGui', 'QtSvg', 'QtXml') :
     s = os.path.join(sys._MEIPASS, t)
@@ -34,14 +32,14 @@ if sys.platform == 'win32' :
     pathex.append(pth)
     ext = '.exe'
 
-a = Analysis(['build/scripts-2.7/graide'],
+a = Analysis(['graide'],
              pathex=pathex,
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)
 bins = a.binaries
 if sys.platform == 'win32' :
-    for d in ('zlib1', 'freetype6', 'graphite2', 'msvcr100') :
+    for d in ('zlib1', 'freetype6', 'msvcr100') :
         bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
     for d in glob.glob('grcompiler_win/*.*') :
         bins += [(d[15:], d, 'BINARY')]
