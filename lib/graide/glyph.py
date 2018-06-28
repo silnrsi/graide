@@ -136,7 +136,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 jlAttrs = [] # list of justify attrs at this level
                 lModel = AttribModel(jlAttrs, jModel)  # sub-tree for this level
                 for k in j.keys() :
-                    fullName = "justify." + string(iLevel) + "." + k
+                    fullName = "justify." + str(iLevel) + "." + k
                     jlAttrs.append(Attribute(k, self.getJustify, None, False,
                             self._fileLoc(fullName), iLevel, k))
                 jModel.add(Attribute(str(iLevel), None, None, True, None, False, lModel))

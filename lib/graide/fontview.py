@@ -149,11 +149,11 @@ def clicked_glyph(index) :
     print(str(index.data()))
 
 if __name__ == "__main__" :
-    from graide.font import Font
+    from graide.font import GraideFont
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    font = Font()
+    font = GraideFont()
     font.loadFont("/usr/share/fonts/opentype/charissil/CharisSIL-R.ttf")
     font.makebitmaps(40)
     table = FontView(font)

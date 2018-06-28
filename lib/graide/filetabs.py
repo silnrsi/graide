@@ -220,7 +220,7 @@ class EditFile(QtWidgets.QPlainTextEdit) :
     	self.setTabStopWidth(tabstop)
 
     def reload(self) :
-        f = file(self.fname)
+        f = open(self.fname)
         self.setPlainText("".join(f.readlines()))
         f.close()
         self.modTime = os.stat(self.fname).st_mtime
@@ -501,7 +501,7 @@ class FileTabs(QtWidgets.QTabWidget) :
         cntFound = 0;
         for fname in self.openFiles :
             if os.path.exists(fname) :
-                f = file(fname)
+                f = open(fname)
 
                 lineNum = 1;
                 for l in f.readlines() :

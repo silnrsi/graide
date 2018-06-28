@@ -426,7 +426,7 @@ class TweakList(QtWidgets.QWidget) :
         self.tweakGroups[self.liststack.indexOf(listwidget)].append(tweak)
         w = QtWidgets.QListWidgetItem(tweak.name or "",listwidget)
         if tweak.comment :
-            w.setToolTip(t.comment)
+            w.setToolTip(tweak.comment)
         w.setBackground(QtGui.QBrush(tweak.background))
 
     

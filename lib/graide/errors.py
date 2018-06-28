@@ -42,7 +42,7 @@ class Errors(QtWidgets.QListWidget) :
 
     def addGdlErrors(self, fname) :
         if not os.path.exists(fname) : return
-        f = file(fname)
+        f = open(fname)
         for l in f.readlines() :
             l = l.strip()
             # Look for FILENAME(LINENUM) : error(ERRORNUM): ... eg

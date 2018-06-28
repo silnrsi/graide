@@ -33,7 +33,7 @@ class Gdx(object) :
     def readfile(self, fname, font, autoGdlFile = None, apFileName = None, ronly = False) :
         relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
         
-        self.file = file(fname)
+        self.file = open(fname)
         if not apFileName :  # autoGdlFile??
             font.initGlyphs()
         for (event, e) in iterparse(self.file, events=('start', 'end')) :

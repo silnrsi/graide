@@ -123,7 +123,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             font.calculatePointClasses()
             font.ligClasses()
             attPassNum = int(config.get('build', 'attpass'))
-            f = file(gdlfile, "w")
+            f = open(gdlfile, "w")
             font.outGDL(f)
             if attPassNum > 0 : font.outPosRules(f, attPassNum)
             if configval(config, 'build', 'gdlfile') :
@@ -134,7 +134,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         gdlfile = configval(config, 'build', 'gdlfile')
         
     if not gdlfile or not os.path.exists(gdlfile) :
-        f = file('gdlerr.txt' ,'w')
+        f = open('gdlerr.txt' ,'w')
         if not gdlfile :
             f.write("No GDL File specified. Build failed")
         else :
@@ -271,7 +271,7 @@ def generateTweakerGDL(config, app) :
     tweakData = app.tab_tweak.parseFile(tweakxmlfile)
     
     passindex = configval(config, 'build', 'tweakpass')
-    f = file(tweakgdlfile, 'w')
+    f = open(tweakgdlfile, 'w')
     f.write("/*\n    Tweaker GDL file for font " + fontname + " to include in " + gdlfile + "\n*/\n\n")
 
     if passindex :

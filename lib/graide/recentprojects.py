@@ -21,7 +21,6 @@
 from qtpy import QtCore, QtGui
 from graide.utils import configval, configintval
 import os, sys
-if sys.platform == "win32" : import _winreg
 
 
 class RecentProjectList(object) :

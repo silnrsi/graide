@@ -213,6 +213,7 @@ class Slot(DataObj) :
             
     def getColStatusAnnot(self) :
         try :
+            status = self.collision['status']
             result = self.colFlagsAnnot(status)
             return result
         except :

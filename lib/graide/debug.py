@@ -40,6 +40,6 @@ class DebugMenu(QtWidgets.QMenu) :
         self.app.loadFont(self.app.fontFileName)
 
     def runSave(self) :
-        f = file('_graide.json', 'w')
+        f = open('_graide.json', 'w')
         json.dump(self.app.json, f, indent=2)
         f.close()

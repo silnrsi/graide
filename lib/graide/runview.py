@@ -268,7 +268,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                     newSel = 0
         
             if newSel >= 0 and newSel != self.currselection :
-                self.changeSelection(newSel)
+                self.changeSelection(newSel, False)
                 
         
     def changeSelection(self, newSel, doubleClick) :
@@ -357,15 +357,15 @@ class RunView(QtCore.QObject, ModelSuper) :
 
 if __name__ == "__main__" :
     import json, sys, os
-    from font import Font
-    from run import Run
+    from graide.font import GraideFont
+    from graide.run import Run
 
     app = QtWidgets.QApplication(sys.argv)
     # print(app.desktop().logicalDpiY())
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests')
-    jf = file(os.path.join(tpath, "padauk3.json"))
+    jf = open(os.path.join(tpath, "padauk3.json"))
     jinfo = json.load(jf)
-    font = Font()
+    font = GraideFont()
     font.loadFont(os.path.join(tpath, "fonts/Padauk/Padauk.ttf"))
     font.makebitmaps(40)
     rinfo = jinfo['passes'][0]['slots']

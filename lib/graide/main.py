@@ -57,11 +57,11 @@ import codecs, traceback  ### debug
 #for line in traceback.format_stack(): print(line.strip())
 
 class MainWindow(QtWidgets.QMainWindow) :
-    
+
     def __init__(self, config, configFile, jsonFile) :
-        
+
         super(MainWindow, self).__init__()
-        
+
         self.rules = None
         #self.runFile = None
         self.runLoaded = False
@@ -127,7 +127,7 @@ class MainWindow(QtWidgets.QMainWindow) :
             self.loadFont(fontname)
 
         if jsonFile :
-            f = file(jsonFile)
+            f = open(jsonFile)
             self.json = json.load(f)
             f.close()
         else :
@@ -328,12 +328,6 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.tweaksfile = tweaksfile
         if self.tab_tweak :
             self.tab_tweak.loadTweaks(tweaksfile)
-
-    def closeEvent(self, event) :   # WHY ARE THERE TWO METHODS CALLED closeEvent????
-        if self.rules :
-            self.rules.close()
-        event.accept()
-
 
     def setActions(self) :
         self.aRunGo = QtWidgets.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
@@ -726,6 +720,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         sys.exit()
 
     def closeEvent(self, event) :
+        if self.rules :
+            self.rules.close()
         self.closeApp()
         event.accept()
         
@@ -762,7 +758,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.tab_tweak.writeXML(self.tweaksfile)
         if self.cfgFileName :
             try :
-                f = file(self.cfgFileName, "w")
+                f = open(self.cfgFileName, "w")
                 self.config.write(f)
                 f.close()
             except :
@@ -874,7 +870,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         
         # Print the results of the compilation to the console.
         if os.path.exists(gdlOutputFileName) :
-            gdlFile = file(gdlOutputFileName)
+            gdlFile = open(gdlOutputFileName)
             for l in gdlFile.readlines() :
                 lastLine = l
             print("..." + l)
@@ -1148,7 +1144,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if result :
             dialog.updateConfig(self, self.config)
             if self.cfgFileName :
-                f = file(self.cfgFileName, "w")
+                f = open(self.cfgFileName, "w")
                 self.config.write(f)
                 f.close()
             mainFileTemp = configval(self.config, "build", "gdlfile")
@@ -1322,7 +1318,7 @@ if __name__ == "__main__" :
     args = p.parse_args()
     
     if args.font :
-        mainWindow = MainWindow(args.font, args.ap, args.results, 40)
+        mainWindow = MainWindow(args.font, args.ap, args.results)
         mainWindow.show()
         sys.exit(app.exec_())
 

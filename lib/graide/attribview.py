@@ -388,11 +388,11 @@ class AttribView(QtWidgets.QTreeView) :
 
 if __name__ == '__main__' :
 
-    from graide.font import Font
+    from graide.font import GraideFont
     import sys, os
  
     app = QtWidgets.QApplication(sys.argv)
-    font = Font()
+    font = GraideFont()
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests/fonts/Padauk')
     font.loadFont(os.path.join(tpath, 'Padauk.ttf'), os.path.join(tpath, 'padauk.xml'))
     glyph = font.psnames['u1000']

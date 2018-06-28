@@ -20,10 +20,10 @@
 from graide import freetype
 from graide.glyph import GraideGlyph, GlyphItem
 from qtpy import QtCore
-from graide.makegdl.font import Font as gdlFont
+from graide.makegdl.font import Font
 import re
 
-class GraideFont(gdlFont) :
+class GraideFont(Font) :
 
     def __init__(self) :
         super(GraideFont, self).__init__()
@@ -144,7 +144,7 @@ class GraideFont(gdlFont) :
                     break
         if gidResult == -1 :
             # Look for a single-glyph class.
-            fontClass = self.classes[gdlName] if self.classes.has_key(gdlName) else None
+            fontClass = self.classes[gdlName] if gdlName in self.classes else None
             if not fontClass == None :
                 if len(fontClass.elements) == 1 :
                     gidResult = fontClass.elements[0]
