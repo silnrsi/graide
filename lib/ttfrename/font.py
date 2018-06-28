@@ -19,7 +19,7 @@
 
 from graide import freetype
 from ttfrename.glyph import GlyphItem
-from qtpy import QtCore, QtGui, QtWidgets
+from qtpy import QtCore, QtWidgets
 from fontTools import ttLib
 import re
 

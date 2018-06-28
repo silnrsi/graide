@@ -27,7 +27,6 @@ if getattr(sys, 'frozen', None) :
 from qtpy import QtGui, QtWidgets
 from ttfrename.font import Font
 from ttfrename.fontview import FontView
-import sys
 
 class MainWindow(QtWidgets.QMainWindow) :
 

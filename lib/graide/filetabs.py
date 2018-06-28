@@ -184,8 +184,8 @@ class EditFile(QtWidgets.QPlainTextEdit) :
         self.addAction(aFindPrev)
 
     # end of __init__
-    
-    
+
+
     def highlight(self, lineno) :
         self.lineSelection.cursor = QtGui.QTextCursor(self.document().findBlockByNumber(lineno))
         self.setExtraSelections([self.lineSelection])
@@ -210,14 +210,14 @@ class EditFile(QtWidgets.QPlainTextEdit) :
         f = self.font()
         f.setPointSize(size)
         self.setFont(f)
-        
+
     def updateFont(self, fontspec, size) :
         font = QtGui.QFont(fontspec)
         font.setPointSize(size)
         self.setFont(font)
-        
+
     def updateTabstop(self, tabstop) :
-    	self.setTabStopWidth(tabstop)
+        self.setTabStopWidth(tabstop)
 
     def reload(self) :
         f = open(self.fname)
@@ -423,24 +423,24 @@ class FileTabs(QtWidgets.QTabWidget) :
     def switchFile(self, widget) :
         if (self.widget(0) == 0 ) :   # no tabs
             return
-        
+
         if self.currIndex > -1 and self.widget(self.currIndex) :
-        	self.widget(self.currIndex).lostFocus()
+            self.widget(self.currIndex).lostFocus()
         self.currIndex = self.currentIndex()
         if self.widget(self.currIndex) :
             self.widget(self.currIndex).gainedFocus()
-        
+
     def setSelectedText(self, text) :
         self.selectedText = text
 
     def setSize(self, size) :
         for i in range(self.count()) :
             self.widget(i).setSize(size)
-            
+
     def updateFont(self, fontspec, size) :
         for i in range(self.count()) :
             self.widget(i).updateFont(fontspec, size)
-            
+
     def updateTabstop(self, tabstop) :
         for i in range(self.count()) :
             self.widget(i).updateTabstop(tabstop)
@@ -451,7 +451,7 @@ class FileTabs(QtWidgets.QTabWidget) :
             fontsize = config.get('ui', 'textsize') if config.has_option('ui', 'textsize') else "10"
             fontsize = int(fontsize)
             self.updateFont(editorfont, fontsize)
-        
+
             tabstop = config.get('ui', 'tabstop') if config.has_option('ui', 'tabstop') else 10
             tabstop = int(tabstop)
             self.updateTabstop(tabstop)
@@ -467,7 +467,7 @@ class FileTabs(QtWidgets.QTabWidget) :
     def deleteOpenFile(self, filename) :
         self.openFiles.remove(filename)
         self.recordOpenFiles()
-    
+
     def recordOpenFiles(self) :
         openFileString = ''
         for f in self.openFiles :
@@ -475,11 +475,11 @@ class FileTabs(QtWidgets.QTabWidget) :
         if not self.app.config.has_section('window') :
             self.app.config.add_section('window')
         self.app.config.set('window', 'openfiles', openFileString)
-        
+
     def reloadModifiedFiles(self) :
         for i in range(self.count()) :
             self.widget(i).reloadIfModified()
-            
+
     def findInOpenFiles(self, tabFindInOpen) :
         #(searchText, ok) = FindInputDialog.getText(self, 'Find in Open Files', 'Search text')
         dlg = FindInputDialog(self, self.currentWidget().getSelectedText(), self.findCaseSens)
@@ -498,12 +498,12 @@ class FileTabs(QtWidgets.QTabWidget) :
         if caseSens == False :
             searchTextCase = searchText.lower()
         tabFindInOpen.clear()
-        cntFound = 0;
+        cntFound = 0
         for fname in self.openFiles :
             if os.path.exists(fname) :
                 f = open(fname)
 
-                lineNum = 1;
+                lineNum = 1
                 for l in f.readlines() :
                     lStrip = l.strip()
                     lCase = lStrip

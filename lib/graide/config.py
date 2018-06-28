@@ -76,7 +76,7 @@ class PassSpin(QtWidgets.QSpinBox) :
 
 class ConfigDialog(QtWidgets.QDialog) :
 
-    def __init__(self, config, currTab, parent = None) :
+    def __init__(self, config, currTab = None, parent = None) :
         super(ConfigDialog, self).__init__(parent)
         self.config = config
         
@@ -219,7 +219,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_editorfont.setToolTip('Font to use for editor pane, or specification such as "monospace"')
         uiGridLo.addWidget(QtWidgets.QLabel('Editor font spec'), 0, 0)
         uiGridLo.addWidget(self.ui_editorfont, 0, 1)
-        
+
         self.ui_size = QtWidgets.QSpinBox(self.ui)
         self.ui_size.setMaximumWidth(60)
         self.ui_size.setRange(1, 36)
@@ -230,7 +230,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_size.setToolTip('Text size in editing windows')
         uiGridLo.addWidget(QtWidgets.QLabel('Editor text point size'), 1, 0)
         uiGridLo.addWidget(self.ui_size, 1, 1)
-        
+
         self.ui_tabstop = QtWidgets.QSpinBox(self.ui)
         self.ui_tabstop.setMaximumWidth(60)
         self.ui_tabstop.setRange(1, 100)
@@ -241,7 +241,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_tabstop.setToolTip('Tab stop in pixels')
         uiGridLo.addWidget(QtWidgets.QLabel('Tab stop width'), 2, 0)
         uiGridLo.addWidget(self.ui_tabstop, 2, 1)
-        
+
         self.ui_gsize = QtWidgets.QSpinBox(self.ui)
         self.ui_gsize.setMaximumWidth(60)
         self.ui_gsize.setRange(1, 288)
@@ -252,7 +252,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_gsize.setToolTip('Pixel size of glyphs in the font window and results, passes, and rules panes')
         uiGridLo.addWidget(QtWidgets.QLabel('Font glyph pixel size'), 3, 0)
         uiGridLo.addWidget(self.ui_gsize, 3, 1)
-        
+
         self.ui_twsize = QtWidgets.QSpinBox(self.ui)
         self.ui_twsize.setMaximumWidth(60)
         self.ui_twsize.setRange(1, 1088)
@@ -263,7 +263,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_twsize.setToolTip('Pixel size of glyphs in the Tweak editing window')
         uiGridLo.addWidget(QtWidgets.QLabel('Tweak glyph pixel size'), 4, 0)
         uiGridLo.addWidget(self.ui_twsize, 4, 1)
-        
+
         self.ui_apsize = QtWidgets.QSpinBox(self.ui)
         self.ui_apsize.setMaximumWidth(60)
         self.ui_apsize.setRange(1, 1088)
@@ -274,30 +274,31 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_apsize.setToolTip('Pixel size of glyphs in the Attach editing window')
         uiGridLo.addWidget(QtWidgets.QLabel('Attachment glyph pixel size'), 5, 0)
         uiGridLo.addWidget(self.ui_apsize, 5, 1)
-        
+
         self.ui_sizes = QtWidgets.QLineEdit(self.ui)
         self.ui_sizes.setText(configval(config, 'ui', 'waterfall'))
         self.ui_sizes.setToolTip('Point sizes for waterfall display, comma-separated; eg: 10, 12, 16, 20, 48')
         uiGridLo.addWidget(QtWidgets.QLabel('Waterfall sizes'), 6, 0)
         uiGridLo.addWidget(self.ui_sizes, 6, 1)
-        
+
         self.ui_ent = QtWidgets.QCheckBox()
         self.ui_ent.setChecked(configintval(config, 'ui', 'entities'))
         self.ui_ent.setToolTip('Display entry strings using \\u type entities for non-ASCII chars')
         uiGridLo.addWidget(QtWidgets.QLabel('Display character entities'), 7, 0)
         uiGridLo.addWidget(self.ui_ent, 7, 1)
-        
+
         self.ui_kernedges = QtWidgets.QCheckBox()
         self.ui_kernedges.setChecked(configintval(config, 'ui', 'kernedges'))
         self.ui_kernedges.setToolTip('Display the edges of glyphs that affect kerning in the Collisions tab')
         uiGridLo.addWidget(QtWidgets.QLabel('Display kerning edges'), 8, 0)
         uiGridLo.addWidget(self.ui_kernedges, 8, 1)
-        
+
         uiGridLo.setRowStretch(9, 1)
         self.tb.addItem(self.ui, 'User Interface')
-        
+
         self.resize(500, 500)
-        self.tb.setCurrentIndex(currTab)
+        if currTab:
+            self.tb.setCurrentIndex(currTab)
 
 
     # The name of the attachment point database file changed.
@@ -319,7 +320,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         if txt and (not self.build_att.text() or self.build_att.text() == 'None') :
             # Pass number must be at least 1.
             self.build_att.setValue(1)
-            
+
     def tweakFileChanged(self, txt) :
         self.build_twkctrls.setEnabled(True if txt else False) # enable/disable sub-controls
         if txt and not self.build_twkgdl.text() :
@@ -334,7 +335,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         if txt and (not self.build_twkpass.text() or self.build_twkpass.text() == 'None') :
             # Pass number must be at least 1.
             self.build_twkpass.setValue(1)
-                
+
     def updateConfig(self, app, config) :
         self.updateChanged(self.general_font, config, 'main', 'font', "ttf", (app.loadFont if app else None))
         self.updateChanged(self.general_gdl, config, 'build', 'gdlfile', "gdl", (app.selectLine if app else None))
@@ -358,7 +359,7 @@ class ConfigDialog(QtWidgets.QDialog) :
             if config.has_option('build', 'makegdlfile') :
                 config.remove_option('build', 'makegdlfile')
                 self.build_gdlinc.setText("")
-                
+
         if self.build_noWarning.text() :
             tempVal = self.build_noWarning.text()
             tempVal = tempVal.replace(' ','')
@@ -376,9 +377,9 @@ class ConfigDialog(QtWidgets.QDialog) :
             txt = self.build_twktest.text()
             if txt :
                 config.set('build', 'tweakconstraint', txt)
-                
+
         appInit = app and app.isInitialized()
-   
+
         if self.ui_size.value() != configintval(config, 'ui', 'textsize') :
             config.set('ui', 'textsize', str(self.ui_size.value()))
             if appInit : app.tab_edit.setSize(self.ui_size.value())
@@ -387,7 +388,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         if self.ui_tabstop.value() != configintval(config, 'ui', 'tabstop') :
             config.set('ui', 'tabstop', str(self.ui_tabstop.value()))
             if appInit : app.tab_edit.updateTabstop(self.ui_tabstop.value())
-        
+
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
             if appInit : app.loadFont(configval(config, 'main', 'font'))
@@ -404,12 +405,12 @@ class ConfigDialog(QtWidgets.QDialog) :
     # When OK is clicked on config dialog:
     def updateChanged(self, widget, config, section, option, defaultExt, fn = None) :
         t = widget.text()
-        
+
         # Append the default extension.
         ext = os.path.splitext(t)[1]
         if t != "" and ext == "" and defaultExt != "" :
-        	t = t + "." + defaultExt
-        
+            t = t + "." + defaultExt
+
         if t != configval(config, section, option) and (t or configval(config, section, option)) :
             if not t :
                 config.remove_option(section, option)
@@ -422,7 +423,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         if widget.isChecked != configval(config, section, option) :
             config.set(section, option, "1" if widget.isChecked() else "0")
             if fn : fn(widget.isChecked())
-                
+
     def currentTab(self) :
         return self.tb.currentIndex()
 

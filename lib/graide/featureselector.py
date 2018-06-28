@@ -229,7 +229,7 @@ class FeatureDialog(QtWidgets.QDialog) :
             #    self.table.setColumnWidth(0, tableWidth - 300)
             #    self.table.setColumnWidth(1, 300)
             #else :
-            threeEightsTableWidth = (tableWidth * 3) / 8;
+            threeEightsTableWidth = (tableWidth * 3) / 8
             self.table.setColumnWidth(1, tableWidth - threeEightsTableWidth)
             self.table.setColumnWidth(2, threeEightsTableWidth)
 

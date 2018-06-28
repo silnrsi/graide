@@ -225,8 +225,8 @@ class TestList(QtWidgets.QWidget) :
         self.recordCurrentTest()
 
     def initTests(self, fname) :
-         self.addGroup('main', record = False)
-        
+        self.addGroup('main', record = False)
+
     def loadTests(self, fname):
         #print("TestList::loadTests(" + fname + ")")
         

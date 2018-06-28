@@ -48,7 +48,7 @@ class LinePlainTextEdit(QtWidgets.QPlainTextEdit) :
     def keyPressEvent(self, key) :
         if key.matches(QtGui.QKeySequence.InsertParagraphSeparator) :
                     # or key.matches(QtGui.QKeySequence.InsertLineSeparator) :
-           self.editFinished.emit()
+            self.editFinished.emit()
         else :
             return super(LinePlainTextEdit, self).keyPressEvent(key)
             
@@ -59,12 +59,12 @@ class AttrValueListDialog(QtWidgets.QDialog) :
         super(AttrValueListDialog,self).__init__(parent)
         
         # Hide the help icon, all it does it take up space.
-        #icon = self.windowIcon(); -- just in case icon gets lost
-        flags = self.windowFlags();
-        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
-        flags = flags & (~helpFlag);
-        self.setWindowFlags(flags);
-        #self.setWindowIcon(icon);
+        #icon = self.windowIcon() -- just in case icon gets lost
+        flags = self.windowFlags()
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint
+        flags = flags & (~helpFlag)
+        self.setWindowFlags(flags)
+        #self.setWindowIcon(icon)
 
         self.setWindowTitle(glyphName)
         listWidget = QtWidgets.QListWidget(self)

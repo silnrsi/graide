@@ -29,12 +29,12 @@ class ClassMemberDialog(QtWidgets.QDialog) :
         super(ClassMemberDialog,self).__init__(parent)
         
         # Hide the help icon, all it does it take up space.
-        #icon = self.windowIcon(); -- just in case icon gets lost
-        flags = self.windowFlags();
-        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
-        flags = flags & (~helpFlag);
-        self.setWindowFlags(flags);
-        #self.setWindowIcon(icon);
+        #icon = self.windowIcon() -- just in case icon gets lost
+        flags = self.windowFlags()
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint
+        flags = flags & (~helpFlag)
+        self.setWindowFlags(flags)
+        #self.setWindowIcon(icon)
 
         self.setWindowTitle(className)
         listWidget = QtWidgets.QListWidget(self)

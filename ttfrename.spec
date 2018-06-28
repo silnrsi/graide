@@ -1,5 +1,5 @@
 # -*- mode: python -*-
-import sys, platform, glob
+import os, sys, platform
 
 libdir = 'lib'
 ext = ''

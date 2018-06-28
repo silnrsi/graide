@@ -79,7 +79,7 @@ class RecentProjectList(object) :
     def _getFileList(self) :
         self.settings.beginGroup('Recent')
         value = self.settings.value('projects')
-        self.settings.endGroup();
+        self.settings.endGroup()
 
         if value :
             files = value.split(';')

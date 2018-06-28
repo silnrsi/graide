@@ -601,7 +601,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.tab_errors = Errors()
         self.tab_results.addTab(self.tab_errors, "Errors")
         self.tab_errors.errorSelected.connect(self.tab_edit.selectLine)
-        
+
         # Find tab
         self.tab_findInFiles = FindInFilesResults()
         self.tab_results.addTab(self.tab_findInFiles, "Find")
@@ -610,7 +610,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         # Passes tab
         self.tab_passes = PassesView(self)
         self.tab_passes.slotSelected.connect(self.slotSelected)
-        self.tab_passes.glyphSelected.connect(self.glyphSelected);
+        self.tab_passes.glyphSelected.connect(self.glyphSelected)
         self.tab_passes.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_passes.rowActivated.connect(self.rulesSelected)
         self.tab_results.addTab(self.tab_passes, "Passes")
@@ -629,7 +629,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         # Rules tab
         self.tab_rules = PassesView(self)
         self.tab_rules.slotSelected.connect(self.slotSelected)
-        self.tab_passes.glyphSelected.connect(self.glyphSelected);
+        self.tab_passes.glyphSelected.connect(self.glyphSelected)
         self.tab_rules.glyphSelected.connect(self.glyphAttrib.changeData)
         self.tab_rules.rowActivated.connect(self.ruleSelected)
         self.tab_results.addTab(self.tab_rules, "Rules")
@@ -646,7 +646,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.tab_posview = PosView(self)
         if hasattr(self, 'tab_posedit') : self.tab_posedit.setView(self.tab_posview)
         self.tab_results.addTab(self.tab_posview, "Attach")
-        
+
     # end of ui_bottom
 
     def setMenus(self) :
@@ -668,11 +668,11 @@ class MainWindow(QtWidgets.QMainWindow) :
         projectmenu.addAction(self.aSaveAP)
         projectmenu.addSeparator()
         projectmenu.addAction(self.aFindInFiles)
-        
+
         # Add recent projects
         if (len(self.aRecProjs) > 0) : projectmenu.addSeparator()
         for (basename, fullname, aProj) in self.aRecProjs :
-        	projectmenu.addAction(aProj)
+            projectmenu.addAction(aProj)
 
         testmenu = self.menuBar().addMenu("&Tests")
         testmenu.addAction(self.aRunGo)
@@ -710,11 +710,11 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         size = self.size()
         widget.resize(QtCore.QSize(size.width() * hori / 100, size.height() * vert / 100))
         widget.setSizePolicy(sizePolicy)
-        
+
     def isInitialized(self) :
         # Indicate whether the app has gone a reasonable way through the initialization process.
         return hasattr(self, "tab_edit")
-        
+
     def doExit(self) :
         self.closeApp()
         sys.exit()
@@ -724,7 +724,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.rules.close()
         self.closeApp()
         event.accept()
-        
+
     def closeApp(self) :
         if self.rules :
             self.rules.close()
@@ -732,7 +732,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self._saveProjectData()
         self.recentProjects.close()
         qCleanupResources()
-      
+
     def infoTabChanged(self) :
         # Don't call updatePositions unnecessarily, because it causes a switch of focus.
         if self.tab_info.currentWidget() == self.tab_tweak :
@@ -1010,11 +1010,11 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         dbgJsonFile = open(jsonDbgFilename, "w")
         dbgJsonFile.write("# Graphite JSON output for input string:\n#\n# ")
         dbgJsonFile.write(inputEntities)
-        dbgJsonFile.write("\n\n");
+        dbgJsonFile.write("\n\n")
         dbgJsonFile.write(stuff)
         dbgJsonFile.close()
         
-        tempJsonFile.close();
+        tempJsonFile.close()
         os.unlink(tempJsonFileName)
         
         return jsonResult
@@ -1151,7 +1151,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             return True  # OK
         else :
             return False  # Cancel
-            
+
     def setConfigTab(self, index) :
         self.currConfigTab = index
 
@@ -1160,7 +1160,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         (cfgFileName, filt) = QtWidgets.QFileDialog.getOpenFileName(self, filter='Configuration files (*.cfg *.ini)')
         if not os.path.exists(cfgFileName) : return
         if os.path.splitext(cfgFileName)[1] == "" :
-        	cfgFileName = cfgFileName + ".cfg"
+            cfgFileName = cfgFileName + ".cfg"
         self._configOpenExisting(cfgFileName)
 
     def _configOpenExisting(self, cfgFileName) :
@@ -1250,7 +1250,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if path :
             os.chdir(path)
         if os.path.splitext(fname)[1] == "" :
-        	fname = fname + ".cfg"
+            fname = fname + ".cfg"
         self.cfgFileName = fname
         self.recentProjects.addProject(self.cfgFileName)
         self.config = RawConfigParser()

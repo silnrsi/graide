@@ -74,7 +74,7 @@ elif sys.platform == 'darwin' :
         for pth in ('/usr/local/lib', '/opt/local/lib') :
             if os.path.exists(os.path.join(pth, fn)) :
                 bins += [(fn, os.path.join(pth, fn), 'BINARY')]
-    f = file("build/myrthook", "w")
+    f = open("build/myrthook", "w")
     f.write(macfixup)
     f.close()
     a.scripts.insert(-1, ("myrthook", "build/myrthook", "PYSOURCE"))

@@ -77,8 +77,8 @@ class GlyphPatternMatcher() :
                 pattern += "("
                 sep = ""
                 for classGlyph in classData.elements :
-                   pattern += sep + "_" + str(classGlyph)
-                   sep = "|"
+                    pattern += sep + "_" + str(classGlyph)
+                    sep = "|"
                 pattern += ")"
             elif tempCnt == 1 :
                 pattern += self._singleGlyphPattern() # ANY
@@ -87,7 +87,7 @@ class GlyphPatternMatcher() :
                 
             tempCnt = tempCnt + 1
             if tempCnt >= endI :
-                break;
+                break
                
         self.pattern = pattern
 
@@ -120,8 +120,8 @@ class GlyphPatternMatcher() :
                 itemPattern = "("
                 sep = ""
                 for classGlyph in classData.elements :
-                   itemPattern += sep + "<" + str(classGlyph) + ">"
-                   sep = "|"
+                    itemPattern += sep + "<" + str(classGlyph) + ">"
+                    sep = "|"
                 itemPattern += ")"
                 
             else :
@@ -176,8 +176,8 @@ class GlyphPatternMatcher() :
             progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
             progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
-        cntTested = 0;
-        cntMatched = 0;
+        cntTested = 0
+        cntMatched = 0
         canceled = False
         for g in e.iterfind('testgroup') :
             groupLabel = g.get('label')
@@ -221,14 +221,14 @@ class GlyphPatternMatcher() :
                 
                 if showProgress :
                     if progressDialog.wasCanceled() :
-                        canceled = True;
+                        canceled = True
                     progressDialog.setValue(cntTested)
                     progressDialog.forceShow()
                 
                 if canceled : break
             # end of for t loop
             
-            if canceled : break;
+            if canceled : break
         # end of for g loop
         
         if showProgress :
@@ -249,7 +249,7 @@ class GlyphPatternMatcher() :
         except Exception as err :
             return 0
 
-        cnt = 0;
+        cnt = 0
         for g in e.iterfind('testgroup') :
             for t in g.iterfind('test') :
                 cnt = cnt + 1
@@ -375,12 +375,12 @@ class MatchList(QtWidgets.QWidget) :
         self.aDel.triggered.connect(self.delTestClicked)
 
     def initResults(self, fname) :
-         self.addGroup('matches')
-    
+        self.addGroup('matches')
+
     # As far as I know this method should never be called:
     def loadTests(self, fname):
         print("loadTests - WHY ARE WE CALLING THIS METHOD?")
-        
+
         # Assumes the file has been added to the UI.
         #for i in range(self.liststack.count()-1, -1, -1) :
         #    self.liststack.removeWidget(self.liststack.widget(i))

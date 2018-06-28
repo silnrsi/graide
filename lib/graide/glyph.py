@@ -168,7 +168,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         
         return topModel
     
-    # Return line-and-file info corresponding to this row and column.  
+    # Return line-and-file info corresponding to this row and column.
     def lineAndFile(self, row, col) :
         if row == 0 or row == 1 or row == 2 : # glyph ID, GDL name, or PS name
             if self.fileLoc[0] :
@@ -180,7 +180,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     
     # Store a line-and-file associated with a glyph attribute.
     def addLineAndFile(self, attrName, inFile, atLine) :
-        self.fileLocs[attrName] = (inFile, atLine);
+        self.fileLocs[attrName] = (inFile, atLine)
         
     def sortedCollKeys(self, keys) :
         goodOrder = ["flags", "min.x", "max.x", "min.y", "max.y", "margin", "marginweight", \
