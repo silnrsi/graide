@@ -17,7 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide.graphite import gr2, grversion
+from graphite2 import gr2, grversion
 import sys
 from ctypes import *
 from ctypes.util import find_library

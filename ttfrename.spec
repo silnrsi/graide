@@ -21,9 +21,6 @@ if sys.platform == 'win32' :
 #    for d in glob.glob('grcompiler_win/*.*') :
 #        bins += [(d[15:], d, 'BINARY')]
 #    import pdb; pdb.set_trace()
-#    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
-#    bins += grdeps
-#    print(grdeps)
 
 exe = EXE(pyz,
           a.scripts,

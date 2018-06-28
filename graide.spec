@@ -54,9 +54,6 @@ if sys.platform == 'win32' :
         if os.path.exists(d) :
             bins += [(d[len(pth):], d, 'BINARY')]
 #    import pdb; pdb.set_trace()
-#    grdeps = bindepend.Dependencies([('graphite2.dll', 'build/scripts-2.7/graphite2.dll', 'BINARY')])
-#    bins += grdeps
-#    print(grdeps)
 elif sys.platform == 'darwin' :
     pth = '/opt/local/Library/Frameworks/QtGui.framework/Versions/4/Resources/'
     for d in glob.glob(pth + 'qt_menu.nib/*') :

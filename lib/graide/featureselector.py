@@ -19,7 +19,7 @@
 
 
 from qtpy import QtCore, QtGui, QtWidgets
-import graide.graphite as gr
+import graphite2 as gr
 from graide.rungraphite import strtolong
 from graide.layout import Layout
 
