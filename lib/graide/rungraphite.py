@@ -18,18 +18,6 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 from graphite2 import gr2, grversion
-import sys
-from ctypes import *
-from ctypes.util import find_library
-
-libc = cdll.LoadLibrary(find_library("c"))
-if sys.platform == "win32" :
-    c = libc._fdopen
-else :
-    c = libc.fdopen
-
-c.restype = c_void_p
-c.argtypes = [c_int, c_char_p]
 
 def strtolong(txt) :
     res = 0
@@ -59,7 +47,7 @@ def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, siz
         gr2.gr_start_logging(grface, debugname)
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
         
     ###print "text=",text  ####
@@ -98,7 +86,7 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
         gr2.gr_start_logging(grface, debugname)
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
     
     lang = strtolong(lang)
@@ -114,7 +102,7 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
         gr2.gr_start_logging(grface, debugname)
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
 
     ###print "text=",text  ####
