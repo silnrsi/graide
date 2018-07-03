@@ -39,8 +39,6 @@ a = Analysis(['graide'],
 pyz = PYZ(a.pure)
 bins = a.binaries
 if sys.platform == 'win32' :
-    for d in ('zlib1', 'freetype6', 'msvcr100') :
-        bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
     for d in glob.glob('grcompiler_win/*.*') :
         bins += [(d[15:], d, 'BINARY')]
     pydir = os.path.dirname(sys.executable)
@@ -67,7 +65,7 @@ elif sys.platform == 'darwin' :
     for d in glob.glob(pth + 'imageformats/*') :
         if os.path.exists(d) :
             bins += [(d[len(pth):], d, 'BINARY')]
-    for d in ('freetype.6', 'graphite2', 'icui18n.48', 'icuuc.48', 'icudata.48') :
+    for d in ('icui18n.48', 'icuuc.48', 'icudata.48') :
         fn = 'lib' + d + '.dylib'
         for pth in ('/usr/local/lib', '/opt/local/lib') :
             if os.path.exists(os.path.join(pth, fn)) :

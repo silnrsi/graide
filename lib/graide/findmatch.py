@@ -21,7 +21,7 @@ from __future__ import print_function
 import os, re
 from xml.etree import cElementTree as et
 from graide.utils import reportError
-from .rungraphite import makeFontAndFace
+from graide.rungraphite import makeFontAndFace
 
 
 from qtpy import QtCore, QtGui, QtWidgets

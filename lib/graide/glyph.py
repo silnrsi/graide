@@ -20,7 +20,7 @@
 from __future__ import print_function
 
 from qtpy import QtCore, QtGui
-from graide import freetype
+import freetype
 import array, ctypes, re, traceback
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj, popUpError

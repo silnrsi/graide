@@ -21,7 +21,7 @@
 
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.glyph import ftGlyph
-from graide import freetype
+import freetype
 
 class WaterfallDialog(QtWidgets.QDialog) :
 

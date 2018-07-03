@@ -15,10 +15,7 @@ a = Analysis(['ttfrename'],
              hookspath=None)
 pyz = PYZ(a.pure)
 bins = a.binaries
-if sys.platform == 'win32' :
-    for d in ('zlib1', 'freetype6') :
-        bins += [(d + '.dll', 'build/scripts-2.7/' + d + '.dll', 'BINARY')]
-#    import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 
 exe = EXE(pyz,
           a.scripts,
