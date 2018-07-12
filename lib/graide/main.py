@@ -406,7 +406,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         #self.tab_info = InfoTabs(self.hsplitter)
         self.widget = QtWidgets.QWidget(self.hsplitter)
         self.setwidgetstretch(self.widget, 55, 100)
-        self.topLayout = QtWidgets.QVBoxLayout(self)  # right two panes
+        self.topLayout = QtWidgets.QVBoxLayout(self.widget)  # right two panes
         self.topLayout.setContentsMargins(*Layout.buttonMargins)
         self.vsplitter = QtWidgets.QSplitter(self.widget) # splitter between code pane and lower pane
         self.vsplitter.setOrientation(QtCore.Qt.Vertical)
