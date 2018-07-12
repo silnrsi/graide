@@ -854,13 +854,14 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.tab_tweak.writeXML(self.tweaksfile)
             
         self.tab_errors.clear()        
-        errfile = TemporaryFile(mode="w+")
+        errfile = NamedTemporaryFile(mode="w+")
         
         self.fontFaces = {}
         
         res = buildGraphite(self.config, self, self.font, self.fontFileName, errfile)
         
-        gdlOutputFileName = 'gdlerr.txt'
+        outputPath = os.path.dirname(self.fontFileName)
+        gdlOutputFileName = outputPath + '/gdlerr.txt'
         
         if res :
             # Compilation failure
