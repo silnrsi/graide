@@ -73,7 +73,7 @@ def findgrcompiler() :
             grcompiler = os.path.join(sys._MEIPASS, 'grcompiler.exe')
             return grcompiler
         try :
-            from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
+            from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
             node = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\Graphite Compiler_is1"
             if sys.maxsize > 1 << 32 :
                 r = OpenKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\" + node)
