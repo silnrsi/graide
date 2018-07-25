@@ -71,7 +71,7 @@ def findgrcompiler() :
     if sys.platform == 'win32' :
         if getattr(sys, 'frozen', None) :
             grcompiler = os.path.join(sys._MEIPASS, 'grcompiler.exe')
-            return grcompiler
+            return
         try :
             from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
             node = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\Graphite Compiler_is1"
@@ -89,14 +89,12 @@ def findgrcompiler() :
                     break
     elif sys.platform == 'darwin' and getattr(sys, 'frozen', None) :
         grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
-        return grcompiler
     else :
         for p in os.environ['PATH'].split(':') :
             a = os.path.join(p, "grcompiler")
             if os.path.exists(a) :
                 grcompiler = a
                 break
-    return grcompiler
 
 # Return 0 if successful.
 def buildGraphite(config, app, font, fontfile, errfile = None) :
