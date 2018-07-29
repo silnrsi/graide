@@ -83,9 +83,9 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
         self.beginResetModel()
         cellwidth = self.delegate.sizeHint(None, None).width() + 1
         if cellwidth < 56 : cellwidth = 56
-        self.columns = width / cellwidth
+        self.columns = width // cellwidth
         if self.columns == 0 : self.columns = 1  # don't know if this is really needed
-        self.rows = (self.font.numGlyphs + self.columns - 1) / self.columns
+        self.rows = (self.font.numGlyphs + self.columns - 1) // self.columns
         if oldcolumns and oldcolumns > self.columns :
             self.columnsRemoved.emit(self.createIndex(0, 0), oldcolumns, self.columns)
         elif oldcolumns and oldcolumns < self.columns :
