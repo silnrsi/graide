@@ -83,8 +83,8 @@ class Rule(object) :
         self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')
         slots = map(lambda x: int(x.get('slotIndex')), e.findall('rhsSlot'))
-        if len(slots) :
-            d = slots[0]
+        if any(slots) :
+            d = next(slots)
             self.slots = map(lambda x : x - d, slots)
         else :
-            self.slots = []
+            self.slots = {}
