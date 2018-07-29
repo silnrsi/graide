@@ -518,7 +518,7 @@ class TestList(QtWidgets.QWidget) :
         self.recordCurrentTest()
 
     def addGroupClicked(self) :
-        (name, ok) = QtGui.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
+        (name, ok) = QtWidgets.QInputDialog.getText(self, 'Test Group', 'Test Group Name')
         if ok :
             index = self.gcombo.currentIndex() + 1
             self.addGroup(name, index)

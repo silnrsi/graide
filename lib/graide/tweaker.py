@@ -512,7 +512,7 @@ class TweakList(QtWidgets.QWidget) :
 
     
     def addGroupClicked(self) :
-        (name, ok) = QtGui.QInputDialog.getText(self, 'Tweak Group', 'Tweak Group Name')
+        (name, ok) = QtWidgets.QInputDialog.getText(self, 'Tweak Group', 'Tweak Group Name')
         if ok :
             index = self.combo.currentIndex() + 1
             self.addGroup(name, index)

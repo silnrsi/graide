@@ -223,7 +223,7 @@ class Classes(QtWidgets.QWidget) :
 
     
     def addClass(self) :
-        (name, ok) = QtGui.QInputDialog.getText(self, 'Add Class', 'Class Name:')
+        (name, ok) = QtWidgets.QInputDialog.getText(self, 'Add Class', 'Class Name:')
         if name and ok :
             self.classUpdated.emit(name, "")
             l = QtWidgets.QTableWidgetItem(name)
