@@ -71,7 +71,7 @@ def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, siz
 
 
 def makeFontAndFace(fontname, size) :
-    grface = gr2.gr_make_file_face(fontname, 0)
+    grface = gr2.gr_make_file_face(fontname.encode(), 0)
     grfont = gr2.gr_make_font(size, grface)
     return (grface, grfont)
     
@@ -83,7 +83,7 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     
     (major, minor, debug) = grversion()
     if major > 1 or minor > 1 :
-        gr2.gr_start_logging(grface, debugname)
+        gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
         fd = debugfile.fileno()
@@ -93,13 +93,14 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     
     grfeats = gr2.gr_face_featureval_for_lang(grface, 0)
     for f, v in feats.items() :
-        if v is None : continue
-        id = gr2.gr_str_to_tag(f)
+        if v is None :
+            continue
+        id = gr2.gr_str_to_tag(f.encode())
         fref = gr2.gr_face_find_fref(grface, id)
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
     if major > 1 or minor > 1 :
-        gr2.gr_start_logging(grface, debugname)
+        gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
         fd = debugfile.fileno()
