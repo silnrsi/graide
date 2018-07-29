@@ -20,7 +20,7 @@
 
 from qtpy import QtGui
 import freetype
-import array, ctypes
+import array
 
 def ftGlyph(face, gid, fill = 0) :
     res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
@@ -43,9 +43,7 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        n = ctypes.create_string_buffer(64)
-        freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = n.value
+        self.name = face.get_glyph_name(gid)
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid

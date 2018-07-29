@@ -21,10 +21,10 @@ from __future__ import print_function
 
 from qtpy import QtCore, QtGui
 import freetype
-import array, ctypes, re, traceback
+import array, re, traceback
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj, popUpError
-from graide.makegdl.glyph import Glyph as gdlGlyph
+from graide.makegdl.glyph import Glyph
 from graide.slot import Slot
 
 
@@ -51,9 +51,8 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        n = ctypes.create_string_buffer(64)
-        freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = re.sub(u'[^A-Za-z0-9._]', '', n.value) # Postscript name
+        name = face.get_glyph_name(gid)
+        self.name = re.sub(b'[^A-Za-z0-9._]', '', name) # Postscript name
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid
@@ -65,7 +64,7 @@ class GlyphItem(object) :
         return self.pixmaps[height]
 
 
-class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
+class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
 
     anchorChanged = QtCore.Signal(str, int, int)
 
