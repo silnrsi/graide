@@ -25,7 +25,6 @@ from graide.utils import configval, configintval, reportError, relpath, ETcanon,
 from graide.layout import Layout
 import os, re
 import codecs, traceback # debugging
-from io import StringIO
 
 
 def asBool(txt) :
@@ -437,10 +436,11 @@ class TestList(QtWidgets.QWidget) :
         s = h.find('styles')
         invfsets = {}
         for k, v in self.fsets.items() :
-            if v is not None and v not in used :
-                del self.fsets[k]
-            else :
-                invfsets[v] = k
+            if v is not None :
+                if v not in used :
+                    del self.fsets[k]
+                else :
+                    invfsets[v] = k
         if len(self.fsets) > 1 :
             if s is not None :
                 for i in range(len(s) - 1, -1, -1) :
@@ -459,12 +459,9 @@ class TestList(QtWidgets.QWidget) :
         elif s :
             h.remove(s)
         f = open(fname, "wb")
-        sio = StringIO()
-        sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
-        sio.write('<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
-        et.ElementTree(ETcanon(e)).write(sio, encoding="utf-8")
-        f.write(sio.getvalue().replace(' />', '/>'))
-        sio.close()
+        f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
+        f.write(b'<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
+        et.ElementTree(ETcanon(e)).write(f, encoding="utf-8")
         f.close()
         
     # end of writeXML
@@ -634,6 +631,8 @@ class TestList(QtWidgets.QWidget) :
         groupIndex = self.liststack.currentIndex()
         testIndex = l.currentRow() if l else -1
         value = str(fileIndex) + '.' + str(groupIndex) + '.' + str(testIndex)
+        if not self.app.config.has_section('data') :
+            self.app.config.add_section('data')
         self.app.config.set('data', 'currenttest', value)
         
     def recordTestFiles(self) :
