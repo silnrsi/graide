@@ -238,6 +238,8 @@ class Classes(QtWidgets.QWidget) :
     
     def delCurrent(self) :
         r = self.tab.currentRow()
+        if r < 0 :
+            return
         name = self.tab.item(r, 0).text()
         self.classUpdated.emit(name, None)
         self.tab.removeRow(r)

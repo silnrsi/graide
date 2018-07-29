@@ -524,15 +524,23 @@ class TestList(QtWidgets.QWidget) :
 
     def delGroupClicked(self) :
         index = self.gcombo.currentIndex()
-        self.liststack.removeWidget(self.list.widget(index))
+        if index < 0 :
+            return
+        self.liststack.removeWidget(self.liststack.widget(index))
         self.gcombo.removeItem(index)
         self.testGroups.pop(index)
         self.recordCurrentTest()
 
     def editClicked(self) :
-        self.editTest(self.liststack.currentWidget().currentRow())
+        if self.liststack.currentWidget() is None :
+            return
+        index = self.liststack.currentWidget().currentRow()
+        if index >= 0 :
+            self.editTest(index)
 
     def addTestClicked(self, t = None) :
+        if not hasattr(self.app, 'feats') :
+            return
         groupIndex = self.liststack.currentIndex()
         if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTest(t)
@@ -544,7 +552,11 @@ class TestList(QtWidgets.QWidget) :
 
     def delTestClicked(self) :
         groupindex = self.liststack.currentIndex()
+        if groupindex < 0 :
+            return
         testindex = self.liststack.widget(groupindex).currentRow()
+        if testindex < 0 :
+            return
         self.testGroups[groupindex].pop(testindex)
         self.liststack.widget(groupindex).takeItem(testindex)
         self.recordTestFiles()
@@ -561,6 +573,8 @@ class TestList(QtWidgets.QWidget) :
     def upClicked(self) :
         l = self.liststack.currentWidget()
         groupindex = self.liststack.currentIndex()
+        if groupindex < 0 :
+            return
         testindex = l.currentRow()
         if testindex > 0 :
             self.testGroups[groupindex].insert(testindex - 1, self.testGroups[groupindex].pop(testindex))
@@ -571,6 +585,8 @@ class TestList(QtWidgets.QWidget) :
     def downClicked(self) :
         l = self.liststack.currentWidget()
         groupindex = self.liststack.currentIndex()
+        if groupindex < 0 :
+            return
         testindex = l.currentRow()
         if testindex < l.count() - 1 :
             self.testGroups[groupindex].insert(testindex + 1, self.testGroups[groupindex].pop(testindex))

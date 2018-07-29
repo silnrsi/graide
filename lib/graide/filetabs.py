@@ -482,6 +482,8 @@ class FileTabs(QtWidgets.QTabWidget) :
 
     def findInOpenFiles(self, tabFindInOpen) :
         #(searchText, ok) = FindInputDialog.getText(self, 'Find in Open Files', 'Search text')
+        if self.currentWidget() is None:
+            return False
         dlg = FindInputDialog(self, self.currentWidget().getSelectedText(), self.findCaseSens)
         result = dlg.exec_()
         if result:

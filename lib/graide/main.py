@@ -899,7 +899,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         #if self.tab_edit.writeIfModified() and not self.buildClicked() :
         #    # Error in saving code or building 
         #    return
-            
+
+        if not self.fontFileName :
+            return
         if os.stat(self.fontFileName).st_ctime > self.fontBuildTime :
             self.loadFont(self.fontFileName)
         
