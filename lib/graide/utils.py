@@ -177,7 +177,9 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         argList.extend(warningList)
         argList.extend(["-d", "-q", gdlfile, tempname, fontfile])
         res = subprocess.call(argList, **parms)
-        
+    else :
+        print("grcompiler is missing")
+
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)
