@@ -173,7 +173,7 @@ class GlyphPatternMatcher() :
         
         if showProgress :
             print("Total tests=",totalTests)
-            progressDialog = QtGui.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
+            progressDialog = QtWidgets.QProgressDialog("Searching...0 matches", "Cancel", 0, totalTests, self.matcher)
             progressDialog.setWindowModality(QtCore.Qt.WindowModal)
 
         cntTested = 0

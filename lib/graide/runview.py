@@ -177,10 +177,10 @@ class RunView(QtCore.QObject, ModelSuper) :
             def doEdge(lastx, curry, e, scale, pen) :  # local function
                 if e > 1e+37 or e < -1e+37 : return None
                 if lastx is not None :
-                    t = QtGui.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
+                    t = QtWidgets.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
                     t.setPen(pen)
                     self.kernLines.append(t)
-                t = QtGui.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
+                t = QtWidgets.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
                 t.setPen(pen)
                 self.kernLines.append(t)
                 return e

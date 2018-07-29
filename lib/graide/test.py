@@ -139,7 +139,7 @@ class Test(object) :
 
     # Launch the color dialog and store the result.
     def doColour(self) :
-        d = QtGui.QColorDialog
+        d = QtWidgets.QColorDialog
         res = d.getColor(self.background)
         if res.isValid() :
             self.background = res

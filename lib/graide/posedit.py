@@ -160,7 +160,7 @@ class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
         self.apItem = None
         self.movepx = None
         self.shiftpx = None
-        if item.parent() : self.setFlags(QtGui.QGraphicsItem.ItemIsMovable | QtGui.QGraphicsItem.ItemIsFocusable)
+        if item.parent() : self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsFocusable)
 
     def keyPressEvent(self, event) :
         if event.modifiers() & QtCore.Qt.ShiftModifier :
@@ -507,7 +507,7 @@ class PosEditTree(QtWidgets.QTreeWidget) :
     def contextMenuEvent(self, event) :
         """Handle a right-click on the main area."""
         item = self.itemAt(event.pos())
-        menu = QtGui.QMenu()
+        menu = QtWidgets.QMenu()
         if self.topLevelItemCount() == 0 :
             simpleAction = menu.addAction("Insert Simple Cluster")
             insertAction = menu.addAction("Insert Base Glyph")
