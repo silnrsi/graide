@@ -42,7 +42,7 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        self.name = face.get_glyph_name(gid)
+        self.name = face.get_glyph_name(gid).decode('ascii')
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid

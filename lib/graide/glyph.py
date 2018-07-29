@@ -50,8 +50,8 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        name = face.get_glyph_name(gid)
-        self.name = re.sub(b'[^A-Za-z0-9._]', '', name) # Postscript name
+        name = face.get_glyph_name(gid).decode('ascii')
+        self.name = re.sub('[^A-Za-z0-9._]', '', name) # Postscript name
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid
