@@ -19,11 +19,10 @@
 
 
 from qtpy import QtGui
-import freetype
 import array
 
 def ftGlyph(face, gid, fill = 0) :
-    res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
+    face.load_glyph(gid)
     b = face.glyph.bitmap
     top = face.glyph.bitmap_top
     left = face.glyph.bitmap_left
