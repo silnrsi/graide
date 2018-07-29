@@ -141,7 +141,7 @@ class EditFile(QtWidgets.QPlainTextEdit) :
         self.fname = fname
         self.abspath = abspath
         self.fileTabs = fileTabs
-        self.lineSelection = QtGui.QTextEdit.ExtraSelection()
+        self.lineSelection = QtWidgets.QTextEdit.ExtraSelection()
         self.lineSelection.format = QtGui.QTextCharFormat()
         self.lineSelection.format.setBackground(QtGui.QColor(QtCore.Qt.yellow))
         self.lineSelection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)

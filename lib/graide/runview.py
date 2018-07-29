@@ -156,7 +156,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self.tview.insertPlainText(glyphName + "  ") # 2 spaces between glyph names
                 self._gindices.append(self._gindices[-1] + len(glyphName) + 2)
                 if s.highlighted :
-                    hselect = QtGui.QTextEdit.ExtraSelection()
+                    hselect = QtWidgets.QTextEdit.ExtraSelection()
                     if s.highlightType in self._fHighlights :
                         hselect.format = self._fHighlights[s.highlightType]
                     else :
@@ -283,7 +283,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.selectPixmapForSlot(newSel, True)
                 
             # Highlight the name of the selected glyph in the text view.
-            tselect = QtGui.QTextEdit.ExtraSelection()
+            tselect = QtWidgets.QTextEdit.ExtraSelection()
             tselect.format = self._fSelect
             tselect.cursor = QtGui.QTextCursor(self.tview.document())
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[newSel])
