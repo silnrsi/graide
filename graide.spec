@@ -39,8 +39,8 @@ a = Analysis(['graide'],
 pyz = PYZ(a.pure)
 bins = a.binaries
 if sys.platform == 'win32' :
-    for d in glob.glob('grcompiler_win/*.*') :
-        bins += [(d[15:], d, 'BINARY')]
+    for d in glob.glob('lib/graide/grcompiler_win/*.*') :
+        bins += [(d[26:], d, 'BINARY')]
     pydir = os.path.dirname(sys.executable)
     pth = os.path.join(pydir, 'Lib\\site-packages\\pyside')
     for d in ('QtSvg', 'QtXml') :
@@ -54,8 +54,8 @@ elif sys.platform == 'darwin' :
     pth = '/opt/local/Library/Frameworks/QtGui.framework/Versions/4/Resources/'
     for d in glob.glob(pth + 'qt_menu.nib/*') :
         a.datas.append((d[len(pth):], d, 'DATA'))
-    for d in glob.glob('grcompiler_mac/*') :
-        bins += [(d[15:], d, 'BINARY')]
+    for d in glob.glob('lib/graide/grcompiler_mac/*') :
+        bins += [(d[26:], d, 'BINARY')]
     pth = '/opt/local/lib/'
     for d in ('QtSvg', 'QtXml') :
         rname = '/opt/local/Library/Frameworks/{0}.framework/Versions/4/{0}'.format(d)
