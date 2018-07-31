@@ -23,6 +23,8 @@ import os, sys
 
 if getattr(sys, 'frozen', None) :
     os.environ['PATH'] += os.pathsep + sys._MEIPASS
+if 'QT_API' not in os.environ :
+    os.environ['QT_API'] = 'pyside2'
 
 from qtpy import QtGui, QtWidgets
 from ttfrename.font import Font

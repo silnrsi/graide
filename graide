@@ -23,7 +23,8 @@ import sys, os
 
 if getattr(sys, 'frozen', None) :
     os.environ['PATH'] += os.pathsep + sys._MEIPASS
-    print(os.environ['PATH'])
+if 'QT_API' not in os.environ :
+    os.environ['QT_API'] = 'pyside2'
 
 from qtpy import QtCore, QtWidgets
 from graide import main
