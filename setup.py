@@ -1,13 +1,15 @@
 #!/usr/bin/python
 
-from sys import platform
+import os
 from setuptools import setup
 
-BIN = []
-if platform == 'win32':
-    BIN.append('grcompiler_win/*')
-elif platform == 'darwin':
-    BIN.append('grcompiler_mac/*')
+if os.environ.get('GRCOMPILER_BUNDLE_VERSION'):
+    import grcompiler
+    BIN = ['grcompiler/*']
+    CMDCLASS = {'bdist_wheel':grcompiler.BuildBdistWheel}
+else:
+    BIN = []
+    CMDCLASS = {}
 
 setup(  name = 'graphite-graide',
         version = '0.8',
@@ -18,5 +20,6 @@ setup(  name = 'graphite-graide',
         package_data = {'graide' : BIN},
         install_requires = ['future', 'configparser', 'QtPy', 'fontTools', 'graphite2', 'freetype-py'],
         scripts = ['graide', 'ttfrename'],
+        cmdclass = CMDCLASS,
         zip_safe = False
 )

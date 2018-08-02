@@ -82,7 +82,7 @@ def findgrcompiler() :
             p = QueryValue(r, "InstallLocation")
             grcompiler = os.path.join(p, "GrCompiler.exe")
         except WindowsError :
-            exe = os.path.join(os.path.dirname(__file__), 'grcompiler_win', 'GrCompiler.exe')
+            exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'GrCompiler.exe')
             if os.path.exists(exe) :
                 grcompiler = exe
                 return
@@ -91,14 +91,13 @@ def findgrcompiler() :
                 if os.path.exists(a) :
                     grcompiler = a
                     break
-    elif sys.platform == 'darwin' :
-        if getattr(sys, 'frozen', None) :
-            grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
-        else :
-            exe = os.path.join(os.path.dirname(__file__), 'grcompiler_mac', 'grcompiler')
-            if os.path.exists(exe) :
-                grcompiler = exe
+    elif getattr(sys, 'frozen', None) :
+        grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
     else :
+        exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'grcompiler')
+        if os.path.exists(exe) :
+            grcompiler = exe
+            return
         for p in os.environ['PATH'].split(':') :
             a = os.path.join(p, "grcompiler")
             if os.path.exists(a) :
@@ -108,16 +107,16 @@ def findgrcompiler() :
 # Return 0 if successful.
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
-    
+
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
-        
+
         if config.has_option('main', 'ap') and not configval(config, 'build', 'apronly'):    # AP XML file
             # Generate the AP GDL file.
             apFilename = config.get('main', 'ap')
             font.saveAP(apFilename, gdlfile)
             if app : app.updateFileEdit(apFilename)
-                
+
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
             # Call the make command to perform makegdl.
@@ -139,7 +138,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             if app : app.updateFileEdit(gdlfile)
     else :
         gdlfile = configval(config, 'build', 'gdlfile')
-        
+
     if not gdlfile or not os.path.exists(gdlfile) :
         f = open('gdlerr.txt' ,'w')
         if not gdlfile :
