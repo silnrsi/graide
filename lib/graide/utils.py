@@ -69,9 +69,6 @@ grcompiler = None
 def findgrcompiler() :
     global grcompiler
     if sys.platform == 'win32' :
-        if getattr(sys, 'frozen', None) :
-            grcompiler = os.path.join(sys._MEIPASS, 'grcompiler.exe')
-            return
         try :
             from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
             node = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\Graphite Compiler_is1"
@@ -91,8 +88,6 @@ def findgrcompiler() :
                 if os.path.exists(a) :
                     grcompiler = a
                     break
-    elif getattr(sys, 'frozen', None) :
-        grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
     else :
         exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'grcompiler')
         if os.path.exists(exe) :
@@ -162,8 +157,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if errfile :
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = errfile
-    if getattr(sys, 'frozen', None) : parms['env'] = os.environ
-        
+
     if config.has_option('build', 'ignorewarnings') :
         warningList = configval(config, 'build', 'ignorewarnings')
         warningList = warningList.replace(' ', '')

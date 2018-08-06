@@ -21,8 +21,6 @@
 
 import sys, os
 
-if getattr(sys, 'frozen', None) :
-    os.environ['PATH'] += os.pathsep + sys._MEIPASS
 if 'QT_API' not in os.environ :
     os.environ['QT_API'] = 'pyside2'
 
@@ -31,8 +29,6 @@ from graide import main
 from argparse import ArgumentParser
 from configparser import RawConfigParser
 
-if getattr(sys, 'frozen', None) :
-    QtCore.QCoreApplication.setLibraryPaths([sys._MEIPASS])
 app = QtWidgets.QApplication(sys.argv)
 
 p = ArgumentParser()
