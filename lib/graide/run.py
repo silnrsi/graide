@@ -42,7 +42,7 @@ class Run(list) :
         runTemp = Run(self.font, self.rtl)
         #print "runTemp length=",len(runTemp)
         iLastOfSeq = len(self)
-        for i in list(range(len(self)-1, 0, -1)):
+        for i in range(len(self)-1, 0, -1):
             slot = self[i]
             glyph = self.font[slot.gid]
             dirAttr = int(glyph.getGdlProperty('directionality'))
