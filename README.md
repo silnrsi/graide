@@ -1,4 +1,4 @@
-# GRAIDE: GRAphite Integrate Development Environment
+# GRAIDE: GRAphite Integrated Development Environment
 
 Graide is an integrated development envrionment that can be used
 to develop fonts with Graphite features.
@@ -35,8 +35,8 @@ supported.
 
 For those wanting to add images to the lib/graide/images directory.
 Make sure you update the pyresources.qrc and run:
-
+```
 pyside2-rcc -o pyresources.py pyresources.qrc
 sed -i -e 's/PySide2/qtpy/' pyresources.py
-
+```
 so that you can see the images from the program.
