@@ -22,7 +22,7 @@ Additionally, run 1 (with Qt4) or 2 (with Qt5):
 1. `pip install PySide`
 2. `pip install PySide2`
 
-You will then have two Python scripts installed: graide and ttfrename.
+You will then have the Python script `graide` installed.
 
 ## Development
 
