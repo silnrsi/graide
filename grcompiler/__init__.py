@@ -17,30 +17,33 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-try:
-    from urllib.request import urlretrieve
-except ImportError:
-    from urllib import urlretrieve
 import os
 import shutil
 import tempfile
 from glob import glob
 from subprocess import check_call
+from sys import platform
 from zipfile import ZipFile
+try:
+    from urllib.request import urlretrieve
+    from urllib.error import HTTPError
+except ImportError:
+    from urllib import urlretrieve
+    from urllib2 import HTTPError
 
-def build():
-        origdir = os.getcwd()
-        tmpdir = tempfile.mkdtemp()
+def build(root, version):
+    origdir = os.getcwd()
+    tmpdir = tempfile.mkdtemp()
 
+    try:
+        urlretrieve('https://github.com/silnrsi/grcompiler/archive/' + version + '.zip', tmpdir + '/grc.zip')
         os.chdir(tmpdir)
-        version = os.environ.get('GRCOMPILER_BUNDLE_VERSION')
-        urlretrieve('https://github.com/silnrsi/grcompiler/archive/' + version + '.zip', 'grc.zip')
         grcz = ZipFile('grc.zip')
         grcz.extractall()
         grcz.close()
 
         os.chdir('grcompiler-' + version)
-        if os.name == 'nt':
+        if platform == 'win32':
             # possible improvement: check for 64 bit compiler and download a 64 bit version
             urlretrieve('http://download.icu-project.org/files/icu4c/56.1/icu4c-56_1-Win32-msvc10.zip', 'icu.zip')
             icuz = ZipFile('icu.zip')
@@ -63,11 +66,19 @@ def build():
             check_call(['./configure'])
             check_call(['make'])
             binaries = ['compiler/grcompiler', 'preprocessor/gdlpp']
-        dst = os.path.join(origdir, 'lib', 'graide', 'grcompiler')
-        if not os.path.exists(dst):
-            os.mkdir(dst)
-        for f in binaries:
-            shutil.copy(f, dst)
 
-        os.chdir(origdir)
-        shutil.rmtree(tmpdir)
+    except HTTPError:
+        if os.path.exists('grcompiler/' + platform):
+            binaries = glob('grcompiler/' + platform + '/*')
+        else:
+            binaries = []
+
+    dst = os.path.join(origdir, root, 'graide', 'grcompiler')
+    if binaries and not os.path.exists(dst):
+        os.mkdir(dst)
+    for f in binaries:
+        shutil.copy(f, dst)
+
+    os.chdir(origdir)
+    shutil.rmtree(tmpdir)
+    return {'graide' : ['grcompiler/*']}

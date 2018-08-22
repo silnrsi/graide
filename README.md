@@ -10,10 +10,11 @@ languages of the world.
 
 Graide uses [GrCompiler](https://github.com/silnrsi/grcompiler).
 Please install it.
-Alternatively you can build it with this Python package.
-Just set the environment variable `GRCOMPILER_BUNDLE_VERSION`
+Alternatively you can bundle it with this Python package.
+Either set the environment variable `GRCOMPILER_BUNDLE`
 to a git reference (e.g. master) and be sure to have its build
-toolchain installed.
+toolchain installed or set the variable to any other value and
+the builtin version is copied to the package.
 
 You can install graide from from this directory with pip:
 `pip install -e .`

@@ -8,26 +8,13 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-if os.environ.get('GRCOMPILER_BUNDLE_VERSION'):
-    from distutils.command.bdist import bdist
-    from wheel.bdist_wheel import bdist_wheel
-    from grcompiler import build
-
-    class BuildBdist(bdist):
-        def run(self):
-            build()
-            bdist.run(self)
-
-    class BuildBdistWheel(bdist_wheel):
-        def run(self):
-            build()
-            bdist_wheel.run(self)
-
-    BIN = ['grcompiler/*']
-    CMDCLASS = {'bdist':BuildBdist, 'bdist_wheel':BuildBdistWheel}
+PKG_ROOT = 'lib'
+bundle = os.environ.get('GRCOMPILER_BUNDLE')
+if bundle:
+    import grcompiler
+    PKG_DATA = grcompiler.build(PKG_ROOT, bundle)
 else:
-    BIN = []
-    CMDCLASS = {}
+    PKG_DATA = {}
 
 setup(  name = 'graide',
         version = '0.8',
@@ -36,12 +23,11 @@ setup(  name = 'graide',
         author_email = 'martin_hosken@sil.org',
         license = 'LGPL-2.1+',
         url = 'https://github.com/silnrsi/graide',
-        package_dir = {'' : 'lib'},
+        package_dir = {'' : PKG_ROOT},
         packages = ['graide', 'graide/makegdl'],
-        package_data = {'graide' : BIN},
+        package_data = PKG_DATA,
         install_requires = ['future', 'configparser', 'QtPy', 'fontTools', 'graphite2', 'freetype-py'],
         scripts = ['graide'],
-        cmdclass = CMDCLASS,
         zip_safe = False,
         long_description = long_description,
         long_description_content_type = 'text/markdown',
