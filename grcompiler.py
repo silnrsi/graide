@@ -27,10 +27,8 @@ import tempfile
 from glob import glob
 from subprocess import check_call
 from zipfile import ZipFile
-from wheel.bdist_wheel import bdist_wheel
 
-class BuildBdistWheel(bdist_wheel):
-    def run(self):
+def build():
         origdir = os.getcwd()
         tmpdir = tempfile.mkdtemp()
 
@@ -73,5 +71,3 @@ class BuildBdistWheel(bdist_wheel):
 
         os.chdir(origdir)
         shutil.rmtree(tmpdir)
-
-        bdist_wheel.run(self)

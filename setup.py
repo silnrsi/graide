@@ -9,9 +9,22 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 if os.environ.get('GRCOMPILER_BUNDLE_VERSION'):
-    import grcompiler
+    from distutils.command.bdist import bdist
+    from wheel.bdist_wheel import bdist_wheel
+    from grcompiler import build
+
+    class BuildBdist(bdist):
+        def run(self):
+            build()
+            bdist.run(self)
+
+    class BuildBdistWheel(bdist_wheel):
+        def run(self):
+            build()
+            bdist_wheel.run(self)
+
     BIN = ['grcompiler/*']
-    CMDCLASS = {'bdist_wheel':grcompiler.BuildBdistWheel}
+    CMDCLASS = {'bdist':BuildBdist, 'bdist_wheel':BuildBdistWheel}
 else:
     BIN = []
     CMDCLASS = {}
