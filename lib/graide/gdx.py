@@ -87,4 +87,4 @@ class Rule(object) :
             d = next(slots)
             self.slots = map(lambda x : x - d, slots)
         else :
-            self.slots = {}
+            self.slots = []
