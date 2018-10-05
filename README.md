@@ -16,12 +16,9 @@ to a git reference (e.g. master) and be sure to have its build
 toolchain installed or set the variable to any other value and
 the builtin version is copied to the package.
 
-You can install graide from from this directory with pip:
-`pip install -e .`
-
-Additionally, run 1 (with Qt4) or 2 (with Qt5):
-1. `pip install PySide`
-2. `pip install PySide2`
+You can install graide from from this directory with pip with one of:
+1. `pip install -e .[qt4]`
+2. `pip install -e .[qt5]`
 
 You will then have the Python script `graide` installed.
 
