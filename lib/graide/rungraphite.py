@@ -17,6 +17,7 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+import sys
 from graphite2 import gr2, grversion
 
 def strtolong(txt) :
@@ -95,7 +96,10 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     for f, v in feats.items() :
         if v is None :
             continue
-        id = gr2.gr_str_to_tag(f.encode())
+        if sys.version_info[0] < 3:
+            id = gr2.gr_str_to_tag(f.encode()) # Python 2.7
+        else:
+            id = gr2.gr_str_to_tag(f)
         fref = gr2.gr_face_find_fref(grface, id)
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
@@ -107,7 +111,7 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
         gr2.graphite_start_logging(fd, 0xFF)
 
     ###print "text=",text  ####
-    text_utf8 = text.encode('utf_8')  ####
+    text_utf8 = text.encode('utf_8')
     ###print "utf8=",text_utf8  ####
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text_utf8, len(text), rtl)
     width = gr2.gr_seg_advance_X(seg)

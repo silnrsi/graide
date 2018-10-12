@@ -264,7 +264,8 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.fontFileName = str(fontname)
         self.fontBuildTime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
         self.font.loadFont(self.fontFileName, fontsize)
-        self.feats = make_FeaturesMap(self.fontFileName) # map languages to features
+        self.feats = make_FeaturesMap(self.fontFileName) # map languages to features  ### FEATURE BUG
+        #self.feats = {None: ()}
         
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
@@ -422,12 +423,32 @@ class MainWindow(QtWidgets.QMainWindow) :
 
         if self.config.has_section('window') :
             self.resize(configintval(self.config, 'window', 'mainwidth'), configintval(self.config, 'window', 'mainheight'))
-            self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'hsplitter')))
-            self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(configval(self.config, 'window', 'vsplitter')))
+            hsplit = configval(self.config, 'window', 'hsplitter')
+            vsplit = configval(self.config, 'window', 'vsplitter')
+            if hsplit and vsplit:
+                hsplitBytes = self.splitterStringToBytes(hsplit)
+                self.hsplitter.restoreState(QtCore.QByteArray.fromBase64(hsplitBytes))
+                vsplitBytes = self.splitterStringToBytes(vsplit)
+                self.vsplitter.restoreState(QtCore.QByteArray.fromBase64(vsplitBytes))
+            else:
+                self.hsplitter.setSizes((Layout.initHSplitWidth, Layout.initWinSize[0] - Layout.initHSplitWidth))
         else :
             self.hsplitter.setSizes((Layout.initHSplitWidth, Layout.initWinSize[0] - Layout.initHSplitWidth))
 
     # end of setupUi
+
+
+    def splitterStringToBytes(self, splitterValue):
+        """Convert a string that looks like b'AABBCC' to a byte array AABBCC."""
+        if sys.version_info[0] < 3:
+            result = splitterValue
+        else:
+            if splitterValue[0:2] == "b'" and splitterValue[-1:] == "'":
+                splitterValue = splitterValue[2:-1]
+            result = splitterValue.encode('utf-8')
+
+        return result
+
 
     def ui_tests(self, parent) : # parent = tab_info
         self.setwidgetstretch(self.tab_info, 30, 100)
@@ -749,8 +770,13 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         s = self.size()
         self.config.set('window', 'mainwidth', str(s.width()))
         self.config.set('window', 'mainheight', str(s.height()))
-        self.config.set('window', 'vsplitter', self.vsplitter.saveState().toBase64())
-        self.config.set('window', 'hsplitter', self.hsplitter.saveState().toBase64())
+        hsplit = self.hsplitter.saveState().toBase64()
+        vsplit = self.vsplitter.saveState().toBase64()
+        if sys.version_info[0] > 2:
+            hsplit = str(hsplit.data(), encoding='utf-8')
+            vsplit = str(vsplit.data(), encoding='utf-8')
+        self.config.set('window', 'hsplitter', hsplit)
+        self.config.set('window', 'vsplitter', vsplit)
 
         if self.testsfile :
             self.tab_tests.saveTests()
@@ -883,7 +909,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if self.apname :
             self.loadAP(self.apname)
         if self.fontFileName :
-            self.feats = make_FeaturesMap(self.fontFileName)
+            self.feats = make_FeaturesMap(self.fontFileName) ### FEATURE BUG
+            #self.feats = {None: ()}
 
         # Get source-code files up-to-date.
         self.tab_edit.reloadModifiedFiles()
@@ -921,7 +948,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
         jsonResult = self.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
             self.font.size, self.runRtl.isChecked(), 
-            self.currFeats or self.feats[self.currLang].fval, self.currLang,
+            self.currFeats or self.feats[self.currLang].fval, ### FEATURE BUG
+            #{},
+            self.currLang,
             self.currWidth)
         if jsonResult != False :
             self.json = jsonResult

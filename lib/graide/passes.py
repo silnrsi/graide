@@ -220,7 +220,7 @@ class PassesView(QtWidgets.QTableWidget) :
                 self.flipFlags.append(flipFlag)
                 self.dirLabels.append(dirLabel)
 
-                if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
+                if 'rules' in json['passes'][j-1] and len(json['passes'][j-1]['rules']) :
                     highlight = "active"
                     self.rulesJson.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
                 else :
@@ -231,7 +231,7 @@ class PassesView(QtWidgets.QTableWidget) :
                     thisSlots = json['output'] if (j == num - 1) else json['passes'][j]['slots']
                     if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], thisSlots) :
                         highlight = "semi-active"
-                if json['passes'][j-1].has_key('collisions') :
+                if 'collisions' in json['passes'][j-1] :
                     self.collFixJson.append(json['passes'][j-1]['collisions'])
                 else :
                     self.collFixJson.append(None)

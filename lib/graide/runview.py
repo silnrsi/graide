@@ -25,12 +25,17 @@
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
-import os, time, traceback
+import sys, os, time, traceback
 
 class GlyphPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def __init__(self, index, px, model = None, parent = None, scene = None) :
-        super(GlyphPixmapItem, self).__init__(px, parent, scene)
+        if sys.version_info[0] < 3:
+            super(GlyphPixmapItem, self).__init__(px, parent, scene)
+        else:
+            super(GlyphPixmapItem, self).__init__(px, parent)
+            self.scene = scene
+        if self.scene: self.scene.addItem(self)
         self.selected = False
         self.index = index
         self.highlighted = False
