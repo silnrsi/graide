@@ -152,8 +152,9 @@ class Classes(QtWidgets.QWidget) :
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             c = font.classes[keys[i]]
             v = map(lambda x: font[x].GDLName() if font[x] else "", c.elements)
-            if any(v) :
-                m = QtWidgets.QTableWidgetItem("  ".join(filter(None, v)))
+            vList = list(v)
+            if len(vList) :
+                m = QtWidgets.QTableWidgetItem("  ".join(filter(None, vList)))
             else :
                 m = QtWidgets.QTableWidgetItem("")
             t = ""

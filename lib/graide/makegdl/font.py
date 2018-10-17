@@ -65,7 +65,7 @@ class PointClass(object) :
 class FontClass(object) :
 
     def __init__(self, elements = None, fname = None, lineno = None, generated = False, editable = False) :
-        self.elements = elements or []
+        self.elements = list(elements)
         self.fname = fname
         self.lineno = lineno
         self.generated = generated
@@ -226,28 +226,29 @@ class Font(object) :
         self.gdls[name] = glyph
         glyph.setGDL(name)
 
-    def addClass(self, name, elements, fname = None, lineno = 0, generated = False, editable = False) :
-        self.classes[name] = FontClass(elements, fname, lineno, generated, editable)
-        for e in elements :
+    def addClass(self, name, elements, fname = None, lineno = 0, generated = False, editable = False):
+        newClass = FontClass(elements, fname, lineno, generated, editable)
+        self.classes[name] = newClass
+        for e in newClass.elements:
             g = self[e]
             if g : g.addClass(name)
 
-    def addGlyphClass(self, name, gid, editable = False) :
+    def addGlyphClass(self, name, gid, editable = False):
         if name not in self.classes :
             self.classes[name] = FontClass()
-        if gid not in self.classes[name].elements :
+        if gid not in self.classes[name].elements:
             self.classes[name].append(gid)
 
-    def classUpdated(self, name, value) :
+    def classUpdated(self, name, value):
         c = []
-        if name in self.classes :
-            for gid in self.classes[name].elements :
+        if name in self.classes:
+            for gid in self.classes[name].elements:
                 g = self[gid]
                 if g : g.removeClass(name)
-        if value is None and name in self.classes :
+        if value is None and name in self.classes:
             del self.classes[name]
             return
-        for n in value.split() :
+        for n in value.split():
             g = self.gdls.get(n, None)
             if g :
                 c.append(g.gid)

@@ -21,7 +21,7 @@
 
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.glyph import ftGlyph
-import freetype
+import sys, freetype
 
 class WaterfallDialog(QtWidgets.QDialog) :
 
@@ -41,8 +41,10 @@ class WaterfallDialog(QtWidgets.QDialog) :
         face = freetype.Face(font.fname)
         currtop = 0
         master = QtCore.QRect()
-        for i in range(len(sizes)) :
-            size = sizes[i] * self.physicalDpiY() / 72.
+        sizesList = list(sizes)  # map to list
+        for i in range(len(sizesList)) :
+            ####size = sizesList[i] * self.physicalDpiY() / 72.
+            size = sizesList[i] * 96.0 / 72.0  # using physicalDpiY gave results on Win10 that were very off
             res = QtCore.QRect()
             pixmaps = []
             pixitems = []
@@ -53,7 +55,11 @@ class WaterfallDialog(QtWidgets.QDialog) :
             for s in run :
                 (px, left, top) = ftGlyph(face, s.gid)
                 if px :
-                    item = QtWidgets.QGraphicsPixmapItem(px, None, self.scene)
+                    if sys.version_info[0] < 3:
+                        item = QtWidgets.QGraphicsPixmapItem(px, None, self.scene)
+                    else:
+                        item = QtWidgets.QGraphicsPixmapItem(px, None)
+                        if self.scene: self.scene.addItem(item)
                     ppos = (s.drawPosX() * factor + left, -s.drawPosY() * factor - top)
                     item.setOffset(ppos[0], ppos[1])
                     pixmaps.append(px)
@@ -63,7 +69,10 @@ class WaterfallDialog(QtWidgets.QDialog) :
                     res = res.united(r)
             currtop += res.height() + margin
             for i in pixitems :
-                i.translate(0, currtop)
+                xoffset = i.offset().x()
+                yoffset = i.offset().y()
+                i.setOffset(xoffset, yoffset + currtop)
+                #i.translate(0, currtop)  # Python 2
             master = master.united(res.translated(0, currtop))
         master.adjust(-margin, -margin, margin, margin)
         self.scene.setSceneRect(master)
