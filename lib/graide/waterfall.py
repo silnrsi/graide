@@ -29,6 +29,8 @@ class WaterfallDialog(QtWidgets.QDialog) :
         super(WaterfallDialog, self).__init__(parent)
         if sizes is None :
             sizes = [8, 9, 10, 11, 12, 13, 14, 16, 20, 28, 40]
+        else:
+            sizes = list(sizes)  # convert map to list
 
         self.vbox = QtWidgets.QVBoxLayout(self)
         self.setLayout(self.vbox)
@@ -41,10 +43,8 @@ class WaterfallDialog(QtWidgets.QDialog) :
         face = freetype.Face(font.fname)
         currtop = 0
         master = QtCore.QRect()
-        sizesList = list(sizes)  # map to list
-        for i in range(len(sizesList)) :
-            ####size = sizesList[i] * self.physicalDpiY() / 72.
-            size = sizesList[i] * 96.0 / 72.0  # using physicalDpiY gave results on Win10 that were very off
+        for i in range(len(sizes)) :
+            size = sizes[i] * self.logicalDpiY() / 72.
             res = QtCore.QRect()
             pixmaps = []
             pixitems = []
