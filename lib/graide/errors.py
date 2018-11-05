@@ -41,7 +41,9 @@ class Errors(QtWidgets.QListWidget) :
         return w
 
     def addGdlErrors(self, fname) :
-        if not os.path.exists(fname) : return
+        if not os.path.exists(fname) :
+            print("Can't find error file: ",fname)
+            return
         f = open(fname)
         for l in f.readlines() :
             l = l.strip()

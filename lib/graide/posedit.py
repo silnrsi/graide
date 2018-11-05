@@ -292,7 +292,7 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
         self.posChanged(text)
         
         # update the list of attachment points for this glyph
-        apname = self.apname # remember - it get changed when we adjust the list
+        apname = self.apname # remember - it gets changed when we adjust the list
         aplist = sorted(self.font.gdls[self.gname].anchors.keys())
         aplist = ['(None)'] + aplist
         self.aps.clear()
