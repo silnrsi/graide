@@ -96,11 +96,8 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     for f, v in feats.items() :
         if v is None :
             continue
-        if sys.version_info[0] < 3:
-            id = gr2.gr_str_to_tag(f.encode()) # Python 2.7
-        else:
-            id = gr2.gr_str_to_tag(f)
-        fref = gr2.gr_face_find_fref(grface, id)
+        tid = gr2.gr_str_to_tag(f.encode()) # Python 2.7
+        fref = gr2.gr_face_find_fref(grface, tid)
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
     if major > 1 or minor > 1 :
