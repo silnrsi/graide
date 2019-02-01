@@ -22,6 +22,7 @@ from qtpy import QtCore, QtGui, QtWidgets
 import graphite2 as gr
 from graide.rungraphite import strtolong
 from graide.layout import Layout
+import sys
 
 class FeatureRefs(object) :
 
@@ -36,6 +37,9 @@ class FeatureRefs(object) :
             length = 0
             grval = grface.get_featureval(strtolong(lang))
             for f in grface.featureRefs :
+                tag = f.tag()
+                if sys.version_info.major > 2:
+                    tag = tag.decode("utf-8")
                 name = f.name(langid)
                 if not name : continue
                 name = name[:]

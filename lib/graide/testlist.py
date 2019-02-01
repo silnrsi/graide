@@ -19,7 +19,7 @@
 
 
 from qtpy import QtCore, QtGui, QtWidgets
-from xml.etree import cElementTree as et
+from xml.etree import ElementTree as et
 from graide.test import Test
 from graide.utils import configval, configintval, reportError, relpath, ETcanon, ETinsert
 from graide.layout import Layout
