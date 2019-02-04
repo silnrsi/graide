@@ -21,9 +21,11 @@ import sys
 from graphite2 import gr2, grversion
 
 def strtolong(txt) :
+    if sys.version_info.major > 2:
+        def ord(x) : return x
     res = 0
     if txt :
-        txt = (txt + "\000\000\000\000")[:4]
+        txt = (txt + b"\000\000\000\000")[:4]
     else :
         return 0
     for c in txt :
@@ -96,7 +98,8 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     for f, v in feats.items() :
         if v is None :
             continue
-        tid = gr2.gr_str_to_tag(f.encode()) # Python 2.7
+        fbytes = f.encode() if isinstance(f, str) else f
+        tid = gr2.gr_str_to_tag(fbytes) # Python 2.7
         fref = gr2.gr_face_find_fref(grface, tid)
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
