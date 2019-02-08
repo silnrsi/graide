@@ -434,13 +434,18 @@ class TestList(QtWidgets.QWidget) :
                     te.set('class', c)
                     used.add(c)
         s = h.find('styles')
+
         invfsets = {}
+        kNotUsed = []
         for k, v in self.fsets.items() :
             if v is not None :
                 if v not in used :
-                    del self.fsets[k]
+                    kNotUsed.append(k)  # don't actually delete while iterating over the dictionary
                 else :
                     invfsets[v] = k
+        for k in kNotUsed:
+            self.fsets.pop(k, None)
+
         if len(self.fsets) > 1 :
             if s is not None :
                 for i in range(len(s) - 1, -1, -1) :
@@ -660,7 +665,12 @@ class TestList(QtWidgets.QWidget) :
         self.app.config.set('data', 'testfiles', fileString)
         
     def findStyleClass(self, t) :
-        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
+        k = ""
+        for label,val in t.feats.items():
+            lstr = label.decode() if isinstance(label, bytes) else label
+            k += " " + lstr + "=" + str(val)
+        k = k[1:] # take off initial superfluous space
+        ####k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
         k += "\n" + (t.lang or "")
         if k not in self.fsets :
             self.fcount += 1

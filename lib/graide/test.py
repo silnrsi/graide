@@ -29,7 +29,7 @@ import re
 class Test(object) :
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white') :
         self.text = text
-        self.feats = dict(feats)    # feature IDs -> values
+        self.feats = self.fixFeatsDict(dict(feats))    # feature IDs -> values
         self.name = name or text
         self.rtl = rtl
         self.lang = lang
@@ -41,6 +41,15 @@ class Test(object) :
         else :
             self.background = QtGui.QColor('white')
         self.width = width
+
+    def fixFeatsDict(self, dict):
+        "Convert feature dict keys to bytes, not str."
+        for k,v in dict.items():
+            if isinstance(k, str):
+                kbytes = k.encode('utf-8')  # convert to bytes
+                dict[kbytes] = v
+                dict.pop(k, None)
+        return dict
 
     def editDialog(self, parent, isTweak = False) :
         self.parent = parent
