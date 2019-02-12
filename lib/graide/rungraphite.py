@@ -100,7 +100,11 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
             continue
         fbytes = f.encode() if isinstance(f, str) else f
         tid = gr2.gr_str_to_tag(fbytes) # Python 2.7
-        fref = gr2.gr_face_find_fref(grface, tid)
+        try:
+            fref = gr2.gr_face_find_fref(grface, tid)
+        except:
+            print("Invalid feature settings")
+
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
     if major > 1 or minor > 1 :

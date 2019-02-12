@@ -220,8 +220,10 @@ class TestList(QtWidgets.QWidget) :
         self.fcombo.setCurrentIndex(fileIndex)
         self.gcombo.setCurrentIndex(groupIndex)
         l = self.liststack.currentWidget()
-        l.setCurrentItem(l.item(testIndex))
-        self.recordCurrentTest()
+        if l:
+            l.setCurrentItem(l.item(testIndex))
+            self.recordCurrentTest()
+
 
     def initTests(self, fname) :
         self.addGroup('main', record = False)
