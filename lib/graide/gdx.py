@@ -24,6 +24,7 @@ import os, traceback
 class Gdx(object) :
 
     def __init__(self) :
+        #print("Gdx::init")
         self.passes = []
         self.passTypes = []
         self.collisionFix=[]
@@ -31,7 +32,10 @@ class Gdx(object) :
         self.keepelements = False
 
     def readfile(self, fname, font, autoGdlFile = None, apFileName = None, ronly = False) :
-        relbase = os.path.relpath(os.path.dirname(fname) or ".") or ""
+        #print("Gdx::readFile")
+        self.relPath = os.path.relpath(os.path.dirname(fname) or ".") or ""
+
+        font.setGdxPath(self)
         
         self.file = file(fname)
         if not apFileName :  # autoGdlFile??
@@ -51,10 +55,10 @@ class Gdx(object) :
             else :
                 if e.tag == "rule" :
                     self.keepelements = False
-                    self.passes[-1].append(Rule(e, relbase))
+                    self.passes[-1].append(Rule(e, self.relPath))
                 if e.tag == 'glyph' :
                     self.keepelements = False
-                    font.addGdxGlyph(e, apFileName)
+                    font.addGdxGlyph(e, apFileName, self.relPath)
                 elif e.tag == 'class' :
                     self.keepelements = False
                     n = e.get('name')
@@ -62,7 +66,8 @@ class Gdx(object) :
                     if len(c) :
                         g = font[int(c[0].get('glyphid'))]
                         fn = c[0].get('inFile')
-                        f = os.path.join(relbase, fn) if fn else None
+                        f = os.path.join(self.relPath, fn) if fn else None
+                        #print("class file name = ", f, "(", self.relPath, ")")
                         l = int(c[0].get('atLine')) if f else 0
                         if len(c) == 1 and g and g.GDLName() == n :
                             pass
@@ -78,8 +83,8 @@ class Gdx(object) :
 
 class Rule(object) :
 
-    def __init__(self, e, relbase) :   	
-        self.srcfile = os.path.join(relbase, e.get('inFile'))
+    def __init__(self, e, relPath) :
+        self.srcfile = os.path.join(relPath, e.get('inFile'))
         self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')
         slots = map(lambda x: int(x.get('slotIndex')), e.findall('rhsSlot'))

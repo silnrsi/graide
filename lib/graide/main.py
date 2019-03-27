@@ -293,7 +293,7 @@ class MainWindow(QtGui.QMainWindow) :
         if apFileName and os.path.exists(apFileName) :
             self.font.loadAP(apFileName)
         else :
-            self.font.loadEmptyGlyphs()
+            self.font.loadEmptyGlyphs("loadAP")
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'),
@@ -829,6 +829,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.tab_results.setCurrentWidget(self.tab_posview)
 
     def selectLine(self, fname = None, srcline = -1) :
+        #print("select line in ", fname, srcline)
         if not fname :
             fname = configval(self.config, 'build', 'gdlfile')
         if self.isInitialized() :
@@ -1268,7 +1269,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     def resetNames(self) :
         if self.font :
-            self.font.loadEmptyGlyphs()
+            self.font.loadEmptyGlyphs("resetNames")
             self.tab_classes.loadFont(self.font)
             if self.tab_font : self.tab_font.update()
 

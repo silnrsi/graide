@@ -297,6 +297,11 @@ class EditFile(QtGui.QPlainTextEdit) :
         else :
             label = self.fname
         self.fileTabs.setTabText(self.tabIndex, label)
+
+
+    def find(self, target):
+        print("Editfile::find", target)
+        super(EditFile, self).find(target)
     
 
 # end of class EditFile

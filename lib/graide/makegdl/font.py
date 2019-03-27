@@ -113,7 +113,7 @@ class Font(object) :
         #print "Font::addGlyph",index,psName,gdlName
         g = factory(psName, index) # create a new glyph of the given class
         self.renameGlyph(g, g.psname, gdlName)
-        if index is None :  # give it the next available index
+        if index is None :   # give it the next available index
             index = len(self.glyphs) 
             self.glyphs.append(g)
         elif index >= len(self.glyphs) :
@@ -121,7 +121,8 @@ class Font(object) :
         self.glyphs[index] = g
         return g
 
-    def addGdxGlyph(self, e, apFileName) :
+    def addGdxGlyph(self, e, apFileName, gdxPath) :
+        #print("addGdxGlyph", gdxPath)
         hasApFile = not not apFileName  # if there is an AP XML File, very little gets set here
                                         # (most of the glyph attrs get set directly from the XML file),
                                         # but we do need to set actualForPseudo, and also the glyph name
@@ -135,11 +136,11 @@ class Font(object) :
             if gid > len(self.glyphItems) :
                 canonName = Name.createFromGDL(gdlName).canonical() if gdlName else None  # postscript-style name
                 if canonName :
-                    g = self.addGlyph(gid, canonName, None)
+                    g = self.addGlyph(gid, canonName, None, gdxPath, "addGdxGlyph-canonName")
                 else :
-                    g = self.addGlyph(gid, canonName, gdlName)
+                    g = self.addGlyph(gid, canonName, gdlName, gdxPath, "addGdxGlyph-gdlName")
             else :
-                g = self.addGlyph(gid)
+                g = self.addGlyph(gid, None, None, gdxPath, "addGdxGlyph-no name")
 
         if not hasApFile :
             g.clear()
@@ -152,7 +153,9 @@ class Font(object) :
         inFile = e.get("inFile")
         atLine = e.get("atLine")
         atLine = int(atLine)-1 if atLine else -1  # subtract 1 because GDX is 1-based but file editor is 0-based
-        if inFile : g.addLineAndFile("gid", inFile, atLine)
+        if inFile :
+            relFile = os.path.join(gdxPath, inFile)
+            g.addLineAndFile("gid", relFile, atLine)
             
         for a in e.iterfind('glyphAttrValue') :
             attrName = a.get('name')
@@ -272,7 +275,7 @@ class Font(object) :
         etree = parse(apFileName)
         i = 0
         for e in etree.getroot().iterfind("glyph") :
-            g = self.addGlyph(i, e.get('PSName'))
+            g = self.addGlyph(i, e.get('PSName'), None, "", "loadAP")
             g.readAP(e, self)
             i += 1
         return True
