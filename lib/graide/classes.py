@@ -196,8 +196,10 @@ class Classes(QtWidgets.QWidget) :
     
     # Highlight the source code where the given class is defined in the code pane.
     def findSourceForClass(self, row) :
+        #print("findSourceForClass")
         c = self.tab.item(row, 1)
         if not c.fileLoc[0] or c.fileLoc[2] :
+            #print(c.fileLoc[0], c.fileLoc[2])
             d = QtWidgets.QDialog(self)
             name = self.tab.item(row, 0).text()
             d.setWindowTitle(name)
@@ -213,6 +215,7 @@ class Classes(QtWidgets.QWidget) :
                 self.tab.item(row, 1).setText(t)
                 self.classUpdated.emit(name, t)
         elif c.fileLoc[0] :
+            #print("send array", c.fileLoc[0], c.fileLoc[1])
             self.app.selectLine(*c.fileLoc[:2])
             return True
 
@@ -246,8 +249,9 @@ class Classes(QtWidgets.QWidget) :
         self.tab.removeRow(r)
     
     
-    # Scroll to the selected class and highlight it.
+    # Scroll to the selected class and highlight it in the class pane.
     def findSelectedClass(self) :
+        #print("findSelectedClass")
         className = self.app.tab_edit.selectedText
         d = QtWidgets.QDialog(self)
         rowMatched = -1

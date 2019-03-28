@@ -68,12 +68,15 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
     anchorChanged = QtCore.Signal(str, int, int)
 
     def __init__(self, name, gid = 0, item = None) :
+        #if gid % 100 == 0: print("GraideGlyph", name, gid, item)
+
         super(GraideGlyph, self).__init__(name, gid)
         QtCore.QObject.__init__(self)
         self.item = item
         self.isHigh = False
         self.justifies = []
         self.fileLocs = {}   # file locations where attributes are set
+        self.gdxPath = ""    # possibly set later when we load the .gdx file
         
     def setItem(self, item) :
         self.item = item
@@ -81,32 +84,37 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
     def __str__(self) :
         return self.psname
 
+    def setGdxPath(self, gdxObject):
+        #print(self, "GraideGlyph::setGdxPath", gdxObject.relPath)
+        self.gdxPath = gdxObject.relPath
+
     def attribModel(self) :
+        #print(self, "GraideGlyph::attribModel", self.dbgContext)
         
         attrList = []
         
         defaultFloc = self._fileLoc("gid")
-        attrList.append(Attribute('glyph number', self.__getattribute__, None, False, defaultFloc, False, 'gid')) # read-only
+        attrList.append(Attribute('glyph number', self.__getattribute__, None, False, defaultFloc, None, False, 'gid')) # read-only
         attrList.append(Attribute('GDL name', self.GDLName, None, fileLoc=defaultFloc))  ## self.setGDL
-        attrList.append(Attribute('Postscript', self.__getattribute__, None, False, defaultFloc, False, 'psname')) #read-only
+        attrList.append(Attribute('Postscript', self.__getattribute__, None, False, defaultFloc, None, False, 'psname')) #read-only
         #attrList.append(Attribute('USV', self.__getattribute__, self.__setattr__, False, False, 'uid'))
-        attrList.append(Attribute('USV', self.__getattribute__, None, False, defaultFloc, False, 'uid'))
-        attrList.append(Attribute('comment', self.__getattribute__, None, False, None, False, 'comment')) ## self.__setattr__, False, 'comment'))
+        attrList.append(Attribute('USV', self.__getattribute__, None, False, defaultFloc, None, False, 'uid'))
+        attrList.append(Attribute('comment', self.__getattribute__, None, False, None, None, False, 'comment')) ## self.__setattr__, False, 'comment'))
 
         for a in sorted(self.properties.keys()) :
             # classes
-            attrList.append(Attribute(a, self.getProperty, None, False, self._fileLoc(a), True, a))  ## self.setPropertyX
+            attrList.append(Attribute(a, self.getProperty, None, False, self._fileLoc(a), self.gdxPath, True, a))  ## self.setPropertyX
             
         for a in sorted(self.gdlProperties.keys()) :
             # breakweight, dir, mirror, etc.
             if a == "*actualForPseudo*" :
                 actual = self.getGdlProperty("*actualForPseudo*")
                 if actual != 0 :
-                    attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), False, a)) ## self.setGdlProperty
+                    attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), self.gdxPath, False, a)) ## self.setGdlProperty
             elif a == "*skipPasses*" :
-                attrList.append(Attribute(a, self.getGdlPropertyWithBinary, None, False, None, False, a))
+                attrList.append(Attribute(a, self.getGdlPropertyWithBinary, None, False, None, None, False, a))
             else :
-                attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), False, a))  ## self.setGdlProperty
+                attrList.append(Attribute(a, self.getGdlProperty, None, False, self._fileLoc(a), self.gdxPath, False, a))  ## self.setGdlProperty
                 
         topModel = AttribModel(attrList) # top-level structure
         
@@ -114,8 +122,8 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
         ptAttrList = []
         ptModel = AttribModel(ptAttrList, topModel) # sub-tree for points
         for k in sorted(self.anchors.keys()) :
-            ptAttrList.append(Attribute(k, self.getPoint, None, False, self._fileLoc(k), False, k))  ## self.setPoint
-        topModel.add(Attribute('points', None, None, True, None, False, ptModel))
+            ptAttrList.append(Attribute(k, self.getPoint, None, False, self._fileLoc(k), self.gdxPath, False, k))  ## self.setPoint
+        topModel.add(Attribute('points', None, None, True, None, None, False, ptModel))
         
         # user-defined
         #try : self.userProperties
@@ -124,8 +132,8 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
             userAttrList = []
             userModel = AttribModel(userAttrList, topModel) # sub-tree for user-defined attrs
             for k in sorted(self.userProperties.keys()) :
-                userAttrList.append(Attribute(k, self.getUserProperty, None, False, self._fileLoc(k), False, k))
-            topModel.add(Attribute('user-defined', None, None, True, None, False, userModel))
+                userAttrList.append(Attribute(k, self.getUserProperty, None, False, self._fileLoc(k), self.gdxPath, False, k))
+            topModel.add(Attribute('user-defined', None, None, True, None, None, False, userModel))
         
         # justification - TODO clean up line-and-file stuff for multiple levels
         if len(self.justifies) :
@@ -136,33 +144,33 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
                 for k in j.keys() :
                     fullName = "justify." + str(iLevel) + "." + k
                     jlAttrs.append(Attribute(k, self.getJustify, None, False,
-                            self._fileLoc(fullName), iLevel, k))
-                jModel.add(Attribute(str(iLevel), None, None, True, None, False, lModel))
-            topModel.add(Attribute('justify', None, None, True, None, False, jModel))
+                            self._fileLoc(fullName), self.gdxPath, iLevel, k))
+                jModel.add(Attribute(str(iLevel), None, None, True, None, None, False, lModel))
+            topModel.add(Attribute('justify', None, None, True, None, None, False, jModel))
         
         # collision
         colAttrList = []
         if (len(self.collisionProps)) :
             colModel = AttribModel(colAttrList, topModel) # sub-tree for collision
             for k in self.sortedCollKeys(self.collisionProps.keys()) :
-                colAttrList.append(Attribute(k, self.getCollisionAnnot, None, False, self._fileLoc("collision."+k), False, k))
-            topModel.add(Attribute('collision', None, None, True, None, False, colModel))
+                colAttrList.append(Attribute(k, self.getCollisionAnnot, None, False, self._fileLoc("collision."+k), self.gdxPath, False, k))
+            topModel.add(Attribute('collision', None, None, True, None, None, False, colModel))
             
         #sequence
         seqAttrList = []
         if (len(self.sequenceProps)) :
             seqModel = AttribModel(seqAttrList, topModel) #sub-tree for sequence
             for k in self.sortedSeqKeys(self.sequenceProps.keys()) :
-                seqAttrList.append(Attribute(k, self.getSequence, None, False, self._fileLoc("sequence."+k), False, k))
-            topModel.add(Attribute('sequence', None, None, True, None, False, seqModel)) 
+                seqAttrList.append(Attribute(k, self.getSequence, None, False, self._fileLoc("sequence."+k), self.gdxPath, False, k))
+            topModel.add(Attribute('sequence', None, None, True, None, None, False, seqModel))
             
         # octaboxes
         octaAttrList = []
         if (len(self.octaboxProps)) :
             octaModel = AttribModel(octaAttrList, topModel) # sub-tree for octaboxes
             for k in sorted(self.octaboxProps.keys()) :
-                octaAttrList.append(Attribute(k, self.getOctabox, None, False, None, False, k))
-            topModel.add(Attribute('octabox', None, None, True, None, False, octaModel))
+                octaAttrList.append(Attribute(k, self.getOctabox, None, False, None, None, False, k))
+            topModel.add(Attribute('octabox', None, None, True, None, None, False, octaModel))
         
         return topModel
     

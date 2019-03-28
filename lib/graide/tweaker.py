@@ -1307,7 +1307,7 @@ class TweakView(QtWidgets.QWidget) :
             fontfile = str(self.fontname)
             self.font = GraideFont()
             self.font.loadFont(fontfile, size)
-            self.font.loadEmptyGlyphs()
+            self.font.loadEmptyGlyphs("TweakView::setFont")
         
 
     def setTweaker(self, tweaker) :

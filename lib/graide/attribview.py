@@ -22,6 +22,7 @@
 from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
+import os
 
 #for line in traceback.format_stack(): print(line.strip())
 
@@ -146,13 +147,16 @@ class AttributeDelegate(QtWidgets.QStyledItemDelegate) :
 
 class Attribute(object) :
 
-    def __init__(self, name, getter, setter, isTree = False, fileLoc = None, listPopup = False, *params) :
+    def __init__(self, name, getter, setter, isTree = False, fileLoc = None, extraPath = None, listPopup = False, *params) :
         self.name = name
         self.setter = setter
         self.getter = getter
         self.params = params
         self.isTree = isTree # debugging
         self.tree = params[0] if isTree else None  # an AttribModel, if this has an embedded tree
+        if fileLoc and extraPath:
+            fileLocFile = os.path.join(extraPath, fileLoc[0])  # make file path relative to GDX file
+            fileLoc = (fileLocFile, fileLoc[1])
         self.fileLoc = fileLoc
         self.doesListPopup = listPopup
             

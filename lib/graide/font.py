@@ -45,14 +45,14 @@ class GraideFont(Font) :
 
 
     def initGlyphs(self, nGlyphs = None) :
-        #print "GraideFont::initGlyphs",nGlyphs
+        #print("GraideFont::initGlyphs",nGlyphs)
         if nGlyphs :
             self.numGlyphs = nGlyphs
         super(GraideFont, self).initGlyphs(self.numGlyphs)
 
 
     def loadFont(self, fontfile, size = 40) :
-        #print "GraideFont::loadFont",fontfile
+        #print("GraideFont::loadFont",fontfile,size)
         
         self.glyphItems = []
         self.pixrect = QtCore.QRect()
@@ -80,20 +80,27 @@ class GraideFont(Font) :
                 g.setItem(self.glyphItems[i])
         self.isread = True
 
-    def loadEmptyGlyphs(self) :
-        #print("GraideFont::loadEmptyGlyphs")
+    def setGdxPath(self, gdxObject):
+        #print("GraideFont::setGdxPath", gdxObject.relPath)
+        self.gdxPath = gdxObject.relPath
+        for gid in range(0, self.numGlyphs):
+            self[gid].setGdxPath(gdxObject)
+
+    def loadEmptyGlyphs(self, dbgContext = "unknown") :
+        #print("GraideFont::loadEmptyGlyphs", context)
         
         self.initGlyphs(self.numGlyphs)
         for i in range(self.numGlyphs) :
-            self.addGlyph(i)
+            self.addGlyph(i, None, None, dbgContext+"--loadEmptyGlyphs")
         face = freetype.Face(self.fname)
         (uni, gid) = face.get_first_char()
         while gid :
             self[gid].uid = "%04X" % uni
             (uni, gid) = face.get_next_char(uni, gid)
 
-    def addGlyph(self, index, psName = None, gdlName = None) :
-        #print "GraideFont::addGlyph",index,psName,gdlName
+    def addGlyph(self, index, psName = None, gdlName = None, gdxPath = "", dbgContext = "unknown") :
+        #if index % 100 == 0:  # print a sampling of glyphs
+        #    print("GraideFont::addGlyph",index,psName,gdlName,dbgContext)
         
         if index < len(self.glyphItems) :
             if (not psName or psName not in self.gnames) :
@@ -103,6 +110,8 @@ class GraideFont(Font) :
         elif psName and psName in self.gnames :
             index = self.gnames[psName]
         g = super(GraideFont, self).addGlyph(index, psName, gdlName, GraideGlyph)
+        g.dbgContext = dbgContext   # what caused this glyph to be created
+        g.gdxPath = gdxPath
         if g.gid < len(self.glyphItems) :
             g.item = self.glyphItems[g.gid]
         return g
