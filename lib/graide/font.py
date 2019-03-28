@@ -17,13 +17,13 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide import freetype
+import freetype
 from graide.glyph import GraideGlyph, GlyphItem
-from PySide import QtCore
-from graide.makegdl.font import Font as gdlFont
+from qtpy import QtCore
+from graide.makegdl.font import Font
 import re
 
-class GraideFont(gdlFont) :
+class GraideFont(Font) :
 
     def __init__(self) :
         super(GraideFont, self).__init__()
@@ -80,12 +80,11 @@ class GraideFont(gdlFont) :
                 g.setItem(self.glyphItems[i])
         self.isread = True
 
-
-def setGdxPath(self, gdxObject):
-    # print("GraideFont::setGdxPath", gdxObject.relPath)
-    self.gdxPath = gdxObject.relPath
-    for gid in range(0, self.numGlyphs):
-        self[gid].setGdxPath(gdxObject)
+    def setGdxPath(self, gdxObject):
+        #print("GraideFont::setGdxPath", gdxObject.relPath)
+        self.gdxPath = gdxObject.relPath
+        for gid in range(0, self.numGlyphs):
+            self[gid].setGdxPath(gdxObject)
 
     def loadEmptyGlyphs(self, dbgContext = "unknown") :
         #print("GraideFont::loadEmptyGlyphs", context)
@@ -154,7 +153,7 @@ def setGdxPath(self, gdxObject):
                     break
         if gidResult == -1 :
             # Look for a single-glyph class.
-            fontClass = self.classes[gdlName] if self.classes.has_key(gdlName) else None
+            fontClass = self.classes[gdlName] if gdlName in self.classes else None
             if not fontClass == None :
                 if len(fontClass.elements) == 1 :
                     gidResult = fontClass.elements[0]

@@ -17,11 +17,11 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtWidgets
 from graide.layout import Layout
 import os, re
 
-class Errors(QtGui.QListWidget) :
+class Errors(QtWidgets.QListWidget) :
 
     errorSelected = QtCore.Signal(str, int)
 
@@ -35,14 +35,16 @@ class Errors(QtGui.QListWidget) :
         self.bringToFront = False
 
     def addItem(self, txt, srcfile = None, line = 0) :
-        w = QtGui.QListWidgetItem(txt, self)
+        w = QtWidgets.QListWidgetItem(txt, self)
         w.srcfile = srcfile
         w.line = line
         return w
 
     def addGdlErrors(self, fname) :
-        if not os.path.exists(fname) : return
-        f = file(fname)
+        if not os.path.exists(fname) :
+            print("Can't find error file: ",fname)
+            return
+        f = open(fname)
         for l in f.readlines() :
             l = l.strip()
             # Look for FILENAME(LINENUM) : error(ERRORNUM): ... eg

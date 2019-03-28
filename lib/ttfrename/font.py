@@ -17,9 +17,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide import freetype
+import freetype
 from ttfrename.glyph import GlyphItem
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtWidgets
 from fontTools import ttLib
 import re
 
@@ -31,29 +31,29 @@ def getTableModule(tag) :
     return None
 ttLib.getTableModule = getTableModule
 
-class Namedit(QtGui.QDialog) :
+class Namedit(QtWidgets.QDialog) :
 
     def __init__(self, name, uid, parent = None) :
         super(Namedit, self).__init__(parent)
-        self.layout = QtGui.QGridLayout(self)
-        self.name = QtGui.QLineEdit(self)
+        self.layout = QtWidgets.QGridLayout(self)
+        self.name = QtWidgets.QLineEdit(self)
         self.name.setText(name)
         self.name.setSelection(0, len(name))
-        self.layout.addWidget(QtGui.QLabel('Name'), 0, 0)
+        self.layout.addWidget(QtWidgets.QLabel('Name'), 0, 0)
         self.layout.addWidget(self.name, 0, 1)
-        self.uid = QtGui.QLineEdit(self)
+        self.uid = QtWidgets.QLineEdit(self)
         if uid :
             self.uid.setText("%04X" % uid)
-        self.layout.addWidget(QtGui.QLabel('Unicode'), 1, 0)
+        self.layout.addWidget(QtWidgets.QLabel('Unicode'), 1, 0)
         self.layout.addWidget(self.uid, 1, 1)
-        o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.layout.addWidget(o, 2, 0, 1, 2)
 
     def getValues(self) :
         t = self.uid.text()
-        if re.match(ur'^[0-9a-fA-F]+$', t) :
+        if re.match(u'^[0-9a-fA-F]+$', t) :
             uid = int(t, 16)
         else :
             uid = 0

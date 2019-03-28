@@ -21,15 +21,14 @@
 
 import os, sys
 
-if getattr(sys, 'frozen', None) :
-    os.environ['PATH'] += os.pathsep + sys._MEIPASS
+if 'QT_API' not in os.environ :
+    os.environ['QT_API'] = 'pyside2'
 
-from PySide import QtGui
+from qtpy import QtGui, QtWidgets
 from ttfrename.font import Font
 from ttfrename.fontview import FontView
-import sys
 
-class MainWindow(QtGui.QMainWindow) :
+class MainWindow(QtWidgets.QMainWindow) :
 
     def __init__(self, app, font) :
         super(MainWindow, self).__init__()
@@ -41,8 +40,8 @@ class MainWindow(QtGui.QMainWindow) :
 
     def setupUI(self) :
         self.resize(800, 600)
-        #self.centralwidget = QtGui.QWidget(self)
-        #self.layout = QtGui.QVBoxLayout(self.centralwidget)
+        #self.centralwidget = QtWidgets.QWidget(self)
+        #self.layout = QtWidgets.QVBoxLayout(self.centralwidget)
         if self.font : self.loadFont()
         #self.layout.addWidget(self.table)
 
@@ -63,7 +62,7 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.editGlyph(index.data())
 
     def open(self) :
-        fileName, filtr = QtGui.QFileDialog.getOpenFileName(self)
+        fileName, filtr = QtWidgets.QFileDialog.getOpenFileName(self)
         if fileName :
             self.font.loadFont(str(fileName))
             if self. table :
@@ -76,13 +75,13 @@ class MainWindow(QtGui.QMainWindow) :
         self.font.save()
 
     def saveas(self) :
-        fileName, filtr = QtGui.QFileDialog.getSaveFileName(self, filter="TrueType Fonts (*.ttf)")
+        fileName, filtr = QtWidgets.QFileDialog.getSaveFileName(self, filter="TrueType Fonts (*.ttf)")
         if fileName : self.font.save(fileName)
 
 def clicked(index) :
     font.editGlyph(index.data())
 
-app = QtGui.QApplication(sys.argv)
+app = QtWidgets.QApplication(sys.argv)
 font = Font()
 if len(sys.argv) > 1 : font.loadFont(sys.argv[1], 40)
 mainWindow = MainWindow(app, font)

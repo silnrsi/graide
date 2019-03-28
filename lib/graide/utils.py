@@ -20,7 +20,7 @@
 import os, subprocess, re, sys
 from tempfile import mktemp
 from shutil import copyfile
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from xml.etree import cElementTree as XmlTree
 
 mainapp = None
@@ -69,11 +69,8 @@ grcompiler = None
 def findgrcompiler() :
     global grcompiler
     if sys.platform == 'win32' :
-        if getattr(sys, 'frozen', None) :
-            grcompiler = os.path.join(sys._MEIPASS, 'grcompiler.exe')
-            return grcompiler
         try :
-            from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
+            from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
             node = "Microsoft\\Windows\\CurrentVersion\\Uninstall\\Graphite Compiler_is1"
             if sys.maxsize > 1 << 32 :
                 r = OpenKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\" + node)
@@ -82,40 +79,44 @@ def findgrcompiler() :
             p = QueryValue(r, "InstallLocation")
             grcompiler = os.path.join(p, "GrCompiler.exe")
         except WindowsError :
+            exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'GrCompiler.exe')
+            if os.path.exists(exe) :
+                grcompiler = exe
+                return
             for p in os.environ['PATH'].split(';') :
                 a = os.path.join(p, 'grcompiler.exe')
                 if os.path.exists(a) :
                     grcompiler = a
                     break
-    elif sys.platform == 'darwin' and getattr(sys, 'frozen', None) :
-        grcompiler = os.path.join(sys._MEIPASS, 'grcompiler')
-        return grcompiler
     else :
+        exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'grcompiler')
+        if os.path.exists(exe) :
+            grcompiler = exe
+            return
         for p in os.environ['PATH'].split(':') :
             a = os.path.join(p, "grcompiler")
             if os.path.exists(a) :
                 grcompiler = a
                 break
-    return grcompiler
 
 # Return 0 if successful.
 def buildGraphite(config, app, font, fontfile, errfile = None) :
     global grcompiler
-    
+
     if configintval(config, 'build', 'usemakegdl') :
         gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
-        
+
         if config.has_option('main', 'ap') and not configval(config, 'build', 'apronly'):    # AP XML file
             # Generate the AP GDL file.
             apFilename = config.get('main', 'ap')
             font.saveAP(apFilename, gdlfile)
             if app : app.updateFileEdit(apFilename)
-                
+
         cmd = configval(config, 'build', 'makegdlcmd')
         if cmd and cmd.strip() :
             # Call the make command to perform makegdl.
             makecmd = expandMakeCmd(config, cmd)
-            print makecmd
+            print(makecmd)
             subprocess.call(makecmd, shell = True)
         else :
             # Use the default makegdl process.
@@ -123,7 +124,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             font.calculatePointClasses()
             font.ligClasses()
             attPassNum = int(config.get('build', 'attpass'))
-            f = file(gdlfile, "w")
+            f = open(gdlfile, "w")
             font.outGDL(f)
             if attPassNum > 0 : font.outPosRules(f, attPassNum)
             if configval(config, 'build', 'gdlfile') :
@@ -132,9 +133,9 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             if app : app.updateFileEdit(gdlfile)
     else :
         gdlfile = configval(config, 'build', 'gdlfile')
-        
+
     if not gdlfile or not os.path.exists(gdlfile) :
-        f = file('gdlerr.txt' ,'w')
+        f = open('gdlerr.txt' ,'w')
         if not gdlfile :
             f.write("No GDL File specified. Build failed")
         else :
@@ -156,8 +157,7 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
     if errfile :
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = errfile
-    if getattr(sys, 'frozen', None) : parms['env'] = os.environ
-        
+
     if config.has_option('build', 'ignorewarnings') :
         warningList = configval(config, 'build', 'ignorewarnings')
         warningList = warningList.replace(' ', '')
@@ -174,12 +174,14 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         
     res = 1
     if grcompiler is not None :
-        print "Compiling..."
+        print("Compiling...")
         argList = [grcompiler]
         argList.extend(warningList)
         argList.extend(["-d", "-q", gdlfile, tempname, fontfile])
         res = subprocess.call(argList, **parms)
-        
+    else :
+        print("grcompiler is missing")
+
     if res :
         copyfile(tempname, fontfile)
     os.remove(tempname)
@@ -248,7 +250,7 @@ def relpath(p, base) :
 
 def as_entities(text) :
     if text :
-        return re.sub(ur'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), text)
+        return re.sub(u'([^\u0000-\u007f])', lambda x: "\\u%04X" % ord(x.group(1)), text)
     else :
         return ""
 
@@ -271,7 +273,7 @@ def generateTweakerGDL(config, app) :
     tweakData = app.tab_tweak.parseFile(tweakxmlfile)
     
     passindex = configval(config, 'build', 'tweakpass')
-    f = file(tweakgdlfile, 'w')
+    f = open(tweakgdlfile, 'w')
     f.write("/*\n    Tweaker GDL file for font " + fontname + " to include in " + gdlfile + "\n*/\n\n")
 
     if passindex :
@@ -342,7 +344,7 @@ def generateTweakerGDL(config, app) :
     
     if app : app.updateFileEdit(tweakgdlfile)
     
-    print "Tweak GDL generated - accepting pending tweaks."
+    print("Tweak GDL generated - accepting pending tweaks.")
     
     # Accept all pending shifts, since they are now part of the Graphite rules.
     app.tab_tweak.acceptPending(tweakxmlfile)
@@ -350,7 +352,7 @@ def generateTweakerGDL(config, app) :
     return ""  # success
     
 def popUpError(msg) :
-    dlg = QtGui.QMessageBox()
+    dlg = QtWidgets.QMessageBox()
     dlg.setText(msg)
     dlg.setWindowTitle("Graide")
     dlg.exec_()

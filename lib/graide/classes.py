@@ -18,26 +18,26 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import configintval
 from graide.layout import Layout
 import traceback
 
-class ClassMemberDialog(QtGui.QDialog) :
+class ClassMemberDialog(QtWidgets.QDialog) :
     
     def __init__(self, parent, className, memberList) :
         super(ClassMemberDialog,self).__init__(parent)
         
         # Hide the help icon, all it does it take up space.
-        #icon = self.windowIcon(); -- just in case icon gets lost
-        flags = self.windowFlags();
-        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
-        flags = flags & (~helpFlag);
-        self.setWindowFlags(flags);
-        #self.setWindowIcon(icon);
+        #icon = self.windowIcon() -- just in case icon gets lost
+        flags = self.windowFlags()
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint
+        flags = flags & (~helpFlag)
+        self.setWindowFlags(flags)
+        #self.setWindowIcon(icon)
 
         self.setWindowTitle(className)
-        listWidget = QtGui.QListWidget(self)
+        listWidget = QtWidgets.QListWidget(self)
         #listWidget.clicked.connect(self.doReturn)
         itemHeight = 18
         cnt = 0
@@ -45,7 +45,7 @@ class ClassMemberDialog(QtGui.QDialog) :
             if member == "" or member == " " :
                 continue
                 
-            item = QtGui.QListWidgetItem(member)
+            item = QtWidgets.QListWidgetItem(member)
             item.setSizeHint(QtCore.QSize(200, itemHeight))
             listWidget.addItem(item)
             cnt = cnt + 1
@@ -77,7 +77,7 @@ class ClassMemberDialog(QtGui.QDialog) :
 
 
 # Classes tab widget
-class Classes(QtGui.QWidget) :
+class Classes(QtWidgets.QWidget) :
 
     classUpdated = QtCore.Signal(str, str)
     classSelected = QtCore.Signal(str)
@@ -87,39 +87,39 @@ class Classes(QtGui.QWidget) :
         self.app = app
         self.ronly = configintval(app.config, 'build', 'apronly')
         self.apgdlfile = apgdlfile
-        self.vb = QtGui.QVBoxLayout(self)
+        self.vb = QtWidgets.QVBoxLayout(self)
         self.vb.setContentsMargins(*Layout.buttonMargins)
         self.vb.setSpacing(Layout.buttonSpacing)
-        self.tab = QtGui.QTableWidget(self)
+        self.tab = QtWidgets.QTableWidget(self)
         self.vb.addWidget(self.tab)
         self.tab.setColumnCount(2)
         self.tab.cellDoubleClicked.connect(self.doubleClicked)
         self.tab.cellClicked.connect(self.clicked)
         self.tab.horizontalHeader().hide()
         self.tab.verticalHeader().hide()
-        self.bbox = QtGui.QWidget(self)
-        self.hb = QtGui.QHBoxLayout(self.bbox)
+        self.bbox = QtWidgets.QWidget(self)
+        self.hb = QtWidgets.QHBoxLayout(self.bbox)
         self.hb.setContentsMargins(*Layout.buttonMargins)
         self.hb.setSpacing(Layout.buttonSpacing)
         self.hb.addStretch()
         self.vb.addWidget(self.bbox)
-        self.cButton = QtGui.QToolButton()	# clear highlights
+        self.cButton = QtWidgets.QToolButton()	# clear highlights
         self.cButton.setIcon(QtGui.QIcon.fromTheme('edit-clear', QtGui.QIcon(":/images/edit-clear.png")))
         self.cButton.clicked.connect(self.clearHighlights)
         self.cButton.setToolTip('Clear glyph highlights')
         self.hb.addWidget(self.cButton)
         if not self.ronly :
-            self.aButton = QtGui.QToolButton()
+            self.aButton = QtWidgets.QToolButton()
             self.aButton.setIcon(QtGui.QIcon.fromTheme('list-add', QtGui.QIcon(":/images/list-add.png")))
             self.aButton.clicked.connect(self.addClass)
             self.aButton.setToolTip('Add new class')
             self.hb.addWidget(self.aButton)
-            self.rButton = QtGui.QToolButton()
+            self.rButton = QtWidgets.QToolButton()
             self.rButton.setIcon(QtGui.QIcon.fromTheme('list-remove', QtGui.QIcon(":/images/list-remove.png")))
             self.rButton.clicked.connect(self.delCurrent)
             self.rButton.setToolTip('Remove currently selected class')
             self.hb.addWidget(self.rButton)
-        self.fButton = QtGui.QToolButton()	# find class
+        self.fButton = QtWidgets.QToolButton()	# find class
         self.fButton.setIcon(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")))
         self.fButton.clicked.connect(self.findSelectedClass)
         self.fButton.setToolTip('Find class selected in source code')
@@ -148,14 +148,15 @@ class Classes(QtGui.QWidget) :
         if num != oldnum :
             self.tab.setRowCount(num)
         for i in range(num) :
-            l = QtGui.QTableWidgetItem(keys[i])
+            l = QtWidgets.QTableWidgetItem(keys[i])
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             c = font.classes[keys[i]]
             v = map(lambda x: font[x].GDLName() if font[x] else "", c.elements)
-            if len(v) :
-                m = QtGui.QTableWidgetItem("  ".join(filter(None, v)))
+            vList = list(v)
+            if len(vList) :
+                m = QtWidgets.QTableWidgetItem("  ".join(filter(None, vList)))
             else :
-                m = QtGui.QTableWidgetItem("")
+                m = QtWidgets.QTableWidgetItem("")
             t = ""
             if self.ronly : c.editable = False
             if c.generated : t += "Generated "
@@ -199,13 +200,13 @@ class Classes(QtGui.QWidget) :
         c = self.tab.item(row, 1)
         if not c.fileLoc[0] or c.fileLoc[2] :
             #print(c.fileLoc[0], c.fileLoc[2])
-            d = QtGui.QDialog(self)
+            d = QtWidgets.QDialog(self)
             name = self.tab.item(row, 0).text()
             d.setWindowTitle(name)
-            l = QtGui.QVBoxLayout(d)
-            edit = QtGui.QPlainTextEdit(self.tab.item(row, 1).text(), d)
+            l = QtWidgets.QVBoxLayout(d)
+            edit = QtWidgets.QPlainTextEdit(self.tab.item(row, 1).text(), d)
             l.addWidget(edit)
-            o = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+            o = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
             o.accepted.connect(d.accept)
             o.rejected.connect(d.reject)
             l.addWidget(o)
@@ -216,7 +217,7 @@ class Classes(QtGui.QWidget) :
         elif c.fileLoc[0] :
             #print("send array", c.fileLoc[0], c.fileLoc[1])
             self.app.selectLine(*c.fileLoc[:2])
-            return True    	
+            return True
 
     #end of findSourceForClass
     
@@ -226,12 +227,12 @@ class Classes(QtGui.QWidget) :
 
     
     def addClass(self) :
-        (name, ok) = QtGui.QInputDialog.getText(self, 'Add Class', 'Class Name:')
+        (name, ok) = QtWidgets.QInputDialog.getText(self, 'Add Class', 'Class Name:')
         if name and ok :
             self.classUpdated.emit(name, "")
-            l = QtGui.QTableWidgetItem(name)
+            l = QtWidgets.QTableWidgetItem(name)
             l.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            v = QtGui.QTableWidgetItem("")
+            v = QtWidgets.QTableWidgetItem("")
             v.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
             r = self.tab.rowCount()
             self.tab.setRowCount(r + 1)
@@ -241,6 +242,8 @@ class Classes(QtGui.QWidget) :
     
     def delCurrent(self) :
         r = self.tab.currentRow()
+        if r < 0 :
+            return
         name = self.tab.item(r, 0).text()
         self.classUpdated.emit(name, None)
         self.tab.removeRow(r)
@@ -248,28 +251,28 @@ class Classes(QtGui.QWidget) :
     
     # Scroll to the selected class and highlight it in the class pane.
     def findSelectedClass(self) :
-        # print("findSelectedClass")
+        #print("findSelectedClass")
         className = self.app.tab_edit.selectedText
-    	d = QtGui.QDialog(self)
-    	rowMatched = -1
-    	for row in range(0, self.classCount) :
-    	    edit = QtGui.QPlainTextEdit(self.tab.item(row, 0).text(), d)
-    	    cname = edit.toPlainText()
-    	    if cname == className :
-    	    	rowMatched = row
-    	    	break
-    	
-    	if rowMatched > -1 :
-    	    item = self.tab.item(rowMatched, 0)
-    	    self.tab.scrollToItem(item)
-    	    item.setBackground(Layout.activePassColour)
-    	    
-    	    if self.selClassName == className :  # second time clicked
-    	        self.findSourceForClass(rowMatched)
-    	#else :
-    	#    QtGui.QSound.play()
-    	        
-    	self.selClassName = className
+        d = QtWidgets.QDialog(self)
+        rowMatched = -1
+        for row in range(0, self.classCount) :
+            edit = QtWidgets.QPlainTextEdit(self.tab.item(row, 0).text(), d)
+            cname = edit.toPlainText()
+            if cname == className :
+                rowMatched = row
+                break
+
+        if rowMatched > -1 :
+            item = self.tab.item(rowMatched, 0)
+            self.tab.scrollToItem(item)
+            item.setBackground(Layout.activePassColour)
+
+            if self.selClassName == className :  # second time clicked
+                self.findSourceForClass(rowMatched)
+        #else :
+        #    QtGui.QSound.play()
+
+        self.selClassName = className
 
     # end of findSelectedClass
     

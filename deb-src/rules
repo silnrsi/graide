@@ -1,11 +1,5 @@
 #!/usr/bin/make -f
+export PYBUILD_NAME=graide
 
 % :
-	dh $@
-
-override_dh_auto_clean :
-	dh_auto_clean
-	rm -fr build
-
-override_dh_install :
-	dh_install --sourcedir=debian/graphite-graide
+	dh $@ --with python2,python3 --buildsystem=pybuild

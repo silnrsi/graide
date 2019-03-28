@@ -19,9 +19,9 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 
-class GlyphDelegate(QtGui.QAbstractItemDelegate) :
+class GlyphDelegate(QtWidgets.QAbstractItemDelegate) :
 
     textheight = 12
 
@@ -31,7 +31,7 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
     def paint(self, painter, option, index) :
         g = index.data()
-        if option.state & QtGui.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.State_Selected:
             painter.fillRect(option.rect, option.palette.highlight())
 
         if g :
@@ -71,8 +71,8 @@ class FontModel(QtCore.QAbstractTableModel) :
         self.beginResetModel()
         cellwidth = self.delegate.sizeHint(None, None).width() + 1
         if cellwidth < 56 : cellwidth = 56
-        self.columns = width / cellwidth
-        self.rows = (self.font.numGlyphs + self.columns - 1) / self.columns
+        self.columns = width // cellwidth
+        self.rows = (self.font.numGlyphs + self.columns - 1) // self.columns
         if oldcolumns and oldcolumns > self.columns :
             self.columnsRemoved.emit(self.createIndex(0, 0), oldcolumns, self.columns)
         elif oldcolumns and oldcolumns < self.columns :
@@ -90,7 +90,7 @@ class FontModel(QtCore.QAbstractTableModel) :
             return None
         return self.font[index.row() * self.columns + index.column()]
 
-class FontView(QtGui.QTableView) :
+class FontView(QtWidgets.QTableView) :
 
     def __init__(self, font, parent = None) :
         super(FontView, self).__init__(parent)
@@ -116,7 +116,7 @@ class FontView(QtGui.QTableView) :
             for i in self.selectedIndexes() :
                 g = i.data()
                 res.append(g.GDLName())
-            clipboard = QtGui.QApplication.clipboard()
+            clipboard = QtWidgets.QApplication.clipboard()
             clipboard.setText("  ".join(res))
         else :
             super(FontView, self).keyPressEvent(event)
@@ -126,7 +126,7 @@ class FontView(QtGui.QTableView) :
         self.viewport().update()
 
 def clicked_glyph(index) :
-    print str(index.data())
+    print(str(index.data()))
 
 if __name__ == "__main__" :
     from ttfrename.font import Font
@@ -135,7 +135,7 @@ if __name__ == "__main__" :
     def clicked(index) :
         font.editGlyph(index.data())
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     font = Font()
     font.loadFont(sys.argv[1], 40)
     table = FontView(font)

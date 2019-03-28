@@ -19,13 +19,13 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
 
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
-class GlyphDelegate(QtGui.QAbstractItemDelegate) :
+class GlyphDelegate(QtWidgets.QAbstractItemDelegate) :
 
     def __init__(self, font, parent=None) :
         super(GlyphDelegate, self).__init__(parent)
@@ -34,7 +34,7 @@ class GlyphDelegate(QtGui.QAbstractItemDelegate) :
 
     def paint(self, painter, option, index) :
         g = index.data()
-        if option.state & QtGui.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.State_Selected:
             painter.fillRect(option.rect, option.palette.highlight())
         elif g and g.isHighlighted() :
             painter.fillRect(option.rect, QtGui.QColor(0, 0, 0, 32))
@@ -83,9 +83,9 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
         self.beginResetModel()
         cellwidth = self.delegate.sizeHint(None, None).width() + 1
         if cellwidth < 56 : cellwidth = 56
-        self.columns = width / cellwidth
+        self.columns = width // cellwidth
         if self.columns == 0 : self.columns = 1  # don't know if this is really needed
-        self.rows = (self.font.numGlyphs + self.columns - 1) / self.columns
+        self.rows = (self.font.numGlyphs + self.columns - 1) // self.columns
         if oldcolumns and oldcolumns > self.columns :
             self.columnsRemoved.emit(self.createIndex(0, 0), oldcolumns, self.columns)
         elif oldcolumns and oldcolumns < self.columns :
@@ -103,7 +103,7 @@ class FontModel(QtCore.QAbstractTableModel, ModelSuper) :
             return None
         return self.font[index.row() * self.columns + index.column()]
 
-class FontView(QtGui.QTableView) :
+class FontView(QtWidgets.QTableView) :
 
     changeGlyph = QtCore.Signal(DataObj, ModelSuper, bool)
 
@@ -133,7 +133,7 @@ class FontView(QtGui.QTableView) :
             for i in self.selectedIndexes() :
                 g = i.data()
                 res.append(g.GDLName())
-            clipboard = QtGui.QApplication.clipboard()
+            clipboard = QtWidgets.QApplication.clipboard()
             clipboard.setText("  ".join(res))
         else :
             super(FontView, self).keyPressEvent(event)
@@ -146,14 +146,14 @@ class FontView(QtGui.QTableView) :
         self.viewport().update()
 
 def clicked_glyph(index) :
-    print str(index.data())
+    print(str(index.data()))
 
 if __name__ == "__main__" :
-    from graide.font import Font
+    from graide.font import GraideFont
     import sys
 
-    app = QtGui.QApplication(sys.argv)
-    font = Font()
+    app = QtWidgets.QApplication(sys.argv)
+    font = GraideFont()
     font.loadFont("/usr/share/fonts/opentype/charissil/CharisSIL-R.ttf")
     font.makebitmaps(40)
     table = FontView(font)

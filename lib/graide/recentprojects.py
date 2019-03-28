@@ -18,10 +18,9 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui
 from graide.utils import configval, configintval
 import os, sys
-if sys.platform == "win32" : import _winreg
 
 
 class RecentProjectList(object) :
@@ -80,7 +79,7 @@ class RecentProjectList(object) :
     def _getFileList(self) :
         self.settings.beginGroup('Recent')
         value = self.settings.value('projects')
-        self.settings.endGroup();
+        self.settings.endGroup()
 
         if value :
             files = value.split(';')

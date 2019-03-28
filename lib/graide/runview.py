@@ -22,15 +22,20 @@
 # A RunView consists of two sub-views: a display of the current glyphs (QGraphicsView)
 # and a list of corresponding glyph names (QPlainTextEdit).
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 from graide.layout import Layout
-import os, time, traceback
+import sys, os, time, traceback
 
-class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
+class GlyphPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
     def __init__(self, index, px, model = None, parent = None, scene = None) :
-        super(GlyphPixmapItem, self).__init__(px, parent, scene)
+        if sys.version_info[0] < 3:
+            super(GlyphPixmapItem, self).__init__(px, parent, scene)
+        else:
+            super(GlyphPixmapItem, self).__init__(px, parent)
+            self.scene = scene
+        if self.scene: self.scene.addItem(self)
         self.selected = False
         self.index = index
         self.highlighted = False
@@ -65,7 +70,7 @@ class GlyphPixmapItem(QtGui.QGraphicsPixmapItem) :
       
       
 # Apparently not used
-class RunTextView(QtGui.QPlainTextEdit) :
+class RunTextView(QtWidgets.QPlainTextEdit) :
 
     def __init__(self, creator, parent = None) :
         super(RunTextView, self).__init__(parent=parent)
@@ -89,22 +94,22 @@ class RunView(QtCore.QObject, ModelSuper) :
     def __init__(self, font = None, run = None, parent = None, collision = False) : # parent = PassesView, Matcher, or none
         super(RunView, self).__init__()
         self.parent = parent
-        self.gview = QtGui.QGraphicsView(parent)	# graphics view - glyphs
+        self.gview = QtWidgets.QGraphicsView(parent)	# graphics view - glyphs
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
         self.gview.mouseDoubleClickEvent = self.sEvent
         if font : 
             self.gview.resize(self.gview.size().width(), max(font.pixrect.height(), RunView.MinHt))
         else :
             self.gview.resize(200, RunView.MinHt)
-        self._scene = QtGui.QGraphicsScene(self.gview) # the scene contains the pixmaps
+        self._scene = QtWidgets.QGraphicsScene(self.gview) # the scene contains the pixmaps
         self._scene.keyPressEvent = self.keyPressEvent
         self._scene.mouseDoubleClickEvent = self.sEvent
-        self.tview = QtGui.QPlainTextEdit(parent)	# text view - glyph names
+        self.tview = QtWidgets.QPlainTextEdit(parent)	# text view - glyph names
         self.tview.setReadOnly(True)
         self.tview.mousePressEvent = self.tEvent
         self.tview.mouseDoubleClickEvent = self.tEvent
         self._fSelect = QtGui.QTextCharFormat()
-        self._fSelect.setBackground(QtGui.QApplication.palette().highlight())
+        self._fSelect.setBackground(QtWidgets.QApplication.palette().highlight())
         self._fHighlights = {}
         for c in Layout.slotColours.keys() :
             self._fHighlights[c] = QtGui.QTextCharFormat()
@@ -156,7 +161,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 self.tview.insertPlainText(glyphName + "  ") # 2 spaces between glyph names
                 self._gindices.append(self._gindices[-1] + len(glyphName) + 2)
                 if s.highlighted :
-                    hselect = QtGui.QTextEdit.ExtraSelection()
+                    hselect = QtWidgets.QTextEdit.ExtraSelection()
                     if s.highlightType in self._fHighlights :
                         hselect.format = self._fHighlights[s.highlightType]
                     else :
@@ -177,10 +182,10 @@ class RunView(QtCore.QObject, ModelSuper) :
             def doEdge(lastx, curry, e, scale, pen) :  # local function
                 if e > 1e+37 or e < -1e+37 : return None
                 if lastx is not None :
-                    t = QtGui.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
+                    t = QtWidgets.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
                     t.setPen(pen)
                     self.kernLines.append(t)
-                t = QtGui.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
+                t = QtWidgets.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
                 t.setPen(pen)
                 self.kernLines.append(t)
                 return e
@@ -268,7 +273,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                     newSel = 0
         
             if newSel >= 0 and newSel != self.currselection :
-                self.changeSelection(newSel)
+                self.changeSelection(newSel, False)
                 
         
     def changeSelection(self, newSel, doubleClick) :
@@ -283,7 +288,7 @@ class RunView(QtCore.QObject, ModelSuper) :
             self.selectPixmapForSlot(newSel, True)
                 
             # Highlight the name of the selected glyph in the text view.
-            tselect = QtGui.QTextEdit.ExtraSelection()
+            tselect = QtWidgets.QTextEdit.ExtraSelection()
             tselect.format = self._fSelect
             tselect.cursor = QtGui.QTextCursor(self.tview.document())
             tselect.cursor.movePosition(QtGui.QTextCursor.NextCharacter, n=self._gindices[newSel])
@@ -348,7 +353,7 @@ class RunView(QtCore.QObject, ModelSuper) :
                 count += 1
             image.save(fname)
             #time.sleep(3)
-            print "Saved image to " + fname
+            print("Saved image to " + fname)
 
     def clear(self) :
         self._scene.clear()
@@ -357,22 +362,22 @@ class RunView(QtCore.QObject, ModelSuper) :
 
 if __name__ == "__main__" :
     import json, sys, os
-    from font import Font
-    from run import Run
+    from graide.font import GraideFont
+    from graide.run import Run
 
-    app = QtGui.QApplication(sys.argv)
-    # print app.desktop().logicalDpiY()
+    app = QtWidgets.QApplication(sys.argv)
+    # print(app.desktop().logicalDpiY())
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests')
-    jf = file(os.path.join(tpath, "padauk3.json"))
+    jf = open(os.path.join(tpath, "padauk3.json"))
     jinfo = json.load(jf)
-    font = Font()
+    font = GraideFont()
     font.loadFont(os.path.join(tpath, "fonts/Padauk/Padauk.ttf"))
     font.makebitmaps(40)
     rinfo = jinfo['passes'][0]['slots']
     run = Run(font, False)
     run.addSlots(rinfo)
     view = RunView(run, font).gview
-    print "Padauk RunView?" ###
+    print("Padauk RunView?") ###
     view.show()
     sys.exit(app.exec_())
 

@@ -17,4 +17,4 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-__all__ = ['makegdl', 'psnames']
+__all__ = ['psnames']

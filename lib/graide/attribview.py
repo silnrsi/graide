@@ -19,12 +19,12 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import ModelSuper, DataObj
 import traceback
 import os
 
-#for line in traceback.format_stack(): print line.strip()
+#for line in traceback.format_stack(): print(line.strip())
 
 #   Here is a summaryhow the Python Slots and Signals interact to update the Glyph tab when a glyph is clicked:
 #
@@ -42,33 +42,33 @@ import os
 #       ...
 #       AttribView::changeData
 
-class LinePlainTextEdit(QtGui.QPlainTextEdit) :
+class LinePlainTextEdit(QtWidgets.QPlainTextEdit) :
 
     editFinished = QtCore.Signal()
 
     def keyPressEvent(self, key) :
         if key.matches(QtGui.QKeySequence.InsertParagraphSeparator) :
                     # or key.matches(QtGui.QKeySequence.InsertLineSeparator) :
-           self.editFinished.emit()
+            self.editFinished.emit()
         else :
             return super(LinePlainTextEdit, self).keyPressEvent(key)
             
 
-class AttrValueListDialog(QtGui.QDialog) :
+class AttrValueListDialog(QtWidgets.QDialog) :
     
     def __init__(self, parent, glyphName, gClassList) :
         super(AttrValueListDialog,self).__init__(parent)
         
         # Hide the help icon, all it does it take up space.
-        #icon = self.windowIcon(); -- just in case icon gets lost
-        flags = self.windowFlags();
-        helpFlag = QtCore.Qt.WindowContextHelpButtonHint;
-        flags = flags & (~helpFlag);
-        self.setWindowFlags(flags);
-        #self.setWindowIcon(icon);
+        #icon = self.windowIcon() -- just in case icon gets lost
+        flags = self.windowFlags()
+        helpFlag = QtCore.Qt.WindowContextHelpButtonHint
+        flags = flags & (~helpFlag)
+        self.setWindowFlags(flags)
+        #self.setWindowIcon(icon)
 
         self.setWindowTitle(glyphName)
-        listWidget = QtGui.QListWidget(self)
+        listWidget = QtWidgets.QListWidget(self)
         #listWidget.clicked.connect(self.doReturn)
         itemHeight = 18
         cnt = 0
@@ -76,7 +76,7 @@ class AttrValueListDialog(QtGui.QDialog) :
             if gClass == "" or gClass == " " :
                 continue
                 
-            item = QtGui.QListWidgetItem(gClass)
+            item = QtWidgets.QListWidgetItem(gClass)
             item.setSizeHint(QtCore.QSize(200, itemHeight))
             listWidget.addItem(item)
             cnt = cnt + 1
@@ -107,7 +107,7 @@ class AttrValueListDialog(QtGui.QDialog) :
 # end of class AttrValueListDialog
 
 
-class AttributeDelegate(QtGui.QStyledItemDelegate) :
+class AttributeDelegate(QtWidgets.QStyledItemDelegate) :
 
     def __init__(self, parent) :
         super(AttributeDelegate, self).__init__(parent)
@@ -215,11 +215,11 @@ class Attribute(object) :
 
         
     def debugPrintData(self) :
-        print self.name
+        print(self.name)
         if self.isTree : 
-            print ">>>"
+            print(">>>")
             self.tree.debugPrintData()
-            print "<<<"
+            print("<<<")
 
 # end of class Attribute
 
@@ -326,20 +326,20 @@ class AttribModel(QtCore.QAbstractItemModel) :
         return attrData.showPopupList(listToShow, widget)       
 
     def debugPrintData(self) :
-        print self.__data
+        print(self.__data)
         for d in self.__data :
             d.debugPrintData()
 
 # end of class AttribModel
             
 
-class AttribView(QtGui.QTreeView) :
+class AttribView(QtWidgets.QTreeView) :
 
     def __init__(self, app, parent = None) :
         super(AttribView, self).__init__(parent)
         self.app = app
         self.header().setStretchLastSection(True)
-        self.header().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.header().hide()
         self.attribDelegate = AttributeDelegate(self)
         #self.setItemDelegateForColumn(1, self.attribDelegate)
@@ -362,7 +362,7 @@ class AttribView(QtGui.QTreeView) :
         self.model.setData(index, None, QtCore.Qt.EditRole)
         
     def mouseDoubleClickEvent(self, event) :
-        #print "mouseDoubleClickEvent"
+        #print("mouseDoubleClickEvent")
         super(AttribView, self).mouseDoubleClickEvent(event)
         
         # Generate a path to where the click was in the tree control.
@@ -392,11 +392,11 @@ class AttribView(QtGui.QTreeView) :
 
 if __name__ == '__main__' :
 
-    from graide.font import Font
+    from graide.font import GraideFont
     import sys, os
  
-    app = QtGui.QApplication(sys.argv)
-    font = Font()
+    app = QtWidgets.QApplication(sys.argv)
+    font = GraideFont()
     tpath = os.path.join(os.path.dirname(sys.argv[0]), '../../tests/fonts/Padauk')
     font.loadFont(os.path.join(tpath, 'Padauk.ttf'), os.path.join(tpath, 'padauk.xml'))
     glyph = font.psnames['u1000']

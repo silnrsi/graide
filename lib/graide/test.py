@@ -18,17 +18,18 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui
+from qtpy import QtGui, QtWidgets
 from graide.featureselector import FeatureDialog
 from xml.etree import cElementTree as et
 from graide.layout import Layout
 from graide.utils import configintval, as_entities, popUpError
+from builtins import chr
 import re
 
 class Test(object) :
     def __init__(self, text, feats, lang = None, rtl = False, name = None, comment = "", width = 100, bgnd = 'white') :
         self.text = text
-        self.feats = dict(feats)    # feature IDs -> values
+        self.feats = self.fixFeatsDict(dict(feats))    # feature IDs -> values
         self.name = name or text
         self.rtl = rtl
         self.lang = lang
@@ -41,55 +42,64 @@ class Test(object) :
             self.background = QtGui.QColor('white')
         self.width = width
 
+    def fixFeatsDict(self, dict):
+        "Convert feature dict keys to bytes, not str."
+        for k,v in dict.items():
+            if isinstance(k, str):
+                kbytes = k.encode('utf-8')  # convert to bytes
+                dict[kbytes] = v
+                dict.pop(k, None)
+        return dict
+
     def editDialog(self, parent, isTweak = False) :
         self.parent = parent
         self.featDialog = None
         
-        dlg = QtGui.QDialog()
-        topWidget = QtGui.QWidget(dlg)
-        hboxLayout = QtGui.QHBoxLayout()
+        dlg = QtWidgets.QDialog()
+        topWidget = QtWidgets.QWidget(dlg)
+        hboxLayout = QtWidgets.QHBoxLayout()
         topWidget.setLayout(hboxLayout)
-        gridLayout = QtGui.QGridLayout()
+        gridLayout = QtWidgets.QGridLayout()
         gridLayout.addWidget(topWidget, 4, 1)
         dlg.setLayout(gridLayout)
         
-        gridLayout.addWidget(QtGui.QLabel('Name:', dlg), 0, 0)
-        editName = QtGui.QLineEdit(self.name, dlg)
+        gridLayout.addWidget(QtWidgets.QLabel('Name:', dlg), 0, 0)
+        editName = QtWidgets.QLineEdit(self.name, dlg)
         gridLayout.addWidget(editName, 0, 1)
-        gridLayout.addWidget(QtGui.QLabel('Text:', dlg), 1, 0)
+        gridLayout.addWidget(QtWidgets.QLabel('Text:', dlg), 1, 0)
         if configintval(parent.config, 'ui', 'entities') :
             t = as_entities(self.text)
         else :
             t = self.text
-        editText = QtGui.QPlainTextEdit(t, dlg)
+        editText = QtWidgets.QPlainTextEdit(t, dlg)
         editText.setMaximumHeight(Layout.runEditHeight)
         gridLayout.addWidget(editText, 1, 1)
-        gridLayout.addWidget(QtGui.QLabel('Comment:', dlg), 2, 0)
-        editComment = QtGui.QPlainTextEdit()
+        gridLayout.addWidget(QtWidgets.QLabel('Comment:', dlg), 2, 0)
+        editComment = QtWidgets.QPlainTextEdit()
         editComment.setPlainText(self.comment)
         editComment.setMaximumHeight(Layout.runEditHeight)
         gridLayout.addWidget(editComment, 2, 1)
-        cbRTL = QtGui.QCheckBox('RTL', dlg)
+        cbRTL = QtWidgets.QCheckBox('RTL', dlg)
         cbRTL.setChecked(self.rtl)
         gridLayout.addWidget(cbRTL, 3, 1)
 
-        colourButton = QtGui.QToolButton(topWidget)
+        colourButton = QtWidgets.QToolButton(topWidget)
         colourButton.setIcon(QtGui.QIcon.fromTheme('background', QtGui.QIcon(":/images/format-fill-color.png")))
         colourButton.setToolTip('Set background colour')
         colourButton.clicked.connect(self.doColour)
         hboxLayout.addWidget(colourButton)
         
-        featButton = QtGui.QPushButton('Features', topWidget)
+        featButton = QtWidgets.QPushButton('Features', topWidget)
         hboxLayout.addWidget(featButton)
         
-        hboxWidget = QtGui.QWidget(dlg)  # generic widget containing the OK/Cancel buttons
-        hboxButtonLo = QtGui.QHBoxLayout()
+        hboxWidget = QtWidgets.QWidget(dlg)  # generic widget containing the OK/Cancel buttons
+        hboxButtonLo = QtWidgets.QHBoxLayout()
         hboxWidget.setLayout(hboxButtonLo)
         gridLayout.addWidget(hboxWidget, 5, 1)
         
-        buttonOk = QtGui.QPushButton('OK', hboxWidget)
+        buttonOk = QtWidgets.QPushButton('OK', hboxWidget)
         hboxButtonLo.addWidget(buttonOk)
-        buttonCancel = QtGui.QPushButton('Cancel', hboxWidget)
+        buttonCancel = QtWidgets.QPushButton('Cancel', hboxWidget)
         hboxButtonLo.addWidget(buttonCancel)
         
         if (self.name == "") :
@@ -138,7 +148,7 @@ class Test(object) :
 
     # Launch the color dialog and store the result.
     def doColour(self) :
-        d = QtGui.QColorDialog
+        d = QtWidgets.QColorDialog
         res = d.getColor(self.background)
         if res.isValid() :
             self.background = res
@@ -154,7 +164,7 @@ class Test(object) :
             t = et.SubElement(e, 'string')
             if self.text :
                 t.text = re.sub(r'\\u([0-9A-Fa-f]{4})|\\U([0-9A-Fa-f]{5,8})', \
-                    lambda m:unichr(int(m.group(1) or m.group(2), 16)), self.text)
+                    lambda m:chr(int(m.group(1) or m.group(2), 16)), self.text)
             else :
                 t.text = ""
             e.set('label', self.name)

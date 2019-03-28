@@ -17,13 +17,13 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.utils import configval, configintval
 from graide.config import FileEntry
 import os
 
 
-class StartDialog(QtGui.QDialog) :
+class StartDialog(QtWidgets.QDialog) :
     
     def __init__(self, config, recentProjects, parent = None) :
         super(StartDialog, self).__init__(parent)
@@ -37,20 +37,20 @@ class StartDialog(QtGui.QDialog) :
         appicon.addFile(':/images/graide logo.svg')
         self.setWindowIcon(appicon)
         
-        vLayout = QtGui.QVBoxLayout(self)
-        frame = QtGui.QFrame(self)
+        vLayout = QtWidgets.QVBoxLayout(self)
+        frame = QtWidgets.QFrame(self)
         vLayout.addWidget(frame)
         
-        gridLayout = QtGui.QGridLayout(frame)
+        gridLayout = QtWidgets.QGridLayout(frame)
         #frame.addItem(gridLayout)
         
-        self.radioRecent = QtGui.QRadioButton("Open a recent project", frame)
-        self.comboRecent = QtGui.QComboBox(frame)
+        self.radioRecent = QtWidgets.QRadioButton("Open a recent project", frame)
+        self.comboRecent = QtWidgets.QComboBox(frame)
         self.comboRecent.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.chooseRecentProject)
-        self.radioExisting = QtGui.QRadioButton("Open an existing project", frame)
+        self.radioExisting = QtWidgets.QRadioButton("Open an existing project", frame)
         self.fileExisting = FileEntry(frame, "", 'Configuration files (*.cfg *.ini)')
         self.fileExisting.textChanged.connect(self.fileSelected)
-        self.radioCreate = QtGui.QRadioButton("Create a new project", frame)
+        self.radioCreate = QtWidgets.QRadioButton("Create a new project", frame)
         recentProjectFiles = self.recentProjects.projects()
         for (basename, fullname) in recentProjectFiles :
             self.comboRecent.addItem(basename)
@@ -66,8 +66,8 @@ class StartDialog(QtGui.QDialog) :
         
         gridLayout.setColumnMinimumWidth(0, 150)
         
-        self.okExit = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok)
-        self.okExit.addButton("Exit", QtGui.QDialogButtonBox.RejectRole)
+        self.okExit = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
+        self.okExit.addButton("Exit", QtWidgets.QDialogButtonBox.RejectRole)
         self.okExit.accepted.connect(self.accept)
         self.okExit.rejected.connect(self.reject)
         vLayout.addSpacing(25)

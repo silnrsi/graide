@@ -18,16 +18,16 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 import json
 
-class ContextToolButton(QtGui.QToolButton) :
+class ContextToolButton(QtWidgets.QToolButton) :
     rightClick = QtCore.Signal(QtGui.QContextMenuEvent)
 
     def contextMenuEvent(self, event) :
         self.rightClick.emit(event)
 
-class DebugMenu(QtGui.QMenu) :
+class DebugMenu(QtWidgets.QMenu) :
 
     def __init__(self, app, parent = None) :
         super(DebugMenu, self).__init__(parent)
@@ -40,6 +40,6 @@ class DebugMenu(QtGui.QMenu) :
         self.app.loadFont(self.app.fontFileName)
 
     def runSave(self) :
-        f = file('_graide.json', 'w')
+        f = open('_graide.json', 'w')
         json.dump(self.app.json, f, indent=2)
         f.close()

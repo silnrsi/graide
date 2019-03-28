@@ -18,12 +18,11 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui
-from graide import freetype
-import array, ctypes
+from qtpy import QtGui
+import array
 
 def ftGlyph(face, gid, fill = 0) :
-    res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
+    face.load_glyph(gid)
     b = face.glyph.bitmap
     top = face.glyph.bitmap_top
     left = face.glyph.bitmap_left
@@ -43,9 +42,7 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        n = ctypes.create_string_buffer(64)
-        freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = n.value
+        self.name = face.get_glyph_name(gid).decode('ascii')
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid

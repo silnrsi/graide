@@ -19,6 +19,7 @@
 
 import re
 import traceback  # Debug
+from builtins import chr, str
 
 uniToPsnameMap = {
     '0020' : 'space',
@@ -4343,7 +4344,7 @@ aglToUniMap = {
 	}
 
 for k, v in uniToPsnameMap.items() :
-    aglToUniMap[v] = unichr(int(k, 16))
+    aglToUniMap[v] = chr(int(k, 16))
 
 def parse(name) :
     res = []
@@ -4427,7 +4428,7 @@ class Name(object) :
             return self.cname
         for k in self.components :
             u = k[0]
-            if not isinstance(u, basestring) and u :
+            if not isinstance(u, str) and u :
                 n = "%04X" % u
             else :
                 n = u
@@ -4462,7 +4463,7 @@ class Name(object) :
             
         for k in self.components :
             u = k[0]
-            if not isinstance(u, basestring) and u :
+            if not isinstance(u, str) and u :
                 n = "%04X" % u
             elif u :
                 n = u.replace('.', '_')

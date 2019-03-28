@@ -17,24 +17,15 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from graide.graphite import gr2, grversion
 import sys
-from ctypes import *
-from ctypes.util import find_library
-
-libc = cdll.LoadLibrary(find_library("c"))
-if sys.platform == "win32" :
-    c = libc._fdopen
-else :
-    c = libc.fdopen
-
-c.restype = c_void_p
-c.argtypes = [c_int, c_char_p]
+from graphite2 import gr2, grversion
 
 def strtolong(txt) :
+    if sys.version_info.major > 2:
+        def ord(x) : return x
     res = 0
     if txt :
-        txt = (txt + "\000\000\000\000")[:4]
+        txt = (txt + b"\000\000\000\000")[:4]
     else :
         return 0
     for c in txt :
@@ -59,7 +50,7 @@ def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, siz
         gr2.gr_start_logging(grface, debugname)
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
         
     ###print "text=",text  ####
@@ -83,7 +74,7 @@ def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, siz
 
 
 def makeFontAndFace(fontname, size) :
-    grface = gr2.gr_make_file_face(fontname, 0)
+    grface = gr2.gr_make_file_face(fontname.encode(), 0)
     grfont = gr2.gr_make_font(size, grface)
     return (grface, grfont)
     
@@ -95,30 +86,36 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     
     (major, minor, debug) = grversion()
     if major > 1 or minor > 1 :
-        gr2.gr_start_logging(grface, debugname)
+        gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
     
     lang = strtolong(lang)
     
     grfeats = gr2.gr_face_featureval_for_lang(grface, 0)
     for f, v in feats.items() :
-        if v is None : continue
-        id = gr2.gr_str_to_tag(f)
-        fref = gr2.gr_face_find_fref(grface, id)
+        if v is None :
+            continue
+        fbytes = f.encode() if isinstance(f, str) else f
+        tid = gr2.gr_str_to_tag(fbytes) # Python 2.7
+        try:
+            fref = gr2.gr_face_find_fref(grface, tid)
+        except:
+            print("Invalid feature settings")
+
         gr2.gr_fref_set_feature_value(fref, int(v), grfeats)
        
     if major > 1 or minor > 1 :
-        gr2.gr_start_logging(grface, debugname)
+        gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
-        fd = c(debugfile.fileno(), "w+")
+        fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
 
     ###print "text=",text  ####
-    text_utf8 = text.encode('utf_8')  ####
+    text_utf8 = text.encode('utf_8')
     ###print "utf8=",text_utf8  ####
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text_utf8, len(text), rtl)
     width = gr2.gr_seg_advance_X(seg)

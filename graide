@@ -21,18 +21,15 @@
 
 import sys, os
 
-if getattr(sys, 'frozen', None) :
-    os.environ['PATH'] += os.pathsep + sys._MEIPASS
-    print os.environ['PATH']
+if 'QT_API' not in os.environ :
+    os.environ['QT_API'] = 'pyside2'
 
-from PySide import QtGui, QtCore
+from qtpy import QtCore, QtWidgets
 from graide import main
 from argparse import ArgumentParser
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
-if getattr(sys, 'frozen', None) :
-    QtCore.QCoreApplication.setLibraryPaths([sys._MEIPASS])
-app = QtGui.QApplication(sys.argv)
+app = QtWidgets.QApplication(sys.argv)
 
 p = ArgumentParser()
 p.add_argument("-p","--project",help="Project configuration file")
@@ -52,7 +49,7 @@ else :
 
 if args.font : config.set('main', 'font', args.font)
 if args.ap : config.set('main', 'ap', args.ap)
-if args.size > 0 : config.set('main', 'size', str(args.size))
+if args.size and args.size > 0 : config.set('main', 'size', str(args.size))
 if args.gdx : config.set('main', 'gdx', args.gdx)
 if args.project :
     (dname, args.project) = os.path.split(args.project)

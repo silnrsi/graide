@@ -17,18 +17,18 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
+from __future__ import print_function
 
-from PySide import QtCore, QtGui
-from graide import freetype
-import array, ctypes, re, traceback
+from qtpy import QtCore, QtGui
+import array, re, traceback
 from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj, popUpError
-from graide.makegdl.glyph import Glyph as gdlGlyph
+from graide.makegdl.glyph import Glyph
 from graide.slot import Slot
 
 
 def ftGlyph(face, gid, fill = 0) :
-    res = freetype.FT_Load_Glyph(face._FT_Face, gid, freetype.FT_LOAD_RENDER)
+    face.load_glyph(gid)
     b = face.glyph.bitmap
     top = face.glyph.bitmap_top
     left = face.glyph.bitmap_left
@@ -50,9 +50,8 @@ class GlyphItem(object) :
     def __init__(self, face, gid, height = 40) :
         face.set_char_size(height = int(height * 64))
         (self.pixmap, self.left, self.top) = ftGlyph(face, gid)
-        n = ctypes.create_string_buffer(64)
-        freetype.FT_Get_Glyph_Name(face._FT_Face, gid, n, ctypes.sizeof(n))
-        self.name = re.sub(ur'[^A-Za-z0-9._]', '', n.value) # Postscript name
+        name = face.get_glyph_name(gid).decode('ascii')
+        self.name = re.sub('[^A-Za-z0-9._]', '', name) # Postscript name
         self.pixmaps = {height : (self.pixmap, self.left, self.top)}
         self.face = face
         self.gid = gid
@@ -64,7 +63,7 @@ class GlyphItem(object) :
         return self.pixmaps[height]
 
 
-class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
+class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
 
     anchorChanged = QtCore.Signal(str, int, int)
 
@@ -143,7 +142,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
                 jlAttrs = [] # list of justify attrs at this level
                 lModel = AttribModel(jlAttrs, jModel)  # sub-tree for this level
                 for k in j.keys() :
-                    fullName = "justify." + string(iLevel) + "." + k
+                    fullName = "justify." + str(iLevel) + "." + k
                     jlAttrs.append(Attribute(k, self.getJustify, None, False,
                             self._fileLoc(fullName), self.gdxPath, iLevel, k))
                 jModel.add(Attribute(str(iLevel), None, None, True, None, None, False, lModel))
@@ -175,7 +174,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
         
         return topModel
     
-    # Return line-and-file info corresponding to this row and column.  
+    # Return line-and-file info corresponding to this row and column.
     def lineAndFile(self, row, col) :
         if row == 0 or row == 1 or row == 2 : # glyph ID, GDL name, or PS name
             if self.fileLoc[0] :
@@ -187,7 +186,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
     
     # Store a line-and-file associated with a glyph attribute.
     def addLineAndFile(self, attrName, inFile, atLine) :
-        self.fileLocs[attrName] = (inFile, atLine);
+        self.fileLocs[attrName] = (inFile, atLine)
         
     def sortedCollKeys(self, keys) :
         goodOrder = ["flags", "min.x", "max.x", "min.y", "max.y", "margin", "marginweight", \
@@ -341,7 +340,7 @@ class GraideGlyph(gdlGlyph, DataObj, QtCore.QObject) :
             
     # debugger        
     def printGdlProperties(self) :
-        print "printGdlProperties:"
-        print ">>>",self.gid
-        print self.gdlProperties
+        print("printGdlProperties:")
+        print(">>>",self.gid)
+        print(self.gdlProperties)
 

@@ -18,14 +18,14 @@
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
 
-from PySide import QtGui, QtCore
+from qtpy import QtGui, QtCore, QtWidgets
 from graide.run import Run
 from graide.runview import RunView
 from graide.utils import ModelSuper, DataObj, configintval
 from graide.layout import Layout
 import traceback
 
-class PassesItem(QtGui.QTableWidgetItem) :
+class PassesItem(QtWidgets.QTableWidgetItem) :
 
     def __init__(self, data) :
         super(PassesItem, self).__init__()
@@ -33,9 +33,9 @@ class PassesItem(QtGui.QTableWidgetItem) :
         
 # The PassesView class is also used for the Rules tab.
 
-class PassesView(QtGui.QTableWidget) : pass
+class PassesView(QtWidgets.QTableWidget) : pass
 
-class PassesView(QtGui.QTableWidget) :
+class PassesView(QtWidgets.QTableWidget) :
 
     # Communication with the Glyph, Slot and Rules tabs:
     slotSelected = QtCore.Signal(DataObj, ModelSuper, bool)
@@ -84,14 +84,14 @@ class PassesView(QtGui.QTableWidget) :
             self.runViews.append(v)
             self.setCellWidget(num, 1, v.gview)
             self.setCellWidget(num, 2, v.tview)
-            l = QtGui.QTableWidgetItem(label)
+            l = QtWidgets.QTableWidgetItem(label)
             l.setFlags(QtCore.Qt.ItemIsEnabled)
             self.setItem(num, 0, l)
             try :
                 v.slotSelected.connect(self.changeSlot)
                 v.glyphSelected.connect(self.changeGlyph)
             except :
-                print "Passes connection failed"
+                print("Passes connection failed")
         else :
             v = self.runViews[num]
             v.loadRun(run, font)
@@ -181,10 +181,10 @@ class PassesView(QtGui.QTableWidget) :
             else :
                 run.addSlots(json['output'])   # final output
                 #passid = j
-            
+
             #print "*** in loadResults: pass",j,"***"
             #run.printDebug()
-            
+
             if j == 0 :
                 pname = "Init"
                 if runDir != fontDir :
@@ -193,7 +193,7 @@ class PassesView(QtGui.QTableWidget) :
                 self.collFixJson.append(None)
                 self.dirLabels.append("")
                 self.flipFlags.append(False)
-                
+
             else :
                 pname = "Pass: %d" % j
 
@@ -207,7 +207,7 @@ class PassesView(QtGui.QTableWidget) :
                 if slotDir != passDir :
                     run.reverseDirection()
                     #run.printDebug()
-                
+
                 flipFlag = False
                 dirLabel = ""
                 if gdx :
@@ -216,44 +216,44 @@ class PassesView(QtGui.QTableWidget) :
                         dirLabel = " (LTR)" if passDir == "ltr" else " (RTL)"  # direction reversed
                         pname += dirLabel + " "
                         flipFlag = True
-                        
+
                 self.flipFlags.append(flipFlag)
                 self.dirLabels.append(dirLabel)
-                    
-                if json['passes'][j-1].has_key('rules') and len(json['passes'][j-1]['rules']) :
+
+                if 'rules' in json['passes'][j-1] and len(json['passes'][j-1]['rules']) :
                     highlight = "active"
                     self.rulesJson.append(json['passes'][j-1]['rules'])  # rules are stored with previous pass :-(
                 else :
                     self.rulesJson.append(None)
-                
+
                 # Add rows for any collisions, if this is such a pass.
                 if 1 < j and j < num and gdx and gdx.passTypes[j-1] == "positioning":
                     thisSlots = json['output'] if (j == num - 1) else json['passes'][j]['slots']
                     if self.hasCollisionFixedSlot(json['passes'][j-1]['slots'], thisSlots) :
                         highlight = "semi-active"
-                if json['passes'][j-1].has_key('collisions') :
+                if 'collisions' in json['passes'][j-1] :
                     self.collFixJson.append(json['passes'][j-1]['collisions'])
                 else :
                     self.collFixJson.append(None)
-                    
+
                 # if passid == -1, NEXT pass is bidi pass
-                    
+
             (neww, newt) = self.addRun(font, run, pname, j, highlight = highlight)
             w = max(w, neww)
             wt = max(wt, newt)
-            
+
         self.finishLoad(w, wt)  # set column widths, etc
-        
+
     # end of loadResults
-    
-    
+
+
     def hasCollisionFixedSlot(self, prevSlots, thisSlots) :
         for i, slotInfo in enumerate(thisSlots) :
             prevInfo = prevSlots[i]
             if 'collision' in slotInfo.keys() and slotInfo['collision']['offset'] != prevInfo['collision']['offset'] :
                 return True
         return False
-    
+
     # The user double-clicked on a pass. Load the view of it showing the rules matched.
     def loadRules(self, font, json, jsonCollisions, initRun, flipDirPrev, flipDirThis, gdx) :
         self.selectRow(-1)
@@ -271,14 +271,14 @@ class PassesView(QtGui.QTableWidget) :
             dontReFlip = False
             runPassDir = run0
         self.runs = [runPassDir]	 # initialize with the Init run, equivalent to last run of previous pass
-        
-        #print "loadRules - 0"
+
+        #print("loadRules - 0")
         #self.runs[0].printDebug()
-            
+
         self.runs[0].label="Init"
         self.runs[0].ruleindex = -1
         rowInput = 0
-        
+
         if json is not None :
             begprev = -1
             endprev = -1
@@ -291,24 +291,24 @@ class PassesView(QtGui.QTableWidget) :
                     #    dontReFlip = False
                     #else :
                     nextRun = self.runs[-1].copy()
-                    
+
                     #print "loadRules - ", len(self.runs)
                     #nextRun.printDebug()
-                    
+
                     # in the previous run, highlight the modified output glyphs, if any
                     if begprev != -1 :
                         for slot in self.runs[-1][begprev:endprev] :
-                    	    slot.highlight(prevHighlight)
-                    	                        
+                            slot.highlight(prevHighlight)
+
                     if cRule['failed'] :
                         lext = " (failed)"
                         beg = self.runs[-1].indexOfId(cRule['input']['start'])
                         end = beg + cRule['input']['length']
-                        
+
                         begprev = beg
                         endprev= end
                         prevHighlight = 'failed'
-                        
+
                     else : # rule fired
                         # Adjust this run to reflect the changes made by the rule.
                         outputSlots = runInfo['output']['slots']
@@ -341,7 +341,7 @@ class PassesView(QtGui.QTableWidget) :
                     
                     self.runs.append(nextRun)
                     
-                    #print "appended - "
+                    #print("appended - ")
                     #nextRun.printDebug()
 
                     nextRun.label = "Rule: %d%s" % (cRule['id'], lext)

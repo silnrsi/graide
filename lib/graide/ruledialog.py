@@ -19,9 +19,9 @@
 
 # This class is no longer used. The PassesView class is used for the Rules tab.
 
-from PySide import QtGui, QtCore
+from qtpy import QtGui, QtCore, QtWidgets
 
-class RuleDialog(QtGui.QDialog) :
+class RuleDialog(QtWidgets.QDialog) :
 
     def __init__(self, parent = None) :
         super(RuleDialog, self).__init__(parent)

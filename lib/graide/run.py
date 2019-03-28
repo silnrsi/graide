@@ -37,12 +37,12 @@ class Run(list) :
     
     # Reverse the slots, but keeping diacritics (directionality = 16) after their bases.
     def reverseDirection(self) :
-        #print "reverseDirection"
+        #print("reverseDirection")
         #self.printDebug()
         runTemp = Run(self.font, self.rtl)
         #print "runTemp length=",len(runTemp)
         iLastOfSeq = len(self)
-        for i in xrange(len(self)-1, 0, -1):
+        for i in range(len(self)-1, 0, -1):
             slot = self[i]
             glyph = self.font[slot.gid]
             dirAttr = int(glyph.getGdlProperty('directionality'))
@@ -65,7 +65,7 @@ class Run(list) :
         for (i, slot) in enumerate(runTemp) :
             self.append(slot)
             slot.index = i
-        #print "final reversed"
+        #print("final reversed")
         #self.printDebug()
 
 
@@ -133,4 +133,4 @@ class Run(list) :
     def printDebug(self) :
         for (i, s) in enumerate(self) :
             s.printDebug()
-        print "------"
+        print("------")

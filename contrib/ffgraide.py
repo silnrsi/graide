@@ -1,5 +1,5 @@
 import fontforge, os, sys, re
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 from graide.config import ConfigDialog
 from graide.utils import buildGraphite, configintval
 from graide.makegdl.font import Font as gdlFont
@@ -19,7 +19,7 @@ def savecfg(font, cfg) :
     font.persistent['graideconfig'] = cfg
 
 def writecfg(conf, fname) :
-    f = file(fname, "w")
+    f = open(fname, "w")
     conf.write(f)
     f.close()
 
@@ -42,8 +42,8 @@ def editConfig(data, font) :
         conf.set('build', 'usemakegdl', '1')
     else :
         conf.read(cfg)
-    from PySide import QtGui
-    app = QtGui.QApplication([])
+    from qtpy import QtWidgets
+    app = QtWidgets.QApplication([])
     d = ConfigDialog(conf)
     if d.exec_() :
         d.updateConfig(None, conf)
@@ -90,29 +90,29 @@ def makeAPstruct(glyph) :
     return res
 
 def mergedict(b, o, t) :
-        propkeys = set(b.keys())
-        propkeys.update(o.keys())
-        propkeys.update(t.keys())
-        for k in propkeys :
-            if k not in b :
-                if k not in o :
-                    b[k] = t[k]
-                else :
-                    b[k] = o[k]
-            elif k not in o :
-                if k not in t or t[k] == b[k] :
-                    del b[k]
-                else :
-                    b[k] = t[k]
-            elif k not in t :
-                if b[k] == o[k] :
-                    del b[k]
-                else :
-                    b[k] = o[k]
-            elif b[k] == o[k] :
+    propkeys = set(b.keys())
+    propkeys.update(o.keys())
+    propkeys.update(t.keys())
+    for k in propkeys :
+        if k not in b :
+            if k not in o :
                 b[k] = t[k]
             else :
                 b[k] = o[k]
+        elif k not in o :
+            if k not in t or t[k] == b[k] :
+                del b[k]
+            else :
+                b[k] = t[k]
+        elif k not in t :
+            if b[k] == o[k] :
+                del b[k]
+            else :
+                b[k] = o[k]
+        elif b[k] == o[k] :
+            b[k] = t[k]
+        else :
+            b[k] = o[k]
 
 def mergeAPInfo(font) :
     for k in font :
@@ -233,7 +233,7 @@ else:
     f = fontforge.open(os.path.abspath(sys.argv[1]))
     cfg = getcfg(f)
     if not cfg :
-        print "No configuration, can't build"
+        print("No configuration, can't build")
         sys.exit(1)
     conf = RawConfigParser()
     conf.read(cfg)

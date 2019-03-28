@@ -16,5 +16,3 @@
 #    If not, write to the Free Software Foundation, 51 Franklin Street,
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
-
-__all__ = ['freetype']

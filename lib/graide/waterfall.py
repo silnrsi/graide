@@ -19,30 +19,32 @@
 #    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
 #    internet at http://www.fsf.org/licenses/lgpl.html.
 
-from PySide import QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from graide.glyph import ftGlyph
-from graide import freetype
+import sys, freetype
 
-class WaterfallDialog(QtGui.QDialog) :
+class WaterfallDialog(QtWidgets.QDialog) :
 
     def __init__(self, font, run, sizes = None, margin = 2, parent = None) :
         super(WaterfallDialog, self).__init__(parent)
         if sizes is None :
             sizes = [8, 9, 10, 11, 12, 13, 14, 16, 20, 28, 40]
+        else:
+            sizes = list(sizes)  # convert map to list
 
-        self.vbox = QtGui.QVBoxLayout(self)
+        self.vbox = QtWidgets.QVBoxLayout(self)
         self.setLayout(self.vbox)
         self.setWindowTitle("Waterfall")
-        self.gview = QtGui.QGraphicsView(self)
+        self.gview = QtWidgets.QGraphicsView(self)
         self.gview.setAlignment(QtCore.Qt.AlignLeft)
-        self.scene = QtGui.QGraphicsScene(self.gview)
+        self.scene = QtWidgets.QGraphicsScene(self.gview)
         self.pixmaps = []
         self.pixitems = []
         face = freetype.Face(font.fname)
         currtop = 0
         master = QtCore.QRect()
         for i in range(len(sizes)) :
-            size = sizes[i] * self.physicalDpiY() / 72.
+            size = sizes[i] * self.logicalDpiY() / 72.
             res = QtCore.QRect()
             pixmaps = []
             pixitems = []
@@ -53,7 +55,11 @@ class WaterfallDialog(QtGui.QDialog) :
             for s in run :
                 (px, left, top) = ftGlyph(face, s.gid)
                 if px :
-                    item = QtGui.QGraphicsPixmapItem(px, None, self.scene)
+                    if sys.version_info[0] < 3:
+                        item = QtWidgets.QGraphicsPixmapItem(px, None, self.scene)
+                    else:
+                        item = QtWidgets.QGraphicsPixmapItem(px, None)
+                        if self.scene: self.scene.addItem(item)
                     ppos = (s.drawPosX() * factor + left, -s.drawPosY() * factor - top)
                     item.setOffset(ppos[0], ppos[1])
                     pixmaps.append(px)
@@ -63,7 +69,10 @@ class WaterfallDialog(QtGui.QDialog) :
                     res = res.united(r)
             currtop += res.height() + margin
             for i in pixitems :
-                i.translate(0, currtop)
+                xoffset = i.offset().x()
+                yoffset = i.offset().y()
+                i.setOffset(xoffset, yoffset + currtop)
+                #i.translate(0, currtop)  # Python 2
             master = master.united(res.translated(0, currtop))
         master.adjust(-margin, -margin, margin, margin)
         self.scene.setSceneRect(master)

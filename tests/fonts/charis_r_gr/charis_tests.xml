@@ -2,6 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="Testing.xsl"?>
 <ftml version="1.0">
   <head>
+    <columns comment="30%" label="15%" string="50%" style="5%" />
     <fontsrc>url(charis_r_gr.ttf)</fontsrc>
   </head>
   <testgroup label="main">
