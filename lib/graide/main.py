@@ -642,8 +642,8 @@ class MainWindow(QtWidgets.QMainWindow) :
             self.runView.glyphSelected.connect(self.glyphAttrib.changeData)
             self.tab_passes.loadResults(self.font, self.json, self.gdx)
             istr = u"".join(map(lambda x:chr(x['unicode']), self.json[-1]['chars']))
-            self.runEdit.setPlainText(istr.encode('raw_unicode_escape'))
-            self.tab_passes.setTopToolTip(istr.encode('raw_unicode_escape'))
+            self.runEdit.setPlainText(istr.encode("utf-8").decode('raw_unicode_escape'))
+            self.tab_passes.setTopToolTip(istr.encode("utf-8").decode('raw_unicode_escape'))
             self.runLoaded = True
         self.setCentralWidget(self.centralwidget)
 
