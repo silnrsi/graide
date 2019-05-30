@@ -171,13 +171,13 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
             warningList = warningList.split(' ')
     else :
         warningList = ['-w510', '-w3521']  # warnings to ignore by default
-        
+
     res = 1
     if grcompiler is not None :
         print("Compiling...")
         argList = [grcompiler]
         argList.extend(warningList)
-        argList.extend(["-d", "-q", gdlfile, tempname, fontfile])
+        argList.extend(["-D", "-q", gdlfile, tempname, fontfile])
         res = subprocess.call(argList, **parms)
     else :
         print("grcompiler is missing")
