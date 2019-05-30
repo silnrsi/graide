@@ -168,7 +168,8 @@ class GlyphPatternMatcher() :
             reportError("Could not search %s: %s" % (targetFile, str(err)))
             print("could not search " + targetFile) ####
             return matchResults
-            
+
+        print("makeFontAndFace", fontFileName)
         faceAndFont = makeFontAndFace(fontFileName, 12)
         
         if showProgress :

@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.fontFaces = {}
         self.fontFileName = None
         self.apname = None
-        self.appTitle = "Graide v0.8.75"
+        self.appTitle = "Graide v0.8.80"
         self.currConfigTab = 0
         
         self.debugCnt = 0  # debug
@@ -1030,7 +1030,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         runGraphiteWithFontFace(self.fontFaces[size], text, tempJsonFileName,
             feats, rtl, lang, size, expand)
         
-        #print(tempJsonFileName)
+        print(tempJsonFileName)     # uncomment to save JSON file
         
         tempJsonFile = open(tempJsonFileName)
         jsonResult = json.load(tempJsonFile)
@@ -1049,7 +1049,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         dbgJsonFile.close()
         
         tempJsonFile.close()
-        os.unlink(tempJsonFileName)
+        #os.unlink(tempJsonFileName)   # comment out to save JSON file
         
         return jsonResult
     
