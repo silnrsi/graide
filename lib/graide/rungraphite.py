@@ -50,7 +50,7 @@ def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, siz
         gr2.gr_start_logging(grface, debugname)
     else :
         debugfile = open(debugname, "w+")
-        print("closed ", debugname)
+        print("opened ", debugname)
         fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
         
@@ -87,12 +87,15 @@ def makeFontAndFace(fontname, size) :
 
 def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
     (grface, grfont) = faceAndFont
-    
+
+    print("runGraphiteWithFontFace",debugname)
+
     (major, minor, debug) = grversion()
     if major > 1 or minor > 1 :
         gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
+        print("open", debugname)
         fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
     
@@ -115,14 +118,19 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
         gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
+        print("open", debugname)
         fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
+
+    print("calling gr_make_seg; width=")
 
     ###print "text=",text  ####
     text_utf8 = text.encode('utf_8')
     ###print "utf8=",text_utf8  ####
     seg = gr2.gr_make_seg(grfont, grface, 0, grfeats, 1, text_utf8, len(text), rtl)
     width = gr2.gr_seg_advance_X(seg)
+
+    print("returned from gr_make_seg; width=", width)
     
     if expand != 100 :
         width = width * expand / 100
@@ -133,7 +141,9 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
     else:
         gr2.graphite_stop_logging()
         debugfile.close()
-        
+        print("close", debugname)
+
+    print("returning from runGraphiteWithFontFace")
     return width
 
 # end of runGraphiteWithFontFace
