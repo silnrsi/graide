@@ -343,7 +343,7 @@ class FileTabs(QtWidgets.QTabWidget) :
         if self.app.config.has_option('window', 'openfiles') :
             openFileString = configval(config, 'window', 'openfiles')
             self.openFiles = openFileString.split(';')
-            self.openFiles.remove('')
+            if '' in self.openFiles: self.openFiles.remove('')
         else :
             self.openFiles = []
         self.selectedText = ''

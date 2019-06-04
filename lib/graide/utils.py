@@ -100,7 +100,7 @@ def findgrcompiler() :
                 break
 
 # Return 0 if successful.
-def buildGraphite(config, app, font, fontfile, errfile = None) :
+def buildGraphite(config, app, font, fontfile, errfile = None, gdlErrFileName = None) :
     global grcompiler
 
     if configintval(config, 'build', 'usemakegdl') :
@@ -148,11 +148,12 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         app.tab_errors.addWarning(tweakWarning)
         app.tab_errors.setBringToFront(True)
         
-    tempname = mktemp()
-    if config.has_option('build', 'usettftable') :
-        subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempname))
+    tempFontFileIn = mktemp()
+    if config.has_option('build', 'usettftable') :  # unimplemented
+        subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempFontFileIn))
     else :
-        copyfile(fontfile, tempname)
+        copyfile(fontfile, tempFontFileIn)
+
     parms = {}
     if errfile :
         parms['stderr'] = subprocess.STDOUT
@@ -177,14 +178,17 @@ def buildGraphite(config, app, font, fontfile, errfile = None) :
         print("Compiling...")
         argList = [grcompiler]
         argList.extend(warningList)
-        argList.extend(["-D", "-q", gdlfile, tempname, fontfile])
+        if gdlErrFileName is not None and gdlErrFileName != "":
+            argList.extend(["-e", gdlErrFileName])
+        argList.extend(["-D", "-q", gdlfile, tempFontFileIn, fontfile])
+
         res = subprocess.call(argList, **parms)
     else :
         print("grcompiler is missing")
 
     if res :
-        copyfile(tempname, fontfile)
-    os.remove(tempname)
+        copyfile(tempFontFileIn, fontfile)
+    os.remove(tempFontFileIn)
     
     return res
 
