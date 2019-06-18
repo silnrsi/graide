@@ -330,8 +330,12 @@ class TestList(QtWidgets.QWidget) :
     # end of loadOldTests
             
     def addFile(self, fname, index = None, savePrevious = True) :
-        #print("TestList::addFile(" + fname + "," + str(savePrevious) + ")")
+        #print("TestList::addFile(" + fname + "," + index + "," + str(savePrevious) + ")")
         if fname == '' : return
+
+        if len(self.testFiles) == 0 and fname is not None:
+            # Make this the main test file.
+            self.app.config.set('main', 'testsfile', fname)
             
         basename = os.path.basename(fname)
         if index == None :
@@ -341,13 +345,15 @@ class TestList(QtWidgets.QWidget) :
         else :
             self.testFiles.insert(index, fname)
             self.fcombo.insertItem(index, basename)
-        # TODO add file to configuration list
+
         self.changeFile(index)
         self.recordTestFiles()
         self.recordCurrentTest()
+
         
     def changeFile(self, index) :
         #print("TestList::changeFile(" + str(index) + ")")
+        #print("testFiles =",self.testFiles)
         
         # Save current set of tests.
         if self.currentFile != "" :
@@ -357,9 +363,10 @@ class TestList(QtWidgets.QWidget) :
             self.liststack.removeWidget(self.liststack.widget(i))
         self.gcombo.clear()
         # Load the new test file.
-        self.loadTests(self.testFiles[index])
-        self.currentFile = self.testFiles[index]
-        self.recordCurrentTest()
+        if len(self.testFiles) > index:
+            self.loadTests(self.testFiles[index])
+            self.currentFile = self.testFiles[index]
+            self.recordCurrentTest()
         
     def addGroup(self, name, index = None, comment = "", record = True) :
         listWidget = TestListWidget(self) # create a test list widget for this group
@@ -491,7 +498,8 @@ class TestList(QtWidgets.QWidget) :
                 fname += ".xml"
             index = self.fcombo.currentIndex() + 1
             self.addFile(fname, index)
-            self.fcombo.setCurrentIndex(self.fcombo.currentIndex() + 1)
+            #self.fcombo.setCurrentIndex(self.fcombo.currentIndex() + 1)
+            self.fcombo.setCurrentIndex(index)
         
     def delFileClicked(self) :
         if len(self.testFiles) <= 1 :

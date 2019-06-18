@@ -749,10 +749,11 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.closeApp()
         event.accept()
 
-    def closeApp(self) :
-        if self.rules :
+    def closeApp(self):
+        #print("closeApp")
+        if self.rules:
             self.rules.close()
-        if self.isInitialized() :
+        if self.isInitialized():
             self._saveProjectData()
         self.recentProjects.close()
         qCleanupResources()
@@ -765,6 +766,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.tab_posedit.updatePositions()
 
     def _saveProjectData(self) :
+        #print("_saveProjectData")
         self.recentProjects.addProject(self.cfgFileName)  # remember that this was a recent project
         self.recentProjects.saveFiles()
 
