@@ -294,11 +294,18 @@ class MainWindow(QtWidgets.QMainWindow) :
     # end of loadFont
 
     def loadAP(self, apFileName) :
+        #print("main - loadAP")
         self.apname = apFileName
         if apFileName and os.path.exists(apFileName) :
             self.font.loadAP(apFileName)
         else :
             self.font.loadEmptyGlyphs("loadAP")
+
+        self.loadGdx()
+        self.loadClasses()
+
+
+    def loadGdx(self):
         if os.path.exists(self.gdxfile) :
             self.gdx = Gdx()
             self.gdx.readfile(self.gdxfile, self.font, configval(self.config, 'build', 'makegdlfile'),
@@ -306,6 +313,8 @@ class MainWindow(QtWidgets.QMainWindow) :
                                 ronly = configintval(self.config, 'build', 'apronly'))
         else :
             self.gdx = None
+
+    def loadClasses(self):
         if hasattr(self, 'tab_classes') :
             self.tab_classes.loadFont(self.font)
 
@@ -915,6 +924,10 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             self.tab_results.setCurrentWidget(self.tab_errors)
         if self.apname :
             self.loadAP(self.apname)
+        else:
+            self.loadGdx()
+            self.loadClasses()
+
         if self.fontFileName :
             try:
                 self.feats = make_FeaturesMap(self.fontFileName)
@@ -1039,7 +1052,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         runGraphiteWithFontFace(self.fontFaces[size], text, tempJsonFileName,
             feats, rtl, lang, size, expand)
         
-        ###print(tempJsonFileName)     # uncomment to save JSON file
+        #print(tempJsonFileName)     # uncomment to save JSON file
         
         tempJsonFile = open(tempJsonFileName)
         jsonResult = json.load(tempJsonFile)

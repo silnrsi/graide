@@ -353,7 +353,6 @@ class TestList(QtWidgets.QWidget) :
         
     def changeFile(self, index) :
         #print("TestList::changeFile(" + str(index) + ")")
-        #print("testFiles =",self.testFiles)
         
         # Save current set of tests.
         if self.currentFile != "" :
