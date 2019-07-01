@@ -267,8 +267,9 @@ class MainWindow(QtWidgets.QMainWindow) :
         try:
             self.feats = make_FeaturesMap(self.fontFileName) # map languages to features  ### FEATURE BUG
         except:
-            # A font without Graphite
-            self.feats = {None: ()}
+            # A font without Graphite?
+            print("WARNING: failure to load Graphite font features while loading font")
+            self.feats = {None: {}}
         
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
@@ -886,6 +887,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         self.runView.clear()
 
     def buildClicked(self) :
+        #print("buildClicked")
+
         self.tab_edit.writeIfModified()
 
         if self.tweaksfile :
@@ -932,8 +935,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             try:
                 self.feats = make_FeaturesMap(self.fontFileName)
             except:
-                # A font without Graphite
-                self.feats = {None: ()}
+                # A font without Graphite?
+                print("WARNING: failure to reinitialize Graphite font features")
+                self.feats = {None: {}}
 
         # Get source-code files up-to-date.
         self.tab_edit.reloadModifiedFiles()
@@ -969,16 +973,22 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             else :
                 self.currLang = None
 
+        ### FEATURE BUG
+        if self.currFeats:
+            tFeats = self.currFeats
+        elif self.currLang and self.feats[self.currLang]:
+            tFeats = self.feats[self.currLang].fval
+        else:
+            tFeats = {}  # probably an error in loading the font
+
         jsonResult = self.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
-            self.font.size, self.runRtl.isChecked(), 
-            self.currFeats or self.feats[self.currLang].fval, ### FEATURE BUG
-            #{},
+            self.font.size, self.runRtl.isChecked(), tFeats,
             self.currLang,
             self.currWidth)
         if jsonResult != False :
             self.json = jsonResult
         else :
-            print("No Graphite result") ###
+            print("No Graphite result")
             self.json = [ {'passes' : [], 'output' : [] } ]
                 
         ### Temp

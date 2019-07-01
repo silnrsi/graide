@@ -84,6 +84,7 @@ class Gdx(object) :
 class Rule(object) :
 
     def __init__(self, e, relPath) :
+        #print("Rule::__init__", relPath)
         self.srcfile = os.path.join(relPath, e.get('inFile'))
         self.srcline = int(e.get('atLine')) - 1
         self.pretty = e.get('prettyPrint')

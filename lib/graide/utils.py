@@ -100,16 +100,18 @@ def findgrcompiler() :
                 break
 
 # Return 0 if successful.
-def buildGraphite(config, app, font, fontfile, errfile = None, gdlErrFileName = None) :
+def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlErrFileName = None) :
     global grcompiler
 
+    #print("buildGraphite")
+
     if configintval(config, 'build', 'usemakegdl') :
-        gdlfile = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
+        gdlFileName = configval(config, 'build', 'makegdlfile')  # auto-generated GDL
 
         if config.has_option('main', 'ap') and not configval(config, 'build', 'apronly'):    # AP XML file
             # Generate the AP GDL file.
             apFilename = config.get('main', 'ap')
-            font.saveAP(apFilename, gdlfile)
+            font.saveAP(apFilename, gdlFileName)
             if app : app.updateFileEdit(apFilename)
 
         cmd = configval(config, 'build', 'makegdlcmd')
@@ -124,25 +126,29 @@ def buildGraphite(config, app, font, fontfile, errfile = None, gdlErrFileName = 
             font.calculatePointClasses()
             font.ligClasses()
             attPassNum = int(config.get('build', 'attpass'))
-            f = open(gdlfile, "w")
+            f = open(gdlFileName, "w")
             font.outGDL(f)
             if attPassNum > 0 : font.outPosRules(f, attPassNum)
             if configval(config, 'build', 'gdlfile') :
                 f.write('\n\n#include "%s"\n' % (os.path.abspath(config.get('build', 'gdlfile'))))
             f.close()
-            if app : app.updateFileEdit(gdlfile)
+            if app : app.updateFileEdit(gdlFileName)
     else :
-        gdlfile = configval(config, 'build', 'gdlfile')
+        gdlFileName = configval(config, 'build', 'gdlfile')
 
-    if not gdlfile or not os.path.exists(gdlfile) :
+    if not gdlFileName or not os.path.exists(gdlFileName) :
         f = open('gdlerr.txt' ,'w')
-        if not gdlfile :
+        if not gdlFileName :
             f.write("No GDL File specified. Build failed")
         else :
-            f.write("No such GDL file: \"%s\". Build failed" % gdlfile)
+            f.write("No such GDL file: \"%s\". Build failed" % gdlFileName)
         f.close()
         return True
         
+    cwd = os.getcwd()
+    sourcePath = os.path.dirname(os.path.abspath(gdlFileName))
+    pathToCwd = pathFromTo(sourcePath, cwd)  # prepend this to existing paths
+
     tweakWarning = generateTweakerGDL(config, app)
     if tweakWarning != "" :
         app.tab_errors.addWarning(tweakWarning)
@@ -150,14 +156,14 @@ def buildGraphite(config, app, font, fontfile, errfile = None, gdlErrFileName = 
         
     tempFontFileIn = mktemp()
     if config.has_option('build', 'usettftable') :  # unimplemented
-        subprocess.call(("ttftable", "-delete", "graphite", fontfile , tempFontFileIn))
+        subprocess.call(("ttftable", "-delete", "graphite", fontFileName , tempFontFileIn))
     else :
-        copyfile(fontfile, tempFontFileIn)
+        copyfile(fontFileName, tempFontFileIn)
 
     parms = {}
-    if errfile :
+    if lowLevelErrFile :
         parms['stderr'] = subprocess.STDOUT
-        parms['stdout'] = errfile
+        parms['stdout'] = lowLevelErrFile
 
     if config.has_option('build', 'ignorewarnings') :
         warningList = configval(config, 'build', 'ignorewarnings')
@@ -174,22 +180,37 @@ def buildGraphite(config, app, font, fontfile, errfile = None, gdlErrFileName = 
         warningList = ['-w510', '-w3521']  # warnings to ignore by default
 
     res = 1
-    if grcompiler is not None :
-        print("Compiling...")
-        argList = [grcompiler]
-        argList.extend(warningList)
-        if gdlErrFileName is not None and gdlErrFileName != "":
-            argList.extend(["-e", gdlErrFileName])
-        argList.extend(["-D", "-q", gdlfile, tempFontFileIn, fontfile])
+    if grcompiler is not None:
+        print("now running compiler")
+        try:
+            # Change the current working directory to the one where the GDL file is located.
+            # This is done to account for a bug in the compiler that interprets #include statements
+            # as relative to the CWD rather than the main source file (happens only on Windows).
+            gdlFileBase = os.path.basename(gdlFileName)
+            tempFontFileIn = os.path.abspath(tempFontFileIn)
+            fontFileName_src = pathToCwd + os.path.relpath(fontFileName)
+            os.chdir(sourcePath)
 
-        res = subprocess.call(argList, **parms)
-    else :
+            print("Compiling...")
+            argList = [grcompiler]
+            argList.extend(warningList)
+            if gdlErrFileName is not None and gdlErrFileName != "":
+                argList.extend(["-e", gdlErrFileName])
+            argList.extend(["-D", "-q", gdlFileBase, tempFontFileIn, fontFileName_src])
+            #print(argList)
+
+            res = subprocess.call(argList, **parms)
+        except:
+            print("error in running compiler")
+    else:
         print("grcompiler is missing")
 
-    if res :
-        copyfile(tempFontFileIn, fontfile)
+    os.chdir(cwd)  # return to where we were
+
+    if res:
+        copyfile(tempFontFileIn, fontFileName)
     os.remove(tempFontFileIn)
-    
+
     return res
 
 
@@ -354,9 +375,47 @@ def generateTweakerGDL(config, app) :
     app.tab_tweak.acceptPending(tweakxmlfile)
     
     return ""  # success
-    
+
+
 def popUpError(msg) :
     dlg = QtWidgets.QMessageBox()
     dlg.setText(msg)
     dlg.setWindowTitle("Graide")
     dlg.exec_()
+
+
+def pathFromTo(path1, path2):
+    path1abs = splitWholePath(os.path.abspath(path1))
+    path2abs = splitWholePath(os.path.abspath(path2))
+    print(path1abs)
+    print(path2abs)
+
+    commonI = 0
+    while commonI < len(path1abs) and commonI < len(path2abs) and path1abs[commonI] == path2abs[commonI]:
+        commonI = commonI + 1
+
+    result = ""
+    print("commonI=", commonI)
+
+    for i2 in range(commonI, len(path1abs)):
+        result += "../"
+
+    for i2 in range(commonI, len(path2abs)):
+        result += path2abs[i2] + "/"
+
+    print("pathFromTo result=", result)
+    return result
+
+
+def splitWholePath(path):
+    result = []
+    while True:
+        (head, tail) = os.path.split(path)
+        if tail is None or tail == "":
+            result.append(head)
+            break
+        else:
+            result.append(tail)
+            path = head
+    result.reverse()
+    return result
