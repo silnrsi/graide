@@ -461,9 +461,9 @@ class PassesView(QtWidgets.QTableWidget) :
                             shift = moveInfo['result']
                             edges = [None] * len(moveInfo['slices'])
                             others = [None] * len(moveInfo['slices'])
-                            for sl in moveInfo['slices'] :
-                                edges[sl['i']] = sl['targetEdge'] + shift
-                                others[sl['i']] = sl['nearEdge']
+                            for slice in moveInfo['slices'] :
+                                edges[slice['i']] = slice['targetEdge'] + shift
+                                others[slice['i']] = slice['nearEdge']
                             nextRun.addKernEdge(edges, others, moveInfo['miny'], moveInfo['slicewidth'])
                         if slotId in prevMoves.keys() :
                             changed = (newValue[0] != prevMoves[slotId][0] or newValue[1] != prevMoves[slotId][1])

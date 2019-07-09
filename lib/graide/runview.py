@@ -179,34 +179,41 @@ class RunView(QtCore.QObject, ModelSuper) :
                 resExcl = self.createPixmap(s, gExclude, i, res, scale, model = self, scene = self._scene, exclOff = exclOff)
         
         if run.kernEdges is not None :
-            def doEdge(lastx, curry, e, scale, pen) :  # local function
-                if e > 1e+37 or e < -1e+37 : return None
+            def doEdge(lastx, curry, edgex, slicey, scale, pen) :  # local function
+                if edgex > 1e+37 or edgex < -1e+37 : return None   # invalid
                 if lastx is not None :
-                    t = QtWidgets.QGraphicsLineItem(lastx * scale, -curry * scale, e * scale, -curry * scale, scene = self._scene)
+                    # Draw a horizontal line connecting the previous vertical line to the next.
+                    t = QtWidgets.QGraphicsLineItem(lastx * scale, -curry * scale, edgex * scale, -curry * scale, scene = self._scene)
+                    t.setParentItem(self._pixmaps[-1])
                     t.setPen(pen)
                     self.kernLines.append(t)
-                t = QtWidgets.QGraphicsLineItem(e * scale, -curry * scale, e * scale, -(curry + run.kernEdges[3]) * scale, scene = self._scene)
+                # Draw a vertical line.
+                t = QtWidgets.QGraphicsLineItem(edgex * scale, -curry * scale, edgex * scale, -(curry + slicey) * scale, scene = self._scene)
+                t.setParentItem(self._pixmaps[-1])
                 t.setPen(pen)
                 self.kernLines.append(t)
-                return e
+                return edgex
 
             self.kernLines = []
-            pene = QtGui.QPen('darkGreen')
-            peno = QtGui.QPen('darkBlue')
+            pene = QtGui.QPen('green') # ending segment
+            peno = QtGui.QPen('blue')  # opening segment
+            slicey = run.kernEdges[3]  # slice y-width
 #            pen.setWidth(2) # pixels
+            # Show the margin of the glyph(s) on the ending segment.
+            curry = run.kernEdges[2]       # y-offset
+            lastx = None
+            for edgex in run.kernEdges[0] :    # x-offsets
+                lastx = doEdge(lastx, curry, edgex, slicey, scale, pene)
+                curry += slicey
+            # Now do the margin of the following glyph(s) on the opening segment.
             curry = run.kernEdges[2]
             lastx = None
-            for e in run.kernEdges[0] :
-                lastx = doEdge(lastx, curry, e, scale, pene)
-                curry += run.kernEdges[3]
-            curry = run.kernEdges[2]
-            lastx = None
-            for e in run.kernEdges[1] :
-                lastx = doEdge(lastx, curry, e, scale, peno)
-                curry += run.kernEdges[3]
+            for edgex in run.kernEdges[1] :    # x-offsets
+                lastx = doEdge(lastx, curry, edgex, slicey, scale, peno)
+                curry += slicey
                 
-        self.tview.moveCursor(QtGui.QTextCursor.Start) # scroll to top
-        
+        self.tview.moveCursor(QtGui.QTextCursor.Start)  # scroll to top
+
         if len(sels) :
             self.tview.setExtraSelections(sels)
         self.boundingRect = res

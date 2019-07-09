@@ -387,15 +387,14 @@ def popUpError(msg) :
 def pathFromTo(path1, path2):
     path1abs = splitWholePath(os.path.abspath(path1))
     path2abs = splitWholePath(os.path.abspath(path2))
-    print(path1abs)
-    print(path2abs)
+    #print(path1abs)
+    #print(path2abs)
 
     commonI = 0
     while commonI < len(path1abs) and commonI < len(path2abs) and path1abs[commonI] == path2abs[commonI]:
         commonI = commonI + 1
 
     result = ""
-    print("commonI=", commonI)
 
     for i2 in range(commonI, len(path1abs)):
         result += "../"
@@ -403,7 +402,6 @@ def pathFromTo(path1, path2):
     for i2 in range(commonI, len(path2abs)):
         result += path2abs[i2] + "/"
 
-    print("pathFromTo result=", result)
     return result
 
 
