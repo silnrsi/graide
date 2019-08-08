@@ -167,19 +167,20 @@ class EditFile(QtWidgets.QPlainTextEdit) :
         aSave.triggered.connect(self.writeIfModified)
         self.addAction(aSave)
 
+        # Disable the FindDialog - it causes a crash.
         aFind = QtWidgets.QAction(self)
-        aFind.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
+#        aFind.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F))
         aFind.triggered.connect(self.search)
         self.addAction(aFind)
         self.findDialog = FindDialog(self)
         self.findIsOpen = False
         
         aFindNext = QtWidgets.QAction(self)
-        aFindNext.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F3))
+#        aFindNext.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F3))
         aFindNext.triggered.connect(self.searchFwd)
         self.addAction(aFindNext)
         aFindPrev = QtWidgets.QAction(self)
-        aFindPrev.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F3))
+#        aFindPrev.setShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_F3))
         aFindPrev.triggered.connect(self.searchBwd)
         self.addAction(aFindPrev)
 
@@ -300,15 +301,18 @@ class EditFile(QtWidgets.QPlainTextEdit) :
 
 
     def find(self, target):
-        print("Editfile::find", target)
-        super(EditFile, self).find(target)
+        print("EditFile::find", target)
+        qstrTarget = QtCore.QRegExp(target)
+        #print(qstrTarget.__class__)
+        super(EditFile, self).find(qstrTarget)
+
     
 
 # end of class EditFile
 
 
 # The window containing all the code files.
-class FileTabs(QtWidgets.QTabWidget) :
+class FileTabs(QtWidgets.QTabWidget):
 
     def __init__(self, config, app, parent = None) :
         super(FileTabs, self).__init__(parent)
