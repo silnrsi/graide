@@ -26,7 +26,7 @@ setup(  name = 'graide',
         package_dir = {'' : PKG_ROOT},
         packages = ['graide', 'graide/makegdl'],
         package_data = PKG_DATA,
-        install_requires = ['future', 'configparser', 'QtPy', 'fontTools', 'freetype-py'],
+        install_requires = ['future', 'QtPy', 'fontTools', 'freetype-py'],
                 # graphite2 is not in pypi so can't require it
         scripts = ['graide'],
         zip_safe = False,
