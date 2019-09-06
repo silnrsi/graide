@@ -1,20 +1,32 @@
 Source: graide
-Section: devel
+Section: fonts
 Priority: optional
 Maintainer: Martin Hosken <martin_hosken@sil.org>
-Build-Depends: debhelper (>= 8), dh-python, python (>= 2.7), python-setuptools, python3, python3-setuptools
-Standards-Version: 4.1.5
+Build-Depends: debhelper-compat (= 13),
+ dh-python,
+ python3-all,
+ python3-setuptools,
+ python3-fonttools,
+ python3-freetype,
+ python3-future,
+ python3-graphite2,
+ python3-qtpy
+Standards-Version: 4.5.0
+Rules-Requires-Root: no
+Testsuite: autopkgtest-pkg-python
+Homepage: https://github.com/silnrsi/graide
 
-Package: python-graide
-Architecture: any
-Depends: ${python:Depends}, ${misc:Depends}, libgraphite2-3 (>= 1.2.2), python-qtpy, python-fonttools, python-future, python-configparser, python-pyside, libfreetype6, grcompiler
+Package: graide
+Architecture: all
+Depends: ${python3:Depends},
+ ${misc:Depends},
+ grcompiler,
+ python3-pyside2.qtcore,
+ python3-pyside2.qtgui,
+ python3-pyside2.qtwidgets
 Description: IDE for Graphite GDL font description development
  Graide is an IDE including a debugger that helps people develop
- GDL descriptions for smart fonts and compile them into the fonts.
-
-Package: python3-graide
-Architecture: any
-Depends: ${python:Depends}, ${misc:Depends}, libgraphite2-3 (>= 1.2.2), python3-qtpy, python3-fonttools, python3-future, python3-configparser, python3-pyside, libfreetype6, grcompiler
-Description: IDE for Graphite GDL font description development
- Graide is an IDE including a debugger that helps people develop
- GDL descriptions for smart fonts and compile them into the fonts.
+ Graphite GDL descriptions for smart fonts and compile them into the fonts.
+ .
+ Graphite is a "smart font" system developed specifically to handle the
+ complexities of lesser-known languages of the world.
