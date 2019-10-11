@@ -93,8 +93,12 @@ class Slot(DataObj) :
             ##cres.append(Attribute('margin', self.getColMargin, None, False))
             ##cres.append(Attribute('marginmin', self.getColMarginMin, None, False))
             cres.append(Attribute('margin', self.getColMarginAttrs, None, False))
-            cres.append(Attribute('min', self.getColLimitMin, None, False))
-            cres.append(Attribute('max', self.getColLimitMax, None, False))
+            #cres.append(Attribute('min', self.getColLimitMin, None, False))
+            #cres.append(Attribute('max', self.getColLimitMax, None, False))
+            cres.append(Attribute('min.x', self.getColLimitMinX, None, False))
+            cres.append(Attribute('min.y', self.getColLimitMinY, None, False))
+            cres.append(Attribute('max.x', self.getColLimitMaxX, None, False))
+            cres.append(Attribute('max.y', self.getColLimitMaxY, None, False))
             cres.append(Attribute('offset', self.getColOffset, None, False))
             flagOverlap = 256
             #if self.getColFlags() & flagOverlap :
@@ -249,6 +253,34 @@ class Slot(DataObj) :
         try :
             res = self.collision['limit']
             return "(%d, %d)" % (res[2], res[3])
+        except :
+            return None
+
+    def getColLimitMinX(self) :
+        try :
+            res = self.collision['limit']
+            return "%d" % (res[0])
+        except :
+            return None
+
+    def getColLimitMinY(self) :
+        try :
+            res = self.collision['limit']
+            return "%d" % (res[1])
+        except :
+            return None
+
+    def getColLimitMaxX(self):
+        try:
+            res = self.collision['limit']
+            return "%d" % (res[2])
+        except:
+            return None
+
+    def getColLimitMaxY(self) :
+        try :
+            res = self.collision['limit']
+            return "%d" % (res[3])
         except :
             return None
        
