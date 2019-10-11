@@ -82,22 +82,26 @@ def findgrcompiler() :
             exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'GrCompiler.exe')
             if os.path.exists(exe) :
                 grcompiler = exe
-                return
-            for p in os.environ['PATH'].split(';') :
-                a = os.path.join(p, 'grcompiler.exe')
-                if os.path.exists(a) :
-                    grcompiler = a
-                    break
+            else :
+                for p in os.environ['PATH'].split(';') :
+                    a = os.path.join(p, 'grcompiler.exe')
+                    if os.path.exists(a) :
+                        grcompiler = a
+                        break
     else :
         exe = os.path.join(os.path.dirname(__file__), 'grcompiler', 'grcompiler')
         if os.path.exists(exe) :
             grcompiler = exe
-            return
-        for p in os.environ['PATH'].split(':') :
-            a = os.path.join(p, "grcompiler")
-            if os.path.exists(a) :
-                grcompiler = a
-                break
+        else :
+            for p in os.environ['PATH'].split(':') :
+                a = os.path.join(p, "grcompiler")
+                if os.path.exists(a) :
+                    grcompiler = a
+                    break
+    if grcompiler is None:
+        print("...not found")
+    else:
+        print("...found in " + grcompiler)
 
 # Return 0 if successful.
 def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlErrFileName = None) :

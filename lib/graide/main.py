@@ -101,8 +101,8 @@ class MainWindow(QtWidgets.QMainWindow) :
         if Layout.noMenuIcons : QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_DontShowIconsInMenus)
             
         print("Finding compiler...") #===
-
         findgrcompiler()
+
         for s in ('main', 'build', 'ui', 'window', 'data') :
             if not config.has_section(s) :
                 config.add_section(s)
