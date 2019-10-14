@@ -744,7 +744,7 @@ class MatchList(QtWidgets.QWidget) :
 
 
     def findStyleClass(self, t) :
-        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(t.feats.keys())))
+        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(str(t.feats.keys()))))
         k += "\n" + (t.lang or "")
         if k not in self.fsets :
             self.fcount += 1
