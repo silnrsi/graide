@@ -177,61 +177,59 @@ def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlEr
         parms['stderr'] = subprocess.STDOUT
         parms['stdout'] = lowLevelErrFile
 
-    if config.has_option('build', 'grccommand') :
-        # Call the compiler just as they specified:
-        grcCommand = configval(config, 'build', 'grccommand')
-        print('Compiling: ', grcCommand, '...')
-        try :
-            res = subprocess.call(grcCommand, shell=True)
-        except :
-            print("error in running compiler")
-
+    if config.has_option('build', 'grcexecutable') and configval(config, 'build', 'grcexecutable') != "":
+        # Call the compiler they specified:
+        grcExec = configval(config, 'build', 'grcexecutable')
     else:
-        if config.has_option('build', 'ignorewarnings') :
-            warningList = configval(config, 'build', 'ignorewarnings')
-            warningList = warningList.replace(' ', '')
-            if warningList == 'none' :
-                warningList = ['-wall']
-            elif warningList == '' :
-                warningList = ['-w510', '-w3521']  # warnings to ignore by default
-            else :
-                warningList = warningList.replace(',', ' -w')
-                warningList = "-w" + warningList
-                warningList = warningList.split(' ')
-        else :
+        grcExec = grcompiler
+
+    if config.has_option('build', 'ignorewarnings') :
+        warningList = configval(config, 'build', 'ignorewarnings')
+        warningList = warningList.replace(' ', '')
+        if warningList == 'none' :
+            warningList = ['-wall']
+        elif warningList == '' :
             warningList = ['-w510', '-w3521']  # warnings to ignore by default
+        else :
+            warningList = warningList.replace(',', ' -w')
+            warningList = "-w" + warningList
+            warningList = warningList.split(' ')
+    else:
+        warningList = ['-w510', '-w3521']  # warnings to ignore by default
 
-        res = 1
-        if grcompiler is not None:
-            try:
-                # Change the current working directory to the one where the GDL file is located.
-                # This is done to account for a bug in the compiler that interprets #include statements
-                # as relative to the CWD rather than the main source file (happens only on Windows).
-                gdlFileBase = os.path.basename(gdlFileName)
-                tempFontFileIn = os.path.abspath(tempFontFileIn)
-                fontFileName_src = pathToCwd + os.path.relpath(fontFileName)
-                os.chdir(sourcePath)
+    res = 1
+    if grcExec is not None:
+        try:
+            # Change the current working directory to the one where the GDL file is located.
+            # This is done to account for a bug in the compiler that interprets #include statements
+            # as relative to the CWD rather than the main source file (happens only on Windows).
+            gdlFileBase = os.path.basename(gdlFileName)
+            tempFontFileIn = os.path.abspath(tempFontFileIn)
+            fontFileName_src = pathToCwd + os.path.relpath(fontFileName)
+            os.chdir(sourcePath)
 
-                print("Compiling...")
-                argList = [grcompiler]
-                argList.extend(warningList)
-                if gdlErrFileName is not None and gdlErrFileName != "":
-                    argList.extend(["-e", gdlErrFileName])
-                argList.extend(["-D", "-q", gdlFileBase, tempFontFileIn, fontFileName_src])
-                #print(argList)
+            print("Compiling...")
+            argList = [grcExec]
+            argList.extend(warningList)
+            if gdlErrFileName is not None and gdlErrFileName != "":
+                argList.extend(["-e", gdlErrFileName])
+            argList.extend(["-D", "-q", gdlFileBase, tempFontFileIn, fontFileName_src])
+            #print(argList)
 
-                res = subprocess.call(argList, **parms)
-            except:
-                print("error in running compiler")
-        else:
-            print("grcompiler is missing")
+            res = subprocess.call(argList, **parms)
+        except:
+            print("error in running compiler")
+    else:
+        print("grcompiler is missing")
 
     os.chdir(cwd)  # return to where we were
 
     #print("compilation result =", res)
 
     if res:
+        # failure in compilation - restore the previous version of the font
         copyfile(tempFontFileIn, fontFileName)
+
     os.remove(tempFontFileIn)
 
     return res

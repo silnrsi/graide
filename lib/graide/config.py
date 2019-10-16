@@ -122,11 +122,11 @@ class ConfigDialog(QtWidgets.QDialog) :
         #buildGridLo.addWidget(QtWidgets.QLabel('Attachment point database:'), 0, 0, 1, 2) # cols 0-1
         #buildGridLo.addWidget(self.build_apxml, 0, 2)
 
-        self.build_grccmd = QtWidgets.QLineEdit(self.build)
-        self.build_grccmd.setText(configval(config, 'build', 'grccommand'))
-        self.build_grccmd.setToolTip('External grcompiler command')
-        buildGridLo.addWidget(QtWidgets.QLabel('Compiler command:'), 0, 0, 1, 2) # cols 0-1
-        buildGridLo.addWidget(self.build_grccmd, 0, 2)
+        self.build_grcexec = QtWidgets.QLineEdit(self.build)
+        self.build_grcexec.setText(configval(config, 'build', 'grcexecutable'))
+        self.build_grcexec.setToolTip('Graphite compiler executable; may be a separate batch file or shell script')
+        buildGridLo.addWidget(QtWidgets.QLabel('Compiler executable:'), 0, 0, 1, 2) # cols 0-1
+        buildGridLo.addWidget(self.build_grcexec, 0, 2)
 
         self.build_gdlinc = FileEntry(self.general, configval(config, 'build', 'makegdlfile'), 'GDL Files (*.gdl *.gdh)')
         self.build_gdlinc.textChanged.connect(self.apChanged)
@@ -143,7 +143,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.build_makegdlcmd = QtWidgets.QLineEdit(self.build_apctrls)
         self.build_makegdlcmd.setMinimumWidth(250)
         self.build_makegdlcmd.setText(configval(config, 'build', 'makegdlcmd'))
-        self.build_makegdlcmd.setToolTip('External make gdl command: %a=AP Database, %f=Font File, %g=Generated GDL File,\n    %i=included GDL file %p=positioning pass number')
+        self.build_makegdlcmd.setToolTip('External make-gdl command: %a=AP Database, %f=Font File, %g=Generated GDL File,\n    %i=included GDL file %p=positioning pass number')
         apGridLo.addWidget(QtWidgets.QLabel('Make GDL Command:'), 1, 0)
         apGridLo.addWidget(self.build_makegdlcmd, 1, 2, 1, 3) # cols 1-3
         
@@ -351,7 +351,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.cbChanged(self.general_rtl, config, 'main', 'defaultrtl')
         self.updateChanged(self.build_apxml, config, 'main', 'ap', "xml", (app.loadAP if app else None))
         #if self.build_apxml.text() :
-        self.updateChanged(self.build_grccmd, config, 'build', 'grccommand', "")
+        self.updateChanged(self.build_grcexec, config, 'build', 'grcexecutable', "")
 
         if self.build_gdlinc.text() :
             config.set('build', 'usemakegdl', "1")
