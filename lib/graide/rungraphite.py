@@ -21,21 +21,40 @@ import sys
 from graphite2 import gr2, grversion
 
 def strtolong(txt) :
-    if sys.version_info.major > 2:
-        def ord(x) : return x
-    res = 0
     if txt :
-        txt = (txt + b"\000\000\000\000")[:4]
+#        txt = (txt + b"\000\000\000\000")[:4]
+        txt = bytestostr(txt)
     else :
         return 0
+
+    res = 0
     for c in txt :
         res = (res << 8) + ord(c)
+    for i in range(len(txt), 4) :
+        res = (res << 8)  # zero-pad
+
     return res
 
+
+def bytestostr(byteseq):
+    if not isinstance(byteseq,str):
+        res = byteseq.decode('utf-8')
+    else:
+        res = byteseq  # already a str
+
+    # Another implementation - which is faster?
+#    try: res = byteseq.decode('utf-8')
+#    except: res = byteseq
+
+    return res
+
+
 def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
+    #print("runGraphite")
+
     (major, minor, debug) = grversion()
     grface = gr2.gr_make_file_face(fontname, 0)
-    
+
     lang = strtolong(lang)
     
     grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
@@ -82,6 +101,8 @@ def makeFontAndFace(fontname, size) :
 
 
 def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
+    #print("runGraphiteWithFontFace")
+
     (grface, grfont) = faceAndFont
 
     (major, minor, debug) = grversion()
@@ -89,13 +110,12 @@ def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, l
         gr2.gr_start_logging(grface, debugname.encode())
     else :
         debugfile = open(debugname, "w+")
-        print("open", debugname)
+        #print("open", debugname)
         fd = debugfile.fileno()
         gr2.graphite_start_logging(fd, 0xFF)
-    
+
     lang = strtolong(lang)
-    
-    grfeats = gr2.gr_face_featureval_for_lang(grface, 0)
+    grfeats = gr2.gr_face_featureval_for_lang(grface, lang)
     for f, v in feats.items() :
         if v is None :
             continue

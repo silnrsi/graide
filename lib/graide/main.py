@@ -30,7 +30,7 @@ from graide.filetabs import FileTabs, FindInFilesResults
 from graide.utils import buildGraphite, configval, configintval, configvalString, registerErrorLog, findgrcompiler, as_entities, popUpError
 from graide.layout import Layout
 from graide.rungraphite import runGraphite, makeFontAndFace, runGraphiteWithFontFace
-from graide.featureselector import make_FeaturesMap, FeatureDialog
+from graide.featureselector import make_FeaturesMap, FeatureDialog, printFeaturesMap
 from graide.testlist import TestList
 from graide.test import Test
 from graide.classes import Classes
@@ -264,13 +264,15 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.fontFileName = str(fontname)
         self.fontBuildTime = os.stat(fontname).st_ctime # modify time, for knowing when to rebuild
         self.font.loadFont(self.fontFileName, fontsize)
+
         try:
             self.feats = make_FeaturesMap(self.fontFileName) # map languages to features  ### FEATURE BUG
+            # printFeaturesMap(self.feats)  # debug
         except:
             # A font without Graphite?
             print("WARNING: failure to load Graphite font features while loading font")
             self.feats = {None: {}}
-        
+
         # basename = os.path.basename(fontname) # look in current directory. Why would you do that?
         self.gdxfile = os.path.splitext(self.fontFileName)[0] + '.gdx'
         
@@ -948,6 +950,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     # Run Graphite over a test string.
     def runClicked(self) :
+        #print("runClicked")
         
         # Don't automatically build the font - the user might be part way through
         # making changes and not ready to build.
@@ -959,7 +962,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             return
         if os.stat(self.fontFileName).st_ctime > self.fontBuildTime :
             self.loadFont(self.fontFileName)
-        
+
         if not self.currFeats and self.currLang not in self.feats :
             if None not in self.feats :    # not a graphite font, try to build
                 self.buildClicked()
