@@ -39,7 +39,6 @@ class FeatureRefs(object) :
             langid = 0x0409 # English
             length = 0
             grval = grface.get_featureval(strtolong(lang))
-            print("grval = ", grval)
             for f in grface.featureRefs :
                 tag = f.tag()
                 if sys.version_info.major > 2:
@@ -220,7 +219,7 @@ class FeatureDialog(QtWidgets.QDialog) :
             v = combo.itemData(combo.currentIndex())
             d = self.featsBaseForLang.fval[fid]
             
-            labelWidget = self.labels[i]
+            labelWidget = self.labels[featI]
             if v != d:
                 backColor = Layout.activePassColour
                 self.featsMod = True
@@ -232,33 +231,38 @@ class FeatureDialog(QtWidgets.QDialog) :
         
 
     def langChanged(self):
-        print("langCtrl changed", self.langCtrl.text())
+        #print("langCtrl changed", self.langCtrl.text())
 
-        # Update the features to match the language.
+        # Update the feature controls to match the language.
 
         newLang = self.langCtrl.text()
         if newLang == '': newLang = None
-        newFBase = self.mainWindow.feats[newLang]
 
-        self.featsBaseForLang = newFBase
-        vals = newFBase.fval
+        if newLang in self.mainWindow.feats:
+            newFBase = self.mainWindow.feats[newLang]
 
-        featI = 0
-        for f in newFBase.order :
-            fid = newFBase.featids[f] if f in newFBase.featids else ""
-            if fid != "":
-                combo = self.combos[featI]
-                settingI = 0
-                for k in newFBase.forders[f] :
-                    if combo.userTag in vals and newFBase.feats[f][k] == vals[combo.userTag] :
-                        combo.setCurrentIndex(settingI)
-                        break
-                    settingI = settingI + 1
-                featI = featI + 1
+            self.featsBaseForLang = newFBase
+            vals = newFBase.fval
 
-        # Clear all the label widget backgrounds to white (default for language).
-        for labelWidget in self.labels:
-            labelWidget.setBackgroundColor(QtGui.QColor(255, 255, 255))   # white
+            featI = 0
+            for f in newFBase.order :
+                fid = newFBase.featids[f] if f in newFBase.featids else ""
+                if fid != "":
+                    combo = self.combos[featI]
+                    settingI = 0
+                    for k in newFBase.forders[f] :
+                        if combo.userTag in vals and newFBase.feats[f][k] == vals[combo.userTag] :
+                            combo.setCurrentIndex(settingI)
+                            break
+                        settingI = settingI + 1
+                    featI = featI + 1
+
+            # Clear all the label widget backgrounds to white (default for language).
+            for labelWidget in self.labels:
+                labelWidget.setBackgroundColor(QtGui.QColor(255, 255, 255))   # white
+
+        else:
+            print("No features found for language " + newLang)
 
 
     def get_feats(self, base = None) :

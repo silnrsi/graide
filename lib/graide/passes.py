@@ -164,7 +164,9 @@ class PassesView(QtWidgets.QTableWidget) :
         # positioning pass index = last subs pass + 2.
         #
         # Best thing to do is to more or less ignore the JSON pass IDs, since they are not reliable.
-            
+
+        advancedView = configintval(self.app.config, 'ui', 'advanced')
+
         if count != self.rowCount() :
             if count < self.rowCount() : self.runViews = self.runViews[:count]
             self.setRowCount(count)
@@ -173,7 +175,7 @@ class PassesView(QtWidgets.QTableWidget) :
         for j in range(num) :
             # Process the output of pass J which = input to pass J+1;  the rules are listed with pass J-1.
             # Note for J = 0 there are no rules.
-            run = Run(font, rtl)
+            run = Run(font, rtl, advancedView)
             highlight = False
             if j < num - 1 :
                 run.addSlots(json['passes'][j]['slots'])  # output of pass J

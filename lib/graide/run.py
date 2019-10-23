@@ -24,14 +24,15 @@ from graide.slot import Slot
 
 class Run(list) :
 
-    def __init__(self, font, rtl = False) :
+    def __init__(self, font, rtl = False, advancedView = False) :
         self.font = font
         self.rtl = rtl
         self.kernEdges = None
+        self.advancedView = advancedView
 
     def addSlots(self, runinfo, flipDir = False) :
         for slotinfo in runinfo :
-            slot = Slot(slotinfo)
+            slot = Slot(slotinfo, advancedView = self.advancedView)
             self.append(slot)
             slot.index = len(self) - 1
     
@@ -39,7 +40,7 @@ class Run(list) :
     def reverseDirection(self) :
         #print("reverseDirection")
         #self.printDebug()
-        runTemp = Run(self.font, self.rtl)
+        runTemp = Run(self.font, self.rtl, self.advancedView)
         #print "runTemp length=",len(runTemp)
         iLastOfSeq = len(self)
         for i in range(len(self)-1, 0, -1):
@@ -70,7 +71,7 @@ class Run(list) :
 
 
     def copy(self) :
-        res = Run(self.font, self.rtl)
+        res = Run(self.font, self.rtl, self.advancedView)
         for slot in self :
             res.append(slot.copy())
         return res
@@ -95,7 +96,7 @@ class Run(list) :
                 fin = i
         res = []
         for slotinfo in runinfo :
-            slot = Slot(slotinfo)
+            slot = Slot(slotinfo, advancedview = self.advancedView)
             res.append(slot)
         self[ini:fin] = res
         for (i, slot) in enumerate(self) :

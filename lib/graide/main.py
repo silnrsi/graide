@@ -72,7 +72,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.recentProjects = RecentProjectList(self.appSettings)
         self.currFeats = None
         self.currLang = None
-        self.currWidth = 100
+        self.currWidth = 100  # for justification
         self.font = GraideFont()
         self.fontFaces = {}
         self.fontFileName = None
@@ -347,7 +347,7 @@ class MainWindow(QtWidgets.QMainWindow) :
 
     def setActions(self) :
         self.aRunGo = QtWidgets.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
-        self.aRunGo.setToolTip("Run text string after rebuild")
+        self.aRunGo.setToolTip("Render text string")
         self.aRunGo.triggered.connect(self.runClicked)
         
         self.aWater = QtWidgets.QAction(QtGui.QIcon.fromTheme("waterfall", QtGui.QIcon(":/images/waterfall.png")), "&Waterfall ...", self)
@@ -520,7 +520,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.test_hbox.addWidget(self.runAdd)
         
         # test output
-        self.run = Run(self.font, self.runRtl.isChecked())
+        self.run = Run(self.font, self.runRtl.isChecked(), configintval(self.config, 'ui', 'advanced'))
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         self.test_splitter.addWidget(self.runView.gview)
@@ -1010,8 +1010,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         # Here we assume that if the default direction of the configuration is RTL, the
         # font is RTL (which may not necessarily be true).
         fontIsRtl = configintval(self.config, 'main', 'defaultrtl')
-        
-        runResult = Run(rtl)
+
+        runResult = Run(rtl, advancedView = configintval(self.config, 'ui', 'advanced'))
         ###if self.run :
         runResult.addSlots(json[-1]['output'])
         widget.runView.loadRun(runResult, self.font, resize = False)
@@ -1115,9 +1115,9 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         else :
             json = {'passes' : [], 'output' : [] }  # empty output
         num = len(json['passes']) + 1  # 0 = Init
-            
+
         glyphList = []
-        run = Run(self.font, rtl)
+        run = Run(self.font, rtl, configintval(self.config, 'ui', 'advanced'))
         run.addSlots(json['output'])   # final output
         for i, s in enumerate(run) :
             g = font[s.gid] # g is a GraideGlyph

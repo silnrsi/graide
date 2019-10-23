@@ -735,6 +735,7 @@ class MatchList(QtWidgets.QWidget) :
         else :
             # this is the side-effect of a double-click: ignore it
             self.noclick = False
+        self.runTest(item)
 
 
     def runTest(self, item) :
@@ -856,7 +857,7 @@ class Matcher(QtWidgets.QTabWidget) :
         #hbox.addWidget(runAdd)
     
         # test output
-        self.run = Run(self.font, self.runRtl.isChecked())
+        self.run = Run(self.font, self.runRtl.isChecked(), configintval(self.app.config, 'ui', 'advanced'))
         self.runView = RunView(self.font)
         self.runView.gview.resize(self.runView.gview.width(), self.font.pixrect.height() + 5)
         vsplitter.addWidget(self.runView.gview)

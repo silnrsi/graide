@@ -26,21 +26,23 @@ import os
 
 #for line in traceback.format_stack(): print(line.strip())
 
-#   Here is a summaryhow the Python Slots and Signals interact to update the Glyph tab when a glyph is clicked:
-#
-#   Set up connections:
-#       runView.glyphSelect.connect(passesView.changeGlyph)
-#       mainWindow.tab_passes.glyphSelected.connect(mainWindow.glyphSelected)
-#       mainWindow.tab_passes.glyphSelected.connect(mainwindow.glyphAttrib.changeData)
-#
-#   Then when a glyph is clicked on:
-#       RunView::changeSelection
-#           calls self.glyphSelected.emit (defined as Signal)
-#       PassesView::changeGlyph
-#           calls self.glyphSelected.emit (defined as Signal)
-#       MainWindow::glyphSelected
-#       ...
-#       AttribView::changeData
+"""
+   Here is a summary of how the Python Slots and Signals interact to update the Glyph tab when a glyph is clicked:
+
+   Set up connections:
+       runView.glyphSelect.connect(passesView.changeGlyph)
+       mainWindow.tab_passes.glyphSelected.connect(mainWindow.glyphSelected)
+       mainWindow.tab_passes.glyphSelected.connect(mainwindow.glyphAttrib.changeData)
+
+   Then when a glyph is clicked on:
+       RunView::changeSelection
+           calls self.glyphSelected.emit (defined as Signal)
+       PassesView::changeGlyph
+           calls self.glyphSelected.emit (defined as Signal)
+       MainWindow::glyphSelected
+       ...
+       AttribView::changeData
+"""
 
 class LinePlainTextEdit(QtWidgets.QPlainTextEdit) :
 

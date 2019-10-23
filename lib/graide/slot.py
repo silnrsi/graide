@@ -38,12 +38,14 @@ class Results(object) :
 
 class Slot(DataObj) :
 
-    def __init__(self, info = {}) :
+    def __init__(self, info = {}, advancedView = False) :
+
         self.highlighted = False
         self.highlightType = ""
         self.px = None          # set in self.pixmap()
         for k, v in info.items() :
             setattr(self, k, v)
+        self.advancedView = advancedView
         
         # Note that these two are different from the collision attribute displayed below.
         # They are used for values that are NOT incorporated into the slot's origin, ie,
@@ -64,6 +66,7 @@ class Slot(DataObj) :
         self.pxExcl = None
         res.colRemoves = {'x' : [], 'y' : [], 's' : [], 'd' : []}
         res.colResults = {}
+        res.advancedView = self.advancedView
         #self.highlighted = False
         #self.highlightType = ""
         return res
@@ -115,13 +118,15 @@ class Slot(DataObj) :
                 if len(self.getColRemoves()[rk]) :
                     trem = []
                     for v in self.getColRemoves()[rk] :
+                        removeData = v[3]
                         if v[2] == "exclude" : # exclude is not a good label for this
                             label = "weighted"
+                            if not self.advancedView: removeData = v[3][0:2]  # get rid of unhelpful details
                         elif v[2] == "remove" :
                             label = "absolute"
                         else :
                             label = v[2]
-                        trem.append(Attribute(label+'('+str(v[1])+')', getVal, None, False, None, None, False, v[3]))
+                        trem.append(Attribute(label+'('+str(v[1])+')', getVal, None, False, None, None, False, removeData))
                     crem[rk] = trem
 
         if hasattr(self, 'collision') and self.hasSequenceAttrs() :
@@ -158,12 +163,19 @@ class Slot(DataObj) :
                 for k in 'xysd' :
                     if k not in r : continue
                     v = r[k]
+                    if self.advancedView:
+                        legalRanges = v.ranges[1:]
+                    else:
+                        legalRanges = []
+                        for lr in v.ranges[1:]:   # strip out the cost factors, they are too much unhelpful detail
+                            legalRanges.append(lr[0])
+
                     lModel = AttribModel([], crAttribModel)
                     crAttribModel.add(Attribute(k, None, None, True, None, None, False, lModel))
-                    lModel.add(Attribute('totalRange', getVal, None, False, None, None, False, "[%d, %d]" % (v.ranges[0][0], v.ranges[0][1])))
-                    lModel.add(Attribute('legalRanges', getVal, None, False, None, None, False, v.ranges[1:]))
-                    lModel.add(Attribute('bestVal', getVal, None, False, None, None, False, v.val))
-                    lModel.add(Attribute('bestCost', getVal, None, False, None, None, False, v.cost))
+                    lModel.add(Attribute('total range', getVal, None, False, None, None, False, "[%d, %d]" % (v.ranges[0][0], v.ranges[0][1])))
+                    lModel.add(Attribute('legal ranges', getVal, None, False, None, None, False, legalRanges))
+                    lModel.add(Attribute('best value', getVal, None, False, None, None, False, v.val))
+                    lModel.add(Attribute('best cost', getVal, None, False, None, None, False, v.cost))
             
         if sres :
             sAttrib = AttribModel(sres, resAttrib)
