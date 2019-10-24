@@ -30,6 +30,13 @@ POSGLYPHID = 1
 WHEELSCALEINCREMENT = 1.05
 
 
+def attachMenuList(aDict, includeNone = False):
+    res = list(aDict.keys())
+    if None in res: res.remove(None)
+    if includeNone: res.append("(None)")
+    res = sorted(res)
+    return res
+
 # One node of the tree control in the upper-left pane, representing a glyph in the cluster
 class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
 
@@ -55,9 +62,10 @@ class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
         return None
 
     def setText(self, col, text) :
-        #print "PosGlyphTreeItem::setText(",text,")" ###
+        #print("PosGlyphTreeItem::setText(",col,", ",text,")")
         # col: 0 = glyph name, 2 = with AP, 3 = at AP
         if text == self.text(col) : return
+        #if text == "(None)": return
         super(PosGlyphTreeItem, self).setText(col, text)
         if col == 0 :  # glyph name
             self.setGlyph(text)
@@ -65,7 +73,7 @@ class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
             self.posGlyphChanged.emit() # make glyphs redraw
 
     def setGlyph(self, name) :
-        #print "PosGlyphTreeItem::setGlyph(",name,")" ###
+        #print("PosGlyphTreeItem::setGlyph(",name,")")
         glyph = self.font.gdls.get(name, None)
         if glyph == self.glyph : return
         self.glyph = glyph
@@ -73,14 +81,20 @@ class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
         self.posGlyphChanged.emit() # make glyphs redraw
         
     def setPixmap(self, scene = None) :
+        # scene belongs to PosView; it will hold the PosPixmapItems
+        #print("PosGlyphTreeItem:setPixmap; scene=", scene)
         if (scene is None and not self.px) : return
+
         if self.glyph :
-            if not self.glyph.item : return
+            #print("glyph=",self.glyph)
+            if not self.glyph.item :
+                return
             (px, left, top) = self.glyph.item.pixmapAt(self.font.attGlyphSize)
             if self.px is not None :
                 self.px.setPixmap(px)
             else :
-                self.px = PosPixmapItem(px, self, scene = scene)
+                self.px = PosPixmapItem(px, self, self.glyph, scene = scene)
+                if scene: scene.addItem(self.px)
             self.px.left = left
             self.px.top = top
             self.px.setOffset(left, -top)
@@ -151,8 +165,13 @@ class PosGlyphTreeItem(QtWidgets.QTreeWidgetItem, QtCore.QObject) :
 # A visible glyph in the lower-right pane
 class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
 
-    def __init__(self, px, item, parent = None, scene = None) :
-        super(PosPixmapItem, self).__init__(px, parent, scene) # scene = scene from PosView
+    def __init__(self, qpx, item, dbg, parent = None, scene = None) :
+        # item = PosGlyphTreeItem
+        super(PosPixmapItem, self).__init__(qpx, parent)   # , scene)
+        #print("PosPixmapItem - qpx = ", qpx)
+        #print("dbg = '", dbg, "'")
+        self._scene = scene   # scene = scene from PosView
+        qpx._scene = scene
         if parent is not None : raise TypeError
         self.item = item
         self.shiftState = False # are they pressing Shift key?
@@ -161,6 +180,7 @@ class PosPixmapItem(QtWidgets.QGraphicsPixmapItem) :
         self.movepx = None
         self.shiftpx = None
         if item.parent() : self.setFlags(QtWidgets.QGraphicsItem.ItemIsMovable | QtWidgets.QGraphicsItem.ItemIsFocusable)
+        self.dbg = dbg
 
     def keyPressEvent(self, event) :
         if event.modifiers() & QtCore.Qt.ShiftModifier :
@@ -349,9 +369,11 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
             aplist = sorted(font.gdls[gname].anchors.keys())
             self.glyph.clear()
             self.glyph.addItems(['(None)'] + glist)
+            self.glyph.addItems(glist)
             self.glyph.setCurrentIndex(1 + glist.index(gname))
             self.aps.clear()
             self.aps.addItems(['(None)'] + aplist)
+            self.aps.addItems(aplist)
             self.aps.setCurrentIndex(1 + aplist.index(apname))
 
     def doRevert(self) :
@@ -366,17 +388,15 @@ class PosGlyphInfoWidget(QtWidgets.QFrame) :
     def updateDialog(self) :
         #print("PosGlyphInfoWidget::updateDialog") ###
         if self.gname != "" :
-            #print("calling setGlyph...") ###
             self.setGlyph(self.font, self.gname, self.apname, self.item, self.apItem)
 
     def chooseGlyphAndAP(self, gname, ap) :
-        #print "PosGlyphInfoWidget::chooseGlyphAndAP(",gname,ap,")" ###
+        #print("PosGlyphInfoWidget::chooseGlyphAndAP(",gname,ap,")")   ###
         if ap is None :
             self.glyph.clear()
             self.glyph.addItems([gname])
             self.glyph.setCurrentIndex(0)
         else :
-            #print("calling setGlyph...") ###
             self.setGlyph(self.font, gname, ap, self.item, self.apItem)
             
     def clearItem(self) :
@@ -400,7 +420,7 @@ class PosGlyphAPDialog(QtWidgets.QDialog) :
         self.base = base
         self.layout = QtWidgets.QGridLayout(self)
         self.names = QtWidgets.QComboBox(self)
-        nameList = ['(None)'] + sorted(font.gdls.keys())
+        nameList = attachMenuList(font.gdls)
         self.names.addItems(nameList)
         self.names.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.names.editTextChanged.connect(self.glyphChanged)
@@ -447,22 +467,22 @@ class PosGlyphAPDialog2(QtWidgets.QDialog) :
         self.base = base
 
         self.layout = QtWidgets.QGridLayout(self)
-        self.pointClasses = self.font.getPointClasses()
+        self.pointClasses = self.font.getPointClasses()  # keys are names of APs
         self.aps = QtWidgets.QComboBox(self)
-        self.aps.addItems(['(None)'] + sorted(self.pointClasses.keys()))
+        self.aps.addItems(attachMenuList(self.pointClasses, True))
         self.aps.currentIndexChanged[unicode].connect(self.apChanged)
         self.layout.addWidget(QtWidgets.QLabel("Attachment Point"), 0, 0)
         self.layout.addWidget(self.aps, 0, 1)
             
         self.stationary = QtWidgets.QComboBox(self)
-        self.stationary.addItems(['(None)'] + sorted(font.gdls.keys()))
+        self.stationary.addItems(attachMenuList(font.gdls, True))
 #        self.stationary.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.stationary.editTextChanged.connect(self.glyphChanged)
         self.layout.addWidget(QtWidgets.QLabel("Stationary Glyph"), 1, 0)
         self.layout.addWidget(self.stationary, 1, 1)
         
         self.mobile = QtWidgets.QComboBox(self)
-        self.mobile.addItems(['(None)'] + sorted(font.gdls.keys()))
+        self.mobile.addItems(attachMenuList(font.gdls, True))
 #        self.mobile.currentIndexChanged[unicode].connect(self.glyphChanged)
         self.mobile.editTextChanged.connect(self.glyphChanged)
         self.layout.addWidget(QtWidgets.QLabel("Mobile Glyph"), 2, 0)
@@ -472,6 +492,7 @@ class PosGlyphAPDialog2(QtWidgets.QDialog) :
         o.accepted.connect(self.accept)
         o.rejected.connect(self.reject)
         self.layout.addWidget(o, 3, 0, 1, 2)
+
 
     def apChanged(self, apName) :
         if apName == "" : return
@@ -493,7 +514,7 @@ class PosGlyphAPDialog2(QtWidgets.QDialog) :
             self.withaps.addItems(sorted(g.anchors.keys()))
 
 
-# Tree control at the top of the Position pane, representing a cluster of glyphs
+# Tree control at the top of the left-hand Attach pane, representing a cluster of glyphs
 class PosEditTree(QtWidgets.QTreeWidget) :
 
     def __init__(self, font, parent = None) :
@@ -680,12 +701,16 @@ class PosView(QtWidgets.QGraphicsView) :
         self.app.posSelected()
 
     def setTreeItem(self, item) :
+        #print("PosView::setTreeItem", item)
         self.curTreeItem = item
 
     def updateable(self, state) :
         self._updateable = state
 
     def repaint(self) :
+        #print("PosView::repaint")
+        #sceneItems = self.scene().items()
+        #print(len(sceneItems), " items")
         self.scene().update()
         
     def clear(self) :
@@ -695,13 +720,15 @@ class PosView(QtWidgets.QGraphicsView) :
         self.repaint()
 
     def posGlyphChanged(self) :
-        #print("PosView::posGlyphChanged") ###
+        #print("PosView::posGlyphChanged")
         if self.curTreeItem is not None and self._updateable :
             self.addTree(self.curTreeItem, base = (0, 0))
 #            self.org = QtGui.QGraphicsEllipseItem(0, 0, 2, 2, scene = self.scene())
 
     def addTree(self, item, base = (0, 0)) :
-        """Adds the glyph and its childen at the given position in design units."""
+        # item is PosGlyphTreeItem
+        #print("PosView::addTree", item, base)
+        """Adds the glyph and its children at the given position in design units."""
         pos = list(base)
         parent = item.parent()
         if parent :
