@@ -96,7 +96,7 @@ class Run(list) :
                 fin = i
         res = []
         for slotinfo in runinfo :
-            slot = Slot(slotinfo, advancedview = self.advancedView)
+            slot = Slot(slotinfo, advancedView = self.advancedView)
             res.append(slot)
         self[ini:fin] = res
         for (i, slot) in enumerate(self) :
