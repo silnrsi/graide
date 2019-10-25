@@ -137,7 +137,8 @@ class MainWindow(QtWidgets.QMainWindow) :
             self.testsfile = config.get('main', 'testsfile')
         else :
             self.testsfile = None
-            
+
+        """
         if config.has_option('build', 'tweakxmlfile') :
             self.tweaksfile = config.get('build', 'tweakxmlfile')
         else :
@@ -147,6 +148,7 @@ class MainWindow(QtWidgets.QMainWindow) :
             self.tweaksize = configintval(config, 'ui', 'tweakglyphsize')
         else :
             self.tweaksize = 80
+        """
 
         if config.has_option('ui', 'attglyphsize') :
             self.setAttGlyphSize(configintval(config, 'ui', 'attglyphsize'))
@@ -340,10 +342,12 @@ class MainWindow(QtWidgets.QMainWindow) :
                 if f != '' : self.tab_tests.addFile(f, None, False)
         # otherwise MainWindow is not set up yet
             
+    """
     def loadTweaks(self, tweaksfile) :
         self.tweaksfile = tweaksfile
         if self.tab_tweak :
             self.tab_tweak.loadTweaks(tweaksfile)
+    """
 
     def setActions(self) :
         self.aRunGo = QtWidgets.QAction(QtGui.QIcon.fromTheme("media-playback-start", QtGui.QIcon(":/images/media-playback-start.png")), "&Run Test", self)
@@ -552,8 +556,9 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.glyph_find = QtWidgets.QToolButton()	# find glyph
         self.glyph_find.setIcon(QtGui.QIcon.fromTheme('edit-find', QtGui.QIcon(":/images/find-normal.png")))
         self.glyph_find.clicked.connect(self.glyphFindSelected)
-        self.glyph_find.setToolTip('Find glyph selected in source code')
+        self.glyph_find.setToolTip('Show glyph selected in source code')
         self.glyph_hb.addWidget(self.glyph_find)
+        """
         self.glyph_addPoint = QtWidgets.QToolButton(self.glyph_bbox)
         self.glyph_addPoint.setIcon(QtGui.QIcon.fromTheme('character-set', QtGui.QIcon(":/images/character-set.png")))
         self.glyph_addPoint.setText(u'\u2022')
@@ -570,6 +575,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.glyph_remove.clicked.connect(self.glyphRemoveProperty)
         self.glyph_remove.setToolTip('Remove property from glyph')
         self.glyph_hb.addWidget(self.glyph_remove)
+        """
         self.glyph_vb.addWidget(self.glyph_bbox)
         self.tab_info.addTab(self.tab_glyph, "Glyph")
         
@@ -583,8 +589,8 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.tab_info.addTab(self.tab_classes, "Classes")
         
         # Tweak tab
-        self.tab_tweak = Tweaker(self.font, self, self.tweaksfile)
-        self.tab_info.addTab(self.tab_tweak, "Tweak")
+        #self.tab_tweak = Tweaker(self.font, self, self.tweaksfile)
+        #self.tab_info.addTab(self.tab_tweak, "Tweak")
         
         # Attach tab
         self.tab_posedit = PosEdit(self.font, self)
@@ -671,12 +677,14 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.tab_results.addTab(self.tab_rules, "Rules")
 
         # Tweaks tab
+        """
         ffile = self.fontFileName if self.fontFileName else ""
         self.tab_tweakview = TweakView(ffile, self.tweaksize, app = self)
         if hasattr(self, 'tab_tweak') :
             self.tab_tweak.setView(self.tab_tweakview)
             self.tab_tweakview.setTweaker(self.tab_tweak)
         self.tab_results.addTab(self.tab_tweakview, "Tweak")
+        """
 
         # Attachment tab
         self.tab_posview = PosView(self)
@@ -772,9 +780,12 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
     def infoTabChanged(self) :
         # Don't call updatePositions unnecessarily, because it causes a switch of focus.
+        """
         if self.tab_info.currentWidget() == self.tab_tweak :
             self.tab_tweak.updatePositions()
-        elif self.tab_info.currentWidget() == self.tab_posedit :
+        elif...
+        """
+        if self.tab_info.currentWidget() == self.tab_posedit :
             self.tab_posedit.updatePositions()
 
     def _saveProjectData(self) :
@@ -797,8 +808,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
         if self.testsfile :
             self.tab_tests.saveTests()
-        if self.tweaksfile :
-            self.tab_tweak.writeXML(self.tweaksfile)
+        #if self.tweaksfile :
+        #    self.tab_tweak.writeXML(self.tweaksfile)
         if self.cfgFileName :
             try :
                 f = open(self.cfgFileName, "w")
@@ -893,8 +904,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
 
         self.tab_edit.writeIfModified()
 
-        if self.tweaksfile :
-            self.tab_tweak.writeXML(self.tweaksfile)
+        #if self.tweaksfile :
+        #    self.tab_tweak.writeXML(self.tweaksfile)
 
         self.tab_errors.clear()
         errfile = NamedTemporaryFile(mode="w+")  ###, delete=False)   # delete=False for debugging
@@ -1273,15 +1284,15 @@ Copyright 2012-2013 SIL International and M. Hosken""")
             else :
                 self.loadTests(testsFileName)
             
-        if self.config.has_option('build', 'tweakxmlfile') :
-            self.loadTweaks(self.config.get('build', 'tweakxmlfile'))
+        #if self.config.has_option('build', 'tweakxmlfile') :
+        #    self.loadTweaks(self.config.get('build', 'tweakxmlfile'))
 
         self._ensureMainGdlFile()
         self._openFileList()
 
         #self.selectLine(self.config.get('build', 'gdlfile'), -1)
         self.tab_edit.updateFromConfigSettings(self.config)
-        self.tab_tweak.updateFromConfigSettings(self.font, self.fontFileName, self.config)
+        #self.tab_tweak.updateFromConfigSettings(self.font, self.fontFileName, self.config)
         self.tab_match.updateFromConfigSettings(self.fontFileName, self.config)
         
         return True  # success
@@ -1342,8 +1353,8 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         m = DebugMenu(self)
         m.exec_(event.globalPos())
 
-    def setTweakGlyphSize(self, size) :
-        self.tab_tweakview.changeFontSize(size)    
+    #def setTweakGlyphSize(self, size) :
+    #    self.tab_tweakview.changeFontSize(size)
 
 
     def setAttGlyphSize(self, size) :

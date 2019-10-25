@@ -186,6 +186,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         buildGridLo.addWidget(self.build_noWarning, 6, 2, 1, 3) # cols 1-3
              
         # Tweaking controls
+        """
         self.build_tweak = FileEntry(self.general, configval(config, 'build', 'tweakxmlfile'), 'Tweak Files (*.xml)')
         self.build_tweak.textChanged.connect(self.tweakFileChanged)
         buildGridLo.addWidget(QtWidgets.QLabel('Position Tweaker File'), 7, 0, 1, 2) # cols 0-1
@@ -213,7 +214,8 @@ class ConfigDialog(QtWidgets.QDialog) :
         tweakGridLo.addWidget(self.build_twktest, 2, 2)
         if not self.build_tweak.text() :
             self.build_twkctrls.setEnabled(False)
-       
+        """
+
         buildGridLo.setRowStretch(11, 1)  # 11 = total number of rows
         self.tb.addItem(self.build, 'Build')
 
@@ -260,6 +262,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         uiGridLo.addWidget(QtWidgets.QLabel('Font Glyph Pixel Size'), 3, 0)
         uiGridLo.addWidget(self.ui_gsize, 3, 1)
 
+        """
         self.ui_twsize = QtWidgets.QSpinBox(self.ui)
         self.ui_twsize.setMaximumWidth(60)
         self.ui_twsize.setRange(1, 1088)
@@ -270,6 +273,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         self.ui_twsize.setToolTip('Pixel size of glyphs in the Tweak editing window')
         uiGridLo.addWidget(QtWidgets.QLabel('Tweak Glyph Pixel Size'), 4, 0)
         uiGridLo.addWidget(self.ui_twsize, 4, 1)
+        """
 
         self.ui_apsize = QtWidgets.QSpinBox(self.ui)
         self.ui_apsize.setMaximumWidth(60)
@@ -279,31 +283,31 @@ class ConfigDialog(QtWidgets.QDialog) :
         else :
             self.ui_apsize.setValue(200)
         self.ui_apsize.setToolTip('Pixel size of glyphs in the Attach editing window')
-        uiGridLo.addWidget(QtWidgets.QLabel('Attachment Glyph Pixel Size'), 5, 0)
-        uiGridLo.addWidget(self.ui_apsize, 5, 1)
+        uiGridLo.addWidget(QtWidgets.QLabel('Attachment Glyph Pixel Size'), 4, 0)
+        uiGridLo.addWidget(self.ui_apsize, 4, 1)
 
         self.ui_sizes = QtWidgets.QLineEdit(self.ui)
         self.ui_sizes.setText(configval(config, 'ui', 'waterfall'))
         self.ui_sizes.setToolTip('Point sizes for waterfall display, comma-separated; eg: 10, 12, 16, 20, 48')
-        uiGridLo.addWidget(QtWidgets.QLabel('Waterfall Sizes'), 6, 0)
-        uiGridLo.addWidget(self.ui_sizes, 6, 1)
+        uiGridLo.addWidget(QtWidgets.QLabel('Waterfall Sizes'), 5, 0)
+        uiGridLo.addWidget(self.ui_sizes, 5, 1)
 
         self.ui_ent = QtWidgets.QCheckBox()
         self.ui_ent.setChecked(configintval(config, 'ui', 'entities'))
         self.ui_ent.setToolTip('Display entry strings using \\u type entities for non-ASCII chars')
-        uiGridLo.addWidget(QtWidgets.QLabel('Display Character Entities'), 7, 0)
-        uiGridLo.addWidget(self.ui_ent, 7, 1)
+        uiGridLo.addWidget(QtWidgets.QLabel('Display Character Entities'), 6, 0)
+        uiGridLo.addWidget(self.ui_ent, 6, 1)
 
         self.ui_kernedges = QtWidgets.QCheckBox()
         self.ui_kernedges.setChecked(configintval(config, 'ui', 'kernedges'))
         self.ui_kernedges.setToolTip('Display the edges of glyphs that affect kerning in the Collisions tab')
-        uiGridLo.addWidget(QtWidgets.QLabel('Display Kerning Edges'), 8, 0)
-        uiGridLo.addWidget(self.ui_kernedges, 8, 1)
+        uiGridLo.addWidget(QtWidgets.QLabel('Display Kerning Edges'), 7, 0)
+        uiGridLo.addWidget(self.ui_kernedges, 7, 1)
 
-        uiGridLo.setRowStretch(9, 1)  # 9 = total number of rows used
+        uiGridLo.setRowStretch(8, 1)  # 8 = total number of rows used
         self.tb.addItem(self.ui, 'User Interface')
 
-        self.resize(500, 500)
+        self.resize(500, 400)
         if currTab:
             self.tb.setCurrentIndex(currTab)
 
@@ -328,6 +332,7 @@ class ConfigDialog(QtWidgets.QDialog) :
             # Pass number must be at least 1.
             self.build_att.setValue(1)
 
+    """
     def tweakFileChanged(self, txt) :
         self.build_twkctrls.setEnabled(True if txt else False) # enable/disable sub-controls
         if txt and not self.build_twkgdl.text() :
@@ -342,6 +347,7 @@ class ConfigDialog(QtWidgets.QDialog) :
         if txt and (not self.build_twkpass.text() or self.build_twkpass.text() == 'None') :
             # Pass number must be at least 1.
             self.build_twkpass.setValue(1)
+    """
 
     def updateConfig(self, app, config) :
         self.updateChanged(self.general_font, config, 'main', 'font', "ttf", (app.loadFont if app else None))
@@ -377,6 +383,7 @@ class ConfigDialog(QtWidgets.QDialog) :
             if config.has_option('build', 'ignorewarnings') :
                 config.remove_option('build', 'ignorewarnings')
 
+        """
         self.updateChanged(self.build_tweak, config, 'build', 'tweakxmlfile',
                 None) # TODO
         if self.build_tweak.text() :
@@ -386,6 +393,7 @@ class ConfigDialog(QtWidgets.QDialog) :
             txt = self.build_twktest.text()
             if txt :
                 config.set('build', 'tweakconstraint', txt)
+        """
 
         appInit = app and app.isInitialized()
 
@@ -401,9 +409,9 @@ class ConfigDialog(QtWidgets.QDialog) :
         if self.ui_gsize.value() != configintval(config, 'main', 'size') :
             config.set('main', 'size', str(self.ui_gsize.value()))
             if appInit : app.loadFont(configval(config, 'main', 'font'))
-        if self.ui_twsize.value() != configintval(config, 'ui', 'tweakglyphsize') :
-            config.set('ui', 'tweakglyphsize', str(self.ui_twsize.value()))
-            if appInit : app.setTweakGlyphSize(self.ui_twsize.value())
+        #if self.ui_twsize.value() != configintval(config, 'ui', 'tweakglyphsize') :
+        #    config.set('ui', 'tweakglyphsize', str(self.ui_twsize.value()))
+        #    if appInit : app.setTweakGlyphSize(self.ui_twsize.value())
         if self.ui_apsize.value() != configintval(config, 'ui', 'attglyphsize') :
             config.set('ui', 'attglyphsize', str(self.ui_apsize.value()))
             if appInit : app.setAttGlyphSize(self.ui_apsize.value())

@@ -161,10 +161,10 @@ def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlEr
     sourcePath = os.path.dirname(os.path.abspath(gdlFileName))
     pathToCwd = pathFromTo(sourcePath, cwd)  # prepend this to existing paths
 
-    tweakWarning = generateTweakerGDL(config, app)
-    if tweakWarning != "" :
-        app.tab_errors.addWarning(tweakWarning)
-        app.tab_errors.setBringToFront(True)
+    #tweakWarning = generateTweakerGDL(config, app)
+    #if tweakWarning != "" :
+    #    app.tab_errors.addWarning(tweakWarning)
+    #    app.tab_errors.setBringToFront(True)
         
     tempFontFileIn = mktemp()
     if config.has_option('build', 'usettftable') :  # unimplemented
