@@ -56,6 +56,25 @@ class TextEditReturn(QtWidgets.QPlainTextEdit) :
 # end of class TextEditReturn
 
 
+class MatchListWidget(QtWidgets.QListWidget):
+
+    def __init__(self, testList):
+        super(MatchListWidget, self).__init__()
+        self.testList = testList
+
+    def keyPressEvent(self, event):
+        res = super(MatchListWidget, self).keyPressEvent(event)
+
+        if event.key() == QtCore.Qt.Key_Up:
+            self.testList.upArrowKey()
+        elif event.key() == QtCore.Qt.Key_Down:
+            self.testList.downArrowKey()
+
+        return res
+
+# end of clas MatchListWidget
+
+
 class GlyphPatternMatcher() :
     
     def __init__(self, app, matcher) :
@@ -292,6 +311,8 @@ class MatchList(QtWidgets.QWidget) :
         
         self.resultsFile = None
 
+        self.quickProofMode = True
+
         self.setActions(app)
         self.vbox = QtWidgets.QVBoxLayout()
         self.vbox.setContentsMargins(*Layout.buttonMargins)
@@ -513,9 +534,9 @@ class MatchList(QtWidgets.QWidget) :
         
 
     def createOneGroup(self, name, index = None, comment = "") :
-        listWidget = QtWidgets.QListWidget() # create a test list widget for this group
-        listWidget.itemDoubleClicked.connect(self.runTest)
-        listWidget.itemClicked.connect(self.loadTest)
+        listWidget = MatchListWidget(self) # create a test list widget for this group
+        listWidget.itemDoubleClicked.connect(self.doubleClick)
+        listWidget.itemClicked.connect(self.singleClick)
         self.liststack.addWidget(listWidget)
         return listWidget
         
@@ -557,7 +578,7 @@ class MatchList(QtWidgets.QWidget) :
     def writeXML(self, fname) :
         #print("writeXML(" + fname + ")")
         
-        print("MatchList::writeXML(" + fname + ")")
+        #print("MatchList::writeXML(" + fname + ")")
         
         e = et.Element('ftml', {'version' : '1.0'})
         if self.header is not None :
@@ -584,11 +605,16 @@ class MatchList(QtWidgets.QWidget) :
                     used.add(c)
         s = h.find('styles')
         invfsets = {}
+        kNotUsed = []
         for k, v in self.fsets.items() :
-            if v is not None and v not in used :
-                del self.fsets[k]
-            else :
-                invfsets[v] = k
+            if v is not None:
+                if v not in used:
+                    kNotUsed.append(k)  # don't actually delete while iterating over the dictionary
+                else:
+                    invfsets[v] = k
+        for k in kNotUsed:
+            self.fsets.pop(k, None)
+
         if len(self.fsets) > 1 :
             if s is not None :
                 for i in range(len(s) - 1, -1, -1) :
@@ -596,7 +622,9 @@ class MatchList(QtWidgets.QWidget) :
             else :
                 s = h.makeelement('styles', {})
                 ETinsert(h, s)
-            for v in sorted(invfsets.keys()) :
+            fsetsList = list(invfsets.keys())
+            if None in fsetsList: fsetsList.remove(None)
+            for v in sorted(fsetsList) :
                 k = invfsets[v]
                 if not v : continue
                 st = et.SubElement(s, 'style')
@@ -606,13 +634,11 @@ class MatchList(QtWidgets.QWidget) :
                 if l and l != 'None' : st.set('lang', l)
         elif s :
             h.remove(s)
+
         f = open(fname, "wb")
-        sio = StringIO()
-        sio.write('<?xml version="1.0" encoding="utf-8"?>\n')
-        sio.write('<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
-        et.ElementTree(ETcanon(e)).write(sio, encoding="utf-8")
-        f.write(sio.getvalue().replace(' />', '/>'))
-        sio.close()
+        f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
+        f.write(b'<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>\n')
+        et.ElementTree(ETcanon(e)).write(f, encoding="utf-8")
         f.close()
         
     # end of writeXML
@@ -726,16 +752,34 @@ class MatchList(QtWidgets.QWidget) :
             l.insertItem(testindex + 1, l.takeItem(testindex))
             l.setCurrentRow(testindex + 1)
 
+    def singleClick(self, item):
+        if self.quickProofMode:
+            self.loadTest(item)
+            self.runTest(item)
+        else:
+            if not self.noclick:
+                self.loadTest(item)
+            else:
+                self.noclick = False
+
+    def doubleClick(self, item):
+        if self.quickProofMode:
+            # the single click routine already did everything
+            pass
+        else:
+            # event sends itemClicked first so no need to select
+            self.runTest(item)
+            self.noclick = True  # because itemClicked event will happen again--ignore it
 
     def loadTest(self, item) :
-        if not self.noclick :
+        #if not self.noclick :
+        if True:
             groupIndex = self.liststack.currentIndex()   # should always be 0 currently
             testIndex = self.liststack.currentWidget().currentRow()
             self.matcher.setRun(self.testGroups[groupIndex][testIndex])
-        else :
+        #else :
             # this is the side-effect of a double-click: ignore it
-            self.noclick = False
-        self.runTest(item)
+        #    self.noclick = False
 
 
     def runTest(self, item) :
@@ -745,12 +789,31 @@ class MatchList(QtWidgets.QWidget) :
 
 
     def findStyleClass(self, t) :
-        k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(str(t.feats.keys()))))
+        k = ""
+        for label,val in t.feats.items():
+            lstr = label.decode() if isinstance(label, bytes) else label
+            k += " " + lstr + "=" + str(val)
+        k = k[1:] # take off initial superfluous space
+        ####k = " ".join(map(lambda x: x + "=" + str(t.feats[x]), sorted(str(t.feats.keys()))))
         k += "\n" + (t.lang or "")
         if k not in self.fsets :
             self.fcount += 1
             self.fsets[k] = "fset%d" % self.fcount
         return self.fsets[k]
+
+    def upArrowKey(self) :
+        groupIndex = self.liststack.currentIndex()
+        testIndex = self.liststack.currentWidget().currentRow()
+        if self.quickProofMode :
+            self.loadTest("bogus")
+            self.runTest("bogus")
+
+    def downArrowKey(self) :
+        groupIndex = self.liststack.currentIndex()
+        testIndex = self.liststack.currentWidget().currentRow()
+        if self.quickProofMode :
+            self.loadTest("bogus")
+            self.runTest("bogus")
 
 # end of class MatchList
 
@@ -913,7 +976,7 @@ class Matcher(QtWidgets.QTabWidget) :
                     self.matchList.appendTest(te)
         
     # end of searchClicked
-    
+
 
     def runClicked(self) :
 
@@ -931,8 +994,6 @@ class Matcher(QtWidgets.QTabWidget) :
         self.run = self.app.loadRunViewAndPasses(self, self.json, 
             # In the Matcher we are generally interested in the output of the final pass, so scroll it into view:
             'to-end')
-        
-        
         
     # end of runClicked
     
