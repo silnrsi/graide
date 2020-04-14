@@ -298,12 +298,14 @@ class MainWindow(QtWidgets.QMainWindow) :
             
     # end of loadFont
 
-    def loadAP(self, apFileName) :
-        #print("main - loadAP")
+    def loadAP(self, apFileName):
+        #print("main - loadAP", apFileName)
         self.apname = apFileName
-        if apFileName and os.path.exists(apFileName) :
+        if apFileName and os.path.exists(apFileName):
             self.font.loadAP(apFileName)
         else :
+            if apFileName:
+                print("WARNING: attachment point file '" + apFileName + "' not found")
             self.font.loadEmptyGlyphs("loadAP")
 
         self.loadGdx()

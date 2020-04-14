@@ -272,6 +272,7 @@ class Font(object) :
 
     # TODO: move this method to GraideFont, or refactor
     def loadAP(self, apFileName) :
+        #print("Font::loadAP", apFileName)
         if not os.path.exists(apFileName) : return False
         self.initGlyphs() # FIXME how many glyphs are there?
         etree = parse(apFileName)
@@ -308,8 +309,10 @@ class Font(object) :
 #                self.classes[c].append(g.gid)
 
     def calculatePointClasses(self) :
+        #print("calculatePointClasses")
         self.points = {}
         for g in self.glyphs :
+            # g is a GraideGlyph
             if not g : continue
             for apName in g.anchors.keys() :
                 genericName = apName[:-1] # without the M or S
