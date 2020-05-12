@@ -17,7 +17,7 @@ else:
     PKG_DATA = {}
 
 setup(  name = 'graide',
-        version = '0.8',
+        version = '1.0',
         description = 'Graphite Integrated Development Environment',
         author = 'Martin Hosken',
         author_email = 'martin_hosken@sil.org',
