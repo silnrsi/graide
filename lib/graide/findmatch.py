@@ -698,7 +698,7 @@ class MatchList(QtWidgets.QWidget) :
 
     def addTestClicked(self, t = None) :
         groupIndex = self.liststack.currentIndex()
-        if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
+        if not t : t = Test('', self.app.feats[None].currentValue(), rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTest(t)
         res = self.editTest(len(self.testGroups[groupIndex]) - 1)
         if not t.name or not res :
@@ -982,7 +982,7 @@ class Matcher(QtWidgets.QTabWidget) :
 
         jsonResult = self.app.runGraphiteOverString(self.fontFileName, None, self.runEdit.toPlainText(),
             self.font.size, self.runRtl.isChecked(), 
-            #self.currFeats or self.app.feats[self.currLang].fval,
+            #self.currFeats or self.app.feats[self.currLang].currentValue(),
             self.currFeats,
             self.currLang, self.currWidth)
         if jsonResult != False :

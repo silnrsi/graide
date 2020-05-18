@@ -556,7 +556,7 @@ class TestList(QtWidgets.QWidget) :
         if not hasattr(self.app, 'feats') :
             return
         groupIndex = self.liststack.currentIndex()
-        if not t : t = Test('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
+        if not t : t = Test('', self.app.feats[None].currentValue(), rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTest(t)
         res = self.editTest(len(self.testGroups[groupIndex]) - 1)
         if not t.name or not res :

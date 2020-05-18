@@ -22,92 +22,99 @@ from qtpy import QtCore, QtGui, QtWidgets
 import graphite2 as gr
 from graide.rungraphite import strtolong, bytestostr
 from graide.layout import Layout
-import sys
+import sys, struct
 
 class FeatureRefs(object) :
 
     # Data structure to represent feature values for a single language, or no language.
 
-    def __init__(self, grface = None, lang = None) :
-        self.feats = {}     # Feature labels => { setting labels => setting values }
-        self.featids = {}   # Feature labels => IDs
-        self.fval = {}      # Feature IDs => current value
-        self.order = []     # List of feature labels, in display order
-        self.forders = {}   # Feature labels => { list of feature values, in order }
+    def __init__(self, grface = None, lang = None, featsInTable = None) :
+        self.feats = {}       # Feature ID => { setting labels => setting values }
+        #self.featids = {}    # Feature labels => IDs
+        self.fCurVal = {}        # Feature IDs => current value
+        self.orderID = []     # List of feature IDs, in display order
+        self.orderLabel = []  # List of feature labels, in display order
+        self.fvalOrder = {}   # Feature tag => { list of feature values, in order }
+        self.featsInTable = featsInTable  # ID => hidden boolean; complete list of all the features in the table, including hidden ones
+        #print("FeatureRefs.featsInTable=", self.featsInTable)
 
         if grface and grface.face :
-            langid = 0x0409 # English
+            uiLangid = 0x0409 # English
             length = 0
             grval = grface.get_featureval(strtolong(lang))
-            for f in grface.featureRefs :
-                tag = f.tag()
+            grface.setFeatsInTable(featsInTable)
+
+            grface_featureRefs = grface.featureRefs   # returns an iterator
+            featRefs = []
+            for f in grface_featureRefs:
+                #print(f.tag(), f)
+                featRefs.append(f)
+            #print(len(featRefs), "features")
+
+            for oneFeatRef in featRefs:
+                tag = oneFeatRef.tag()
                 if sys.version_info.major > 2:
                     tag = tag.decode("utf-8")  # convert to string
                 if tag == '' : continue  # is this the lang feature? not sure...
-                name = f.name(langid)
-                if not name : continue
-                name = name[:]
-                n = f.num()
-                #print(n, name, f.tag())
-                if n == 0 :
+                label = oneFeatRef.name(uiLangid)
+                if not label : continue
+                label = label[:]
+                sCnt = oneFeatRef.settingCount()
+                if sCnt == 0 :
                     continue  # probably the lang feature; ignore
-                finfo = {}
-                forder = []
-                for i in range(n) :  # loop over settings
-                    v = f.val(i)
-                    k = f.label(i, langid)[:]
-                    finfo[k] = v
-                    forder.append(k)
-                self.order.append(name)
-                self.feats[name] = finfo
-                self.featids[name] = f.tag()
-                self.fval[f.tag()] = grval.get(f)
-                self.forders[name] = forder
-                #print n, name, f.tag(), finfo, forder
+                fSettings = {}
+                fvalOrder = []
+                for i in range(sCnt) :  # loop over settings
+                    v = oneFeatRef.val(i)
+                    k = oneFeatRef.label(i, uiLangid)[:]  # ugly to use the label as the key of the dict, but oh well
+                    #print("  --", k, v)
+                    fSettings[k] = v
+                    fvalOrder.append(k)
+                self.orderID.append(tag)
+                self.orderLabel.append(label)
+                self.feats[tag] = fSettings
+                #self.featids[name] = f.tag()
+                self.fCurVal[tag] = grval.get(oneFeatRef)
+                self.fvalOrder[tag] = fvalOrder
+                #print(oneFeatRef.tag(), sCnt, fSettings, self.fCurVal[oneFeatRef.tag())
 
 
     def copy(self) :
         res = FeatureRefs()
         res.feats = dict(self.feats)
-        res.featids = dict(self.featids)
-        res.fval = dict(self.fval)
-        res.order = list(self.order)
-        for k, v in self.forders.items() :
-            res.forders[k] = list(v)
+        #res.featids = dict(self.featids)
+        res.fCurVal = dict(self.fCurVal)
+        res.orderID = list(self.orderID)
+        res.orderLabel = list(self.orderLabel)
+        for k, v in self.fvalOrder.items() :
+            res.fvalOrder[k] = list(v)
+        res.featsInTable = self.featsInTable
         return res
 
     def apply(self, fvals) :
         for (k, v) in fvals.items() :
-            self.fval[k] = v
+            self.fCurVal[k] = v
 
-    def printFeatures(self):
-        for (k,v) in self.fval.items():
-            print(k,v)
+    def printFeatures(self):  # debugging
+        for (k,v) in self.fCurVal.items():
+            print(k,"value=",v)
 
+    def isHidden(self, feattag):
+        if self.featsInTable is None:
+            return False
+        else:
+            if isinstance(feattag, bytes):
+                feattag = bytestostr(feattag)
+            return self.featsInTable[feattag];
 
-def make_FeaturesMap(font) :
-    #print("make_FeaturesMap")
-    grface = gr.Face(font)
-    result = {}
-    result[None] = FeatureRefs(grface)
-    if not grface.face : return result
-    for langID in grface.featureLangs :
-        langStr = gr.tag_to_str(langID)
-        langStr = bytestostr(langStr)
-        result[langStr] = FeatureRefs(grface, langStr)
-    return result
-
-
-def printFeaturesMap(fmap) :  # debugging
-    for (l, f) in fmap.items():
-        print("===============")
-        print("lang tag", l)
-        f.printFeatures()
+    def currentValue(self):
+        return self.fCurVal
 
 
 class FeatureDialog(QtWidgets.QDialog) :
 
     def __init__(self, parent = None) : # parent = main window
+        #print("FeatureDialog::__init__")
         super(FeatureDialog, self).__init__(parent)
         self.mainWindow = parent
         self.setWindowTitle("Set Features")
@@ -153,14 +160,16 @@ class FeatureDialog(QtWidgets.QDialog) :
 
     def set_feats(self, feats, featsBaseForLang, vals = None, lang = None, width = 100) :
 
-        #print("feats=", feats)
+        #print("FeatureDialog::set_feats=", feats)
         #print("featsBaseForLang=", featsBaseForLang)
         #print("vals=", vals)
         #print("lang=", lang)
+
+        #feats.printFeatures()
         
         self.featsBaseForLang = featsBaseForLang
         
-        if not vals : vals = feats.fval
+        if not vals : vals = feats.fCurVal
         
         self.initMode = True
         
@@ -168,34 +177,45 @@ class FeatureDialog(QtWidgets.QDialog) :
             self.table.removeRow(0)
         self.combos = []
         self.labels = []
-        num = len(feats.order)
+        num = len(feats.orderID)
         self.table.setRowCount(num)
         count = 0
-        for f in feats.order :
-            fid = feats.featids[f] if f in feats.featids else ""
+#       for f in feats.order :
+#           fid = feats.featids[f] if f in feats.featids else ""
+        i = 0
+        for fid in feats.orderID:
+            fLabel = feats.orderLabel[i]
+            i = i + 1
             if fid != "" :
                 c = QtWidgets.QComboBox()
                 c.connect(QtCore.SIGNAL('currentIndexChanged(int)'), self.changeSetting)
-                c.userTag = feats.featids[f]
-                for k in feats.forders[f] :
-                    c.addItem(k, feats.feats[f][k])
-                    if c.userTag in vals and feats.feats[f][k] == vals[c.userTag] :
+                #c.userTag = feats.featids[f]
+                c.userTag = fid
+                for k in feats.fvalOrder[fid] :
+                    c.addItem(k, feats.feats[fid][k])
+                    if c.userTag in vals and feats.feats[fid][k] == vals[c.userTag] :
                         c.setCurrentIndex(c.count() - 1)
                 self.combos.append(c)
                 self.table.setCellWidget(count, 2, c)
                 
-                #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fval[fid] else ""
+                #modText = " * " if vals[fid] and vals[fid] != featsBaseForLang.fCurVal[fid] else ""
                 #self.table.setItem(count, 0, QtWidgets.QTableWidgetItem(modText))
                 # Column 0 currently not used
-                
-                labelWidget = QtWidgets.QTableWidgetItem(f)
-                if fid in vals and vals[fid] != featsBaseForLang.fval[fid] :
+
+                fShowLabel = fLabel
+                if feats.isHidden(fid):
+                    fShowLabel = fLabel + " [" + fid + "]"
+                labelWidget = QtWidgets.QTableWidgetItem(fShowLabel)
+                if fid in vals and vals[fid] != featsBaseForLang.fCurVal[fid] :
                     labelWidget.setBackground(Layout.activePassColour) # modified from expected
                     self.featsMod = True
+                if feats.isHidden(fid):
+                    labelWidget.setTextColor(QtGui.QColor(130, 130, 130))  # hidden
+                    #print("---", fid, " is hidden")
                 self.table.setItem(count, 1, labelWidget)
                 self.labels.append(labelWidget)
             
-            count += 1
+            count += 1  # number actually added
             
         if lang : self.langCtrl.setText(lang)
 
@@ -213,11 +233,12 @@ class FeatureDialog(QtWidgets.QDialog) :
             return
         
         featI = 0
-        for f in self.featsBaseForLang.order :
-            fid = self.featsBaseForLang.featids[f]
+        for fid in self.featsBaseForLang.orderID :
+            flabel = self.featsBaseForLang.orderLabel[featI]
+            #fid = self.featsBaseForLang.featids[f]
             combo = self.combos[featI]
             v = combo.itemData(combo.currentIndex())
-            d = self.featsBaseForLang.fval[fid]
+            d = self.featsBaseForLang.fCurVal[fid]
             
             labelWidget = self.labels[featI]
             if v != d:
@@ -242,15 +263,16 @@ class FeatureDialog(QtWidgets.QDialog) :
             newFBase = self.mainWindow.feats[newLang]
 
             self.featsBaseForLang = newFBase
-            vals = newFBase.fval
+            vals = newFBase.fCurVal
 
             featI = 0
-            for f in newFBase.order :
-                fid = newFBase.featids[f] if f in newFBase.featids else ""
+            for fid in newFBase.orderID :
+                flabel = newfBase.orderLabel[featI]
+                #fid = newFBase.featids[f] if f in newFBase.featids else ""
                 if fid != "":
                     combo = self.combos[featI]
                     settingI = 0
-                    for k in newFBase.forders[f] :
+                    for k in newFBase.fvalOrder[fid] :
                         if combo.userTag in vals and newFBase.feats[f][k] == vals[combo.userTag] :
                             combo.setCurrentIndex(settingI)
                             break
@@ -269,7 +291,7 @@ class FeatureDialog(QtWidgets.QDialog) :
         result = {}
         for c in self.combos :
             v = c.itemData(c.currentIndex())
-            if base is None or base.fval[c.userTag] != v :
+            if base is None or base.fCurVal[c.userTag] != v :
                 result[c.userTag] = v
         return result
 
@@ -315,14 +337,131 @@ class FeatureDialog(QtWidgets.QDialog) :
     # Somehow the lang features gets in the list; remove it
     def removeLangFeature(self, featRefs) :
         print("kludgeRemoveBogusFeature")
-        c = len(featRefs.order)
-        featLabelLast = featRefs.order[c-1]
-        featIdLast = featRefs.featids[featLabelLast]
+        c = len(featRefs.orderID)
+        featIdLast = featRefs.orderID[c-1]
+        featLabelLast = featRefs.orderLabel[c-1]
+        #featIdLast = featRefs.featids[featLabelLast]
         if featIdLast == "" :
             print("removing...")
             del featRefs.feats[featLabelLast]
-            del featRefs.featids[featLabelLast]
-            del featRefs.forders[featLabelLast]
-            del featRefs.fval['']
-            del featRefs.order[c-1]
+            #del featRefs.featids[featLabelLast]
+            del featRefs.fvalOrder[featLabelLast]
+            del featRefs.fCurVal['']
+            del featRefs.orderID[c-1]
+            del featRefs.orderLabel[c-1]
         return featRefs
+
+# end of class FeatureDialog
+
+
+# Functions
+
+# Map languages to features
+def make_FeaturesMap(fontname):
+    #print("make_FeaturesMap", fontname)
+
+    # Get a complete list of features, even the hidden ones
+    res = readFeaturesFromTable(fontname)
+    #print(res)
+    featList = res[0]
+    featHidden = res[1]
+    featSettings = res[2]
+
+    grface = gr.Face(fontname)
+    result = {}
+
+    result[None] = FeatureRefs(grface, featsInTable=featHidden)
+    if not grface.face: return result
+    for langID in grface.featureLangs:
+        langStr = gr.tag_to_str(langID)
+        langStr = bytestostr(langStr)
+        result[langStr] = FeatureRefs(grface, langStr, featsInTable=featHidden)
+    return result
+
+def printFeaturesMap(fmap):  # debugging
+    for (l, f) in fmap.items():
+        print("===============")
+        print("lang tag", l)
+        f.printFeatures()
+
+# Read the Feat table from the font directly, since the Graphite engine API calls omit the hidden features.
+
+def readFeaturesFromTable(fontfilename):
+    #print("readFeatTable",fontfilename)
+    tableDict = {}
+    with open(fontfilename, "rb") as inf:
+        dat = inf.read(12)
+        (_, numtables) = struct.unpack(">4sH", dat[:6])
+        #print("numtables=",numtables)
+        dat = inf.read(numtables * 16)
+        for i in range(numtables):
+            (tag, csum, offset, length) = struct.unpack(">4sLLL", dat[i * 16: (i+1) * 16])
+            tName = tag.decode("utf-8")
+            #print(tName)
+            tableDict[tName] = [offset, length]
+        nameTbl = readNameTable(inf, tableDict)
+        return readFeatTable(inf, tableDict, nameTbl)
+
+
+def readFeatTable(inf, tableDict, nameTbl):
+    resFeats = {}
+    resHidden = {}
+    resSettings = {}
+    if 'Feat' not in tableDict:
+        print("no Feat table")
+        return [None, None]
+    inf.seek(tableDict['Feat'][0])
+    dat = inf.read(tableDict['Feat'][1])
+    (version, subversion) = struct.unpack(">HH", dat[:4])
+    #print(version, subversion)
+    numFeats, = struct.unpack(">H", dat[4:6])
+    #print("num feats", numFeats)
+
+    for i in range(numFeats):
+        #print("feature #",i)
+        if version >= 2:
+            (fid, numSettings, _, offset, flags, lid) = struct.unpack(">LHHLHH", dat[12+16*i:28+16*i])
+        else:
+            (fid, numSettings, offset, flags, lid) = struct.unpack(">HHLHH", dat[12+12*i:24+12*i])
+        #print(fid)
+        tag = num2tag(fid)
+
+        resFeats[tag] = nameTbl.get(lid, "")
+        resHidden[tag] = ((flags & 0x0800) != 0)
+        #print(tag, resHidden[tag])
+        settingsDict = {}
+        resSettings[tag] = settingsDict
+        for j in range(numSettings):
+            val, lid = struct.unpack(">HH", dat[offset + 4*j:offset + 4*(j+1)])
+            settingsDict[val] = nameTbl.get(lid, "")
+        #print(valdict)
+
+    #print("resHidden=", resHidden)
+    return (resFeats, resHidden, resSettings)
+
+
+def num2tag(n):  # convert a feature tag integer to a string
+    if n < 0x00200000:
+        return str(n)
+    else:
+        return struct.unpack('4s', struct.pack('>L', n))[0].replace(b'\000', b'').decode()
+
+def readNameTable(inf, tableDict):
+    resNameTable = {}
+    if 'name' not in tableDict:
+        return None
+    inf.seek(tableDict['name'][0])
+    data = inf.read(tableDict['name'][1])
+    fmt, n, stringOffset = struct.unpack(b">HHH", data[:6])
+    stringData = data[stringOffset:]
+    data = data[6:]
+    for i in range(n):
+        if len(data) < 12:
+            break
+        (pid, eid, lid, nid, length, offset) = struct.unpack(b">HHHHHH", data[12*i:12*(i+1)])
+        # only get unicode strings (US English)
+        if (pid == 0 and lid == 0) or (pid == 3 and (eid < 2 or eid == 10) and lid == 1033):
+            resNameTable[nid] = stringData[offset:offset+length].decode("utf_16_be")
+
+    #print(resNameTable)
+    return resNameTable

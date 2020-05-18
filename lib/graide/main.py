@@ -949,6 +949,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if self.fontFileName :
             try:
                 self.feats = make_FeaturesMap(self.fontFileName)
+                #self.feats[None].printFeatures()
             except:
                 # A font without Graphite?
                 print("WARNING: failure to reinitialize Graphite font features")
@@ -993,7 +994,7 @@ Copyright 2012-2013 SIL International and M. Hosken""")
         if self.currFeats:
             tFeats = self.currFeats
         elif self.currLang and self.feats[self.currLang]:
-            tFeats = self.feats[self.currLang].fval
+            tFeats = self.feats[self.currLang].currentValue()
         else:
             tFeats = {}  # probably an error in loading the font
 

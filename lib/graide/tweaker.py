@@ -532,7 +532,7 @@ class TweakList(QtWidgets.QWidget) :
     
     def addTestClicked(self, t = None) :
         gIndex = self.liststack.currentIndex()
-        if not t : t = Tweak('', self.app.feats[None].fval, rtl = configintval(self.app.config, 'main', 'defaultrtl'))
+        if not t : t = Tweak('', self.app.feats[None].currentValue(), rtl = configintval(self.app.config, 'main', 'defaultrtl'))
         self.appendTweak(t)
         res = self.editTweak(len(self.tweakGroups[gIndex]) - 1)
         if not t.name or not res :

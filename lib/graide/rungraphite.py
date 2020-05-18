@@ -49,6 +49,7 @@ def bytestostr(byteseq):
     return res
 
 
+# Currently not used
 def runGraphite(fontname, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
     #print("runGraphite")
 
