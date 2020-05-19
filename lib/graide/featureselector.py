@@ -36,7 +36,7 @@ class FeatureRefs(object) :
         self.orderLabel = []  # List of feature labels, in display order
         self.fvalOrder = {}   # Feature tag => { list of feature values, in order }
         self.featsInTable = featsInTable  # ID => hidden boolean; complete list of all the features in the table, including hidden ones
-        #print("FeatureRefs.featsInTable=", self.featsInTable)
+        print("FeatureRefs.featsInTable=", self.featsInTable)
 
         if grface and grface.face :
             uiLangid = 0x0409 # English
@@ -76,7 +76,7 @@ class FeatureRefs(object) :
                 #self.featids[name] = f.tag()
                 self.fCurVal[tag] = grval.get(oneFeatRef)
                 self.fvalOrder[tag] = fvalOrder
-                #print(oneFeatRef.tag(), sCnt, fSettings, self.fCurVal[oneFeatRef.tag())
+                print(tag, sCnt, fSettings, self.fCurVal[tag])
 
 
     def copy(self) :
@@ -160,7 +160,7 @@ class FeatureDialog(QtWidgets.QDialog) :
 
     def set_feats(self, feats, featsBaseForLang, vals = None, lang = None, width = 100) :
 
-        #print("FeatureDialog::set_feats=", feats)
+        print("FeatureDialog::set_feats=", feats)
         #print("featsBaseForLang=", featsBaseForLang)
         #print("vals=", vals)
         #print("lang=", lang)
@@ -211,7 +211,9 @@ class FeatureDialog(QtWidgets.QDialog) :
                     self.featsMod = True
                 if feats.isHidden(fid):
                     labelWidget.setTextColor(QtGui.QColor(130, 130, 130))  # hidden
-                    #print("---", fid, " is hidden")
+                    print("---", fid, " is hidden")
+                else:
+                    print(fid, "not hidden")
                 self.table.setItem(count, 1, labelWidget)
                 self.labels.append(labelWidget)
             
@@ -387,17 +389,17 @@ def printFeaturesMap(fmap):  # debugging
 # Read the Feat table from the font directly, since the Graphite engine API calls omit the hidden features.
 
 def readFeaturesFromTable(fontfilename):
-    #print("readFeatTable",fontfilename)
+    print("readFeatTable",fontfilename)
     tableDict = {}
     with open(fontfilename, "rb") as inf:
         dat = inf.read(12)
         (_, numtables) = struct.unpack(">4sH", dat[:6])
-        #print("numtables=",numtables)
+        print("numtables=",numtables)
         dat = inf.read(numtables * 16)
         for i in range(numtables):
             (tag, csum, offset, length) = struct.unpack(">4sLLL", dat[i * 16: (i+1) * 16])
             tName = tag.decode("utf-8")
-            #print(tName)
+            print(tName)
             tableDict[tName] = [offset, length]
         nameTbl = readNameTable(inf, tableDict)
         return readFeatTable(inf, tableDict, nameTbl)
