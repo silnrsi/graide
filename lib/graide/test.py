@@ -43,11 +43,16 @@ class Test(object) :
         self.width = width
 
     def fixFeatsDict(self, dict):
-        "Convert feature dict keys to bytes, not str."
+        "Convert feature dict keys to str, not bytes."
         for k,v in dict.items():
-            if isinstance(k, str):
+            """if isinstance(k, str):
                 kbytes = k.encode('utf-8')  # convert to bytes
                 dict[kbytes] = v
+                dict.pop(k, None)"""
+
+            if isinstance(k, bytes):
+                kstr = k.decode('utf-8')  #  convert to str
+                dict[kstr] = v
                 dict.pop(k, None)
         return dict
 

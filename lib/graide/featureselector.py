@@ -47,7 +47,7 @@ class GraideFace(gr.Face):
                     # normal case: string, not integer
                     if isinstance(featid, bytes):
                         featid = bytestostr(featid)
-                    #featid = featid.encode('utf-8')   # convert to bytes
+                    #featid = featid.encode('utf-8')   # convert to bytes - no, leave as str
                     featid = strtolong(featid)
                 else:
                     print("featid is an integer", featid)
