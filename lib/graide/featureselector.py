@@ -24,6 +24,44 @@ from graide.rungraphite import strtolong, bytestostr
 from graide.layout import Layout
 import sys, struct
 
+# A GraideFace knows how to find the complete list of features out of the Feat table, including the hidden ones.
+class GraideFace(gr.Face):
+    def __init__(self, data, options=0, fn=None):
+        super(GraideFace, self).__init__(data, options, fn)
+        self.allFeatsInTable = None
+
+    def setFeatsInTable(self, featsInTable):
+        self.allFeatsInTable = featsInTable
+
+    @property
+    def featureRefs(self):
+        if self.allFeatsInTable is not None:
+            #print("getting feats from full list")
+            i = -1
+            for featid in self.allFeatsInTable:
+                i = i + 1
+                if not isinstance(featid, int) and len(featid) <= 1:
+                    # short string that is really an integer, eg, '1'
+                    featid = int(featid)
+                elif not isinstance(featid, int):
+                    # normal case: string, not integer
+                    if isinstance(featid, bytes):
+                        featid = bytestostr(featid)
+                    #featid = featid.encode('utf-8')   # convert to bytes
+                    featid = strtolong(featid)
+                else:
+                    print("featid is an integer", featid)
+
+                #fref = gr_face_find_fref(self.face, featid)
+                fref = super(GraideFace, self).get_featureref(featid)
+                #yield FeatureRef(fref, index=i)
+                yield fref
+
+        else:
+            print("getting feats from gr_face_fref API")
+            super(GraideFace, self).featureRefs
+
+
 class FeatureRefs(object) :
 
     # Data structure to represent feature values for a single language, or no language.
@@ -36,7 +74,7 @@ class FeatureRefs(object) :
         self.orderLabel = []  # List of feature labels, in display order
         self.fvalOrder = {}   # Feature tag => { list of feature values, in order }
         self.featsInTable = featsInTable  # ID => hidden boolean; complete list of all the features in the table, including hidden ones
-        print("FeatureRefs.featsInTable=", self.featsInTable)
+        #print("FeatureRefs.featsInTable=", self.featsInTable)
 
         if grface and grface.face :
             uiLangid = 0x0409 # English
@@ -59,7 +97,7 @@ class FeatureRefs(object) :
                 label = oneFeatRef.name(uiLangid)
                 if not label : continue
                 label = label[:]
-                sCnt = oneFeatRef.settingCount()
+                sCnt = oneFeatRef.num()  # number of settings
                 if sCnt == 0 :
                     continue  # probably the lang feature; ignore
                 fSettings = {}
@@ -76,7 +114,7 @@ class FeatureRefs(object) :
                 #self.featids[name] = f.tag()
                 self.fCurVal[tag] = grval.get(oneFeatRef)
                 self.fvalOrder[tag] = fvalOrder
-                print(tag, sCnt, fSettings, self.fCurVal[tag])
+                #print(tag, sCnt, fSettings, self.fCurVal[tag])
 
 
     def copy(self) :
@@ -160,7 +198,7 @@ class FeatureDialog(QtWidgets.QDialog) :
 
     def set_feats(self, feats, featsBaseForLang, vals = None, lang = None, width = 100) :
 
-        print("FeatureDialog::set_feats=", feats)
+        #print("FeatureDialog::set_feats=", feats)
         #print("featsBaseForLang=", featsBaseForLang)
         #print("vals=", vals)
         #print("lang=", lang)
@@ -211,9 +249,9 @@ class FeatureDialog(QtWidgets.QDialog) :
                     self.featsMod = True
                 if feats.isHidden(fid):
                     labelWidget.setTextColor(QtGui.QColor(130, 130, 130))  # hidden
-                    print("---", fid, " is hidden")
-                else:
-                    print(fid, "not hidden")
+                    #print("---", fid, " is hidden")
+                #else:
+                #    print(fid, "not hidden")
                 self.table.setItem(count, 1, labelWidget)
                 self.labels.append(labelWidget)
             
@@ -369,7 +407,7 @@ def make_FeaturesMap(fontname):
     featHidden = res[1]
     featSettings = res[2]
 
-    grface = gr.Face(fontname)
+    grface = GraideFace(fontname)
     result = {}
 
     result[None] = FeatureRefs(grface, featsInTable=featHidden)
@@ -389,17 +427,17 @@ def printFeaturesMap(fmap):  # debugging
 # Read the Feat table from the font directly, since the Graphite engine API calls omit the hidden features.
 
 def readFeaturesFromTable(fontfilename):
-    print("readFeatTable",fontfilename)
+    #print("readFeatTable",fontfilename)
     tableDict = {}
     with open(fontfilename, "rb") as inf:
         dat = inf.read(12)
         (_, numtables) = struct.unpack(">4sH", dat[:6])
-        print("numtables=",numtables)
+        #print("numtables=",numtables)
         dat = inf.read(numtables * 16)
         for i in range(numtables):
             (tag, csum, offset, length) = struct.unpack(">4sLLL", dat[i * 16: (i+1) * 16])
             tName = tag.decode("utf-8")
-            print(tName)
+            #print(tName)
             tableDict[tName] = [offset, length]
         nameTbl = readNameTable(inf, tableDict)
         return readFeatTable(inf, tableDict, nameTbl)
@@ -433,10 +471,11 @@ def readFeatTable(inf, tableDict, nameTbl):
         #print(tag, resHidden[tag])
         settingsDict = {}
         resSettings[tag] = settingsDict
+        #print("num settings", numSettings)
         for j in range(numSettings):
             val, lid = struct.unpack(">HH", dat[offset + 4*j:offset + 4*(j+1)])
             settingsDict[val] = nameTbl.get(lid, "")
-        #print(valdict)
+        #print(settingsDict)
 
     #print("resHidden=", resHidden)
     return (resFeats, resHidden, resSettings)
