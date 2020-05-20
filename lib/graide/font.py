@@ -81,10 +81,18 @@ class GraideFont(Font) :
         self.isread = True
 
     def setGdxPath(self, gdxObject):
-        #print("GraideFont::setGdxPath", gdxObject.relPath)
+        #print("GraideFont::setGdxPath", self.numGlyphs, gdxObject.relPath)
         self.gdxPath = gdxObject.relPath
         for gid in range(0, self.numGlyphs):
-            self[gid].setGdxPath(gdxObject)
+            if self[gid] is not None:  # why?
+                self[gid].setGdxPath(gdxObject)
+            """
+            if self[gid] is not None:
+                self[gid].setGdxPath(gdxObject)
+            else:
+                print(gid, "is None")
+                for gid2 in range(0,10):
+                    print(gid2, self[gid2])"""
 
     def loadEmptyGlyphs(self, dbgContext = "unknown") :
         #print("GraideFont::loadEmptyGlyphs", context)
