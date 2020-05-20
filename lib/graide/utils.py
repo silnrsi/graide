@@ -203,18 +203,18 @@ def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlEr
             # Change the current working directory to the one where the GDL file is located.
             # This is done to account for a bug in the compiler that interprets #include statements
             # as relative to the CWD rather than the main source file (happens only on Windows).
-            gdlFileBase = os.path.basename(gdlFileName)
-            tempFontFileIn = os.path.abspath(tempFontFileIn)
-            fontFileName_src = pathToCwd + os.path.relpath(fontFileName)
-            os.chdir(sourcePath)
+            # -- NO LONGER NEEDED; the compiler has been fixed.
+            #gdlFileBase = os.path.basename(gdlFileName)
+            #tempFontFileIn = os.path.abspath(tempFontFileIn)
+            #fontFileName_src = pathToCwd + os.path.relpath(fontFileName)
+            #os.chdir(sourcePath)
 
             print("Compiling...")
             argList = [grcExec]
             argList.extend(warningList)
             if gdlErrFileName is not None and gdlErrFileName != "":
                 argList.extend(["-e", gdlErrFileName])
-            argList.extend(["-D", "-q", gdlFileBase, tempFontFileIn, fontFileName_src])
-            #print(argList)
+            argList.extend(["-D", "-q", gdlFileName, tempFontFileIn, fontFileName])
 
             res = subprocess.call(argList, **parms)
         except:
@@ -222,7 +222,7 @@ def buildGraphite(config, app, font, fontFileName, lowLevelErrFile = None, gdlEr
     else:
         print("grcompiler is missing")
 
-    os.chdir(cwd)  # return to where we were
+    #os.chdir(cwd)  # return to where we were - NOT NEEDED
 
     #print("compilation result =", res)
 

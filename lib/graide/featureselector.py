@@ -118,7 +118,7 @@ class FeatureRefs(object) :
                 for i in range(sCnt) :  # loop over settings
                     v = oneFeatRef.val(i)
                     k = oneFeatRef.label(i, uiLangid)[:]  # ugly to use the label as the key of the dict, but oh well
-                    print("  --", k, v)
+                    #("  --", k, v)
                     fSettings[k] = v
                     fvalOrder.append(k)
                 self.orderID.append(tag)
@@ -127,7 +127,7 @@ class FeatureRefs(object) :
                 #self.featids[name] = f.tag()
                 self.fCurVal[tag] = grval.get(oneFeatRef)
                 self.fvalOrder[tag] = fvalOrder
-                print(tag, sCnt, fSettings, self.fCurVal[tag])
+                #print(tag, sCnt, fSettings, self.fCurVal[tag])
 
 
     def copy(self) :
@@ -440,12 +440,12 @@ def printFeaturesMap(fmap):  # debugging
 # Read the Feat table from the font directly, since the Graphite engine API calls omit the hidden features.
 
 def readFeaturesFromTable(fontfilename):
-    print("readFeatTable",fontfilename)
+    #print("readFeatTable",fontfilename)
     tableDict = {}
     with open(fontfilename, "rb") as inf:
         dat = inf.read(12)
         (_, numtables) = struct.unpack(">4sH", dat[:6])
-        print("numtables=",numtables)
+        #print("numtables=",numtables)
         dat = inf.read(numtables * 16)
         for i in range(numtables):
             (tag, csum, offset, length) = struct.unpack(">4sLLL", dat[i * 16: (i+1) * 16])
