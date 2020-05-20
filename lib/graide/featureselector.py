@@ -31,6 +31,7 @@ class GraideFace(gr.Face):
         self.allFeatsInTable = None
 
     def setFeatsInTable(self, featsInTable):
+        #print("GraideFace::setFeatsInTable", featsInTable)
         self.allFeatsInTable = featsInTable
 
     @property
@@ -40,25 +41,36 @@ class GraideFace(gr.Face):
             i = -1
             for featid in self.allFeatsInTable:
                 i = i + 1
-                if not isinstance(featid, int) and len(featid) <= 1:
-                    # short string that is really an integer, eg, '1'
-                    featid = int(featid)
-                elif not isinstance(featid, int):
-                    # normal case: string, not integer
-                    if isinstance(featid, bytes):
-                        featid = bytestostr(featid)
-                    #featid = featid.encode('utf-8')   # convert to bytes - no, leave as str
-                    featid = strtolong(featid)
+                #print(featid)
+                if isinstance(featid, int):
+                    #print("featid is an integer", featid)
+                    pass
                 else:
-                    print("featid is an integer", featid)
+                    featidInt = maybeInteger(featid)
+                    if featidInt != 0:
+                        # string that is really an integer, eg, '1' or '1234'
+                        #print("integer-like string")
+                        if featidInt != 1:  # 1 is lang
+                            print("WARNING: integer feature ID " + featid + " is not handled by Graide")
+                            # eventually populating the feature dialog will fail
+                        featid = featidInt
+                    else:
+                        #print("regular string")
+                        # normal case: string, not integer
+                        if isinstance(featid, bytes):
+                            featid = bytestostr(featid)
+                        #featid = featid.encode('utf-8')   # convert to bytes - no, leave as str
+                        featid = strtolong(featid)
 
-                #fref = gr_face_find_fref(self.face, featid)
-                fref = super(GraideFace, self).get_featureref(featid)
+                #print(featid)
+
+                fref = super(GraideFace, self).get_featureref(featid)   #fref = gr_face_find_fref(self.face, featid)
+                #print("created fref", i, fref)
                 #yield FeatureRef(fref, index=i)
                 yield fref
 
         else:
-            print("getting feats from gr_face_fref API")
+            #print("getting feats from gr_face_fref API")
             super(GraideFace, self).featureRefs
 
 
@@ -83,6 +95,7 @@ class FeatureRefs(object) :
             grface.setFeatsInTable(featsInTable)
 
             grface_featureRefs = grface.featureRefs   # returns an iterator
+            #print("returned from featureRefs")
             featRefs = []
             for f in grface_featureRefs:
                 #print(f.tag(), f)
@@ -105,16 +118,16 @@ class FeatureRefs(object) :
                 for i in range(sCnt) :  # loop over settings
                     v = oneFeatRef.val(i)
                     k = oneFeatRef.label(i, uiLangid)[:]  # ugly to use the label as the key of the dict, but oh well
-                    #print("  --", k, v)
+                    print("  --", k, v)
                     fSettings[k] = v
                     fvalOrder.append(k)
                 self.orderID.append(tag)
                 self.orderLabel.append(label)
                 self.feats[tag] = fSettings
-                #self.featids[name] = f.tag()
+                self.featids[name] = f.tag()
                 self.fCurVal[tag] = grval.get(oneFeatRef)
                 self.fvalOrder[tag] = fvalOrder
-                #print(tag, sCnt, fSettings, self.fCurVal[tag])
+                print(tag, sCnt, fSettings, self.fCurVal[tag])
 
 
     def copy(self) :
@@ -143,7 +156,7 @@ class FeatureRefs(object) :
         else:
             if isinstance(feattag, bytes):
                 feattag = bytestostr(feattag)
-            return self.featsInTable[feattag];
+            return self.featsInTable[feattag]
 
     def currentValue(self):
         return self.fCurVal
@@ -427,12 +440,12 @@ def printFeaturesMap(fmap):  # debugging
 # Read the Feat table from the font directly, since the Graphite engine API calls omit the hidden features.
 
 def readFeaturesFromTable(fontfilename):
-    #print("readFeatTable",fontfilename)
+    print("readFeatTable",fontfilename)
     tableDict = {}
     with open(fontfilename, "rb") as inf:
         dat = inf.read(12)
         (_, numtables) = struct.unpack(">4sH", dat[:6])
-        #print("numtables=",numtables)
+        print("numtables=",numtables)
         dat = inf.read(numtables * 16)
         for i in range(numtables):
             (tag, csum, offset, length) = struct.unpack(">4sLLL", dat[i * 16: (i+1) * 16])
@@ -506,3 +519,9 @@ def readNameTable(inf, tableDict):
 
     #print(resNameTable)
     return resNameTable
+
+def maybeInteger(str):
+    """Return the corresponding integer, or zero"""
+    try: resInt = int(str)
+    except: resInt = 0
+    return resInt
