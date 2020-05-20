@@ -65,7 +65,7 @@ class PointClass(object) :
 class FontClass(object) :
 
     def __init__(self, elements = None, fname = None, lineno = None, generated = False, editable = False) :
-        self.elements = list(elements)
+        self.elements = list() if elements is None else list(elements)
         self.fname = fname
         self.lineno = lineno
         self.generated = generated
