@@ -124,7 +124,7 @@ class FeatureRefs(object) :
                 self.orderID.append(tag)
                 self.orderLabel.append(label)
                 self.feats[tag] = fSettings
-                self.featids[name] = f.tag()
+                #self.featids[name] = f.tag()
                 self.fCurVal[tag] = grval.get(oneFeatRef)
                 self.fvalOrder[tag] = fvalOrder
                 print(tag, sCnt, fSettings, self.fCurVal[tag])
