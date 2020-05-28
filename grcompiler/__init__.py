@@ -42,30 +42,12 @@ def build(root, version):
         grcz.extractall()
         grcz.close()
 
-        os.chdir('grcompiler-' + version)
-        if platform == 'win32':
-            # possible improvement: check for 64 bit compiler and download a 64 bit version
-            urlretrieve('http://download.icu-project.org/files/icu4c/56.1/icu4c-56_1-Win32-msvc10.zip', 'icu.zip')
-            icuz = ZipFile('icu.zip')
-            icuz.extractall()
-            icuz.close()
-
-            # the make file expects an icu source package to find the headers
-            os.chdir('icu')
-            os.mkdir('source')
-            shutil.move('include', 'source/common')
-
-            os.chdir('../preprocessor')
-            check_call(['nmake', '-f', 'gdlpp.mak'])
-
-            os.chdir('..')
-            check_call(['nmake', '-f', 'makefile.mak'])
-            binaries = glob('release/*')
-        else:
-            check_call(['autoreconf', '-i'])
-            check_call(['./configure'])
-            check_call(['make'])
-            binaries = ['compiler/grcompiler', 'preprocessor/gdlpp']
+        os.chdir(glob('grcompiler-*')[0])
+        check_call(['cmake', '-DCMAKE_BUILD_TYPE=Release', '.'])
+        check_call(['cmake', '--build', '.'])
+        # include binaries and license texts
+        binaries = glob('compiler/icud*') + glob('compiler/icuu*') + glob('compiler/grcompiler*') + ['compiler/stddef.gdh']
+        binaries += glob('license/*') + glob('preprocessor/gdlpp*')
 
     except HTTPError as e:
         if os.path.exists('grcompiler/' + platform):
