@@ -67,11 +67,11 @@ def build(root, version):
             check_call(['make'])
             binaries = ['compiler/grcompiler', 'preprocessor/gdlpp']
 
-    except HTTPError:
+    except HTTPError as e:
         if os.path.exists('grcompiler/' + platform):
             binaries = glob('grcompiler/' + platform + '/*')
         else:
-            binaries = []
+            raise e
 
     dst = os.path.join(origdir, root, 'graide', 'grcompiler')
     if binaries and not os.path.exists(dst):
