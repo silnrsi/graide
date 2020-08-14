@@ -320,13 +320,13 @@ class FeatureDialog(QtWidgets.QDialog) :
 
             featI = 0
             for fid in newFBase.orderID :
-                flabel = newfBase.orderLabel[featI]
+                flabel = newFBase.orderLabel[featI]
                 #fid = newFBase.featids[f] if f in newFBase.featids else ""
                 if fid != "":
                     combo = self.combos[featI]
                     settingI = 0
                     for k in newFBase.fvalOrder[fid] :
-                        if combo.userTag in vals and newFBase.feats[f][k] == vals[combo.userTag] :
+                        if combo.userTag in vals and newFBase.feats[fid][k] == vals[combo.userTag] :
                             combo.setCurrentIndex(settingI)
                             break
                         settingI = settingI + 1
