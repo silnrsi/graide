@@ -46,7 +46,7 @@ class Run(list) :
         for i in range(len(self)-1, 0, -1):
             slot = self[i]
             glyph = self.font[slot.gid]
-            dirAttr = int(glyph.getGdlProperty('directionality'))
+            dirAttr = int(glyph.getGdlProperty('directionality', 0))
             #print i, "gid=",slot.gid,"dir=",dirAttr
             if dirAttr != 16 :
                 for iCopy in range(i, iLastOfSeq) :

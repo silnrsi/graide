@@ -239,8 +239,8 @@ class GraideGlyph(Glyph, DataObj, QtCore.QObject) :
         else :
             self.properties[key] = value
 
-    def getGdlProperty(self, key) :
-        return self.gdlProperties[key]
+    def getGdlProperty(self, key, default=None) :
+        return self.gdlProperties.get(key, default)
         
     def getGdlPropertyWithBinary(self, key) :
         value = int(self.gdlProperties[key])
