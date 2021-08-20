@@ -102,7 +102,7 @@ def makeFontAndFace(fontname, size) :
 
 
 def runGraphiteWithFontFace(faceAndFont, text, debugname, feats = {}, rtl = 0, lang = None, size = 16, expand = 100) :
-    #print("runGraphiteWithFontFace")
+    #print("runGraphiteWithFontFace: lang=", lang)
 
     (grface, grfont) = faceAndFont
 
