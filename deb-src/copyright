@@ -1,9 +1,0 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: graide
-Upstream-Contact: Martin Hosken <martin_hosken@sil.org>
-Source: https://github.com/silnrsi/graide
-
-Files: *
-Copyright: 2012 SIL International
-Copyright: 2018 Bastian Germann
-License: LGPL-2.1+
