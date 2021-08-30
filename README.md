@@ -1,6 +1,6 @@
 # GRAIDE: GRAphite Integrated Development Environment
 
-Graide is an integrated development envrionment that can be used
+Graide is an integrated development environment that can be used
 to develop fonts with Graphite features.
 [Graphite](http://graphite.sil.org) is a "smart font" system
 developed specifically to handle the complexities of lesser-known
