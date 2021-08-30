@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>
+<ftml version="1.0">
+  <head>
+    <columns comment="30%" label="15%" string="50%" style="5%" />
+    <fontsrc>url(Simple-Graphite-Font.ttf)</fontsrc>
+  </head>
+  <testgroup label="main">
+    <test label="test1">
+      <comment>this is pretty cool</comment>
+      <string>this is a simple test</string>
+    </test>
+    <test label="test2">
+      <comment>even cooler</comment>
+      <string>this is another test</string>
+    </test>
+    <test label="latin">
+      <string>abcdefghijklmnopqrstuvwxyz</string>
+    </test>
+  </testgroup>
+</ftml>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="Testing.xsl"?>
+<ftml version="1.0">
+  <head>
+    <columns comment="30%" label="15%" string="50%" style="5%" />
+    <fontsrc>url(Stddr.ttf)</fontsrc>
+  </head>
+  <testgroup label="main">
+    <test label="test1">
+      <string>abcdefghijklmnopqrstuvwxyz</string>
+    </test>
+  </testgroup>
+</ftml>

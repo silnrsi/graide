@@ -1,0 +1,46 @@
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+//	File: simple.gdl
+//
+//	This file is part of Simple Graphite Font and is 
+//	Copyright (c) 1997-2011 SIL International (http://www.sil.org/),
+//	with Reserved Font Names "Doulos" and "SIL".
+//
+//	This Font Software is licensed under the SIL Open Font License,
+//	Version 1.1.
+//
+//	You should have received a copy of the license along with this Font Software.
+//	If this is not the case, go to (http://scripts.sil.org/OFL) for all the
+//	details including a FAQ.
+//
+//	For seeing some basic Graphite behavior.
+//
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#include "stddef.gdh"
+
+Bidi = false;
+
+
+
+table(glyph)
+
+	clsUpperVowel = codepoint("AEIOU");
+	clsLowerVowel = codepoint("aeiou");
+	
+	clsUpperCons = codepoint("BCDFGHJKLMNPQRSTVWXYZ");
+	clsLowerCons = codepoint("bcdfghjklmnpqrstvwxyz");
+
+endtable;	// glyph
+
+
+table(sub)
+
+	clsUpperVowel  >  clsLowerVowel;
+	clsLowerCons  > clsUpperCons;
+
+endtable;
+
+
+
