@@ -25,10 +25,14 @@ from graide.attribview import Attribute, AttribModel
 from graide.utils import DataObj, popUpError
 from graide.makegdl.glyph import Glyph
 from graide.slot import Slot
+from freetype import ft_errors
 
 
 def ftGlyph(face, gid, fill = 0) :
-    face.load_glyph(gid)
+    try:
+        face.load_glyph(gid)
+    except ft_errors.FT_Exception:
+        return (None, 0, 0)
     b = face.glyph.bitmap
     top = face.glyph.bitmap_top
     left = face.glyph.bitmap_left
