@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow) :
         self.fontFaces = {}
         self.fontFileName = None
         self.apname = None
-        self.appTitle = "Graide v1.0.0"
+        self.appTitle = "Graide v1.1.0"
         self.currConfigTab = 0
         
         self.debugCnt = 0  # debug
@@ -746,7 +746,7 @@ class MainWindow(QtWidgets.QMainWindow) :
 
 An environment for the creation and debugging of Graphite fonts.
 
-Copyright 2012-2020 SIL International and M. Hosken""")
+Copyright 2012-2022 SIL International and M. Hosken""")
 
     def setwidgetstretch(self, widget, hori, vert) :
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
