@@ -58,7 +58,7 @@ To build a Windows executable, `PyInstaller` can be used. Install it from PyPI i
 
 The command line to build the exe is:
 
-    pyinstaller --onefile --icon \<path to icon file in graide repo\> \<path to graide script in graide venv\> 
+    pyinstaller --onefile --icon <path to icon file in graide repo> <path to graide script in graide venv> 
 
 The icon file can be found in the graide repo at `<path to repo folder>\graide\lib\graide\images\graide.ico`
 
@@ -68,4 +68,4 @@ This will produce `graide.exe` in the venv `graide\dist` folder. It will also pr
 
     pyinstaller --clean graide.spec 
 
-The `graide.exe` file should run on a Windows system without the need to install Python, or if Python is installed there, without affecting it. It includes a Python interpreter, all the dependent packages, and the graide code, which will be unpacked into a temporary folder and executed when graide.exe is ran.
+The `graide.exe` file should run on a Windows system without the need to install Python, or if Python is installed there, without affecting it. It includes a Python interpreter, all the dependent packages, and the graide code, which will be unpacked into a temporary folder and executed when `graide.exe` is ran.
