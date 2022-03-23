@@ -10,9 +10,9 @@ Clone the [graide](https://github.com/silnrsi/graide) and [graphite](https://git
 
 The graide repo includes a bundled Graphite compiler. If a newer version is desired, install the Graphite compiler using an installer from its [repo](https://github.com/silnrsi/grcompiler/releases) or build a release version from [source](https://github.com/silnrsi/grcompiler). Then, update the files in the `graide` repo at `graide\grcompiler\win32` from the Graphite compiler installation or build (e.g. `grcompiler.exe`, `icudt66.dll`, `icuuc66.dll`, `gdlpp.exe`, `stddef.gdh`).
 
-## Install graide in a Python virual environment ##
+## Install graide in a Python virtual environment ##
 
-The following describes how to install graide in a Python virtual enviroment (venv). Such environments provide a way to install a Python-based application with all its dependencies in a way that isolates it from any Python system already present on a system. The application thus does not interfere with the system Python and is not affected by subsequent changes to the system Python. 
+The following describes how to install graide in a Python virtual environment (venv). Such environments provide a way to install a Python-based application with all its dependencies in a way that isolates it from any Python system already present on a system. The application thus does not interfere with the system Python and is not affected by subsequent changes to the system Python. 
 
 Python 3.9 (64-bit) needs to be installed. At a command prompt, the following will create the virtual environment in a folder called graide in the current directory.
 
