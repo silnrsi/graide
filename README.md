@@ -1,3 +1,5 @@
+![graide](https://scripts.sil.org/cms/sites/projects/media/graide4_1_rulesMultiple.png)
+
 # GRAIDE: GRAphite Integrated Development Environment
 
 Graide is an integrated development environment that can be used
