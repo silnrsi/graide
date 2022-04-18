@@ -6,7 +6,7 @@ This document describes building graide.exe using 64-bit Python 3.9 on Windows 1
 
 Acquire a 64-bit `graphite2.dll` either by building a release version from source using the graphite [repo](https://github.com/silnrsi/graphite) or by downloading it from [Team City](https://build.palaso.org/viewType.html?buildTypeId=Graphite_Windows64bitProduction) using the guest login provided there.
 
-Clone the [graide](https://github.com/silnrsi/graide) and [graphite](https://github.com/silnrsi/graphite) repos.
+Clone the [graide](https://github.com/silnrsi/graide) and [graphite](https://github.com/silnrsi/graphite) repos. (If you've already cloned them, run `python setup.py clean --all` in each one to remove any `build` folder, or do that manually.)
 
 The graide repo includes a bundled Graphite compiler. If a newer version is desired, install the Graphite compiler using an installer from its [repo](https://github.com/silnrsi/grcompiler/releases) or build a release version from [source](https://github.com/silnrsi/grcompiler). Then, update the files in the `graide` repo at `graide\grcompiler\win32` from the Graphite compiler installation or build (e.g. `grcompiler.exe`, `icudt66.dll`, `icuuc66.dll`, `gdlpp.exe`, `stddef.gdh`).
 
@@ -49,6 +49,8 @@ The graide installation can be tested by running `python Scripts\graide` in the 
 
     cd <graide venv>
     python Scripts\graide
+
+(FYI, if you want to run graide without an active venv, you can do so by 1) running the launcher using the python.exe in the venv (i.e. `Scripts\python.exe Scripts\graide`) and 2) putting the `graphite2.dll` on your `PATH` (or pointing the `PYGRAPHITE2_LIBRARY_PATH` environment variable to its absolute path file name).)
 
 ## Build graide.exe ##
 

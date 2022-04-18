@@ -21,11 +21,23 @@ the builtin version is copied to the package.
 You can install graide from from this directory with pip:
 `pip install -e .`
 
+Graide also uses [Graphite](https://github.com/silnrsi/graphite).
+Install it by cloning that repo and running the above `pip` command.
+You will also need to obtain a `graphite2.dll` from
+[Team City](https://build.palaso.org/viewType.html?buildTypeId=Graphite_Windows64bitProduction)
+using the guest login provided there (or by building it from source)
+and put the dll somewhere on your `PATH`
+(or set the PYGRAPHITE2_LIBRARY_PATH environment variable to its absolute path file name).
+
 Additionally, run 1 (with Qt4) or 2 (with Qt5):
 1. `pip install PySide`
 2. `pip install PySide2`
 
 You will then have the Python script `graide` installed.
+
+(Instructions for installing Graide into a Python virtual environment
+and optionally building an MS Windows exe are in
+[BuildingGraideExe.md](https://github.com/silnrsi/graide/blob/master/doc/BuildingGraideExe.md).)
 
 ## Development
 
